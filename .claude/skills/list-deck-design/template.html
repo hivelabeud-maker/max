@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>State of the Project — Chapter 01 · Tools</title>
+
+<!-- Pretendard Variable (가변 폰트, 100~900) -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<!-- 수치·메타 라벨용 모노스페이스 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* paper-and-ink palette — white edition */
+    --bg:        #FFFFFF;
+    --bg-card:   #F5F1EA;   /* warm off-white card surface */
+    --ink:       #1A1A1A;
+    --muted:     #6E665A;
+    --rule:      #E4DED2;   /* hairline / dashed dividers */
+    --chip:      #F2EDE3;
+
+    /* signature accent — vivid orange */
+    --accent:        #FF6B35;
+    --accent-soft:   #FFD9C2;
+
+    /* secondary data color — dusty lavender (charts) */
+    --data:          #C5BBDD;
+    --data-strong:   #A89BC8;
+
+    --sans: "Pretendard Variable", Pretendard, -apple-system,
+            BlinkMacSystemFont, system-ui, "Segoe UI",
+            Roboto, "Helvetica Neue", "Apple SD Gothic Neo",
+            "Noto Sans KR", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --maxw: 1200px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  html { background-color: #FFFFFF; }
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* ---------- top nav ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar-inner {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; font-size: 13px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
+  }
+  .brand .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--accent); }
+  .nav { display: flex; gap: 24px; color: var(--muted); }
+  .nav a { text-decoration: none; font-weight: 500; }
+  .nav a:hover { color: var(--ink); }
+  .nav .current { color: var(--ink); }
+
+  /* ---------- layout ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 56px;
+    padding: 56px 0 120px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; gap: 24px; padding-top: 24px; }
+    .sidenav { position: static !important; }
+  }
+
+  /* ---------- side nav ---------- */
+  .sidenav {
+    position: sticky; top: 80px; align-self: start;
+    font-size: 13px;
+    border-top: 1px solid var(--ink);
+    padding-top: 12px;
+  }
+  .sidenav .label {
+    text-transform: uppercase; letter-spacing: 0.12em;
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .sidenav ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+  .sidenav li {
+    counter-increment: toc;
+    padding: 8px 0; border-bottom: 1px dashed var(--rule);
+    display: flex; gap: 10px;
+  }
+  .sidenav li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted); padding-top: 2px;
+  }
+  .sidenav a { text-decoration: none; line-height: 1.35; font-weight: 500; }
+  .sidenav li.active a { color: var(--accent); font-weight: 700; }
+
+  /* ---------- chapter intro ---------- */
+  .crumb {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--muted); letter-spacing: 0.04em;
+    display: flex; gap: 14px; align-items: center;
+    margin-bottom: 28px;
+  }
+  .crumb .pill {
+    background: var(--accent); color: #fff;
+    padding: 4px 10px; border-radius: 999px;
+    font-weight: 700; letter-spacing: 0.08em;
+  }
+  h1.chapter-title {
+    font-weight: 800;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin: 0 0 32px;
+  }
+  h1.chapter-title em {
+    font-style: normal;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .lede {
+    font-weight: 500;
+    font-size: 22px; line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 60ch;
+    margin: 0 0 48px;
+  }
+
+  /* ---------- hero stat strip ---------- */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+    margin: 0 0 72px;
+  }
+  @media (max-width: 700px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 28px 24px 24px;
+    border-right: 1px dashed var(--rule);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .num {
+    font-weight: 700;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .stat .num .unit { font-size: 0.4em; color: var(--muted); font-weight: 500; }
+  .stat .delta {
+    display: inline-block;
+    font-family: var(--mono); font-size: 11px;
+    margin-top: 10px; padding: 2px 8px; border-radius: 4px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .stat .label {
+    margin-top: 14px;
+    font-size: 13px; color: var(--muted); line-height: 1.4;
+  }
+
+  /* ---------- sections ---------- */
+  section { margin-bottom: 88px; scroll-margin-top: 96px; }
+  .section-head {
+    border-top: 1px dashed var(--rule);
+    padding-top: 24px;
+    margin-bottom: 32px;
+  }
+  .section-head h2 {
+    font-weight: 800;
+    font-size: clamp(28px, 3.4vw, 44px);
+    line-height: 1.15; letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .section-head h2 .no {
+    color: var(--ink);
+    margin-right: 12px;
+  }
+  .section-head h2 em { font-style: normal; color: var(--accent); }
+  .section-head .deck {
+    font-size: 16px; color: var(--muted);
+    margin-top: 12px; max-width: 55ch;
+  }
+  .prose p { max-width: 65ch; margin: 0 0 18px; }
+  .prose p .hl { background: linear-gradient(180deg, transparent 55%, var(--accent-soft) 55%); padding: 0 2px; }
+
+  /* ---------- two-column block ---------- */
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 800px) { .two { grid-template-columns: 1fr; gap: 32px; } }
+
+  /* ---------- bar chart ---------- */
+  .chart {
+    background: var(--bg-card);
+    border: 1px dashed var(--rule);
+    border-radius: 0;
+    padding: 24px;
+  }
+  .chart .ch-title {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px; font-weight: 700;
+  }
+  .chart .ch-sub {
+    font-size: 20px; font-weight: 700; letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .bars { display: grid; gap: 12px; }
+  .bar-row {
+    display: grid; grid-template-columns: 140px 1fr 56px;
+    align-items: center; gap: 12px; font-size: 13px;
+  }
+  .bar-track { background: var(--chip); border-radius: 3px; height: 14px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--data); border-radius: 3px; }
+  .bar-fill.strong { background: var(--data-strong); }
+  .bar-fill.accent { background: var(--accent); }
+  .bar-row .val {
+    font-family: var(--mono); font-size: 12px; text-align: right; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .bar-row .name { color: var(--ink); font-weight: 500; }
+
+  /* ---------- pullquote ---------- */
+  .pull {
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+    padding: 40px 0;
+    margin: 56px 0;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+  }
+  .pull .no { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .pull blockquote {
+    margin: 0;
+    font-weight: 500;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.3; letter-spacing: -0.02em;
+  }
+  .pull blockquote em { color: var(--accent); font-style: normal; font-weight: 700; }
+  .pull cite {
+    display: block; margin-top: 18px;
+    font-style: normal; font-size: 13px; color: var(--muted);
+  }
+
+  /* ---------- tool grid ---------- */
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  @media (max-width: 800px) { .tools { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .tools { grid-template-columns: 1fr; } }
+  .tool { background: var(--bg); padding: 24px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+  .tool .rank { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tool .name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .tool .share {
+    font-family: var(--mono); font-size: 12px; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .tool .share b { color: var(--accent); }
+  .tool .note { font-size: 13px; color: var(--muted); margin-top: auto; line-height: 1.45; }
+
+  /* ---------- donut ---------- */
+  .donut-wrap { display: grid; grid-template-columns: 160px 1fr; gap: 28px; align-items: center; }
+  .donut {
+    --p: 68;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--chip) 0);
+    display: grid; place-items: center;
+    position: relative;
+  }
+  .donut::after {
+    content: ""; width: 110px; height: 110px; border-radius: 50%;
+    background: var(--bg); position: absolute;
+  }
+  .donut .pct {
+    position: relative; z-index: 1;
+    font-weight: 700; font-size: 32px; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .donut-legend { font-size: 14px; }
+  .donut-legend ul { list-style: none; padding: 0; margin: 0; }
+  .donut-legend li {
+    display: flex; justify-content: space-between;
+    padding: 6px 0; border-bottom: 1px dashed var(--rule);
+  }
+  .donut-legend li b {
+    font-family: var(--mono); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--ink); color: var(--bg);
+    border-radius: 6px; padding: 28px 32px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 28px; align-items: center;
+    margin: 32px 0;
+  }
+  .callout h3 { font-weight: 700; font-size: 22px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .callout p { margin: 0; color: #cfc8b7; font-size: 14px; max-width: 60ch; }
+  .callout .big {
+    font-size: 64px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.03em; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--ink);
+    padding: 32px 0 56px;
+    font-size: 12px; color: var(--muted);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  /* ---------- chip ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; }
+  .chips span {
+    background: var(--chip); border-radius: 999px;
+    padding: 4px 10px; font-size: 12px; color: var(--ink); font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner wrap">
+    <div class="brand"><span class="dot"></span> State of the Project</div>
+    <nav class="nav">
+      <a href="#">개요</a>
+      <a href="#" class="current">Chapter 01 · Tools</a>
+      <a href="#">방법론</a>
+      <a href="#">PDF 다운로드</a>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="grid">
+
+    <aside class="sidenav">
+      <div class="label">In this chapter</div>
+      <ol>
+        <li class="active"><a href="#overview">개요</a></li>
+        <li><a href="#adoption">도입</a></li>
+        <li><a href="#stack">스택 구성</a></li>
+        <li><a href="#workflow">워크플로 변화</a></li>
+        <li><a href="#voices">현장의 목소리</a></li>
+        <li><a href="#outlook">전망</a></li>
+      </ol>
+    </aside>
+
+    <article>
+
+      <div class="crumb">
+        <span class="pill">CHAPTER 01</span>
+        <span>2026 · 14분 분량</span>
+      </div>
+
+      <h1 class="chapter-title">우리가 <em>실제로</em> 손에 잡는 도구들.</h1>
+
+      <p class="lede">
+        2,418명의 디자이너·엔지니어가 한 해 동안 무엇을 만들고, 무엇을 띄웠으며, 무엇을 다시 들여다봤는지 — 북마크가 아니라 화요일 아침에 켠 것으로 측정했다.
+      </p>
+
+      <section id="overview">
+        <div class="stat-strip">
+          <div class="stat">
+            <div class="num">87<span class="unit">%</span></div>
+            <div class="delta">▲ 14pt YoY</div>
+            <div class="label">주 1회 이상 AI 도구를 사용</div>
+          </div>
+          <div class="stat">
+            <div class="num">6.2</div>
+            <div class="delta">▲ 1.8 vs. 2024</div>
+            <div class="label">하나의 워크플로에서 쓰는 도구 평균 개수</div>
+          </div>
+          <div class="stat">
+            <div class="num">$41<span class="unit">/mo</span></div>
+            <div class="delta">▲ 23%</div>
+            <div class="label">개인 기여자의 월 평균 지출</div>
+          </div>
+          <div class="stat">
+            <div class="num">11<span class="unit">min</span></div>
+            <div class="delta">▼ 38%</div>
+            <div class="label">빈 캔버스에서 첫 프로토타입까지</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="adoption">
+        <div class="section-head">
+          <h2><span class="no">1.</span>도입은 더 이상 이야기가 아니다. 이제는 <em>조합</em>이다.</h2>
+          <p class="deck">올해의 화두는 ‘쓰느냐 마느냐’가 아니라, 몇 개를 어떤 순서로 쌓아 누가 신뢰하느냐다.</p>
+        </div>
+
+        <div class="prose two">
+          <div>
+            <p>처음으로 <span class="hl">개인 기여자가 다루는 도구 수가, 매니저가 이름을 댈 수 있는 수를 넘어섰다</span>. 응답자 중앙값은 한 작업당 6개의 도구를 쓴다 — 작년 4.4개에서 늘었다. 표준 스택을 합의한 팀은 1/3 뿐.</p>
+            <p>가장 빠르게 성장한 카테고리는 ‘AI 어시스턴트’가 아니다. 그 사이를 잇는 라우터·평가·프롬프트 레지스트리 — 18개월 전엔 거의 존재하지 않던 것들이다.</p>
+            <div class="chips">
+              <span>+318% 라우터</span><span>+221% 평가</span><span>+162% 프롬프트 레지스트리</span><span>+44% IDE</span>
+            </div>
+          </div>
+
+          <div class="chart">
+            <div class="ch-title">카테고리별 YoY 성장</div>
+            <div class="ch-sub">스택이 두꺼워지는 지점</div>
+            <div class="bars">
+              <div class="bar-row"><span class="name">라우터</span><span class="bar-track"><span class="bar-fill accent" style="width:96%"></span></span><span class="val">+318%</span></div>
+              <div class="bar-row"><span class="name">평가 하네스</span><span class="bar-track"><span class="bar-fill accent" style="width:72%"></span></span><span class="val">+221%</span></div>
+              <div class="bar-row"><span class="name">프롬프트 레지스트리</span><span class="bar-track"><span class="bar-fill" style="width:54%"></span></span><span class="val">+162%</span></div>
+              <div class="bar-row"><span class="name">에이전트 IDE</span><span class="bar-track"><span class="bar-fill" style="width:38%"></span></span><span class="val">+88%</span></div>
+              <div class="bar-row"><span class="name">이미지 / 영상</span><span class="bar-track"><span class="bar-fill" style="width:28%"></span></span><span class="val">+44%</span></div>
+              <div class="bar-row"><span class="name">노트북 UI</span><span class="bar-track"><span class="bar-fill" style="width:14%"></span></span><span class="val">+12%</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="stack">
+        <div class="section-head">
+          <h2><span class="no">2.</span>숏리스트 — 사람들이 실제로 <em>여는</em> 것들.</h2>
+          <p class="deck">2,418명의 ‘주간 사용’ 자기 보고. 해당 도구가 최소 한 번 등장한 워크플로의 비율로 정렬.</p>
+        </div>
+
+        <div class="tools">
+          <div class="tool">
+            <div class="rank">01</div>
+            <div class="name">Tool Alpha</div>
+            <div class="share">share <b>61%</b> · ▲ 9pt</div>
+            <div class="note">“점심 전까지 뭔가 봐야 할 때” 시작점으로 가장 먼저 켠다.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">02</div>
+            <div class="name">Beta Studio</div>
+            <div class="share">share <b>54%</b> · ▲ 14pt</div>
+            <div class="note">5–20인 팀에서 가장 크게 성장. 엔터프라이즈 컴플라이언스는 아직 약함.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">03</div>
+            <div class="name">Gamma</div>
+            <div class="share">share <b>48%</b> · ▼ 3pt</div>
+            <div class="note">개인 기여자 사이에선 빠지고, 디자인 옵스에선 버틴다.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">04</div>
+            <div class="name">Delta</div>
+            <div class="share">share <b>39%</b> · ▲ 6pt</div>
+            <div class="note">Alpha 다음으로 71% 사용자가 추가하는 ‘두 번째 도구’.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">05</div>
+            <div class="name">Epsilon</div>
+            <div class="share">share <b>33%</b> · ▲ 22pt</div>
+            <div class="note">단일 해 최대 점프. 호불호 강함 — 사랑도 이탈도 높다.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">06</div>
+            <div class="name">Zeta</div>
+            <div class="share">share <b>27%</b> · ▼ 8pt</div>
+            <div class="note">더 가벼운 대안들에 자리를 내주고 있다.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="pull">
+        <div class="no">QUOTE 01</div>
+        <blockquote>
+          “어떤 도구가 가장 좋은지는 더 이상 묻지 않는다. 우리가 묻는 건 <em>한 워크플로 안에서 가장 덜 싸우는 두 개</em>가 무엇이냐다.”
+          <cite>— 시니어 디자이너 · 핀테크 · 80인 팀</cite>
+        </blockquote>
+      </div>
+
+      <section id="workflow">
+        <div class="section-head">
+          <h2><span class="no">3.</span>시간은 <em>어디로</em> 가는가.</h2>
+          <p class="deck">멀티툴 워크플로 도입 전후, 주간 시간 배분 자기 보고.</p>
+        </div>
+
+        <div class="two">
+          <div class="donut-wrap">
+            <div class="donut" style="--p:68"><span class="pct">68%</span></div>
+            <div class="donut-legend">
+              <ul>
+                <li><span>만들기</span><b>32%</b></li>
+                <li><span>AI 결과 검토</span><b>26%</b></li>
+                <li><span>프롬프트 · 반복</span><b>22%</b></li>
+                <li><span>커뮤니케이션</span><b>14%</b></li>
+                <li><span>기타</span><b>6%</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="prose">
+            <p>AI 결과를 검토하는 일이 디자이너의 한 주에서 두 번째로 큰 활동이 됐다 — 커뮤니케이션보다 크고, 리서치보다 크다. <span class="hl">일은 사라진 게 아니라, 한 칸 위로 이동했다.</span></p>
+            <p>일찍 평가 도구에 투자한 팀은 ‘검토 피로’가 41% 적고, 배포 결정 속도는 2.3배 빠르다.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div>
+            <h3>복리 효과</h3>
+            <p>생성 도구 옆에 평가 하네스를 함께 돌리는 팀은, 그러지 않는 팀보다 검토된 결과물을 2.3배 빠르게 출시한다 — 작년엔 없던 격차다.</p>
+          </div>
+          <div class="big">2.3×</div>
+        </div>
+      </section>
+
+      <section id="voices">
+        <div class="section-head">
+          <h2><span class="no">4.</span>현장이 <em>묻지 않은</em> 자리에서 말한 것들.</h2>
+          <p class="deck">자유응답에서 반복적으로 떠오른 세 주제. 셋 다 작년 리포트엔 없었다.</p>
+        </div>
+
+        <div class="tools">
+          <div class="tool">
+            <div class="rank">THEME 01</div>
+            <div class="name">“도구 피로는 진짜다.”</div>
+            <div class="note">장문 응답의 38%에서 언급. 가장 자주 꼽힌 원인 — 도구 자체가 아니라 도구 사이의 맥락 전환.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">THEME 02</div>
+            <div class="name">“내 스택은 개인적이다.”</div>
+            <div class="note">61%가 자신의 워크플로가 동료와 다르다고 답했고 — 그게 더 좋다고 했다.</div>
+          </div>
+          <div class="tool">
+            <div class="rank">THEME 03</div>
+            <div class="name">“평가는 새로운 디자인 시스템이다.”</div>
+            <div class="note">작년 언급 1% 미만에서 올해 22%까지. 품질·일관성에 대한 답변에 자리잡았다.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="pull">
+        <div class="no">QUOTE 02</div>
+        <blockquote>
+          “함께 일하는 가장 좋은 팀들은 프롬프트를 <em>소스 코드처럼</em> 다룬다 — 버전 관리되고, 리뷰되며, 책임자가 있다.”
+          <cite>— 디자인 리드 · B2B SaaS · 200인 회사</cite>
+        </blockquote>
+      </div>
+
+      <section id="outlook">
+        <div class="section-head">
+          <h2><span class="no">5.</span>올해 추세가 유지되면 <em>2027년</em>은 어떨까.</h2>
+          <p class="deck">데이터에서 도출한 세 가지 방향성 — 예측이 아니라 외삽.</p>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat">
+            <div class="num">~9</div>
+            <div class="label">2026년 4분기, 워크플로당 도구 중앙값 예상</div>
+          </div>
+          <div class="stat">
+            <div class="num">$72<span class="unit">/mo</span></div>
+            <div class="label">개인 월 평균 지출 예상</div>
+          </div>
+          <div class="stat">
+            <div class="num">50<span class="unit">%</span></div>
+            <div class="label">응답자가 매일 평가 하네스를 돌릴 비율</div>
+          </div>
+          <div class="stat">
+            <div class="num">3<span class="unit">×</span></div>
+            <div class="label">‘라우터’ 카테고리, 2년 연속 성장 배율</div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div>State of the Project · Chapter 01 · Tools · 2026 edition</div>
+        <div>데이터 수집 2026.03–05 · n=2,418 · 방법론 →</div>
+      </footer>
+
+    </article>
+  </div>
+</main>
+
+</body>
+</html>
