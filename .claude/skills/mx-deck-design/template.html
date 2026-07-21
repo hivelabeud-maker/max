@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>{프로젝트명} — Proposal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FFFFFF; --bg-dark: #0A0A0A; --bg-dark2: #1C1C1E;
+  --card: #F3F3F3; --ink: #171717; --ink-inv: #FFFFFF;
+  --muted: #9C9C9C; --meta: #B0B0B0;
+  --accent: #2F4BD8; /* ← 프로젝트 포인트 1색만 교체 */
+  /* 분류·태그·차트용 포인트 팔레트 (MAXOS 대시보드 v8) */
+  --sig: #2F3E5F;     --sig-soft: #EEF1F7;
+  --pt-blue: #1D4ED8; --pt-blue-soft: #DBEAFE;
+  --pt-green: #2D7A4F;--pt-green-soft: #E5F2E9;
+  --pt-amber: #C77A0F;--pt-amber-soft: #FFF6E5;
+  --pt-red: #B23B3B;  --pt-red-soft: #FDECEC;
+  --pt-purple: #8B5CF6;
+  --pt-pink: #7A1F4A; --pt-pink-soft: #FBE7F1;
+  --sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --r-card: 30px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #E8E8E8; }
+body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+
+/* ===== 슬라이드 골격 — 고정높이 아님, 내용 따라 늘어남 ===== */
+.deck { display: grid; gap: 20px; padding: 20px; max-width: 1960px; margin: 0 auto; }
+.slide {
+  position: relative; background: var(--bg); overflow: hidden;
+  min-height: min(56.25vw, 100svh);
+  display: flex; flex-direction: column;
+}
+.slide.dark  { background: var(--bg-dark);  color: var(--ink-inv); }
+.slide.dark2 { background: var(--bg-dark2); color: var(--ink-inv); }
+
+/* 마진 3단계 — 정보량 대응 (통일하지 말 것) */
+.m-divider { padding: 90px clamp(24px, 2.3vw, 45px) 60px; }
+.m-content { padding: 90px clamp(24px, 4.2vw, 80px) 80px; }
+.m-dense   { padding: 90px clamp(24px, 5.7vw, 110px) 80px; }
+
+/* ===== 공통: 상단 메타 바 ===== */
+.meta-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 26px clamp(24px, 2vw, 40px) 0;
+  font-size: 14px; letter-spacing: 0.5px; opacity: 0.5;
+}
+.meta-bar span:nth-child(2) { position: absolute; left: 50%; transform: translateX(-50%); }
+@media (max-width: 560px) { .meta-bar span:nth-child(2) { display: none; } }
+
+/* 출처 라인 — 수치 쓴 슬라이드 우하단 필수 */
+.source { position: absolute; right: clamp(24px, 4.2vw, 80px); bottom: 28px; font-size: 12px; color: var(--muted); }
+
+/* ===== 타이포 스케일 (실측) ===== */
+.t-display { font-size: clamp(64px, 8vw, 120px); font-weight: 700; letter-spacing: -0.019em; line-height: 1; font-variant-numeric: tabular-nums; }
+.t-stat    { font-size: clamp(44px, 5vw, 72px);  font-weight: 700; letter-spacing: -0.02em;  line-height: 1; font-variant-numeric: tabular-nums; }
+.t-stat .unit { font-size: 0.5em; }
+.t-divider { font-size: clamp(56px, 9vw, 160px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; }
+.t-opener  { font-size: clamp(40px, 6vw, 90px);  font-weight: 400; letter-spacing: -0.02em; line-height: 1.08; }
+.t-quote   { font-size: clamp(24px, 2.5vw, 37px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.2; }
+.t-title   { font-size: clamp(28px, 3vw, 44px);  font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+.t-label   { font-size: 24px; font-weight: 700; }
+.t-eyebrow { font-size: 18px; font-weight: 600; }
+.t-body    { font-size: 16px; font-weight: 400; line-height: 1.4; }
+
+/* ===== cover--main ===== */
+.cover-foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; align-items: flex-end; }
+.cover-note { max-width: 660px; font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.cover-fields { display: flex; gap: clamp(24px, 4vw, 90px); flex-wrap: wrap; }
+.cover-fields .f .k { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.cover-fields .f .v { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+/* ===== section-0N-- 오프너 ===== */
+.opener { display: flex; gap: clamp(16px, 2vw, 28px); align-items: flex-start; flex-wrap: wrap; }
+.opener .no { font-size: clamp(22px, 2.4vw, 36px); color: rgba(255,255,255,0.35); padding-top: 0.5em; }
+.opener .toc { margin-left: auto; display: grid; gap: 14px; padding-top: 0.8em; min-width: 220px; }
+.opener .toc .i { display: flex; gap: 14px; font-size: 14px; }
+.opener .toc .i b { font-weight: 700; }
+.opener .toc .i span { color: rgba(255,255,255,0.65); }
+@media (max-width: 760px) { .opener .toc { margin-left: 0; width: 100%; } }
+
+/* ===== two-col: 좌 타이틀 / 우 본문 ===== */
+.two-col { display: grid; grid-template-columns: minmax(280px, 5fr) 7fr; gap: clamp(24px, 3vw, 60px); }
+@media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+.two-col .head { display: grid; gap: 18px; align-content: start; }
+
+/* ===== 카드 공통 — grid auto-fit, 절대좌표 금지 ===== */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(16px, 2vw, 38px); align-items: end; margin-top: clamp(28px, 4vw, 64px); }
+.card {
+  background: var(--card); border-radius: var(--r-card); padding: 34px;
+  min-height: 320px; display: flex; flex-direction: column;
+}
+.card .num { text-align: right; }
+.card .foot { margin-top: auto; display: grid; gap: 8px; padding-top: 32px; }
+.card .cap { font-size: 16px; color: rgba(23,23,23,0.75); }
+.card.hi { background: var(--ink); color: var(--ink-inv); min-height: 420px; grid-column: span 2; }
+.card.hi .cap { color: rgba(255,255,255,0.7); }
+@media (max-width: 620px) { .card.hi { grid-column: span 1; } }
+
+/* ===== pull-quote ===== */
+.pull-quote { text-align: center; margin: clamp(32px, 5vw, 72px) auto; max-width: 30ch; }
+
+/* ===== persona quotes ===== */
+.quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 4vw, 56px); }
+.quote-card { background: var(--card); border-radius: var(--r-card); padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+.quote-card p { font-size: 17px; line-height: 1.5; }
+.quote-card .who { margin-top: auto; font-size: 14px; color: var(--muted); }
+
+/* ===== trend 카드 ===== */
+.trend-card { background: var(--card); border-radius: var(--r-card); padding: 30px; min-height: 260px; display: flex; flex-direction: column; gap: 10px; }
+.trend-card .desc { color: rgba(23,23,23,0.7); margin-top: auto; }
+
+/* ===== tag — 배경 soft + 글자 deep 고정 ===== */
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+.tag.sig   { background: var(--sig-soft);      color: var(--sig); }
+.tag.blue  { background: var(--pt-blue-soft);  color: var(--pt-blue); }
+.tag.green { background: var(--pt-green-soft); color: var(--pt-green); }
+.tag.amber { background: var(--pt-amber-soft); color: var(--pt-amber); }
+.tag.red   { background: var(--pt-red-soft);   color: var(--pt-red); }
+.tag.pink  { background: var(--pt-pink-soft);  color: var(--pt-pink); }
+
+/* ===== chart — CSS bar, 다계열은 포인트 팔레트 순서 ===== */
+.chart { background: var(--card); border-radius: var(--r-card); padding: 34px; margin-top: clamp(28px, 4vw, 56px); overflow-x: auto; }
+.bar-row { display: grid; grid-template-columns: 130px 1fr 64px; gap: 14px; align-items: center; margin-bottom: 14px; min-width: 420px; }
+.bar-row .name { font-size: 14px; font-weight: 600; }
+.bar-row .track { height: 26px; background: rgba(23,23,23,0.06); border-radius: 6px; overflow: hidden; }
+.bar-row .fill { height: 100%; border-radius: 6px; }
+.bar-row .val { font-size: 14px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.c1 { background: var(--sig); } .c2 { background: var(--pt-blue); }
+.c3 { background: var(--pt-green); } .c4 { background: var(--pt-amber); } .c5 { background: var(--pt-purple); }
+
+/* ===== research--category-case (리서치 케이스 그리드) ===== */
+.case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 4vw, 56px); }
+.case-card { background: var(--card); border-radius: var(--r-card); padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.case-card .ph { aspect-ratio: 4/3; background: rgba(23,23,23,0.06); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; }
+.case-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; display: block; }
+.case-card .cap { font-size: 16px; color: rgba(23,23,23,0.75); }
+.case-card .src-link { margin-top: auto; font-size: 12px; color: var(--muted); text-decoration: none; }
+.case-card .src-link:hover { color: var(--ink); }
+
+/* ===== moodboard ===== */
+.mood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: clamp(28px, 4vw, 56px); }
+.mood-grid .ph { aspect-ratio: 4/3; background: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; }
+.mood-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ===== cover--main ===== -->
+  <section class="slide dark m-divider">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <h1 class="t-divider" style="margin-top:60px">{프로젝트<br>타이틀}</h1>
+    <div class="cover-foot">
+      <p class="cover-note">본 문서는 {목적 설명}을 담고 있습니다. 이 문서를 당사의 허락 없이 활용하거나 배포할 수 없습니다.</p>
+      <div class="cover-fields">
+        <div class="f"><div class="k">DEVICE</div><div class="v">{디바이스}</div></div>
+        <div class="f"><div class="k">DATE</div><div class="v">{YYYY.MM}</div></div>
+        <div class="f"><div class="k">CLIENT</div><div class="v">{클라이언트}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== divider--research (챕터 디바이더: 타이포만) ===== -->
+  <section class="slide dark m-divider">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <h2 class="t-divider" style="margin-top:40px">마켓조사/리서치<br>WIDE RESEARCH<br>XY 포지셔닝 맵</h2>
+  </section>
+
+  <!-- ===== section-02-- 오프너 (번호 + 타이틀 + 우측 목차) ===== -->
+  <section class="slide dark2 m-divider">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="opener" style="margin-top:40px">
+      <span class="no">02</span>
+      <h2 class="t-opener">Market &amp; User<br>Insight</h2>
+      <div class="toc">
+        <div class="i"><b>2.1</b><span>시장 분석</span></div>
+        <div class="i"><b>2.2</b><span>타겟 분석</span></div>
+        <div class="i"><b>2.3</b><span>사용자 니즈</span></div>
+        <div class="i"><b>2.4</b><span>결론</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== market--stat-cards (two-col 헤드 + 통계 카드 3+1) ===== -->
+  <section class="slide m-content">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="two-col" style="margin-top:40px">
+      <div class="head">
+        <p class="t-eyebrow">Research</p>
+        <h3 class="t-title">{슬라이드 제목}</h3>
+      </div>
+      <p class="t-body">{우측 본문 — 시장 맥락을 4~5줄로. 문단은 678px 폭 기준으로 끊는다.}</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="num t-stat">8-10<span class="unit">%</span></div>
+        <div class="foot"><div class="t-label">{지표 이름}</div><div class="cap">{한 줄 해석}</div></div>
+      </div>
+      <div class="card">
+        <div class="num t-stat">5,460<span class="unit">억</span></div>
+        <div class="foot"><div class="t-label">{지표 이름}</div><div class="cap">{한 줄 해석}</div></div>
+      </div>
+      <div class="card">
+        <div class="num t-stat">4,369<span class="unit">억</span></div>
+        <div class="foot"><div class="t-label">{지표 이름}</div><div class="cap">{한 줄 해석}</div></div>
+      </div>
+      <div class="card hi">
+        <div class="num t-display">670만+</div>
+        <div class="foot"><div class="t-label">{핵심 자산 지표}</div><div class="cap">{왜 중요한지 한 줄}</div></div>
+      </div>
+    </div>
+    <p class="source">출처 : {매체명 연도} / {매체명 연도}</p>
+  </section>
+
+  <!-- ===== pull-quote ===== -->
+  <section class="slide m-content" style="justify-content:center">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <p class="pull-quote t-quote">“ {핵심 전환 문장 한 줄} ”</p>
+  </section>
+
+  <!-- ===== market--persona-quotes ===== -->
+  <section class="slide m-dense">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="two-col" style="margin-top:40px">
+      <div class="head">
+        <p class="t-eyebrow">User Voice</p>
+        <h3 class="t-title">{사용자의 언어로 듣기}</h3>
+      </div>
+    </div>
+    <div class="quotes">
+      <div class="quote-card"><p>“ {인터뷰 인용문} ”</p><div class="who">{나이} · {직업} · {지역}</div></div>
+      <div class="quote-card"><p>“ {인터뷰 인용문} ”</p><div class="who">{나이} · {직업} · {지역}</div></div>
+      <div class="quote-card"><p>“ {인터뷰 인용문} ”</p><div class="who">{나이} · {직업} · {지역}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== chart--bar (다계열: 포인트 팔레트 순서 + 태그) ===== -->
+  <section class="slide m-content">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="two-col" style="margin-top:40px">
+      <div class="head">
+        <p class="t-eyebrow">Data</p>
+        <h3 class="t-title">{차트 제목}</h3>
+      </div>
+      <p class="t-body">{차트가 말하는 것 한 문단.}
+        <span class="tag green" style="margin-left:8px">상승</span>
+        <span class="tag amber">주의</span>
+      </p>
+    </div>
+    <div class="chart">
+      <div class="bar-row"><span class="name">{계열 A}</span><div class="track"><div class="fill c1" style="width:82%"></div></div><span class="val">82%</span></div>
+      <div class="bar-row"><span class="name">{계열 B}</span><div class="track"><div class="fill c2" style="width:64%"></div></div><span class="val">64%</span></div>
+      <div class="bar-row"><span class="name">{계열 C}</span><div class="track"><div class="fill c3" style="width:47%"></div></div><span class="val">47%</span></div>
+      <div class="bar-row"><span class="name">{계열 D}</span><div class="track"><div class="fill c4" style="width:29%"></div></div><span class="val">29%</span></div>
+    </div>
+    <p class="source">출처 : {매체명 연도}</p>
+  </section>
+
+  <!-- ===== research--category-case (마케터 리서치 산출 표준) ===== -->
+  <section class="slide m-dense">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="two-col" style="margin-top:40px">
+      <div class="head">
+        <p class="t-eyebrow">Category A</p>
+        <h3 class="t-title">{카테고리 이름 — 관점 한 줄}</h3>
+      </div>
+      <p class="t-body">· {이 카테고리의 공통 관점}<br>· {우리에게 주는 함의}</p>
+    </div>
+    <div class="case-grid">
+      <div class="case-card"><div class="ph">image</div><div class="t-label">{브랜드명}</div><p class="cap">{훔칠 포인트 한 줄}</p><a class="src-link" href="#">{도메인} ↗</a></div>
+      <div class="case-card"><div class="ph">image</div><div class="t-label">{브랜드명}</div><p class="cap">{훔칠 포인트 한 줄}</p><a class="src-link" href="#">{도메인} ↗</a></div>
+      <div class="case-card"><div class="ph">image</div><div class="t-label">{브랜드명}</div><p class="cap">{훔칠 포인트 한 줄}</p><a class="src-link" href="#">{도메인} ↗</a></div>
+      <div class="case-card"><div class="ph">image</div><div class="t-label">{브랜드명}</div><p class="cap">{훔칠 포인트 한 줄}</p><a class="src-link" href="#">{도메인} ↗</a></div>
+    </div>
+    <p class="source">출처 : 각 카드 하단 링크 참조 · 조사 기준 {YYYY.MM}</p>
+  </section>
+
+  <!-- ===== moodboard--01 ===== -->
+  <section class="slide m-content">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <div class="two-col" style="margin-top:40px">
+      <div class="head">
+        <p class="t-eyebrow">Moodboard</p>
+        <h3 class="t-title">{무드 이름 — 한 줄 정의}</h3>
+      </div>
+    </div>
+    <div class="mood-grid">
+      <div class="ph">image</div><div class="ph">image</div><div class="ph">image</div>
+      <div class="ph">image</div><div class="ph">image</div><div class="ph">image</div>
+      <div class="ph">image</div><div class="ph">image</div>
+    </div>
+  </section>
+
+  <!-- ===== cover--end ===== -->
+  <section class="slide dark m-divider" style="align-items:center; justify-content:center; text-align:center">
+    <header class="meta-bar"><span>{고객사} X HIVELAB</span><span>PROPOSAL</span><span>{연도}</span></header>
+    <p class="t-divider" style="font-size:clamp(40px, 6vw, 96px)">End Of<br>Document</p>
+  </section>
+
+</div>
+</body>
+</html>
