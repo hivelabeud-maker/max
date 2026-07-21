@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MAX실 OS v8 — 에이전트 오퍼레이팅 대시보드</title>
+<style>
+  :root{
+    --surface:#fcfcfb; --card:#ffffff; --line:#eceae4; --line2:#f2f0ea;
+    --ink:#1f1d1a; --ink2:#6b6862; --ink3:#a29e96; --accent:#2f6fed;
+    --logical:#2f6fed; --creative:#d9789c; --gate:#e0a23d; --ops:#4fbf9a; --orch:#d98a63;
+    --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.04),0 1px 8px rgba(0,0,0,.03);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--surface);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    -webkit-font-smoothing:antialiased;padding:28px 30px 72px;max-width:1240px;margin:0 auto;line-height:1.5}
+  h1{font-size:30px;font-weight:800;margin:0;letter-spacing:-.5px}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .head .sub{color:var(--ink2);font-size:14px;margin-top:6px}
+  .period{color:var(--ink2);font-size:13.5px;text-align:right;line-height:1.5;padding-top:6px}
+  .period b{color:var(--ink);font-weight:700}
+
+  /* sticky section nav */
+  .snav{position:sticky;top:0;z-index:30;display:flex;gap:6px;flex-wrap:wrap;
+    margin:20px -30px 6px;padding:12px 30px;background:rgba(252,252,251,.86);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  .snav a{border:1px solid var(--line);background:var(--card);color:var(--ink2);text-decoration:none;
+    padding:7px 15px;border-radius:999px;font-size:13.5px;font-weight:600;transition:.15s;white-space:nowrap}
+  .snav a:hover{border-color:#d8d5cd;color:var(--ink)}
+
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0 6px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+  .tile .k{font-size:13px;color:var(--ink2);margin-bottom:8px}
+  .tile .v{font-size:27px;font-weight:800;letter-spacing:-.5px}
+  .tile .v small{font-size:14px;font-weight:600;color:var(--ink2)}
+
+  .sec{scroll-margin-top:72px}
+  .sec-title{font-size:20px;font-weight:800;margin:40px 0 4px;letter-spacing:-.3px}
+  .sec-desc{font-size:14px;color:var(--ink2);margin:0 0 16px;max-width:760px}
+
+  /* ── 파이프라인 ── */
+  .pipe{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px 18px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .pipe-track{display:flex;align-items:stretch;gap:0;min-width:900px}
+  .stage{flex:1;min-width:120px;position:relative;display:flex;flex-direction:column}
+  .stage .arrow{position:absolute;top:34px;right:-11px;z-index:2;color:var(--ink3);font-size:20px;line-height:1}
+  .stage:last-child .arrow{display:none}
+  .stage-box{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:13px 13px 14px;margin:0 6px;
+    background:var(--card);transition:.18s;cursor:default}
+  .stage-box:hover{border-color:#d3d0c8;box-shadow:var(--shadow)}
+  .stage.io .stage-box{background:#f7f6f2;border-style:dashed}
+  .stage .ph{font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--ink3);text-transform:uppercase}
+  .stage .lb{font-size:15px;font-weight:800;margin:5px 0 8px}
+  .stage .ag{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;
+    background:#eef2fe;color:#2454c4;margin-bottom:9px}
+  .stage.creative .ag{background:#fbeef4;color:#b34a76}
+  .stage.io .ag{background:#efeee9;color:#7a766e}
+  .stage .out{font-size:12.5px;color:var(--ink2);line-height:1.5}
+  .stage .star{color:var(--gate);font-weight:800}
+  /* marketer bracket */
+  .bracket-row{min-width:900px;margin:14px 0 2px;position:relative;height:40px}
+  .bracket{position:absolute;height:34px;border:1.5px solid #e6b8a0;border-top:none;border-radius:0 0 10px 10px;
+    display:flex;align-items:flex-end;justify-content:center}
+  .bracket .tag{transform:translateY(50%);background:#fdf1ea;border:1px solid #e6b8a0;color:#a5562c;
+    font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;white-space:nowrap}
+  .pipe-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12.5px;color:var(--ink2)}
+  .pipe-legend .lg{display:inline-flex;align-items:center;gap:6px}
+  .pipe-legend .sw{width:11px;height:11px;border-radius:3px}
+
+  /* ── 마케터 스포트라이트 ── */
+  .mk{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+  .mk-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 22px}
+  .mk-card h3{margin:0 0 4px;font-size:16px;font-weight:800}
+  .mk-card .role{font-size:13px;color:var(--orch);font-weight:700;margin-bottom:12px}
+  .mk-steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  .mk-steps li{position:relative;padding:9px 0 9px 34px;border-top:1px solid var(--line2);font-size:13.5px}
+  .mk-steps li:first-child{border-top:none}
+  .mk-steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;
+    width:22px;height:22px;border-radius:50%;background:#fdf1ea;color:#a5562c;font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center}
+  .mk-steps li b{font-weight:800}
+  .mk-steps li span{color:var(--ink2)}
+  table.rt{border-collapse:collapse;width:100%;font-size:13px}
+  table.rt th,table.rt td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+  table.rt th{color:var(--ink3);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+  table.rt td.trg{color:var(--ink)}
+  table.rt td.run{color:var(--ink2);white-space:nowrap}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;background:#f2f0ea;color:#6b6862}
+
+  /* ── 조직도 ── */
+  .modebar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+  .mfilter{border:1px solid var(--line);background:var(--card);color:var(--ink2);cursor:pointer;
+    padding:7px 15px;border-radius:999px;font-size:13px;font-weight:600;transition:.15s}
+  .mfilter:hover{border-color:#d8d5cd}
+  .mfilter.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .groups{display:flex;flex-direction:column;gap:16px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:16px 18px 18px;transition:.2s}
+  .group.dim{opacity:.32}
+  .group-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .group-no{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;color:#fff;flex:none}
+  .group-head .gn{font-size:15.5px;font-weight:800}
+  .group-head .gm{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .group-head .gd{font-size:12.5px;color:var(--ink3);margin-left:auto;text-align:right}
+  .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(226px,1fr));gap:10px}
+  .agent{border:1px solid var(--line);border-radius:11px;padding:12px 13px;background:var(--card);
+    border-left-width:3px;transition:.15s}
+  .agent:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+  .agent .an{font-size:13.5px;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .agent .ak{font-size:12px;color:var(--ink2);margin:1px 0 6px;font-weight:600}
+  .agent .ar{font-size:12px;color:var(--ink2);line-height:1.45}
+  .agent.flash{animation:flash 1.4s ease}
+  @keyframes flash{0%{background:#fff7e6;box-shadow:0 0 0 3px #f7dfa8}60%{background:#fff7e6}100%{background:#fff}}
+
+  /* ── 파이프라인(브랜드) & 게이트 ── */
+  .flow{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+  .fnode{border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;background:var(--card);
+    font-size:13px;font-weight:700;box-shadow:var(--shadow)}
+  .fnode small{display:block;font-weight:600;color:var(--ink3);font-size:11px;margin-top:2px}
+  .fsep{color:var(--ink3);font-size:18px;padding:0 10px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .note{background:#f7f6f2;border:1px solid var(--line);border-radius:12px;padding:13px 16px;
+    font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:14px}
+  .note b{color:var(--ink)}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  @media(max-width:900px){
+    .tiles{grid-template-columns:repeat(2,1fr)}
+    .mk,.grid2{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    body{padding:16px 13px 48px}
+    h1{font-size:22px}
+    .snav{margin:16px -13px 4px;padding:10px 13px}
+    .sec-title{font-size:17px;margin:30px 0 4px}
+    .tiles{gap:10px}.tile{padding:14px 15px}.tile .v{font-size:22px}
+    .group-head .gd{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div>
+    <h1>MAX실 OS v8</h1>
+    <div class="sub">에이전트 오퍼레이팅 대시보드 · 인입부터 전략까지</div>
+  </div>
+  <div class="period"><b>하이브랩 MX센터</b><br/>26 에이전트 · 6 그룹 · 2 사고모드</div>
+</div>
+
+<nav class="snav">
+  <a href="#pipeline">인입→전략 흐름</a>
+  <a href="#marketer">마케터 역할</a>
+  <a href="#org">에이전트 조직도</a>
+  <a href="#orchestrator">파이프라인·게이트</a>
+</nav>
+
+<div class="tiles">
+  <div class="tile"><div class="k">등록 에이전트</div><div class="v">26<small> 종</small></div></div>
+  <div class="tile"><div class="k">기능 그룹</div><div class="v">6<small> 그룹</small></div></div>
+  <div class="tile"><div class="k">인입→전략 단계</div><div class="v">5<small> + 게이트</small></div></div>
+  <div class="tile"><div class="k">사고 이원화</div><div class="v">Logical<small> ↔ Creative</small></div></div>
+</div>
+
+<!-- ══════════ 1. 인입 → 전략 파이프라인 ══════════ -->
+<section class="sec" id="pipeline">
+  <div class="sec-title">인입 → 전략, 어떻게 나오나</div>
+  <p class="sec-desc">요청이 들어오면 <b>RFP 분석 → 시장조사 → 디자인 리서치 → 발산 → 관점 고정</b> 순으로 흐릅니다.
+    각 단계는 담당 에이전트가 있고, 앞 단계의 산출이 다음 단계의 입력이 됩니다. 단계를 누르면 아래 조직도에서 담당 에이전트가 강조됩니다.</p>
+  <div class="pipe">
+    <div class="pipe-track" id="pipeTrack"></div>
+    <div class="bracket-row"><div class="bracket" id="mkBracket"><div class="tag">🧭 marketer 가 이 구간을 하나로 실행</div></div></div>
+    <div class="pipe-legend">
+      <span class="lg"><span class="sw" style="background:#2f6fed"></span>Logical Mode (데이터·논리)</span>
+      <span class="lg"><span class="sw" style="background:#d9789c"></span>Creative Mode (발산·감성)</span>
+      <span class="lg"><span class="sw" style="background:#e0a23d"></span>사전 관점 게이트 ⭐</span>
+      <span class="lg"><span class="sw" style="background:#e7e5df"></span>인입 / 산출</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 2. 마케터 역할 ══════════ -->
+<section class="sec" id="marketer">
+  <div class="sec-title">마케터의 역할</div>
+  <p class="sec-desc">기존 5개 리서치 에이전트(RFP·시장조사·트렌드·레퍼런스·발산)를 <b>하나의 흐름으로 이어서</b> 도는 역할 에이전트입니다.
+    제안·기획 착수 전, "진짜 니즈 + 우리가 설 빈자리 + 방향 후보"를 <b>출처 있는 근거</b>로 깔아줍니다.</p>
+  <div class="mk">
+    <div class="mk-card">
+      <h3>marketer — 리서치·발산 통합</h3>
+      <div class="role">RFP 분석 → 시장조사 → 와이드 리서치 → 디자인 리서치 → 발산</div>
+      <ol class="mk-steps">
+        <li><b>RFP 분석</b> <span>· 명시요구·숨은니즈·미정의·위험 4분류 + 확인질문 3개. 여기서 잡은 니즈가 이후 전 단계의 기준선.</span></li>
+        <li><b>시장조사</b> <span>· 경쟁 N개 → XY 포지셔닝 맵 → 화이트스페이스(우리가 노릴 빈자리).</span></li>
+        <li><b>와이드 리서치</b> <span>· "제대로/30개" 요청 시 1단계를 폭·깊이로 확장. "빠르게"면 생략.</span></li>
+        <li><b>디자인 리서치</b> <span>· 최근 3개월 트렌드 + 카테고리 레퍼런스. 출처 URL 필수.</span></li>
+        <li><b>발산</b> <span>· 겹치지 않는 방향 후보 2~3개 + 키워드·약식 포지셔닝 축.</span></li>
+      </ol>
+      <div class="note"><b>종합 산출(한 장):</b> 진짜 니즈 한 줄 · 노릴 빈자리 · 지금 흐름의 트렌드/레퍼런스 · 방향 후보 2~3개 · 다음 단계 제안(관점 잡기/견적/제안 착수).</div>
+    </div>
+    <div class="mk-card">
+      <h3>어디까지 도나 — 라우팅</h3>
+      <div class="role">필요한 단계만 돈다 · 전체는 0→4</div>
+      <table class="rt">
+        <thead><tr><th>이렇게 말하면</th><th>도는 단계</th></tr></thead>
+        <tbody>
+          <tr><td class="trg">"RFP 분석" · "과업 분석"</td><td class="run">0 <span class="chip">→1 연결</span></td></tr>
+          <tr><td class="trg">"시장조사" · "경쟁사 분석해줘"</td><td class="run">1 <span class="chip">→2</span></td></tr>
+          <tr><td class="trg">"트렌드 봐줘"</td><td class="run">3-트렌드</td></tr>
+          <tr><td class="trg">"레퍼런스 찾아줘"</td><td class="run">3-레퍼런스</td></tr>
+          <tr><td class="trg">"브레인스토밍" · "아이디어 줘"</td><td class="run">4</td></tr>
+          <tr><td class="trg">"리서치 쭉 돌려줘" · "마케터 돌려"</td><td class="run">0→1→2→3→4</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>원칙:</b> 출처 필수(없으면 "추정" 명시) · 객관 우선(결론 먼저 정하지 않음) · 축은 소비자 언어로 · 빈자리는 "기회 vs 함정" 구분 · PII 미포함.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 3. 에이전트 조직도 ══════════ -->
+<section class="sec" id="org">
+  <div class="sec-title">에이전트 조직도</div>
+  <p class="sec-desc">26개 에이전트가 6개 그룹으로 나뉩니다. <b>Logical Mode(데이터·논리)</b>와 <b>Creative Mode(발산·감성)</b>의 이원화 사고를 축으로 구성됩니다.</p>
+  <div class="modebar" id="modebar">
+    <button class="mfilter on" data-mode="all">전체</button>
+    <button class="mfilter" data-mode="logical">Logical</button>
+    <button class="mfilter" data-mode="creative">Creative</button>
+    <button class="mfilter" data-mode="gate">검수 게이트</button>
+    <button class="mfilter" data-mode="orch">오케스트레이터</button>
+  </div>
+  <div class="groups" id="groups"></div>
+</section>
+
+<!-- ══════════ 4. 오케스트레이터 & 게이트 ══════════ -->
+<section class="sec" id="orchestrator">
+  <div class="sec-title">파이프라인 & 검수 게이트</div>
+  <p class="sec-desc">브랜드 제안은 단계 게이트를 통과해야 다음으로 넘어갑니다. 외부 발송 전에는 다단계 검수 게이트를 거칩니다.</p>
+  <div class="grid2">
+    <div class="mk-card">
+      <h3>브랜드 제안 풀 파이프라인</h3>
+      <div class="role" style="color:var(--orch)">brand-pipeline 오케스트레이션 · 단계 게이트 필수</div>
+      <div class="flow" style="margin-top:6px">
+        <div class="fnode">manus-1<small>경쟁 리서치·포지셔닝·BX 프롬프트</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">manus-2<small>비주얼 아이덴티티·컨셉/무드보드</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">runable-3<small>브랜드 시스템화·최종 슬라이드 덱</small></div>
+      </div>
+      <div class="note"><b>슬라이드는 runable-3에서만.</b> manus-1은 <b>manus_1_state</b>, manus-2는 <b>manus_2_state</b>로만 산출하고, 둘 다 있고 <b>slide_generation_ready=true</b>일 때만 최종 덱 생성.</div>
+    </div>
+    <div class="mk-card">
+      <h3>발송 직전 검수 게이트</h3>
+      <div class="role" style="color:var(--gate)">Quality Gate · 오류·톤 편차 방지</div>
+      <div class="flow" style="margin-top:6px">
+        <div class="fnode">creative-director<small>톤 최종 확정</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">design-critique<small>6영역 검수</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">review-panel<small>5관점 검토</small></div>
+      </div>
+      <div class="flow" style="margin-top:10px">
+        <div class="fnode">fact-checker<small>사실·숫자 반증</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">delivery-gate<small>라이트모드·PII 린트</small></div>
+        <span class="fsep">›</span>
+        <div class="fnode">tone-guardian<small>회신 톤 교정</small></div>
+      </div>
+      <div class="note"><b>refute-first:</b> 팩트 체커는 반증부터. delivery-gate는 결정론적 린트(라이트모드·PII·잘림·링크)로 발송 직전 자동 경유.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>MAX실 OS v8 · 에이전트 오퍼레이팅 대시보드</span>
+  <span>출처: .claude/agents · CLAUDE.md · 이원화 사고방식(Logical ↔ Creative)</span>
+</footer>
+
+<script>
+/* ── 인입→전략 파이프라인 데이터 ─────────────────────── */
+const STAGES = [
+  {ph:"인입", lb:"요청 인입", mode:"io", ag:"—", out:"RFP·과업지시서 / 세일즈 리드 / 클라이언트 요청", targets:[]},
+  {ph:"1단계", lb:"RFP 분석", mode:"logical", ag:"rfp-analyst", out:"명시요구·숨은니즈·미정의·위험 4분류 + 확인질문 3개", targets:["rfp-analyst"]},
+  {ph:"2단계", lb:"시장조사", mode:"logical", ag:"market-research", out:"경쟁 N개 → XY 포지셔닝 맵 → 화이트스페이스", targets:["market-research"]},
+  {ph:"3단계", lb:"디자인 리서치", mode:"logical", ag:"trend · reference", out:"최근 3개월 트렌드 + 카테고리 레퍼런스 (출처 필수)", targets:["design-trend-radar","reference-curator"]},
+  {ph:"4단계", lb:"발산", mode:"creative", ag:"brainstormer", out:"겹치지 않는 방향 후보 2~3개 + 키워드·포지셔닝 축", targets:["brainstormer"]},
+  {ph:"게이트", lb:"관점 고정 ⭐", mode:"logical", ag:"concept-director", out:"전 매체가 상속할 브랜드 관점 한 문장", targets:["concept-director"], star:true},
+  {ph:"산출", lb:"전략 산출", mode:"io", ag:"한 장 요약", out:"진짜 니즈 + 노릴 빈자리 + 방향 후보 + 다음 단계", targets:[]},
+];
+
+const track = document.getElementById("pipeTrack");
+STAGES.forEach((s,i)=>{
+  const io = s.mode==="io" ? " io" : "";
+  const cr = s.mode==="creative" ? " creative" : "";
+  const el = document.createElement("div");
+  el.className = "stage"+io+cr;
+  const agStyle = s.star ? ' style="background:#fbf1de;color:#a5701c"' : '';
+  el.innerHTML =
+    '<div class="stage-box" data-i="'+i+'">'
+    + '<div class="ph">'+s.ph+'</div>'
+    + '<div class="lb">'+s.lb+'</div>'
+    + '<span class="ag"'+agStyle+'>'+s.ag+'</span>'
+    + '<div class="out">'+s.out+'</div>'
+    + '</div><div class="arrow">›</div>';
+  const box = el.querySelector(".stage-box");
+  if(s.targets.length){ box.style.cursor="pointer";
+    box.addEventListener("click",()=>highlightAgents(s.targets)); }
+  track.appendChild(el);
+});
+
+/* marketer 브래킷: 1단계~4단계(index 1~4) 폭에 맞춰 배치 */
+function placeBracket(){
+  const boxes = track.querySelectorAll(".stage");
+  if(boxes.length<5) return;
+  const a = boxes[1].offsetLeft, b = boxes[4].offsetLeft + boxes[4].offsetWidth;
+  const br = document.getElementById("mkBracket");
+  br.style.left = (a+6)+"px";
+  br.style.width = (b-a-12)+"px";
+}
+placeBracket();
+window.addEventListener("resize", placeBracket);
+
+/* ── 조직도 데이터 (CLAUDE.md 현재 등록 26종 기준) ─────── */
+const GROUPS = [
+  {no:"①", name:"수주·전략", mode:"logical", color:"#2f6fed", desc:"데이터·논리 기반 의사결정",
+   agents:[
+     {n:"rfp-analyst", k:"RFP 분석가", r:"RFP → 명시·숨은·미정의·위험 4분류 + 확인 질문"},
+     {n:"market-research", k:"시장조사", r:"경쟁사 N개 → XY 포지셔닝 맵 + 빈자리, 출처 필수"},
+     {n:"concept-director", k:"컨셉 디렉터 ⭐", r:"사전 관점 게이트 — 핵심 제품/타이틀 → 관점 한 문장(전 매체 상속)"},
+     {n:"brainstormer", k:"브레인스토머", r:"발산 + 방향별 키워드·약식 포지셔닝 축", altmode:"creative"},
+     {n:"critic", k:"냉정한 비평가", r:"비용·기간·역량·실현·설득력 점수화"},
+   ]},
+  {no:"②", name:"디자인 인텔리전스", mode:"logical", color:"#7d74d6", desc:"시장·내부 기준으로 품질 검증",
+   agents:[
+     {n:"design-trend-radar", k:"트렌드 레이더", r:"최근 3개월 글로벌 트렌드, 출처 필수"},
+     {n:"reference-curator", k:"레퍼런스 큐레이터", r:"카테고리별 레퍼런스 큐레이션, 출처 필수"},
+     {n:"design-system-guardian", k:"시스템 가디언", r:"사내 디자인 시스템 준수 점검"},
+     {n:"design-critique", k:"디자인 비평가", r:"시안 6영역 검수 🟢🟡🔴"},
+   ]},
+  {no:"③", name:"디자인 생성", mode:"creative", color:"#d9789c", desc:"크리에이티브 결정을 산출물로",
+   agents:[
+     {n:"visual-generator", k:"비주얼 제너레이터", r:"키비주얼·목업 이미지(Higgsfield)"},
+     {n:"moodboard-builder", k:"무드보드 빌더", r:"레퍼런스+생성 무드보드"},
+     {n:"figma-bridge", k:"피그마 브릿지", r:"코드 ↔ Figma 양방향"},
+     {n:"storyboard-maker", k:"스토리보드 메이커", r:"영상·모션 콘티(Higgsfield)"},
+   ]},
+  {no:"④", name:"검수 게이트", mode:"gate", color:"#e0a23d", desc:"발송 직전 다단계 검증",
+   agents:[
+     {n:"fact-checker", k:"팩트 체커", r:"사실·숫자·인용 반증 먼저(refute-first)"},
+     {n:"review-panel", k:"5관점 패널", r:"기획·크리에이터·사업·마케팅·B2B고객 병렬 검토"},
+     {n:"delivery-gate", k:"딜리버리 게이트", r:"라이트모드·PII·잘림 린트(발송 직전)"},
+     {n:"tone-guardian", k:"톤 가디언", r:"회신 톤·매너 교정(발송 전)"},
+   ]},
+  {no:"⑤", name:"조직·채용·법무", mode:"ops", color:"#4fbf9a", desc:"조직 운영·인사·법무",
+   agents:[
+     {n:"creative-director", k:"크리에이티브 디렉터", r:"시안 톤 최종·온보딩 팩"},
+     {n:"hiring-radar", k:"채용 레이더", r:"9→20 증원 파이프라인"},
+     {n:"vendor-radar", k:"벤더 레이더", r:"외주 풀·외주비"},
+     {n:"legal-compliance", k:"법무", r:"계약·NDA 쟁점 플래그(자문 대체 아님)"},
+   ]},
+  {no:"⑥", name:"역할·파이프라인 오케스트레이터", mode:"orch", color:"#d98a63", desc:"흐름을 묶고 게이트로 잇는다",
+   agents:[
+     {n:"marketer", k:"마케터", r:"RFP→시장조사→리서치→발산을 하나로. 인입→전략 구간 통합 실행"},
+     {n:"brand-pipeline", k:"브랜드 파이프라인", r:"manus-1 → manus-2 → runable-3 풀프로세스(단계 게이트)"},
+     {n:"manus-1", k:"마누스 1차", r:"경쟁 리서치·포지셔닝·BX 프롬프트(슬라이드 금지)"},
+     {n:"manus-2", k:"마누스 2차", r:"비주얼 아이덴티티·컨셉/무드보드(슬라이드 금지)"},
+     {n:"runable-3", k:"러너블 3차", r:"브랜드 시스템화·최종 슬라이드 덱"},
+   ]},
+];
+
+const MODE_LABEL = {logical:"Logical", creative:"Creative", gate:"검수 게이트", ops:"운영", orch:"오케스트레이터"};
+const MODE_BG = {logical:"#eef2fe", creative:"#fbeef4", gate:"#fbf1de", ops:"#e6f6ef", orch:"#fdf1ea"};
+const MODE_FG = {logical:"#2454c4", creative:"#b34a76", gate:"#a5701c", ops:"#1f7a5f", orch:"#a5562c"};
+
+const groupsEl = document.getElementById("groups");
+GROUPS.forEach(g=>{
+  const sec = document.createElement("div");
+  sec.className = "group";
+  sec.dataset.mode = g.mode;
+  let cards = "";
+  g.agents.forEach(a=>{
+    const am = a.altmode || g.mode;
+    cards += '<div class="agent" data-name="'+a.n+'" data-mode="'+g.mode+'" data-am="'+am+'" style="border-left-color:'+g.color+'">'
+      + '<div class="an">'+a.n+'</div>'
+      + '<div class="ak">'+a.k+'</div>'
+      + '<div class="ar">'+a.r+'</div></div>';
+  });
+  sec.innerHTML =
+    '<div class="group-head">'
+    + '<div class="group-no" style="background:'+g.color+'">'+g.no+'</div>'
+    + '<div class="gn">'+g.name+'</div>'
+    + '<div class="gm" style="background:'+MODE_BG[g.mode]+';color:'+MODE_FG[g.mode]+'">'+MODE_LABEL[g.mode]+'</div>'
+    + '<div class="gd">'+g.desc+'</div>'
+    + '</div>'
+    + '<div class="agrid">'+cards+'</div>';
+  groupsEl.appendChild(sec);
+});
+
+/* 모드 필터 */
+document.getElementById("modebar").addEventListener("click", e=>{
+  const btn = e.target.closest(".mfilter"); if(!btn) return;
+  document.querySelectorAll(".mfilter").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  const m = btn.dataset.mode;
+  document.querySelectorAll(".group").forEach(sec=>{
+    const has = m==="all" || [...sec.querySelectorAll(".agent")].some(a=>a.dataset.am===m || a.dataset.mode===m);
+    sec.classList.toggle("dim", !has);
+  });
+});
+
+/* 파이프라인 단계 클릭 → 해당 에이전트 카드 강조 */
+function highlightAgents(names){
+  document.querySelector('.mfilter[data-mode="all"]').click();
+  const org = document.getElementById("org");
+  org.scrollIntoView({behavior:"smooth", block:"start"});
+  setTimeout(()=>{
+    names.forEach(nm=>{
+      const card = document.querySelector('.agent[data-name="'+nm+'"]');
+      if(card){ card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+    });
+  }, 420);
+}
+</script>
+</body>
+</html>
