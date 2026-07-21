@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/research-writing-guard.sh\"",
+            "timeout": 10,
+            "statusMessage": "리서치·글 산출 규칙 점검"
+          }
+        ]
+      }
+    ]
+  }
+}
