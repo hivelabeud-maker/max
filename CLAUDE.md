@@ -39,7 +39,8 @@
 ├── agents/README.md           # 에이전트 상세 설명
 ├── skills/                    # 커스텀 스킬
 │   └── list-deck-design/
-├── projects/                   # 프로젝트별 노트
+├── projects/                   # 프로젝트별 폴더 (YYYYMM_프로젝트명/README.md + 산출물)
+│   └── 202607_AI게임제작동향리서치/  # 예: deck.html + README.md
 └── library/
     ├── core-directives.md     # 5가지 핵심 원칙
     ├── prompt-guide.md        # 프롬프트 생성 가이드
@@ -100,6 +101,16 @@
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
 
 ## 프로젝트 관리
-- 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식
-- 포함 항목: 클라이언트, 업무 범위, 일정, 견적, 진행 메모
+- **프로젝트는 폴더 단위**: `.claude/projects/YYYYMM_프로젝트명/` 형식
+  - 폴더 안에 `README.md`(프로젝트 노트) + 산출물 파일(deck.html·이미지 등)을 함께 담는다.
+- **세션 시작 시 자동 생성**: 이 파일을 읽은 뒤, 이번 세션이 신규 프로젝트성 업무(새 클라이언트·새 과업·새 산출물)로 시작되면
+  **묻지 말고** `.claude/projects/YYYYMM_프로젝트명/` 폴더와 `README.md`를 먼저 생성하고 그 안에서 작업한다.
+  - `YYYYMM`은 현재 날짜, `프로젝트명`은 과업을 한눈에 알 수 있는 한글 키워드.
+  - 기존 프로젝트의 후속 작업이면 새로 만들지 않고 해당 폴더에 이어서 쌓는다.
+  - 단순 질의·잡업(프로젝트가 아닌 것)에는 폴더를 만들지 않는다.
+- `README.md` 포함 항목: 클라이언트, 업무 범위, 일정, 견적, 상태 + 요약 섹션 + 원본 로그 섹션
+- 템플릿: `.claude/library/prompts/project-note-template.md` 복사해서 초기화
 - 상세 규칙(요약 섹션 vs 원본 로그 섹션 이원화)은 `.claude/library/project-note-rules.md` 참조
+
+> 매 세션 무조건 빈 폴더를 만들라는 뜻이 아니다. "신규 프로젝트로 판단되면 착수와 동시에 자동 스캐폴딩"이 원칙.
+> 모델과 무관하게 확정적으로 폴더가 생성되길 원하면 SessionStart 훅으로도 걸 수 있다(요청 시 설정).
