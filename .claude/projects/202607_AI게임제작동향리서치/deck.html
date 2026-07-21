@@ -50,6 +50,9 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
 @media (max-width: 560px) { .meta-bar span:nth-child(2) { display: none; } }
 
 .source { position: absolute; right: clamp(24px, 4.2vw, 80px); bottom: 28px; font-size: 12px; color: var(--muted); }
+.source a { color: inherit; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.source a:hover { color: var(--ink); }
+.slide.dark .source a:hover, .slide.dark2 .source a:hover { color: var(--ink-inv); }
 
 .t-display { font-size: clamp(64px, 8vw, 120px); font-weight: 700; letter-spacing: -0.019em; line-height: 1; font-variant-numeric: tabular-nums; }
 .t-stat    { font-size: clamp(44px, 5vw, 72px);  font-weight: 700; letter-spacing: -0.02em;  line-height: 1; font-variant-numeric: tabular-nums; }
@@ -199,7 +202,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <div class="i"><b>1.3</b><span>광고 소재는 몇 개나</span></div>
       </div>
     </div>
-    <p class="lead">이제 AI는 "해볼까" 단계가 아닙니다. 게임 회사 절반이 실제 개발에 AI를 씁니다. 신규 유저를 모으는 광고 소재도 절반이 AI로 만들어집니다. 질문이 바뀌었습니다. "쓸까 말까"가 아니라 <span class="accent">"누가 먼저 소재를 미리 쌓아두나"</span>입니다.</p>
+    <p class="lead">게임 회사 절반이 이미 개발에 AI를 씁니다. 신규 유저를 모으는 광고 소재도 절반이 AI로 만들어집니다. 그래서 이 리서치가 보는 건 하나입니다. <span class="accent">누가 먼저 광고 소재를 미리 쌓아두느냐.</span></p>
   </section>
 
   <!-- ===== market--stat-cards ===== -->
@@ -231,7 +234,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <div class="foot"><div class="t-label">큰 게임 한 편이 아낀 돈</div><div class="cap">버그 점검·번역·그림 만들기까지 합친 평균(약 1천만 달러). 게임당 제작비도 1억~7억 원 더 아낍니다.</div></div>
       </div>
     </div>
-    <p class="source">출처 : BCG Global Gaming Report 2026 · GoodFirms 2026 · DigitalDefynd 2026</p>
+    <p class="source">출처 : <a href="https://www.goodfirms.co/blog/ai-in-game-development-studios-tools-experiences">BCG Global Gaming Report 2026</a> · <a href="https://www.goodfirms.co/blog/ai-in-game-development-studios-tools-experiences">GoodFirms 2026</a> · <a href="https://digitaldefynd.com/IQ/ai-in-game-development-case-studies/">DigitalDefynd 2026</a></p>
   </section>
 
   <!-- ===== chart--bar : 제작 단계별 AI 효율 ===== -->
@@ -254,14 +257,14 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
       <div class="bar-row"><span class="name">광고 영상 제작비</span><div class="track"><div class="fill c3" style="width:80%"></div></div><span class="val">70–90%↓</span></div>
       <div class="bar-row"><span class="name">핵심 그림은 사람이</span><div class="track"><div class="fill c4" style="width:20%"></div></div><span class="val">20%</span></div>
     </div>
-    <p class="source">출처 : Starloop Studios 2026 · Stepico 2026 · Segwise 2026</p>
+    <p class="source">출처 : <a href="https://starloopstudios.com/how-game-studios-use-ai-in-2026/">Starloop Studios 2026</a> · <a href="https://stepico.com/blog/prototyping-asset-generation-and-playtesting-how-to-make-a-game-with-ai/">Stepico 2026</a> · <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Segwise 2026</a></p>
   </section>
 
   <!-- ===== pull-quote ===== -->
   <section class="slide dark m-content" style="justify-content:center">
     <header class="meta-bar"><span>MX실 X HIVELAB</span><span>WIDE RESEARCH</span><span>2026</span></header>
     <p class="pull-quote t-quote">“ 첫 아이디어는 AI가 빠르게 냅니다.<br>실제로 쓰려면 사람이 다듬어야 합니다.<br>승부는 <span class="accent">'얼마나 많이 뽑아내나'</span>에서 갈립니다. ”</p>
-    <p class="source" style="color:rgba(255,255,255,0.5)">출처 : CHI 2026 · Generative AI in Game Development 정성연구</p>
+    <p class="source" style="color:rgba(255,255,255,0.5)">출처 : <a href="https://dl.acm.org/doi/10.1145/3772318.3791206">CHI 2026 · Generative AI in Game Development 정성연구</a></p>
   </section>
 
   <!-- ===== divider 02 ===== -->
@@ -410,7 +413,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <div class="foot"><div class="t-label">3개월간 만든 광고 변형</div><div class="cap">잘나가는 광고주 기준, 작년보다 25~30%↑. 많이 만드는 게 곧 경쟁력입니다.</div></div>
       </div>
     </div>
-    <p class="source">출처 : Gamelight 2026 · Segwise 2026 · VIDEOAI.ME 2026</p>
+    <p class="source">출처 : <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Gamelight 2026</a> · <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Segwise 2026</a> · <a href="https://videoai.me/blog/mobile-game-ads-ugc-cpi-retention-installs">VIDEOAI.ME 2026</a></p>
   </section>
 
   <!-- ===== chart--bar : UA 성과 지표 ===== -->
@@ -433,7 +436,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
       <div class="bar-row"><span class="name">AI로 다듬은 소재 → 광고비</span><div class="track"><div class="fill c3" style="width:30%"></div></div><span class="val">~30%↓</span></div>
       <div class="bar-row"><span class="name">똑똑한 AI 광고 → 우량 유저</span><div class="track"><div class="fill c4" style="width:20%"></div></div><span class="val">20%↓</span></div>
     </div>
-    <p class="source">출처 : AppsFlyer 2025 크리에이티브 리포트 · Bigabid 2026 · Segwise 2026</p>
+    <p class="source">출처 : <a href="https://segwise.ai/blog/ai-creative-cpi-70-percent-honest-math">AppsFlyer 2025 크리에이티브 리포트</a> · <a href="https://www.bigabid.com/mobile-gaming-trends-2026/">Bigabid 2026</a> · <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Segwise 2026</a></p>
   </section>
 
   <!-- ===== divider 04 ===== -->
@@ -485,7 +488,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <div class="sd">반응이 식기 전에 갈아 끼울 소재를 미리 쌓아둡니다. "이 광고 지겨워졌다"는 신호가 오면 곧바로 새 소재로 바꿔 성과를 지킵니다.</div>
       </div>
     </div>
-    <p class="source">출처 : Stepico 2026 · Segwise 2026 · Starloop Studios 2026</p>
+    <p class="source">출처 : <a href="https://stepico.com/blog/prototyping-asset-generation-and-playtesting-how-to-make-a-game-with-ai/">Stepico 2026</a> · <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Segwise 2026</a> · <a href="https://starloopstudios.com/how-game-studios-use-ai-in-2026/">Starloop Studios 2026</a></p>
   </section>
 
   <!-- ===== 선제작 파이프라인 흐름 (trend cards) ===== -->
@@ -516,7 +519,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <p class="desc">계속 순환 — 성과 안정성 +30%</p>
       </div>
     </div>
-    <p class="source">출처 : Stepico 2026 · Segwise 2026</p>
+    <p class="source">출처 : <a href="https://stepico.com/blog/prototyping-asset-generation-and-playtesting-how-to-make-a-game-with-ai/">Stepico 2026</a> · <a href="https://segwise.ai/blog/ai-mobile-game-marketing-playbook-2026">Segwise 2026</a></p>
   </section>
 
   <!-- ===== divider 05 ===== -->
