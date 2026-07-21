@@ -106,7 +106,12 @@ deep은 텍스트·라인·채움, soft는 그 뒤 배경.
 </header>
 ```
 
-**출처 라인** (데이터 쓴 슬라이드만, 우하단): `<p class="source">출처 : {매체} {연도}</p>`
+**출처 라인** (데이터 쓴 슬라이드만, 우하단): 매체명은 **항상 클릭 가능한 바로가기 링크**로 건다.
+```html
+<p class="source">출처 : <a href="{URL}">{매체} {연도}</a> · <a href="{URL}">{매체} {연도}</a></p>
+```
+- 텍스트로만 된 출처 금지 — 매 매체명에 실제 원문 URL을 `<a href>`로 연결(다크 슬라이드도 동일, 링크는 `color: inherit`).
+- 1차 출처 URL이 없으면 그 수치를 읽은 2차 기사 URL을 건다(어디서 읽었는지까지 추적 가능하게).
 
 ## 모듈 레시피 — Figma 모듈명과 1:1 대응
 
@@ -182,6 +187,13 @@ cp .claude/skills/mx-deck-design/template.html ./<프로젝트명>-deck.html
 # 텍스트만 치환. --accent 1색만 프로젝트 컬러로 교체.
 ```
 
+## 전달 — 다운로드가 아니라 "바로 보기"
+
+완성된 덱은 파일 다운로드가 아니라 **브라우저에서 바로 열리는 형태**로 전달한다.
+- **Artifact로 퍼블리시**(호스팅 URL) — 클릭하면 브라우저에서 렌더. 이게 기본.
+- Artifact는 CSP로 **외부 폰트 CDN을 차단**한다 → 퍼블리시용 사본에서는 Pretendard `<link>`(cdn.jsdelivr)를 제거하고, `--sans` 스택의 한글 시스템 폰트(Apple SD Gothic Neo·Noto Sans KR)로 폴백시킨다. `<!DOCTYPE>/<html>/<head>/<body>` 래퍼도 제거하고 `<style>` + `<div class="deck">`만 남긴다(Artifact가 스켈레톤으로 감쌈).
+- 원본 `deck.html`(CDN 포함)은 스탠드얼론용으로 보관하고, 퍼블리시용은 `deck-artifact.html`로 따로 둔다.
+
 ## 흔한 실수
 
 - 액센트를 2색 이상 씀 → 무채색+1색이 정체성. 1색만.
@@ -190,4 +202,5 @@ cp .claude/skills/mx-deck-design/template.html ./<프로젝트명>-deck.html
 - 절대좌표(position: absolute)로 카드 배치 → 내용 늘면 깨짐. grid auto-fit만.
 - 디바이더에 본문을 넣음 → 디바이더는 타이포만.
 - 출처 누락 → 수치 쓴 슬라이드는 우하단 12px 출처 필수.
+- 출처를 텍스트로만 씀 → **매체명은 항상 `<a href>` 바로가기 링크.** 클릭하면 원문으로 가야 한다.
 - 헤더 메타 바 생략 → 전 슬라이드 공통. 빼면 다른 덱처럼 보인다.

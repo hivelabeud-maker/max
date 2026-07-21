@@ -55,6 +55,9 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
 
 /* 출처 라인 — 수치 쓴 슬라이드 우하단 필수 */
 .source { position: absolute; right: clamp(24px, 4.2vw, 80px); bottom: 28px; font-size: 12px; color: var(--muted); }
+.source a { color: inherit; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.source a:hover { color: var(--ink); }
+.slide.dark .source a:hover, .slide.dark2 .source a:hover { color: var(--ink-inv); }
 
 /* ===== 타이포 스케일 (실측) ===== */
 .t-display { font-size: clamp(64px, 8vw, 120px); font-weight: 700; letter-spacing: -0.019em; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -215,7 +218,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
         <div class="foot"><div class="t-label">{핵심 자산 지표}</div><div class="cap">{왜 중요한지 한 줄}</div></div>
       </div>
     </div>
-    <p class="source">출처 : {매체명 연도} / {매체명 연도}</p>
+    <p class="source">출처 : <a href="{URL}">{매체명 연도}</a> · <a href="{URL}">{매체명 연도}</a></p>
   </section>
 
   <!-- ===== pull-quote ===== -->
@@ -259,7 +262,7 @@ body { font-family: var(--sans); color: var(--ink); font-size: 16px; line-height
       <div class="bar-row"><span class="name">{계열 C}</span><div class="track"><div class="fill c3" style="width:47%"></div></div><span class="val">47%</span></div>
       <div class="bar-row"><span class="name">{계열 D}</span><div class="track"><div class="fill c4" style="width:29%"></div></div><span class="val">29%</span></div>
     </div>
-    <p class="source">출처 : {매체명 연도}</p>
+    <p class="source">출처 : <a href="{URL}">{매체명 연도}</a></p>
   </section>
 
   <!-- ===== research--category-case (마케터 리서치 산출 표준) ===== -->
