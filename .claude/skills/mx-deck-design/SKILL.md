@@ -187,6 +187,13 @@ cp .claude/skills/mx-deck-design/template.html ./<프로젝트명>-deck.html
 # 텍스트만 치환. --accent 1색만 프로젝트 컬러로 교체.
 ```
 
+## 전달 — 다운로드가 아니라 "바로 보기"
+
+완성된 덱은 파일 다운로드가 아니라 **브라우저에서 바로 열리는 형태**로 전달한다.
+- **Artifact로 퍼블리시**(호스팅 URL) — 클릭하면 브라우저에서 렌더. 이게 기본.
+- Artifact는 CSP로 **외부 폰트 CDN을 차단**한다 → 퍼블리시용 사본에서는 Pretendard `<link>`(cdn.jsdelivr)를 제거하고, `--sans` 스택의 한글 시스템 폰트(Apple SD Gothic Neo·Noto Sans KR)로 폴백시킨다. `<!DOCTYPE>/<html>/<head>/<body>` 래퍼도 제거하고 `<style>` + `<div class="deck">`만 남긴다(Artifact가 스켈레톤으로 감쌈).
+- 원본 `deck.html`(CDN 포함)은 스탠드얼론용으로 보관하고, 퍼블리시용은 `deck-artifact.html`로 따로 둔다.
+
 ## 흔한 실수
 
 - 액센트를 2색 이상 씀 → 무채색+1색이 정체성. 1색만.
