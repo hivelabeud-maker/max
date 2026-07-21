@@ -38,10 +38,7 @@
 ├── CLAUDE.md (이 파일 — 핵심만)
 ├── agents/README.md           # 에이전트 상세 설명
 ├── skills/                    # 커스텀 스킬
-│   ├── list-deck-design/
-│   ├── mx-deck-design/
-│   ├── hivelab-proposal-style/  # 정식 폴더 구조(SKILL.md)로 이전
-│   └── brand-strategy-deck/     # 리서치·전략 deck.html (template·schema·components·references)
+│   └── list-deck-design/
 ├── projects/                   # 프로젝트별 노트
 └── library/
     ├── core-directives.md     # 5가지 핵심 원칙
@@ -90,7 +87,7 @@
 - `legal-compliance` (법무) — 계약·NDA 쟁점 플래그(자문 대체 아님)
 
 **⑥ 역할·파이프라인 오케스트레이터**
-- `marketer` (마케터) — **브랜드 리서치·전략 총괄**. RFP·초기자료 → 프로젝트 성격 → 브랜드 팩트북 → 타깃 정의 → 목표·진짜문제 재정의 → 시장·경쟁사 와이드 리서치 → 카테고리 군집 → XY 포지셔닝 맵 → 화이트스페이스 → 인사이트 → 전략 대안·추천 전략 → `brand-strategy-deck` 스킬로 deck.html 생성. 리서치·전략은 Markdown·JSON 저장 후 HTML은 스킬로 조립. 트리거 "RFP 분석"/"프로젝트 들어왔어"/"시장조사"/"경쟁사 분석"/"포지셔닝 맵"/"화이트스페이스"/"전략 짜줘"/"리서치 덱 만들어줘"/"마케터 돌려"
+- `marketer` (마케터) — RFP부터 리서치·발산까지 통합 역할. RFP 분석 → 시장조사 → 와이드 리서치 → 디자인 리서치(트렌드·레퍼런스) → 발산을 순서대로. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"
 - `brand-pipeline` (브랜드 파이프라인) — 브랜드 제안 풀프로세스 오케스트레이션(manus-1 → manus-2 → runable-3, 단계 게이트 필수)
 - `manus-1` (마누스 1차) — 경쟁 리서치·포지셔닝·BX 비주얼 프롬프트(슬라이드 생성 금지)
 - `manus-2` (마누스 2차) — 비주얼 아이덴티티 추출·컨셉/무드보드 발산(슬라이드 생성 금지)
@@ -101,15 +98,6 @@
 ## 현재 등록된 스킬
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
-- `brand-strategy-deck` — 브랜드 리서치·전략 deck.html 생성 (GRAIN 골든 예시 시각 문법, 22블록 구조, template.html·REPORT_SCHEMA·COMPONENTS·references 동반). marketer가 최종 단계에서 호출. 트리거 "리서치 덱 만들어줘"/"전략 덱 HTML"/"deck.html 생성"
-- `hivelab-proposal-style` — HIVELAB 모노톤 제안서 디자인 시스템 (정식 스킬 폴더 구조로 이전됨)
-
-## 브랜드 전략 프로젝트 운영 원칙
-- 브랜드 전략 프로젝트는 **marketer가 총괄**한다 (RFP → 리서치 → 전략 → 덱).
-- 리서치와 전략은 **Markdown·JSON으로 먼저 저장**한다 (`report-data.json`이 데이터 정본).
-- 최종 HTML은 **`brand-strategy-deck` 스킬을 통해** 생성한다.
-- 기존 **골든 예시(GRAIN)와 template.html**을 출력 기준으로 사용한다.
-- HTML을 **프로젝트마다 처음부터 재디자인하지 않는다.**
 
 ## 프로젝트 관리
 - 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식

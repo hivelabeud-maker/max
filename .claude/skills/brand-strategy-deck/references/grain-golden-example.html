@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAIN — Brand Design Deck</title>
+<style>
+  :root {
+    --bg: #EBEBEB;
+    --card: #FFFFFF;
+    --ink: #111111;
+    --ink2: #4A4944;
+    --ink3: #8A8780;
+    --border: #E2E2E2;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Pretendard, sans-serif; background: var(--bg); margin: 0; color: var(--ink); }
+  .page { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+  .cat-card { background: var(--bg); border-radius: 16px; padding: 40px 44px 48px; margin-bottom: 40px; position: relative; }
+  .cat-label { font-size: 13px; font-weight: 700; color: var(--ink2); margin-bottom: 8px; }
+  .cat-title { font-size: 42px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px; }
+  .cat-bullets { margin-bottom: 28px; }
+  .cat-bullets div { font-size: 14px; color: var(--ink2); margin-bottom: 4px; }
+  .cat-bullets div::before { content: "· "; }
+  .brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .brand-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px 16px; text-align: left; display: flex; flex-direction: column; gap: 6px; position: relative; }
+  .brand-mark { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; padding-right: 40px; }
+  .brand-meta { font-size: 10.5px; color: var(--ink3); line-height: 1.5; }
+  .brand-meta b { color: var(--ink2); font-weight: 700; }
+  .brand-desc { font-size: 11px; color: var(--ink2); line-height: 1.45; margin-top: 2px; }
+  .brand-source { font-size: 10px; margin-top: 6px; }
+  .brand-source a { color: #2454C7; text-decoration: none; }
+  .brand-source a:hover { text-decoration: underline; }
+  .tier-badge { font-size: 8.5px; font-weight: 700; color: #fff; background: #999; border-radius: 8px; padding: 2px 7px; position: absolute; top: 16px; right: 16px; }
+  .tier-1 { background: #2D7A4F; }
+  .tier-2 { background: #C77A0F; }
+  .tier-3 { background: #999; }
+  .tier-4 { background: #B23B3B; }
+  @media (max-width: 900px) { .brand-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .brand-grid { grid-template-columns: 1fr; } }
+
+  .concept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .concept-card { background: var(--card); border-radius: 12px; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+  .concept-rank { font-size: 11px; font-weight: 700; color: #fff; background: var(--ink); border-radius: 20px; padding: 3px 10px; display: inline-block; width: fit-content; }
+  .concept-score { position: absolute; top: 20px; right: 20px; font-size: 20px; font-weight: 900; }
+  .concept-title { font-size: 22px; font-weight: 800; margin-top: 4px; }
+  .concept-mood { font-size: 11.5px; color: var(--ink3); font-style: italic; }
+  .concept-field { font-size: 11px; line-height: 1.5; color: var(--ink2); }
+  .concept-field b { color: var(--ink); }
+  .concept-risk { font-size: 10.5px; color: #B23B3B; margin-top: 4px; }
+  @media (max-width: 900px) { .concept-grid { grid-template-columns: 1fr; } }
+
+  /* ===== Strategy Slide (full-bleed mood) ===== */
+  .strategy-slide {
+    position: relative;
+    min-height: 620px;
+    color: #fff;
+    margin-bottom: 40px;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .strategy-slide::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: brightness(0.55);
+  }
+  .strategy-slide::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 55%, transparent 75%);
+  }
+  .strategy-inner { position: relative; z-index: 2; display: grid; grid-template-columns: 340px 1fr; gap: 40px; width: 100%; padding: 56px; }
+  .strategy-label { font-size: 13px; font-weight: 700; opacity: 0.7; margin-bottom: 6px; }
+  .strategy-title { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 28px; line-height: 1.05; }
+  .strategy-field { margin-bottom: 18px; }
+  .strategy-field .fk { font-size: 10px; font-weight: 700; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .strategy-field .fv { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .strategy-field .fd { font-size: 12px; opacity: 0.8; line-height: 1.4; }
+  .strategy-swatches { display: flex; gap: 6px; margin-top: 6px; }
+  .strategy-swatches div { width: 32px; height: 32px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); }
+  .strategy-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-self: center; }
+  .strategy-visual img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; }
+  .strategy-visual img:first-child { grid-row: span 2; height: 452px; }
+  @media (max-width: 900px) { .strategy-inner { grid-template-columns: 1fr; } .strategy-visual { grid-template-columns: 1fr 1fr; } .strategy-visual img:first-child { height: 220px; grid-row: auto; } }
+
+  /* ===== Runable 3 · 16:9 White Slide System ===== */
+  .slide16 { background:#fff; aspect-ratio:16/9; width:100%; margin-bottom:24px; border-radius:8px; padding:44px 52px; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.08); display:flex; flex-direction:column; }
+  .slide16-head { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #E5E5E5; padding-bottom:12px; margin-bottom:20px; }
+  .slide16-label { font-size:15px; font-weight:800; }
+  .slide16-note { font-size:11px; color:#999; }
+
+  /* Slide 1: Brand Story */
+  .story-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+  .story-brand { font-size:34px; font-weight:800; letter-spacing:-0.02em; }
+  .story-sub { font-size:13px; color:#555; margin-top:4px; line-height:1.4; max-width:320px; }
+  .story-tags { display:flex; gap:6px; margin-top:10px; }
+  .story-tags span { font-size:10px; font-weight:700; border:1px solid #ccc; border-radius:20px; padding:3px 10px; }
+  .story-grid { display:grid; grid-template-columns: 1.1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap:10px; flex:1; margin-bottom:14px; }
+  .story-grid img { width:100%; height:100%; object-fit:cover; border-radius:4px; }
+  .story-grid .ph1 { grid-column:1; grid-row:1; }
+  .story-grid .ph2 { grid-column:2; grid-row:1 / span 2; }
+  .story-grid .ph3 { grid-column:3; grid-row:1 / span 2; }
+  .story-grid .ph4 { grid-column:1; grid-row:2; }
+  .story-body { display:flex; gap:24px; font-size:10.5px; color:#555; line-height:1.5; }
+  .story-body div { flex:1; }
+
+  /* Slide 2: Brand Value Keywords */
+  .vk-row { display:grid; grid-template-columns:repeat(3,1fr); gap:0; flex:1; }
+  .vk-card { padding: 0 24px; border-left:1px solid #eee; display:flex; flex-direction:column; }
+  .vk-card:first-child { border-left:none; padding-left:0; }
+  .vk-letter { font-size:13px; font-weight:800; margin-bottom:6px; }
+  .vk-title { font-size:26px; font-weight:800; line-height:1.15; margin-bottom:14px; }
+  .vk-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+  .vk-tags span { font-size:9.5px; border:1px solid; border-radius:20px; padding:3px 10px; }
+  .vk-body { font-size:11.5px; color:#555; line-height:1.55; margin-bottom:auto; flex:1; }
+  .vk-motif-label { font-size:9.5px; color:#999; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px; margin-top:16px; }
+  .vk-motif { font-size:13px; font-weight:700; }
+
+  /* Slide 3: Brand Mind Map */
+  .mindmap { position:relative; flex:1; }
+  .mm-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#111; color:#fff; border-radius:50%; width:150px; height:150px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; z-index:3; }
+  .mm-center .n { font-size:20px; font-weight:900; }
+  .mm-center .s { font-size:9px; opacity:0.7; margin-top:4px; padding:0 10px; line-height:1.3; }
+  .mm-line { position:absolute; height:1px; background:#ddd; transform-origin:left center; z-index:1; }
+  .mm-node { position:absolute; border-radius:50%; width:108px; height:108px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; z-index:2; border:2px solid; background:#fff; }
+  .mm-node .cat { font-size:11.5px; font-weight:800; }
+  .mm-node .catkr { font-size:10px; margin-top:2px; }
+  .mm-kw { position:absolute; font-size:9.5px; color:#555; background:#F2F2F2; border-radius:5px; padding:4px 9px; z-index:2; }
+
+  /* Slide 4: Brand Direction */
+  .bd-axis { display:grid; grid-template-columns: 34px 130px 1fr 130px; align-items:center; gap:14px; padding:16px 0; border-bottom:1px solid #f0f0f0; }
+  .bd-axis:last-child { border-bottom:none; }
+  .bd-idx { font-size:14px; font-weight:800; color:#999; }
+  .bd-label { font-size:12.5px; font-weight:700; }
+  .bd-label small { display:block; font-size:9.5px; color:#999; font-weight:400; margin-top:2px; }
+  .bd-line { position:relative; height:1px; background:#ccc; display:flex; justify-content:space-between; }
+  .bd-line div { width:10px; height:10px; border-radius:50%; border:1.5px solid #999; background:#fff; margin-top:-5px; }
+  .bd-line div.active { background:#111; border-color:#111; }
+  .bd-label.right { text-align:right; }
+
+  /* Slide 5: Graphic Motif */
+  .motif-row { display:grid; grid-template-columns:repeat(3,1fr); gap:0; flex:1; }
+  .motif-col { padding:0 20px; border-left:1px solid #eee; }
+  .motif-col:first-child { border-left:none; padding-left:0; }
+  .motif-label { font-size:12px; font-weight:800; margin-bottom:10px; }
+  .motif-imgs { display:grid; grid-template-columns:repeat(2,1fr); gap:3px; }
+  .motif-imgs img { width:100%; aspect-ratio:1; object-fit:cover; filter:grayscale(1) contrast(1.15); }
+
+  /* Slide 6: Competitor Research */
+  .cr-grid { display:grid; grid-template-columns:repeat(5,1fr); grid-auto-rows:1fr; gap:0; flex:1; }
+  .cr-card { border-left:1px solid #eee; border-top:1px solid #eee; padding:12px 12px; display:flex; flex-direction:column; }
+  .cr-card:nth-child(5n+1) { border-left:none; }
+  .cr-logo { font-weight:900; font-size:14px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .cr-cat { font-size:9px; color:#999; margin-bottom:6px; }
+  .cr-desc { font-size:9.5px; color:#666; line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ Group A ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Category A</div>
+    <h1 class="cat-title">장인·소재가 말하는 럭셔리</h1>
+    <div class="cat-bullets">
+      <div>카피보다 소재·공정 자체가 가격을 정당화한다</div>
+      <div>"장인정신 서사"가 프리미엄가의 근거</div>
+    </div>
+    <div class="brand-grid">
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Assouline — Mirage Hourglass</div>
+        <div class="brand-meta"><b>국가</b> 미국/프랑스 · <b>가격대</b> $375–475<br><b>타깃</b> 40-60대 상위소득, 서재 콜렉터</div>
+        <div class="brand-desc"><b>핵심메시지</b> 기술적 정교함과 공예미의 결합. 가장 직접적인 경쟁(가죽+유리 모래시계)</div>
+        <div class="brand-source"><a href="https://www.assouline.com/products/mirage-hourglass-brown-pebbled-leather" target="_blank">assouline.com ↗</a> · <a href="https://www.harrods.com/en-us/p/assouline-mirage-hourglass-000000000007773188" target="_blank">harrods.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Hermès Home</div>
+        <div class="brand-meta"><b>국가</b> 프랑스 · <b>가격대</b> $500–5000+<br><b>타깃</b> 최상위 소득층, 콜렉터</div>
+        <div class="brand-desc"><b>핵심메시지</b> 메종의 장인정신을 오브제로 확장. 부티크 전용 유통(GRAIN D2C엔 적용 불가)</div>
+        <div class="brand-source"><a href="https://www.hermes.com/us/en/category/home/objects/" target="_blank">hermes.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">L'Objet</div>
+        <div class="brand-meta"><b>국가</b> 미국(뉴욕) · <b>가격대</b> $100–1000+<br><b>타깃</b> 40-60대 하이엔드 인테리어 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 장인정신과 신화적 모티프의 결합, 금박·에나멜. 장식성 강해 실용 기능 부재</div>
+        <div class="brand-source">공식 URL 미확보 — 추가 검증 필요</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Georg Jensen</div>
+        <div class="brand-meta"><b>국가</b> 덴마크 · <b>가격대</b> $150–2000+<br><b>타깃</b> 40-60대 전통 럭셔리 선호층</div>
+        <div class="brand-desc"><b>핵심메시지</b> 100년 이상 은세공 헤리티지. 올드머니 이미지로 웰니스 타깃엔 다소 올드</div>
+        <div class="brand-source">추가 검증 필요</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">놋담 (NOTDAM)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 추정 $50-300<br><b>타깃</b> 30-50대 전통공예·혼수 시장</div>
+        <div class="brand-desc"><b>핵심메시지</b> 전통 방짜유기의 현대적 리빙화. 홈쇼핑/혼수 이미지로 올드함</div>
+        <div class="brand-source"><a href="https://notdam.com/" target="_blank">notdam.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">광명유기공방</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨<br><b>타깃</b> 40-60대 전통공예 애호가</div>
+        <div class="brand-desc"><b>핵심메시지</b> 전통 방짜유기 제작 기법 계승. 이커머스형 사이트로 세련도 낮음</div>
+        <div class="brand-source"><a href="https://www.gmykmall.com/" target="_blank">gmykmall.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">한국도자기 오브제 컬렉션</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨(추정 중고가)<br><b>타깃</b> 40-60대 전통 도자기·혼수 시장</div>
+        <div class="brand-desc"><b>핵심메시지</b> 대기업도 '오브제 컬렉션'으로 카테고리 재정의 시도한다는 시장 신호</div>
+        <div class="brand-source"><a href="https://shophankook.com/product/list.html?cate_no=1114" target="_blank">shophankook.com ↗</a></div></div>
+    </div>
+  </div>
+
+  <!-- ============ Group B ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Category B</div>
+    <h1 class="cat-title">기능이 곧 즐거움인 정밀 오브젝트</h1>
+    <div class="cat-bullets">
+      <div>오브젝트가 '작동'하는 순간(회전·잠금·촉각)이 브랜드 경험의 핵심</div>
+      <div>장식이 아니라 메커니즘이 매력</div>
+    </div>
+    <div class="brand-grid">
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Craighill</div>
+        <div class="brand-meta"><b>국가</b> 미국(브루클린) · <b>가격대</b> $35–120<br><b>타깃</b> 30-40대 도시 남성 미니멀리스트</div>
+        <div class="brand-desc"><b>핵심메시지</b> "일상의 사소한 짜증을 해결하는 정교한 도구". 소재(브라스 패티나)가 스토리 주인공</div>
+        <div class="brand-source"><a href="https://craighill.co/" target="_blank">craighill.co ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">MetaEDC</div>
+        <div class="brand-meta"><b>국가</b> 미국 · <b>가격대</b> $50–300+<br><b>타깃</b> 20-40대 남성 콜렉터, EDC 커뮤니티</div>
+        <div class="brand-desc"><b>핵심메시지</b> "가보가 될 만한 아이템". 촉각+수집 감성 이미 검증, 웰니스 언어는 없음</div>
+        <div class="brand-source"><a href="https://meta-edc.com/" target="_blank">meta-edc.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">Wanwu / Lautie</div>
+        <div class="brand-meta"><b>국가</b> 중국(글로벌 온라인) · <b>가격대</b> $60–250<br><b>타깃</b> 20-30대 남성 얼리어답터 콜렉터</div>
+        <div class="brand-desc"><b>핵심메시지</b> 정밀 기계식 잠금·회전 메커니즘의 만족감. 드롭 상품 중심, 브랜드 서사 약함</div>
+        <div class="brand-source"><a href="https://lautie.com/product-tag/haptic-coin/" target="_blank">lautie.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Tom Dixon</div>
+        <div class="brand-meta"><b>국가</b> 영국 · <b>가격대</b> $80–500<br><b>타깃</b> 30-50대 하이엔드 인테리어 애호가</div>
+        <div class="brand-desc"><b>핵심메시지</b> 대담한 금속 조형과 인더스트리얼 미학. 인더스트리얼 톤이 웰니스 정서와 거리</div>
+        <div class="brand-source">추가 검증 필요</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Studio Neat류</div>
+        <div class="brand-meta"><b>국가</b> 미국 · <b>가격대</b> $40–150<br><b>타깃</b> 30-45대 기능·엔지니어링 감성</div>
+        <div class="brand-desc"><b>핵심메시지</b> 정밀 엔지니어링 미학. "효율" 언어에 가까움 — GRAIN이 피해야 할 축</div>
+        <div class="brand-source">Hypothesis, 재검증 권장</div></div>
+    </div>
+  </div>
+
+  <!-- ============ Group C ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Category C</div>
+    <h1 class="cat-title">감성 리추얼의 접근 가능한 웰니스</h1>
+    <div class="cat-bullets">
+      <div>가격 접근성을 유지하며 '작은 의식'을 일상에 심는 톤</div>
+      <div>대부분 생산성/미니멀 언어에 갇혀 있음 — GRAIN이 피할 지점</div>
+    </div>
+    <div class="brand-grid">
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Ferm Living</div>
+        <div class="brand-meta"><b>국가</b> 덴마크 · <b>가격대</b> $40–400<br><b>타깃</b> 30-50대 스칸디 미학 선호층</div>
+        <div class="brand-desc"><b>핵심메시지</b> 중세기 미학의 현대적 재해석. 가구/데코 중심 — 리추얼 오브젝트 없음</div>
+        <div class="brand-source"><a href="https://fermliving.us/products/sector-desk-oakbrass" target="_blank">fermliving.us ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">챕터원 (CHAPTER1)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨(추정 $30-80)<br><b>타깃</b> 30-40대 인테리어 감도 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> "공예와 산업 사회 라이프스타일의 접점". 소모품 중심 비즈니스</div>
+        <div class="brand-source"><a href="https://chapterone.kr/" target="_blank">chapterone.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">헤이딘 (HEJDIN)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 추정 $20-60<br><b>타깃</b> 20-40대 지속가능성 선호층</div>
+        <div class="brand-desc"><b>핵심메시지</b> "자연에 한 걸음 더 가까운 일상". 제주 화산석, 향 확산 목적(GRAIN과 소재축 다름)</div>
+        <div class="brand-source"><a href="https://hejdin.com/" target="_blank">hejdin.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">힐홉</div>
+        <div class="brand-meta"><b>국가</b> 한국(2022 론칭) · <b>가격대</b> 확인 안됨<br><b>타깃</b> 20-40대 웰니스·명상 관심층</div>
+        <div class="brand-desc"><b>핵심메시지</b> 명상을 중심에 둔 라이프스타일. "mindful" 없이 감성적으로 다루는 톤 참고할 만함</div>
+        <div class="brand-source"><a href="https://design.co.kr/article/43510" target="_blank">design.co.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Menu (Audo Copenhagen)</div>
+        <div class="brand-meta"><b>국가</b> 덴마크 · <b>가격대</b> $30–300<br><b>타깃</b> 30-45대 미니멀 디자인 선호층</div>
+        <div class="brand-desc"><b>핵심메시지</b> 협업 기반 시대를 초월한 디자인. '리추얼 오브젝트' 카테고리 자체 없음</div>
+        <div class="brand-source">추가 검증 필요</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">위켄드랩 (Weekend Lab)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨<br><b>타깃</b> 20-30대 감성 리빙 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 인센스 홀더, 독특한 로컬 소재(자개) 활용. 브랜드 정보 자체 제한적</div>
+        <div class="brand-source"><a href="https://seoulbund.com/" target="_blank">seoulbund.com(판매처) ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Poketo</div>
+        <div class="brand-meta"><b>국가</b> 미국(LA) · <b>가격대</b> $15–80<br><b>타깃</b> 20-30대 트렌디 오피스 워커</div>
+        <div class="brand-desc"><b>핵심메시지</b> 컬러풀하고 실용적인 일상 디자인. (반면교사) 프리미엄 소재감 전무</div>
+        <div class="brand-source">추가 검증 필요</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">Nomess Copenhagen</div>
+        <div class="brand-meta"><b>국가</b> 덴마크 · <b>가격대</b> $20–100<br><b>타깃</b> 20-40대 스칸디 실용주의 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 실용성과 컬러의 균형. 프리미엄 소재감 부족, 가격 갭 큼</div>
+        <div class="brand-source">추가 검증 필요</div></div>
+    </div>
+  </div>
+
+  <!-- ============ 기타/추가조사 ============ -->
+  <div class="cat-card">
+    <div class="cat-label">기타 · 추가조사 대상</div>
+    <h1 class="cat-title" style="font-size:28px;">클러스터 미분류 / 참고용 벤치마크</h1>
+    <div class="cat-bullets">
+      <div>정보 부족(Tier 3~4)으로 클러스터 배정 보류, 시장 신호 확인용으로만 참고</div>
+    </div>
+    <div class="brand-grid">
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">Jonathan Adler</div>
+        <div class="brand-meta"><b>국가</b> 미국 · <b>가격대</b> $150–3000+(소품 $100–400)<br><b>타깃</b> 40-60대 맥시멀 럭셔리 취향</div>
+        <div class="brand-desc"><b>핵심메시지</b> 위트있는 럭셔리, 팝한 클래식. 맥시멀·컬러풀 톤, GRAIN 절제된 럭셔리와 결 다름</div>
+        <div class="brand-source"><a href="https://jonathanadler.com/products/canaan-table-lamp" target="_blank">jonathanadler.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">Areaware</div>
+        <div class="brand-meta"><b>국가</b> 미국 · <b>가격대</b> $20–120<br><b>타깃</b> 30-40대 디자인 애호가</div>
+        <div class="brand-desc"><b>핵심메시지</b> 디자이너 협업 조각적 일상 오브젝트. 가격대 낮아 프리미엄감 부족</div>
+        <div class="brand-source"><a href="https://archiveofobjects.net/en/collections/100-design-objects/" target="_blank">archiveofobjects.net ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">엘캔들 (elcandle)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨(중저가 추정)<br><b>타깃</b> 20-30대 일반 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 메탈릭 캔들. 프리미엄 하드굿 아님, GRAIN과 소재축 다름</div>
+        <div class="brand-source"><a href="https://elcandle.kr/" target="_blank">elcandle.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">서울번드 (편집숍)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 다양(중가대)<br><b>타깃</b> 20-30대 감성 리빙 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 캔들·디퓨저·인센스 편집 플랫폼. 브랜드 아닌 유통 플랫폼(참고용)</div>
+        <div class="brand-source"><a href="https://seoulbund.com/" target="_blank">seoulbund.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">포인트오브뷰</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨(중저가 추정)<br><b>타깃</b> 20-30대 기록/창작 지향 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 창작과 기록을 위한 도구 설계. 올리브영 유통이라 뷰티 색채 강함</div>
+        <div class="brand-source"><a href="https://m.oliveyoung.co.kr/m/mtn/brand/A020205" target="_blank">oliveyoung.co.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">텐바이텐 (플랫폼)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>타깃</b> 20-30대 디자인 소품 소비자</div>
+        <div class="brand-desc"><b>핵심메시지</b> 디자인 브랜드 어워드 운영. 참고용 벤치마크(브랜드 아닌 플랫폼)</div>
+        <div class="brand-source"><a href="https://www.10x10.co.kr/award/awardbrandlist.asp" target="_blank">10x10.co.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">무신사 '오브제(OBGE)'</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>타깃</b> 20-30대 무신사 이용층</div>
+        <div class="brand-desc"><b>핵심메시지</b> '오브제'라는 명칭을 브랜드명으로 쓴 국내 사례. 세부 정보 확인 안됨</div>
+        <div class="brand-source"><a href="https://www.musinsa.com/brand/obge" target="_blank">musinsa.com ↗</a> (추가 검증 필요)</div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-4">T4</span><div class="brand-mark">룩앳스톤 (LookAtStone)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨</div>
+        <div class="brand-desc"><b>핵심메시지</b> 스톤/마블 소재 리빙 오브제(추정). 본문 근거 사용 불가, 재조사 대상</div>
+        <div class="brand-source"><a href="https://lookatstone.com/" target="_blank">lookatstone.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-3">T3</span><div class="brand-mark">베스트피스 (BESTPIECE)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨(가구 단위 중고가~고가)<br><b>타깃</b> 30-40대 홈오피스·게이밍 셋업</div>
+        <div class="brand-desc"><b>핵심메시지</b> '데스크'를 프리미엄 라이프스타일로 재정의. 데스크테리어 커뮤니티가 GRAIN 잠재 유통 접점</div>
+        <div class="brand-source"><a href="https://www.bestpiece.kr/" target="_blank">bestpiece.kr ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-4">T4</span><div class="brand-mark">소생공단(오브제)</div>
+        <div class="brand-meta"><b>국가</b> 한국 · <b>가격대</b> 확인 안됨</div>
+        <div class="brand-desc"><b>핵심메시지</b> 리빙 오브제 편집(추정). 본문 근거 사용 불가, 재조사 대상</div>
+        <div class="brand-source"><a href="https://soseng.net/product-category/오브제/" target="_blank">soseng.net ↗</a></div></div>
+    </div>
+  </div>
+
+  <!-- ============ 3열 흐름표 ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Synthesis</div>
+    <h1 class="cat-title" style="font-size:32px;">클러스터 → 브랜딩 전략 → 디자인 무드</h1>
+    <table style="width:100%; border-collapse: collapse; background:#fff; border-radius:10px; overflow:hidden; font-size:13px;">
+      <tr style="background:#f4f4f4; text-align:left;">
+        <th style="padding:14px 16px;">클러스터</th><th style="padding:14px 16px;">브랜딩 전략</th><th style="padding:14px 16px;">디자인 무드</th>
+      </tr>
+      <tr style="border-top:1px solid #eee;">
+        <td style="padding:14px 16px; font-weight:700;">A. 장인·소재 럭셔리</td>
+        <td style="padding:14px 16px;">소재·공정 자체가 가격을 정당화</td>
+        <td style="padding:14px 16px;">에디토리얼 럭셔리, 절제된 소재 조합</td>
+      </tr>
+      <tr style="border-top:1px solid #eee;">
+        <td style="padding:14px 16px; font-weight:700;">B. 기능·정밀 메커니즘</td>
+        <td style="padding:14px 16px;">'작동'하는 순간이 브랜드 경험의 핵심</td>
+        <td style="padding:14px 16px;">정밀 머시닝 클로즈업, 촉각 시연</td>
+      </tr>
+      <tr style="border-top:1px solid #eee;">
+        <td style="padding:14px 16px; font-weight:700;">C. 접근가능 웰니스 리추얼</td>
+        <td style="padding:14px 16px;">작은 의식을 일상에 심는 톤(생산성 클리셰 배제 필요)</td>
+        <td style="padding:14px 16px;">내추럴 소재 질감, 라이프스타일 화보</td>
+      </tr>
+    </table>
+    <p style="font-size:13px; color:var(--ink2); margin-top:16px;"><strong>GRAIN의 화이트스페이스 = A와 B의 교집합</strong>(럭셔리 소재+실제 작동 기능), C의 리추얼 언어는 가져오되 생산성 클리셰는 배제.</p>
+  </div>
+
+  <!-- ============ Gate 1 POV ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Gate 1 · Strategic POV <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨, v2로 대체됨</span></div>
+    <h1 class="cat-title" style="font-size:36px;">"Gravity is Proof"</h1>
+    <p style="font-size:15px; color:var(--ink2); max-width:640px;">중력이 증거다 — 럭셔리 소재(소재=가치)와 정밀 기능(작동=가치)을 하나의 물리 현상으로 통합. 브랜드가 아니라 물리학이 신뢰를 보증한다는 믿음. (내부 철학으로만 유지, 표면 카피엔 노출 안 함)</p>
+  </div>
+
+  <!-- ============ 6개 Concept Territories ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Manus 2 · Step 3-4 <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title">6개 Concept Territories</h1>
+    <div class="cat-bullets">
+      <div>모두 "Gravity is Proof" 철학으로 회수되지만, 서로 다른 감각 온도를 가짐</div>
+      <div>계측기 미학(Instrument Aesthetic) 방향 하에서 발산</div>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-card" style="border:2px solid #2D7A4F;">
+        <span class="concept-score" style="color:#2D7A4F;">9/10</span>
+        <div class="concept-rank">① Instrument Grade ⭐</div>
+        <div class="concept-title">캘리브레이션된 도구</div>
+        <div class="concept-mood">냉철 · 신뢰 · 클리니컬한 럭셔리</div>
+        <div class="concept-field"><b>컬러</b> 스틸그레이+스모크글라스, 랩 배경</div>
+        <div class="concept-field"><b>포토</b> 랩 라이트박스, 캘리퍼스와 측정 순간</div>
+        <div class="concept-field"><b>모션</b> Grip(장갑) → Flip(180°분해) → Fall(슬로우모션) → Settle(레벨측정)</div>
+        <div class="concept-risk">Risk: 정서적 매력 저하 가능</div>
+      </div>
+      <div class="concept-card">
+        <span class="concept-score">7/10</span>
+        <div class="concept-rank">② Gravity Cut</div>
+        <div class="concept-title">찰나의 증거 샷</div>
+        <div class="concept-mood">긴장감 · 다이내믹 · 정밀 속도감</div>
+        <div class="concept-field"><b>컬러</b> 브라스 하이라이트 + 다크차콜</div>
+        <div class="concept-field"><b>포토</b> 하이스피드 크롭, 화면 절반 여백</div>
+        <div class="concept-field"><b>모션</b> 스트로보 편집(블러+정지 교차), Settle서 타이머 정지</div>
+        <div class="concept-risk">Risk: 가벼운 챌린지 콘텐츠로 소비될 위험</div>
+      </div>
+      <div class="concept-card">
+        <span class="concept-score">7/10</span>
+        <div class="concept-rank">③ Field Notes</div>
+        <div class="concept-title">검증된 기록물</div>
+        <div class="concept-mood">탐사적 · 기록적 · 조용한 권위</div>
+        <div class="concept-field"><b>컬러</b> 스모크글라스+브라스+크림톤</div>
+        <div class="concept-field"><b>포토</b> 필드 다큐멘터리, 로우앵글</div>
+        <div class="concept-field"><b>모션</b> 절차적 의식 → 손글씨 인증서 기입(개체별 실측값)</div>
+        <div class="concept-risk">Risk: 빈티지/박물관으로 오독 위험</div>
+      </div>
+      <div class="concept-card" style="opacity:0.7;">
+        <span class="concept-score">5/10</span>
+        <div class="concept-rank">④ Zero Point</div>
+        <div class="concept-title">리셋 기준점</div>
+        <div class="concept-mood">미니멀 · 절제</div>
+        <div class="concept-field">데스크 리듬의 리셋 지점, 웰니스 클리셰와 가장 인접</div>
+        <div class="concept-risk">Risk: 차별성 희석 위험 최대</div>
+      </div>
+      <div class="concept-card" style="opacity:0.7;">
+        <span class="concept-score">6/10</span>
+        <div class="concept-rank">⑤ Suspended Load</div>
+        <div class="concept-title">중력을 담는 장치</div>
+        <div class="concept-mood">사변적 · 극적 · 설치미술급</div>
+        <div class="concept-field">롱익스포저 암전, 갤러리 전시대형 박스</div>
+        <div class="concept-risk">Risk: 실행 난도 최상, 한정 매체만 적합</div>
+      </div>
+      <div class="concept-card" style="opacity:0.7;">
+        <span class="concept-score">4/10</span>
+        <div class="concept-rank">⑥ Tolerance Mark</div>
+        <div class="concept-title">공차 기호의 그래픽화</div>
+        <div class="concept-mood">대담 · 컬렉터블 · 스트리트</div>
+        <div class="concept-field">공차 기호를 스트리트웨어 그래픽으로 확장</div>
+        <div class="concept-risk">Risk: 럭셔리 톤 훼손 위험 가장 큼</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Design Strategy Slides (3방향) ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Design Strategy · 무드보드 <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title">3가지 디자인 전략</h1>
+    <div class="cat-bullets">
+      <div>확정된 브랜딩 전략(안전/차별화/실험적 대안) 각각에 대응하는 그래픽모티프·형태·타이포·컬러&질감</div>
+    </div>
+  </div>
+
+  <!-- Strategy 1: Instrument Grade -->
+  <div class="strategy-slide" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105326_a9061e2f-3d19-4b77-81ea-5903ba930038.png');">
+    <div class="strategy-inner">
+      <div>
+        <div class="strategy-label">Strategy 1 — 안전(메인) · 웹·제품샷</div>
+        <h2 class="strategy-title">Instrument Grade</h2>
+
+        <div class="strategy-field">
+          <div class="fk">Logotype</div>
+          <div class="fv">Suisse Mono Wordmark</div>
+          <div class="fd">공차 표기(±0.02mm)처럼 조판된 모노스페이스 로고타입. 계측 인증서를 연상.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Graphic Motif · Form</div>
+          <div class="fv">Tolerance Grid</div>
+          <div class="fd">±, ⌀, mm 기호에서 파생된 정렬선 그리드. 원형 실루엣+기계 조인트 관절.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Texture · Color</div>
+          <div class="fv">Brushed Steel + Smoke Glass</div>
+          <div class="fd">브러시드 스테인리스 무광 질감과 스모크글라스의 감쇠색.</div>
+          <div class="strategy-swatches">
+            <div style="background:#8C8C8C;"></div><div style="background:#B8B8B0;"></div><div style="background:#2B2A28;"></div><div style="background:#141312;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="strategy-visual">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105348_970a7666-69f9-4802-ae8a-6b32ac2436a6.png" alt="Instrument Grade 제품샷">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065833_7ade4e93-248f-4338-ab51-b004ffdd6291.png" alt="손">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_071652_f315813d-c45a-48d8-bc74-2a874fc0b462.png" alt="브라스 각인 매크로">
+      </div>
+    </div>
+  </div>
+
+  <!-- Strategy 2: Gravity Cut -->
+  <div class="strategy-slide" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105333_935f4d1c-8408-4f95-8991-8bc078da4de3.png');">
+    <div class="strategy-inner">
+      <div>
+        <div class="strategy-label">Strategy 2 — 차별화(보조) · SNS 숏폼</div>
+        <h2 class="strategy-title">Gravity Cut</h2>
+
+        <div class="strategy-field">
+          <div class="fk">Logotype</div>
+          <div class="fv">Grotesk Countdown Mark</div>
+          <div class="fd">스톱워치 타이머 형식의 초대형 넘버링, 낙하 타이머처럼 카운트되는 워드마크.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Graphic Motif · Form</div>
+          <div class="fv">Freeze-Frame Crop</div>
+          <div class="fd">낙하 순간을 초고속 크롭한 파편화 구도. 여백:피사체 6:4 이상의 과감한 크롭.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Texture · Color</div>
+          <div class="fv">Aged Brass + Dark Charcoal</div>
+          <div class="fd">비도금 브라스의 산화 흔적, 스크래치를 의도적으로 노출.</div>
+          <div class="strategy-swatches">
+            <div style="background:#8A6E3F;"></div><div style="background:#C4A25A;"></div><div style="background:#1A1A1A;"></div><div style="background:#EDEAE2;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="strategy-visual">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105354_6f3365a2-bf8a-43b8-8004-f7e929fb3fa0.png" alt="Gravity Cut 낙하순간">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065856_f9a45733-bbf9-4773-b5e9-390548995f15.png" alt="모래 낙하">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065840_ac7a9d9c-3b85-4900-b012-3c5f98b1fc05.png" alt="손 회전">
+      </div>
+    </div>
+  </div>
+
+  <!-- Strategy 3: Field Notes -->
+  <div class="strategy-slide" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105341_63bd9220-0e36-4e37-a1b5-2beecc3c7559.png');">
+    <div class="strategy-inner">
+      <div>
+        <div class="strategy-label">Strategy 3 — 실험적 대안(3순위·보류)</div>
+        <h2 class="strategy-title">Field Notes</h2>
+
+        <div class="strategy-field">
+          <div class="fk">Logotype</div>
+          <div class="fv">Serial Ledger Mark</div>
+          <div class="fd">개체별 고유 시리얼 넘버링 시스템, 항해일지 각주 스타일 모노타입.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Graphic Motif · Form</div>
+          <div class="fv">Logbook Layout</div>
+          <div class="fd">항해일지형 여백 구조, 손글씨 각주가 들어갈 자리를 항상 확보.</div>
+        </div>
+        <div class="strategy-field">
+          <div class="fk">Texture · Color</div>
+          <div class="fv">Brass + Leather + Cream Paper</div>
+          <div class="fd">황동 각인과 가죽 파우치, 문서 느낌의 크림톤 종이질감.</div>
+          <div class="strategy-swatches">
+            <div style="background:#8A6E3F;"></div><div style="background:#2B2A28;"></div><div style="background:#EDEAE2;"></div><div style="background:#C4A25A;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="strategy-visual">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105403_64eebaec-c773-465b-af41-1b14881ffa7e.png" alt="Field Notes 인증서">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065902_ec5269c2-b65c-4b4e-9371-3718ede3617f.png" alt="모래 매크로">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065913_eb11ac43-0847-4ac5-8cb3-30352eb8cd07.png" alt="황동 텍스처">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Reference Brand Strategy 연결 ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Reference Connection <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title" style="font-size:32px;">전략별 레퍼런스 브랜드 & 포지셔닝</h1>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:32px;">
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px;">Strategy 1 — Instrument Grade</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: Craighill · MetaEDC · Studio Neat류</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">정밀 머시닝, 계측 문법. B그룹(기능·정밀 메커니즘)에서 촬영 언어만 계승하고 리추얼 언어는 배제.</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px;">Strategy 2 — Gravity Cut</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: Tom Dixon · Wanwu/Lautie</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">금속 광택의 극적 연출, 협업형 드롭 마케팅에서 SNS 확산 문법만 차용.</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px;">Strategy 3 — Field Notes</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: Assouline · Georg Jensen</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">A그룹(장인·소재 럭셔리)의 헤리티지 서사에서 "기록/인증" 요소만 차용, 출판사 소품 톤은 배제.</div>
+      </div>
+    </div>
+
+    <!-- Positioning Map -->
+    <div style="background:#fff; border-radius:12px; padding:32px; position:relative; height:440px;">
+      <div style="font-weight:800; font-size:15px; margin-bottom:16px;">Brand Positioning Map</div>
+      <div style="position:absolute; top:44px; left:32px; right:32px; bottom:60px; border-left:1px solid #ddd; border-bottom:1px solid #ddd;">
+        <span style="position:absolute; top:-20px; left:calc(50% - 20px); font-size:10px; color:var(--ink3);">리추얼소재</span>
+        <span style="position:absolute; bottom:-24px; left:calc(50% - 20px); font-size:10px; color:var(--ink3);">일상소재</span>
+        <span style="position:absolute; top:calc(50% - 8px); left:-58px; font-size:10px; color:var(--ink3); writing-mode:vertical-rl;">장식적</span>
+        <span style="position:absolute; top:calc(50% - 8px); right:-64px; font-size:10px; color:var(--ink3); writing-mode:vertical-rl;">기능적</span>
+
+        <!-- GRAIN goal (empty quadrant, top-right) -->
+        <div style="position:absolute; top:8%; right:8%; text-align:center;">
+          <div style="width:70px; height:70px; border:2px solid #2D7A4F; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#2D7A4F;">GRAIN<br>Goal</div>
+        </div>
+        <!-- Assouline near-fit -->
+        <div style="position:absolute; top:22%; right:22%; font-size:11px; font-weight:700;">Assouline</div>
+        <!-- Hermes -->
+        <div style="position:absolute; top:12%; right:38%; font-size:11px; font-weight:700;">Hermès</div>
+        <!-- bottom right: functional x everyday -->
+        <div style="position:absolute; bottom:15%; right:10%; font-size:11px; font-weight:700;">MetaEDC</div>
+        <div style="position:absolute; bottom:22%; right:26%; font-size:11px; font-weight:700;">Craighill</div>
+        <!-- top left: decorative x ritual -->
+        <div style="position:absolute; top:15%; left:10%; font-size:11px; font-weight:700;">L'Objet</div>
+        <div style="position:absolute; top:28%; left:22%; font-size:11px; font-weight:700;">Georg Jensen</div>
+        <!-- bottom left: decorative x everyday -->
+        <div style="position:absolute; bottom:15%; left:10%; font-size:11px; font-weight:700;">Poketo</div>
+        <div style="position:absolute; bottom:26%; left:24%; font-size:11px; font-weight:700;">Nomess</div>
+        <div style="position:absolute; bottom:36%; left:14%; font-size:11px; font-weight:700;">헤이딘</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Client x Mood Matrix ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Manus 2 · Step 6 <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title" style="font-size:32px;">Client × Mood Matrix</h1>
+    <table style="width:100%; border-collapse: collapse; background:#fff; border-radius:10px; overflow:hidden; font-size:12.5px;">
+      <tr style="background:#f4f4f4; text-align:left;">
+        <th style="padding:12px 14px;">컨셉</th><th style="padding:12px 14px;">Brand Fit</th><th style="padding:12px 14px;">Target Fit</th><th style="padding:12px 14px;">차별화</th><th style="padding:12px 14px;">확장성</th><th style="padding:12px 14px;">실행가능성</th><th style="padding:12px 14px;">Risk</th><th style="padding:12px 14px;">Total</th>
+      </tr>
+      <tr style="border-top:1px solid #eee; background:#F4F9F5;"><td style="padding:12px 14px; font-weight:700;">① Instrument Grade ⭐</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px; font-weight:800;">28</td></tr>
+      <tr style="border-top:1px solid #eee;"><td style="padding:12px 14px; font-weight:700;">② Gravity Cut</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px; font-weight:800;">24</td></tr>
+      <tr style="border-top:1px solid #eee;"><td style="padding:12px 14px; font-weight:700;">③ Field Notes</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px; font-weight:800;">24</td></tr>
+      <tr style="border-top:1px solid #eee; color:#999;"><td style="padding:12px 14px;">④ Zero Point</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">17</td></tr>
+      <tr style="border-top:1px solid #eee; color:#999;"><td style="padding:12px 14px;">⑤ Suspended Load</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">5</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">18</td></tr>
+      <tr style="border-top:1px solid #eee; color:#999;"><td style="padding:12px 14px;">⑥ Tolerance Mark</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">4</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">3</td><td style="padding:12px 14px;">2</td><td style="padding:12px 14px;">17</td></tr>
+    </table>
+  </div>
+
+  <!-- ============ Brutalist Framework ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Manus 2 · Step 7 <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title" style="font-size:32px;">Brutalist Framework — 부분 적용</h1>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:#fff; border-radius:10px; padding:20px 22px;">
+        <div style="font-weight:700; color:#2D7A4F; margin-bottom:8px;">✅ 차용하는 것</div>
+        <div style="font-size:13px; line-height:1.6; color:var(--ink2);">
+          Exposed Structure(공차표기·조립선·개스킷 노출)<br>
+          Raw Surface(무광 텍스처·브러시드 마감선)<br>
+          Grid Honesty(정렬선을 드러내는 레이아웃)
+        </div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px 22px;">
+        <div style="font-weight:700; color:#B23B3B; margin-bottom:8px;">❌ 배제하는 것</div>
+        <div style="font-size:13px; line-height:1.6; color:var(--ink2);">
+          거친 콘크리트 질감<br>
+          의도적 비대칭·불완전 정렬<br>
+          무채색 단일 팔레트 전면화(브라스 온기 제거)
+        </div>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--ink2); margin-top:16px;"><strong>핵심 원칙</strong>: "거칠게 보이기 위해 거칠다"가 아니라 "숨길 이유가 없어서 노출한다" — 스타일이 아니라 증명의 태도로만 차용.</p>
+  </div>
+
+  <!-- ============ Concept Shortlist ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Manus 2 · Step 8 <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨</span></div>
+    <h1 class="cat-title">Concept Shortlist</h1>
+    <div class="concept-grid">
+      <div class="concept-card" style="border:2px solid #2D7A4F;">
+        <div class="concept-rank" style="background:#2D7A4F;">안전 · 메인</div>
+        <div class="concept-title">Instrument Grade</div>
+        <div class="concept-mood">웹 · 제품샷</div>
+        <div class="concept-field">캘리브레이션된 도구로서의 모래시계 — 정밀함이 곧 신뢰의 증거</div>
+        <div class="concept-field"><b>카피 톤</b> "0.02mm의 오차도 허용하지 않는다"</div>
+        <div class="concept-field"><b>보완장치</b> 브라스 디테일 1곳으로 온기 포인트 고정</div>
+      </div>
+      <div class="concept-card" style="border:2px solid #8A6E3F;">
+        <div class="concept-rank" style="background:#8A6E3F;">차별화 · 보조</div>
+        <div class="concept-title">Gravity Cut</div>
+        <div class="concept-mood">SNS 숏폼</div>
+        <div class="concept-field">중력이 작동하는 찰나를 포착한 증거 샷 — 행위 자체가 브랜드</div>
+        <div class="concept-field"><b>카피 톤</b> "떨어지는 순간, 증명된다"</div>
+        <div class="concept-field"><b>보완장치</b> 정지 이미지는 "정점의 순간" 프레임만 선별</div>
+      </div>
+      <div class="concept-card" style="opacity:0.6;">
+        <div class="concept-rank" style="background:#999;">실험적 대안 · 보류</div>
+        <div class="concept-title">Field Notes</div>
+        <div class="concept-mood">3순위, 미채택</div>
+        <div class="concept-field">검증된 기록물로서의 모래시계 — 예산·일정 이슈 시 대체 후보</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 이종업계 리서치 (v2 보강) ============ -->
+  <div class="cat-card">
+    <div class="cat-label">v2 보강 · 이종업계 크로스카테고리 리서치</div>
+    <h1 class="cat-title">"제품이 아니라 철학으로" 고른 22개 브랜드</h1>
+    <div class="cat-bullets">
+      <div>기존 데스크 오브젝트 리서치(01-competitor-matrix.md)는 그대로 유지, 이 섹션은 보강 자료</div>
+      <div>정밀 시계·광학·실험실 계측기·오디오 하드웨어·정밀공구·의료기구·항공우주·테크 하드웨어 8개 이종업계</div>
+    </div>
+    <div class="brand-grid">
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">NOMOS Glashütte</div>
+        <div class="brand-meta"><b>업계</b> 정밀 시계 · <b>국가</b> 독일</div>
+        <div class="brand-desc"><b>공명 지점</b> 사파이어 케이스백으로 무브먼트 노출 — "메커니즘 투명 노출" 철학과 정확히 겹침</div>
+        <div class="brand-source"><a href="https://www.rescapement.com/blog/nomos-glashtte-a-brief-history-of-the-young-german-watchmaker" target="_blank">rescapement.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Bell & Ross</div>
+        <div class="brand-meta"><b>업계</b> 정밀 시계 · <b>국가</b> 프랑스</div>
+        <div class="brand-desc"><b>공명 지점</b> "From the cockpit to the wrist" — 계기판을 손목 위로 옮긴 형태 언어</div>
+        <div class="brand-source"><a href="https://bellross.com/en/blogs/actualites/20-bold-years" target="_blank">bellross.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Omega Speedmaster</div>
+        <div class="brand-meta"><b>업계</b> 정밀 시계 · <b>국가</b> 스위스</div>
+        <div class="brand-desc"><b>공명 지점</b> 1965 NASA 인증. "극한 테스트 통과=진짜"가 GRAIN "중력이 증거다"와 동일 구조</div>
+        <div class="brand-source"><a href="https://www.omegawatches.com/chronicle/1965-nasa-tests-and-qualifies-the-speedmaster" target="_blank">omegawatches.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">IWC / Rolex 인증서 문화</div>
+        <div class="brand-meta"><b>업계</b> 정밀 시계 · <b>국가</b> 스위스</div>
+        <div class="brand-desc"><b>공명 지점</b> COSC 크로노미터 인증. "제품보다 인증서가 진위를 증명" — 카피 요소로 직접 차용</div>
+        <div class="brand-source"><a href="https://www.rolex.com/en-us/watches/new-watches/superlative-chronometer" target="_blank">rolex.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Leica</div>
+        <div class="brand-meta"><b>업계</b> 광학·카메라 · <b>국가</b> 독일</div>
+        <div class="brand-desc"><b>공명 지점</b> "Precision and Craftsmanship Made in Germany" — 슬로건 자체가 태그라인 벤치마크</div>
+        <div class="brand-source"><a href="https://leica-camera.com/en-int/press/four-generations-leitz-company-management-1869-1986" target="_blank">leica-camera.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Carl Zeiss</div>
+        <div class="brand-meta"><b>업계</b> 광학 · <b>국가</b> 독일</div>
+        <div class="brand-desc"><b>공명 지점</b> 재단 소유 구조 — 주주 없이 순수 광학과학에 복무. 반상업적 진정성 카피</div>
+        <div class="brand-source"><a href="https://www.zeiss.com/corporate/en/about-zeiss/past/history.html" target="_blank">zeiss.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Hasselblad</div>
+        <div class="brand-meta"><b>업계</b> 카메라 · <b>국가</b> 스웨덴</div>
+        <div class="brand-desc"><b>공명 지점</b> 아폴로 11호 달착륙 카메라. "극한 환경 검증"이 신화가 된 가장 극적인 사례</div>
+        <div class="brand-source"><a href="https://www.dpreview.com/news/2644561941/hasselblad-re-issues-1969-press-release-on-moon-landing-cameras" target="_blank">dpreview.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Mettler Toledo</div>
+        <div class="brand-meta"><b>업계</b> 실험실 계측기 · <b>국가</b> 스위스/미국</div>
+        <div class="brand-desc"><b>공명 지점</b> Standard Calibration Certificate — 패키지에 "측정 인증서" 동봉 아이디어 직접 차용</div>
+        <div class="brand-source"><a href="https://www.mt.com/us/en/home/service/service_products/SER_MiraCal_StandardCalibrationCertificate.html" target="_blank">mt.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Fluke</div>
+        <div class="brand-meta"><b>업계</b> 산업 계측기 · <b>국가</b> 미국</div>
+        <div class="brand-desc"><b>공명 지점</b> ISO/IEC 17025 인증, 공식 양식화된 교정 증명서 — 인증서 디자인 그래픽 레퍼런스</div>
+        <div class="brand-source"><a href="https://www.fluke.com/en-us/learn/blog/calibration/what-is-a-calibration-certificate-why-you-need-one" target="_blank">fluke.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">L.S. Starrett Co.</div>
+        <div class="brand-meta"><b>업계</b> 정밀 측정도구 · <b>국가</b> 미국</div>
+        <div class="brand-desc"><b>공명 지점</b> "Perfection" 창립원칙. 도구 자체가 "측정의 기준"이 되는 메타적 위상</div>
+        <div class="brand-source"><a href="https://www.starrett.com/" target="_blank">starrett.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Teenage Engineering</div>
+        <div class="brand-meta"><b>업계</b> 오디오 하드웨어 · <b>국가</b> 스웨덴</div>
+        <div class="brand-desc"><b>공명 지점</b> 나사·회로 노출이 정직함의 증거. GRAIN 계측기 미학의 가장 직접적인 동시대 레퍼런스</div>
+        <div class="brand-source"><a href="https://blakecrosley.com/guides/design/teenage-engineering" target="_blank">blakecrosley.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Braun / Dieter Rams</div>
+        <div class="brand-meta"><b>업계</b> 가전 디자인 · <b>국가</b> 독일</div>
+        <div class="brand-desc"><b>공명 지점</b> "Less, but better" — 절제된 톤앤매너 카피의 원형</div>
+        <div class="brand-source"><a href="https://tulamics.com/blogs/news/the-design-philosophy-of-dieter-rams" target="_blank">tulamics.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">Nagra</div>
+        <div class="brand-meta"><b>업계</b> 오디오 레코더 · <b>국가</b> 스위스</div>
+        <div class="brand-desc"><b>공명 지점</b> "기록될 것"이라는 뜻. "스위스 시계 정밀도"가 업계 관용구로 통용</div>
+        <div class="brand-source"><a href="https://en.wikipedia.org/wiki/Nagra" target="_blank">wikipedia.org ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Victorinox</div>
+        <div class="brand-meta"><b>업계</b> 정밀 공구 · <b>국가</b> 스위스</div>
+        <div class="brand-desc"><b>공명 지점</b> NASA 우주비행사 표준 장비 채택. "실전에서 검증된 것만 진짜"</div>
+        <div class="brand-source"><a href="https://www.victorinox.com/en/All-about-Victorinox/History/cms/history/" target="_blank">victorinox.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">Snap-on</div>
+        <div class="brand-meta"><b>업계</b> 정밀 수공구 · <b>국가</b> 미국</div>
+        <div class="brand-desc"><b>공명 지점</b> 가격보다 기능을 먼저 설계. "타협 없음" 카피 근거</div>
+        <div class="brand-source"><a href="https://www.oreateai.com/blog/snapon-tools-more-than-just-a-name-its-a-legacy-of-precision/c9097e451770575167067d79c332244e" target="_blank">oreateai.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Aesculap (B. Braun)</div>
+        <div class="brand-meta"><b>업계</b> 외과 수술기구 · <b>국가</b> 독일</div>
+        <div class="brand-desc"><b>공명 지점</b> "실패가 용납되지 않는 도구"의 시각언어(무광 스틸) — 가장 강도 높은 레퍼런스</div>
+        <div class="brand-source"><a href="https://www.aesculapusa.com/en/healthcare-professionals/sterile-supply-management-solutions/instrument-quality-story.html" target="_blank">aesculapusa.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-2">T2</span><div class="brand-mark">NASA 인증 문화</div>
+        <div class="brand-meta"><b>업계</b> 항공우주 · <b>국가</b> 미국</div>
+        <div class="brand-desc"><b>공명 지점</b> 극한 조건 통과=진위 증명. GRAIN "중력이 증거다"가 차용한 서사 원형</div>
+        <div class="brand-source"><a href="https://www.space.com/omega-speedmaster-master-chronometer" target="_blank">space.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">Nothing (Nothing Phone)</div>
+        <div class="brand-meta"><b>업계</b> 테크 하드웨어 · <b>국가</b> 영국</div>
+        <div class="brand-desc"><b>공명 지점</b> 투명 후면="숨길 것이 없다". 가장 최신 소비재 레퍼런스</div>
+        <div class="brand-source"><a href="https://designlabb.medium.com/the-story-of-nothing-8458180049ee" target="_blank">designlabb.medium.com ↗</a></div></div>
+
+      <div class="brand-card"><span class="tier-badge tier-1">T1</span><div class="brand-mark">reMarkable</div>
+        <div class="brand-meta"><b>업계</b> 테크 하드웨어 · <b>국가</b> 노르웨이</div>
+        <div class="brand-desc"><b>공명 지점</b> "덜어냄 자체가 신뢰의 증거". GRAIN 절제 서사와 공명</div>
+        <div class="brand-source"><a href="https://remarkable.com/about" target="_blank">remarkable.com ↗</a></div></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:28px;">
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:15px; margin-bottom:6px;">그룹 A — 인증서 문화</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">신뢰는 소재가 아니라 제3자 검증 절차에서 나온다. Mettler Toledo, Fluke, Omega, NASA 인증</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:15px; margin-bottom:6px;">그룹 B — 노출된 메커니즘</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">내부 작동 원리를 숨기지 않고 전시해 정직함을 증명. NOMOS, Teenage Engineering, Nothing, Braun</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:15px; margin-bottom:6px;">그룹 C — 극한 신뢰의 도구 언어</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">실패가 용납되지 않는 조건에서 실전 검증된 신화. Bell&Ross, Hasselblad, Leica, Aesculap</div>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--ink2); margin-top:16px;"><strong>화이트스페이스</strong>: 소비재 브랜드 중 "정식 계측 인증서"를 패키지 요소로 전면화한 사례는 거의 없음 — 그룹 A가 진짜 빈자리. 단, 실제 측정 데이터 없이 장식으로만 쓰면 "가짜 권위"로 읽힐 리스크.</p>
+  </div>
+
+  <!-- ============ v2 PIVOT: SURREAL MATTER TRANSFORMATION ============ -->
+  <div class="cat-card" style="background:#1A1414; color:#F5EFE4;">
+    <div class="cat-label" style="color:#FDB833;">v2 · 방향 전환 (v1 Instrument Grade 폐기)</div>
+    <h1 class="cat-title" style="color:#fff;">Time Lies About What<br>It's Made Of</h1>
+    <p style="font-size:15px; color:#cfc4b3; max-width:640px; margin-bottom:24px;">시간은 자신이 무엇으로 이루어졌는지 거짓말한다 — "정밀함=신뢰"였던 v1과 정반대로, 확신을 잠시 유보시키는 경험이 핵심.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:18px;">
+        <div style="font-weight:800; color:#FDB833; margin-bottom:4px;">변형 Transmutation</div>
+        <div style="font-size:12px; color:#cfc4b3;">모래인데 액체금속처럼 흐르고, 유리인데 젤리처럼 흔들림</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:18px;">
+        <div style="font-weight:800; color:#FDB833; margin-bottom:4px;">불신 Uncanny Doubt</div>
+        <div style="font-size:12px; color:#cfc4b3;">"내가 보고 있는 게 맞나?"라는 인지적 정지</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:18px;">
+        <div style="font-weight:800; color:#FDB833; margin-bottom:4px;">경이 Wonder</div>
+        <div style="font-size:12px; color:#cfc4b3;">불안이 공포가 아니라 매혹으로 착지하는 지점</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;">
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden;">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140322_4c741ee4-45a5-4222-99af-42815c4c71a4.png" style="width:100%; aspect-ratio:1; object-fit:cover;">
+        <div style="padding:12px 14px;"><b style="font-size:12px;">Slow</b><div style="font-size:11px; color:#cfc4b3; margin-top:2px;">젤리 웨블링 — 시간이 액체처럼 머뭇거림</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden;">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140323_3f636db2-87fc-4ea8-b995-c391d2ca35fd.png" style="width:100%; aspect-ratio:1; object-fit:cover;">
+        <div style="padding:12px 14px;"><b style="font-size:12px;">Fast</b><div style="font-size:11px; color:#cfc4b3; margin-top:2px;">리퀴드 크롬 — 거울처럼 반사하며 흐름</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden;">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140326_e48dd5bf-5c24-45f0-8f60-5706275c2442.png" style="width:100%; aspect-ratio:1; object-fit:cover;">
+        <div style="padding:12px 14px;"><b style="font-size:12px;">Heavy</b><div style="font-size:11px; color:#cfc4b3; margin-top:2px;">페로플루이드 — 중력을 거스르며 솟아오름</div></div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:20px;">
+        <div style="font-weight:800; margin-bottom:8px;">🔊 Sound Identity (신규 9번째 렌즈)</div>
+        <div style="font-size:12.5px; color:#cfc4b3; line-height:1.6;">ASMR이 핵심 감각 축으로 추가. Slow=말랑한 저음 / Fast=챠르르 금속성 고음 / Heavy=낮고 두꺼운 유체음. 매 낙하마다 소리도 미묘하게 다름 — 무자막 ASMR 루프 영상이 SNS 핵심 자산.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:20px;">
+        <div style="font-weight:800; margin-bottom:8px;">🎯 타깃 재정의</div>
+        <div style="font-size:12.5px; color:#cfc4b3; line-height:1.6;">Gen Z + 예술감성 성인. 기능이 아닌 "조형 작품 소장욕구". 프리미엄 오브젝트가 아니라 리미티드 아트토이·콜렉터블 시장(카우스·무라카미 타카시급)에 가까움.</div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:#8A8780; margin-top:20px;">톤 원칙: "미친 소재, 침착한 크래프트" — 표현은 초현실적이어도 촬영·마감은 최상급 유지 (그로테스크로 안 빠지게). 보존35%:파괴65%</p>
+  </div>
+
+  <!-- ============ v2 Reference Connection & Positioning Map ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Reference Connection & Positioning <span style="background:#FDB833; color:#1A1414; border-radius:10px; padding:2px 8px; font-size:10px; font-weight:800;">v2 · 현재 버전</span></div>
+    <h1 class="cat-title" style="font-size:32px;">전략별 레퍼런스 & 새 포지셔닝</h1>
+    <div class="cat-bullets"><div>v1(프리미엄 데스크 오브젝트 시장) → v2(리미티드 아트토이·조형 콜렉터블 시장)로 비교군 자체가 이동</div></div>
+
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:32px;">
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px; color:#B8860B;">Slow — Jelly Wobble</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: Objects of Common Interest, 젤리/실리콘 조형 아티스트</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">유기적 실리콘·글라스 조형에서 "말랑하고 흔들리는 소재감"만 계승, 갤러리 톤은 배제하고 소장욕 자극 쪽으로.</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px; color:#8C8C8C;">Fast — Liquid Chrome</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: MSCHF, 서리얼 CGI 아트 트렌드</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">예측 불가능한 소재 드롭으로 화제성을 만드는 문법에서 "리퀴드 메탈 반사"라는 시각 충격만 차용.</div>
+      </div>
+      <div style="background:#fff; border-radius:10px; padding:20px;">
+        <div style="font-weight:800; font-size:16px; margin-bottom:4px; color:#1A1A1A;">Heavy — Ferrofluid Spike</div>
+        <div style="font-size:11px; color:var(--ink3); margin-bottom:12px;">레퍼런스: Daniel Arsham, KAWS</div>
+        <div style="font-size:12px; color:var(--ink2); line-height:1.5;">"침식된 미래 유물"·리미티드 피규어의 조형적 권위에서 "단단해 보이지만 배신하는 물성" 서사를 차용.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff; border-radius:12px; padding:32px; position:relative; height:440px;">
+      <div style="font-weight:800; font-size:15px; margin-bottom:16px;">Brand Positioning Map (v2)</div>
+      <div style="position:absolute; top:44px; left:32px; right:32px; bottom:60px; border-left:1px solid #ddd; border-bottom:1px solid #ddd;">
+        <span style="position:absolute; top:-20px; left:calc(50% - 30px); font-size:10px; color:var(--ink3);">배신하는 물성(초현실)</span>
+        <span style="position:absolute; bottom:-24px; left:calc(50% - 30px); font-size:10px; color:var(--ink3);">예측가능한 물성</span>
+        <span style="position:absolute; top:calc(50% - 8px); left:-58px; font-size:10px; color:var(--ink3); writing-mode:vertical-rl;">기능적 도구</span>
+        <span style="position:absolute; top:calc(50% - 8px); right:-64px; font-size:10px; color:var(--ink3); writing-mode:vertical-rl;">조형 예술작품</span>
+
+        <!-- GRAIN goal: art object x surreal matter (top-right) -->
+        <div style="position:absolute; top:8%; right:8%; text-align:center;">
+          <div style="width:70px; height:70px; border:2px solid #FDB833; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#B8860B; background:#FFF9EC;">GRAIN<br>Goal</div>
+        </div>
+        <!-- top right near: art x surreal -->
+        <div style="position:absolute; top:24%; right:24%; font-size:11px; font-weight:700;">Daniel Arsham</div>
+        <div style="position:absolute; top:14%; right:40%; font-size:11px; font-weight:700;">MSCHF</div>
+        <!-- bottom right: functional x surreal (rare) -->
+        <div style="position:absolute; bottom:20%; right:14%; font-size:11px; font-weight:700;">서리얼 CGI 아트 (일반)</div>
+        <!-- top left: art object x predictable material -->
+        <div style="position:absolute; top:15%; left:10%; font-size:11px; font-weight:700;">KAWS</div>
+        <div style="position:absolute; top:28%; left:22%; font-size:11px; font-weight:700;">Takashi Murakami</div>
+        <div style="position:absolute; top:40%; left:8%; font-size:11px; font-weight:700;">Superplastic</div>
+        <!-- bottom left: functional x predictable -->
+        <div style="position:absolute; bottom:15%; left:10%; font-size:11px; font-weight:700;">Craighill</div>
+        <div style="position:absolute; bottom:26%; left:24%; font-size:11px; font-weight:700;">Assouline</div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--ink2); margin-top:16px;"><strong>화이트스페이스</strong>: "조형 예술작품 × 배신하는 물성" 사분면 — 아트토이 시장은 예측 가능한(고체·안전한) 소재로 조형성을 추구하고, 서리얼 CGI 아트는 실물화·소장 가능한 형태가 아님. GRAIN은 이 둘의 교집합.</p>
+  </div>
+
+  <!-- ============ RUNABLE 3 · SLIDE DECK ============ -->
+  <div class="cat-card">
+    <div class="cat-label">Runable 3 · Final Slide Deck <span style="background:#999; color:#fff; border-radius:10px; padding:2px 8px; font-size:10px;">v1 · 폐기됨 — v2 슬라이드는 아래 참조</span></div>
+    <h1 class="cat-title" style="font-size:32px;">브랜드 시스템 슬라이드 (v1)</h1>
+    <div class="cat-bullets"><div>재사용 가능한 6종 슬라이드 템플릿(runable-3-slide-templates.md)에 GRAIN v1(Instrument Grade) 콘텐츠 적용 — 아카이브용, v2로 대체됨</div></div>
+  </div>
+
+  <!-- Slide 1: Brand Story -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Story</span><span class="slide16-note">이 브랜드가 만드는 순간을 확인해주세요</span></div>
+    <div class="story-top">
+      <div>
+        <div class="story-brand">GRAIN</div>
+        <div class="story-sub">중력이 증거다 — 검증된 정밀 도구로서<br>럭셔리 소재 안에 시간을 가둔 모래시계</div>
+        <div class="story-tags"><span>Instrument Grade</span><span>Precision Object</span></div>
+      </div>
+    </div>
+    <div class="story-grid">
+      <img class="ph1" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105348_970a7666-69f9-4802-ae8a-6b32ac2436a6.png" alt="랩샷">
+      <img class="ph2" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_071639_15237afe-befc-4df4-9943-552efc67e783.png" alt="히어로">
+      <img class="ph3" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065840_ac7a9d9c-3b85-4900-b012-3c5f98b1fc05.png" alt="손">
+      <img class="ph4" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_071652_f315813d-c45a-48d8-bc74-2a874fc0b462.png" alt="각인">
+    </div>
+    <div class="story-body">
+      <div>매일 책상 위에서 반복되는 30분이 있다. GRAIN은 그 시간을 재는 것이 아니라, 그 시간이 실제로 존재했다는 물리적 증거를 만든다.</div>
+      <div>우리는 스틸과 스모크글라스로 캘리브레이션된 도구를 만든다. 공차는 숨기지 않는다 — 오차 범위 자체가 브랜드의 언어다.</div>
+      <div>습관을 강요하지 않는다. 정확함이 스스로 습관을 만들 뿐이다. 리추얼은 우리가 파는 것이 아니라, 정밀함의 부산물이다.</div>
+      <div>30-45세, 이미 정밀 오브젝트에 지갑을 열어본 도시의 얼리어답터. 장식이 아니라 증명을 원하는 사람들을 위한 도구.</div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Brand Value Keywords -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Value Keywords</span><span class="slide16-note">이 브랜드의 핵심에 가장 가까운 방향을 선택해주세요</span></div>
+    <div class="vk-row">
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#8C8C8C;">A</div>
+        <div class="vk-title" style="color:#8C8C8C;">INSTRUMENT<br>GRADE</div>
+        <div class="vk-tags"><span style="color:#8C8C8C; border-color:#8C8C8C;">정밀</span><span style="color:#8C8C8C; border-color:#8C8C8C;">신뢰</span><span style="color:#8C8C8C; border-color:#8C8C8C;">클리니컬</span></div>
+        <div class="vk-body">정지된 사물은 증거가 될 수 없다. GRAIN은 계측기의 언어로 스스로를 증명하는 도구다. 공차와 실측값이 곧 카피이자 장식이다.</div>
+        <div class="vk-motif-label">그래픽 모티프</div>
+        <div class="vk-motif">공차 그리드, 브러시드 스틸 텍스처</div>
+      </div>
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#8A6E3F;">B</div>
+        <div class="vk-title" style="color:#8A6E3F;">GRAVITY<br>CUT</div>
+        <div class="vk-tags"><span style="color:#8A6E3F; border-color:#8A6E3F;">속도</span><span style="color:#8A6E3F; border-color:#8A6E3F;">긴장</span><span style="color:#8A6E3F; border-color:#8A6E3F;">증거</span></div>
+        <div class="vk-body">중력이 작동하는 찰나만이 진짜다. 낙하하는 모래 한 알이 브랜드 전체를 증명한다. 정지가 아니라 사건을 촬영한다.</div>
+        <div class="vk-motif-label">그래픽 모티프</div>
+        <div class="vk-motif">모션블러 스트로보, 브라스 산화 텍스처</div>
+      </div>
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#2B2A28;">C</div>
+        <div class="vk-title" style="color:#2B2A28;">FIELD<br>NOTES</div>
+        <div class="vk-tags"><span style="color:#2B2A28; border-color:#2B2A28;">기록</span><span style="color:#2B2A28; border-color:#2B2A28;">인증</span><span style="color:#2B2A28; border-color:#2B2A28;">권위</span></div>
+        <div class="vk-body">모든 개체는 실측되고 기록된다. 항해일지처럼, 이 도구가 살아온 순간들이 시리얼 넘버 하나하나에 새겨진다.</div>
+        <div class="vk-motif-label">그래픽 모티프</div>
+        <div class="vk-motif">시리얼 인장, 가죽·크림 종이 텍스처</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Brand Mind Map -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Mind Map</span><span class="slide16-note">GRAIN의 핵심 가치와 연결되는 키워드를 확인해주세요</span></div>
+    <div class="mindmap">
+      <!-- connecting lines (6 spokes from center) -->
+      <div class="mm-line" style="width:130px; top:26%; left:calc(50% - 4px); transform:rotate(-64deg);"></div>
+      <div class="mm-line" style="width:150px; top:38%; left:calc(50% + 60px); transform:rotate(-8deg);"></div>
+      <div class="mm-line" style="width:150px; top:62%; left:calc(50% + 60px); transform:rotate(8deg);"></div>
+      <div class="mm-line" style="width:130px; top:74%; left:calc(50% - 4px); transform:rotate(64deg) scaleX(-1);"></div>
+      <div class="mm-line" style="width:150px; top:62%; left:calc(50% - 210px); transform:rotate(-8deg) scaleX(-1);"></div>
+      <div class="mm-line" style="width:150px; top:38%; left:calc(50% - 210px); transform:rotate(8deg) scaleX(-1);"></div>
+
+      <div class="mm-center"><div class="n">GRAIN</div><div class="s">Gravity is Proof</div></div>
+
+      <!-- Node 1: PRECISION (top, steel gray) -->
+      <div class="mm-node" style="top:2%; left:calc(50% - 54px); border-color:#8C8C8C;"><div class="cat" style="color:#8C8C8C;">PRECISION</div><div class="catkr">정밀</div></div>
+      <div class="mm-kw" style="top:-2%; left:8%;">공차</div>
+      <div class="mm-kw" style="top:10%; left:6%;">캘리브레이션</div>
+      <div class="mm-kw" style="top:-2%; right:8%;">측정</div>
+
+      <!-- Node 2: MATERIAL TRUTH (upper right, brass) -->
+      <div class="mm-node" style="top:26%; right:1%; border-color:#8A6E3F;"><div class="cat" style="color:#8A6E3F;">MATERIAL<br>TRUTH</div><div class="catkr">소재진위</div></div>
+      <div class="mm-kw" style="top:18%; right:22%;">브라스</div>
+      <div class="mm-kw" style="top:40%; right:0%;">스모크글라스</div>
+
+      <!-- Node 3: GESTURE (lower right, charcoal) -->
+      <div class="mm-node" style="bottom:26%; right:1%; border-color:#2B2A28;"><div class="cat" style="color:#2B2A28;">GESTURE</div><div class="catkr">행위</div></div>
+      <div class="mm-kw" style="bottom:18%; right:22%;">뒤집기</div>
+      <div class="mm-kw" style="bottom:40%; right:0%;">손의 흔적</div>
+
+      <!-- Node 4: GRAVITY (bottom, deep charcoal) -->
+      <div class="mm-node" style="bottom:2%; left:calc(50% - 54px); border-color:#1A1A1A;"><div class="cat" style="color:#1A1A1A;">GRAVITY</div><div class="catkr">중력</div></div>
+      <div class="mm-kw" style="bottom:-2%; left:8%;">낙하</div>
+      <div class="mm-kw" style="bottom:-2%; right:8%;">불가역성</div>
+
+      <!-- Node 5: HONESTY (lower left, brass-dark) -->
+      <div class="mm-node" style="bottom:26%; left:1%; border-color:#B23B3B;"><div class="cat" style="color:#B23B3B;">HONESTY</div><div class="catkr">노출</div></div>
+      <div class="mm-kw" style="bottom:18%; left:22%;">노출된 구조</div>
+      <div class="mm-kw" style="bottom:40%; left:0%;">개스킷·나사산</div>
+
+      <!-- Node 6: TOOL NOT DECOR (upper left, blue-gray) -->
+      <div class="mm-node" style="top:26%; left:1%; border-color:#2454C7;"><div class="cat" style="color:#2454C7;">TOOL,<br>NOT DECOR</div><div class="catkr">도구성</div></div>
+      <div class="mm-kw" style="top:18%; left:22%;">반장식</div>
+      <div class="mm-kw" style="top:40%; left:0%;">계측기 미학</div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Brand Direction -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Direction</span><span class="slide16-note">각 축에서 GRAIN이 위치해야 한다고 생각하는 지점을 확인해주세요</span></div>
+    <div>
+      <div class="bd-axis">
+        <div class="bd-idx">01</div><div class="bd-label">정적인</div>
+        <div class="bd-line"><div></div><div></div><div class="active"></div><div></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">역동적인</div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">02</div><div class="bd-label">장식적</div>
+        <div class="bd-line"><div></div><div></div><div></div><div></div><div></div><div class="active"></div><div></div></div>
+        <div class="bd-label right">기능적</div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">03</div><div class="bd-label">대중적 가격대</div>
+        <div class="bd-line"><div></div><div></div><div></div><div></div><div class="active"></div><div></div><div></div></div>
+        <div class="bd-label right">프리미엄 가격대</div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">04</div><div class="bd-label">단일 시스템<small>이 브랜드만의 고유한 인상</small></div>
+        <div class="bd-line"><div></div><div></div><div class="active"></div><div></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">시스템적인<small>하위 브랜드 확장 고려</small></div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">05</div><div class="bd-label">함축적인<small>이름·형태만으로 철학 암시</small></div>
+        <div class="bd-line"><div></div><div class="active"></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">서술적인<small>가독성·직관적 전달 우선</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Graphic Motif -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Graphic motif</span><span class="slide16-note">이 브랜드의 핵심에 가장 가까운 방향을 선택해주세요</span></div>
+    <div class="motif-row">
+      <div class="motif-col">
+        <div class="motif-label" style="color:#8C8C8C;">A · Instrument Grade</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110339_0ab2937c-8b39-4815-9ed1-83d215d1ecec.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110345_41b77833-a30d-4c1c-bc7e-87e653cddad6.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105326_a9061e2f-3d19-4b77-81ea-5903ba930038.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_071652_f315813d-c45a-48d8-bc74-2a874fc0b462.png">
+        </div>
+      </div>
+      <div class="motif-col">
+        <div class="motif-label" style="color:#8A6E3F;">B · Gravity Cut</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110353_416869f2-73a7-4b09-906f-d1fc1c8c731d.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110400_ef572dd1-da8a-441f-a9fc-b5a72f618230.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105333_935f4d1c-8408-4f95-8991-8bc078da4de3.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065902_ec5269c2-b65c-4b4e-9371-3718ede3617f.png">
+        </div>
+      </div>
+      <div class="motif-col">
+        <div class="motif-label" style="color:#2B2A28;">C · Field Notes</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110406_ce05ac33-e1cb-4a77-a1d9-2f838646f55b.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_110412_9fe88c85-5b0d-4038-98e8-9cf26171f497.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_105341_63bd9220-0e36-4e37-a1b5-2beecc3c7559.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_065913_eb11ac43-0847-4ac5-8cb3-30352eb8cd07.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Competitor Research -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Competitor Research</span><span class="slide16-note">프리미엄 데스크 오브젝트·정밀 오브젝트 경쟁사</span></div>
+    <div class="cr-grid">
+      <div class="cr-card"><div class="cr-logo">Craighill</div><div class="cr-cat">브라스·스틸 데스크 도구</div><div class="cr-desc">일상의 사소한 짜증을 해결하는 정교한 도구. $35–120</div></div>
+      <div class="cr-card"><div class="cr-logo">Assouline</div><div class="cr-cat">럭셔리 오브제</div><div class="cr-desc">가죽+유리 모래시계. 가장 직접적 경쟁. $375–475</div></div>
+      <div class="cr-card"><div class="cr-logo">MetaEDC</div><div class="cr-cat">콜렉터블 EDC 피젯</div><div class="cr-desc">가보가 될 만한 아이템. 촉각+수집 감성. $50–300+</div></div>
+      <div class="cr-card"><div class="cr-logo">Hermès Home</div><div class="cr-cat">울트라 럭셔리 오브제</div><div class="cr-desc">메종의 장인정신을 오브제로. $500–5000+</div></div>
+      <div class="cr-card"><div class="cr-logo">L'Objet</div><div class="cr-cat">럭셔리 테이블탑</div><div class="cr-desc">장인정신+신화적 모티프, 실용 기능 부재</div></div>
+      <div class="cr-card"><div class="cr-logo">Georg Jensen</div><div class="cr-cat">헤리티지 메탈 오브제</div><div class="cr-desc">100년 은세공 헤리티지, 올드머니 이미지</div></div>
+      <div class="cr-card"><div class="cr-logo">Tom Dixon</div><div class="cr-cat">인더스트리얼 오브제</div><div class="cr-desc">대담한 금속 조형, 인더스트리얼 미학</div></div>
+      <div class="cr-card"><div class="cr-logo">Ferm Living</div><div class="cr-cat">스칸디 리빙</div><div class="cr-desc">중세기 미학의 현대적 재해석. $40–400</div></div>
+      <div class="cr-card"><div class="cr-logo" style="font-family: ui-monospace, monospace; letter-spacing:0.02em;">WANWU / LAUTIE</div><div class="cr-cat">햅틱 코인</div><div class="cr-desc">정밀 기계식 잠금·회전 메커니즘. $60–250</div></div>
+      <div class="cr-card"><div class="cr-logo">놋담</div><div class="cr-cat">전통 유기 리빙</div><div class="cr-desc">전통 방짜유기의 현대적 리빙화</div></div>
+      <div class="cr-card"><div class="cr-logo" style="font-style:italic; font-weight:700;">Jonathan Adler</div><div class="cr-cat">럭셔리 홈데코</div><div class="cr-desc">위트있는 럭셔리, 팝한 클래식. $150–3000+</div></div>
+      <div class="cr-card"><div class="cr-logo" style="text-transform:uppercase; letter-spacing:0.05em;">Areaware</div><div class="cr-cat">디자이너 데스크 오브젝트</div><div class="cr-desc">디자이너 협업 조각적 일상 오브젝트. $20–120</div></div>
+      <div class="cr-card"><div class="cr-logo">Menu</div><div class="cr-cat">스칸디 리빙 오브제</div><div class="cr-desc">협업 기반 시대를 초월한 디자인. $30–300</div></div>
+      <div class="cr-card"><div class="cr-logo">헤이딘</div><div class="cr-cat">웰니스 디퓨저</div><div class="cr-desc">제주 화산석 도자기, 자연에 가까운 일상</div></div>
+      <div class="cr-card"><div class="cr-logo">챕터원</div><div class="cr-cat">라이프리빙 오브제</div><div class="cr-desc">공예와 산업사회 라이프스타일의 접점</div></div>
+      <div class="cr-card"><div class="cr-logo">힐홉</div><div class="cr-cat">명상 웰니스</div><div class="cr-desc">번아웃 없는 감성적 명상 라이프스타일</div></div>
+      <div class="cr-card"><div class="cr-logo" style="letter-spacing:0.08em; text-transform:uppercase; font-size:12px;">Studio Neat류</div><div class="cr-cat">기능적 데스크 오브젝트</div><div class="cr-desc">정밀 엔지니어링 미학. $40–150</div></div>
+      <div class="cr-card"><div class="cr-logo">Poketo</div><div class="cr-cat">라이프스타일 문구</div><div class="cr-desc">컬러풀하고 실용적인 일상 디자인 (반면교사)</div></div>
+    </div>
+  </div>
+
+  <!-- ============ RUNABLE 3 v2 · SLIDE DECK ============ -->
+  <div class="cat-card" style="background:#1A1414; color:#F5EFE4;">
+    <div class="cat-label" style="color:#FDB833;">Runable 3 · Final Slide Deck — v2 (현재 버전)</div>
+    <h1 class="cat-title" style="color:#fff; font-size:32px;">브랜드 시스템 슬라이드 (v2)</h1>
+    <div class="cat-bullets"><div style="color:#cfc4b3;">"Time Lies About What It's Made Of" 관점으로 6종 슬라이드 재생성</div></div>
+  </div>
+
+  <!-- v2 Slide 1: Brand Story -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Story <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">이 브랜드가 만드는 순간을 확인해주세요</span></div>
+    <div class="story-top">
+      <div>
+        <div class="story-brand">GRAIN</div>
+        <div class="story-sub">시간은 자신이 무엇으로 이루어졌는지<br>거짓말한다 — 변형하는 시간의 조형물</div>
+        <div class="story-tags"><span>Surreal Matter</span><span>Collectible Art Object</span></div>
+      </div>
+    </div>
+    <div class="story-grid">
+      <img class="ph1" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140322_4c741ee4-45a5-4222-99af-42815c4c71a4.png" alt="젤리">
+      <img class="ph2" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140323_3f636db2-87fc-4ea8-b995-c391d2ca35fd.png" alt="리퀴드크롬">
+      <img class="ph3" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140326_e48dd5bf-5c24-45f0-8f60-5706275c2442.png" alt="크롬베어물기">
+      <img class="ph4" src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140327_0169ab56-c416-40b8-8b0c-093d4463df9b.png" alt="마티니매시업">
+    </div>
+    <div class="story-body">
+      <div>모래시계는 시간의 물성을 눈으로 보여주는 유일한 오브젝트다. GRAIN은 그 물성이 우리가 아는 물리 법칙을 배신하는 순간을 만든다.</div>
+      <div>젤리처럼 흔들리고, 수은처럼 흐르고, 페로플루이드처럼 솟아오른다. 표면이 무엇으로 이루어졌는지는 매번 다르게 거짓말한다.</div>
+      <div>우리는 확신을 팔지 않는다. "이게 뭘로 만들어진 거지?"라는 경이의 순간, 그 정지된 인지가 곧 소유욕이 된다.</div>
+      <div>Gen Z와 예술적 감성을 지닌 성인 콜렉터. 기능이 아니라 조형 작품으로서 인테리어에 두고 싶은 사람들을 위한 오브제.</div>
+    </div>
+  </div>
+
+  <!-- v2 Slide 2: Brand Value Keywords -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Value Keywords <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">이 브랜드의 핵심에 가장 가까운 방향을 선택해주세요</span></div>
+    <div class="vk-row">
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#B8860B;">A</div>
+        <div class="vk-title" style="color:#B8860B;">SLOW —<br>JELLY WOBBLE</div>
+        <div class="vk-tags"><span style="color:#B8860B; border-color:#B8860B;">웨블링</span><span style="color:#B8860B; border-color:#B8860B;">머뭇거림</span><span style="color:#B8860B; border-color:#B8860B;">말랑함</span></div>
+        <div class="vk-body">시간이 액체처럼 머뭇거린다. 반투명 젤리 챔버가 살아있는 듯 흔들리며, 정확함이 아니라 망설임을 보여준다.</div>
+        <div class="vk-motif-label">그래픽 모티프 · 사운드</div>
+        <div class="vk-motif">번트케이크 리브 텍스처 · 말랑한 저음 ASMR</div>
+      </div>
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#8C8C8C;">B</div>
+        <div class="vk-title" style="color:#8C8C8C;">FAST —<br>LIQUID CHROME</div>
+        <div class="vk-tags"><span style="color:#8C8C8C; border-color:#8C8C8C;">반사</span><span style="color:#8C8C8C; border-color:#8C8C8C;">유동성</span><span style="color:#8C8C8C; border-color:#8C8C8C;">착시</span></div>
+        <div class="vk-body">모래가 수은처럼 흐른다. 형태 없는 것이 거울처럼 반사하며 형태를 가진 듯 움직인다 — 가장 빠르게 불신을 만든다.</div>
+        <div class="vk-motif-label">그래픽 모티프 · 사운드</div>
+        <div class="vk-motif">드리핑 리퀴드 메탈 · 챠르르 금속성 고음</div>
+      </div>
+      <div class="vk-card">
+        <div class="vk-letter" style="color:#1A1A1A;">C</div>
+        <div class="vk-title" style="color:#1A1A1A;">HEAVY —<br>FERROFLUID SPIKE</div>
+        <div class="vk-tags"><span style="color:#1A1A1A; border-color:#1A1A1A;">중력거스름</span><span style="color:#1A1A1A; border-color:#1A1A1A;">돌기</span><span style="color:#1A1A1A; border-color:#1A1A1A;">경이</span></div>
+        <div class="vk-body">단단해 보이는 챔버 안에서 검은 유체가 뾰족한 돌기로 솟아오르며 떨어진다. 중력마저 배신하는 흐름.</div>
+        <div class="vk-motif-label">그래픽 모티프 · 사운드</div>
+        <div class="vk-motif">스파이크 패턴 자성유체 · 낮고 두꺼운 유체음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v2 Slide 3: Brand Mind Map -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Mind Map <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">GRAIN의 핵심 가치와 연결되는 키워드를 확인해주세요</span></div>
+    <div class="mindmap">
+      <div class="mm-line" style="width:130px; top:26%; left:calc(50% - 4px); transform:rotate(-64deg);"></div>
+      <div class="mm-line" style="width:150px; top:38%; left:calc(50% + 60px); transform:rotate(-8deg);"></div>
+      <div class="mm-line" style="width:150px; top:62%; left:calc(50% + 60px); transform:rotate(8deg);"></div>
+      <div class="mm-line" style="width:130px; top:74%; left:calc(50% - 4px); transform:rotate(64deg) scaleX(-1);"></div>
+      <div class="mm-line" style="width:150px; top:62%; left:calc(50% - 210px); transform:rotate(-8deg) scaleX(-1);"></div>
+      <div class="mm-line" style="width:150px; top:38%; left:calc(50% - 210px); transform:rotate(8deg) scaleX(-1);"></div>
+
+      <div class="mm-center"><div class="n">GRAIN</div><div class="s">Time Lies About What It's Made Of</div></div>
+
+      <div class="mm-node" style="top:2%; left:calc(50% - 54px); border-color:#B8860B;"><div class="cat" style="color:#B8860B;">TRANSMUTATION</div><div class="catkr">변형</div></div>
+      <div class="mm-kw" style="top:-2%; left:8%;">소재 배신</div>
+      <div class="mm-kw" style="top:10%; left:6%;">액체금속</div>
+      <div class="mm-kw" style="top:-2%; right:8%;">젤리</div>
+
+      <div class="mm-node" style="top:26%; right:1%; border-color:#B23B3B;"><div class="cat" style="color:#B23B3B;">UNCANNY<br>DOUBT</div><div class="catkr">불신</div></div>
+      <div class="mm-kw" style="top:18%; right:22%;">인지정지</div>
+      <div class="mm-kw" style="top:40%; right:0%;">착시</div>
+
+      <div class="mm-node" style="bottom:26%; right:1%; border-color:#2454C7;"><div class="cat" style="color:#2454C7;">WONDER</div><div class="catkr">경이</div></div>
+      <div class="mm-kw" style="bottom:18%; right:22%;">매혹</div>
+      <div class="mm-kw" style="bottom:40%; right:0%;">소유욕</div>
+
+      <div class="mm-node" style="bottom:2%; left:calc(50% - 54px); border-color:#1A1A1A;"><div class="cat" style="color:#1A1A1A;">SOUND<br>(ASMR)</div><div class="catkr">청각</div></div>
+      <div class="mm-kw" style="bottom:-2%; left:8%;">유체음</div>
+      <div class="mm-kw" style="bottom:-2%; right:8%;">매낙하다름</div>
+
+      <div class="mm-node" style="bottom:26%; left:1%; border-color:#8C8C8C;"><div class="cat" style="color:#8C8C8C;">ART OBJECT</div><div class="catkr">조형작품</div></div>
+      <div class="mm-kw" style="bottom:18%; left:22%;">소장욕구</div>
+      <div class="mm-kw" style="bottom:40%; left:0%;">리미티드</div>
+
+      <div class="mm-node" style="top:26%; left:1%; border-color:#FDB833;"><div class="cat" style="color:#FDB833;">GEN Z ×<br>ARTISTIC</div><div class="catkr">타깃</div></div>
+      <div class="mm-kw" style="top:18%; left:22%;">예술감성</div>
+      <div class="mm-kw" style="top:40%; left:0%;">인테리어</div>
+    </div>
+  </div>
+
+  <!-- v2 Slide 4: Brand Direction -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Brand Direction <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">각 축에서 GRAIN이 위치해야 한다고 생각하는 지점을 확인해주세요</span></div>
+    <div>
+      <div class="bd-axis">
+        <div class="bd-idx">01</div><div class="bd-label">확신을 주는<small>단정문 카피</small></div>
+        <div class="bd-line"><div></div><div></div><div></div><div></div><div></div><div class="active"></div><div></div></div>
+        <div class="bd-label right">의문을 남기는<small>역설·질문형 카피</small></div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">02</div><div class="bd-label">기능하는 도구</div>
+        <div class="bd-line"><div class="active"></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">소장하는 조형작품</div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">03</div><div class="bd-label">예측 가능한 물성</div>
+        <div class="bd-line"><div></div><div></div><div></div><div></div><div></div><div></div><div class="active"></div></div>
+        <div class="bd-label right">배신하는 물성</div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">04</div><div class="bd-label">시각 중심<small>사진·모션</small></div>
+        <div class="bd-line"><div></div><div></div><div class="active"></div><div></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">청각 통합<small>ASMR 사운드 우선</small></div>
+      </div>
+      <div class="bd-axis">
+        <div class="bd-idx">05</div><div class="bd-label">그로테스크·공포</div>
+        <div class="bd-line"><div></div><div></div><div></div><div class="active"></div><div></div><div></div><div></div></div>
+        <div class="bd-label right">경이·매혹</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v2 Slide 5: Graphic Motif -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Graphic motif <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">이 브랜드의 핵심에 가장 가까운 방향을 선택해주세요</span></div>
+    <div class="motif-row">
+      <div class="motif-col">
+        <div class="motif-label" style="color:#B8860B;">A · Slow (Jelly)</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140322_4c741ee4-45a5-4222-99af-42815c4c71a4.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140324_7bb4bc9d-ab94-46ae-b018-05174d3a56be.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140322_4c741ee4-45a5-4222-99af-42815c4c71a4.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140324_7bb4bc9d-ab94-46ae-b018-05174d3a56be.png">
+        </div>
+      </div>
+      <div class="motif-col">
+        <div class="motif-label" style="color:#8C8C8C;">B · Fast (Liquid Chrome)</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140323_3f636db2-87fc-4ea8-b995-c391d2ca35fd.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140327_0169ab56-c416-40b8-8b0c-093d4463df9b.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140323_3f636db2-87fc-4ea8-b995-c391d2ca35fd.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140327_0169ab56-c416-40b8-8b0c-093d4463df9b.png">
+        </div>
+      </div>
+      <div class="motif-col">
+        <div class="motif-label" style="color:#1A1A1A;">C · Heavy (Ferrofluid)</div>
+        <div class="motif-imgs">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140326_e48dd5bf-5c24-45f0-8f60-5706275c2442.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140326_e48dd5bf-5c24-45f0-8f60-5706275c2442.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140327_0169ab56-c416-40b8-8b0c-093d4463df9b.png">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_2xRL15Rqznvjzwppcb2PjNb6rfo/hf_20260701_140326_e48dd5bf-5c24-45f0-8f60-5706275c2442.png">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v2 Slide 6: Competitor Research (art/collectible market) -->
+  <div class="slide16">
+    <div class="slide16-head"><span class="slide16-label">Competitor Research <span style="background:#FDB833; color:#1A1414; border-radius:8px; padding:1px 7px; font-size:9px; font-weight:800;">v2</span></span><span class="slide16-note">리미티드 아트토이·콜렉터블 조형 작품 시장 (신규 카테고리)</span></div>
+    <div class="cr-grid">
+      <div class="cr-card"><div class="cr-logo">KAWS</div><div class="cr-cat">아트토이 콜렉터블</div><div class="cr-desc">리미티드 피규어, 갤러리+스트리트 교차 소장 시장</div></div>
+      <div class="cr-card"><div class="cr-logo" style="font-family:cursive;">Takashi Murakami</div><div class="cr-cat">아트 오브제</div><div class="cr-desc">팝아트 조형물, 컬렉터블 피규어화</div></div>
+      <div class="cr-card"><div class="cr-logo">Daniel Arsham</div><div class="cr-cat">조형 오브제</div><div class="cr-desc">"침식된 미래 유물" 컨셉의 캐스팅 조형 작품</div></div>
+      <div class="cr-card"><div class="cr-logo">MSCHF</div><div class="cr-cat">컨셉추얼 드롭</div><div class="cr-desc">예측 불가능한 소재/컨셉 드롭으로 화제성 창출</div></div>
+      <div class="cr-card"><div class="cr-logo" style="letter-spacing:0.05em;">Superplastic</div><div class="cr-cat">디지털+피지컬 아트토이</div><div class="cr-desc">Gen Z 타깃 리미티드 피규어 드롭 문화</div></div>
+      <div class="cr-card"><div class="cr-logo">Objects of Common Interest</div><div class="cr-cat">조형 오브제 디자인</div><div class="cr-desc">유기적 실리콘/글라스 조형, 갤러리+리테일 교차</div></div>
+    </div>
+    <p style="font-size:10.5px; color:#999; margin-top:10px;">※ 이 슬라이드는 아트토이·조형 콜렉터블 시장 방향성 참고용 — 출처 확인 및 상세 리서치는 다음 라운드에서 보강 필요</p>
+  </div>
+
+</div>
+</body>
+</html>
