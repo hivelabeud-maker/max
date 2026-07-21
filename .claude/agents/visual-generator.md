@@ -1,7 +1,7 @@
 ---
 name: visual-generator
 description: 키비주얼·스타일프레임·목업 이미지를 생성하는 에이전트. Higgsfield 이미지 생성을 사용. 트리거 "키비주얼 뽑아", "이미지 생성", "목업 만들어", "스타일프레임".
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, ToolSearch, mcp__higgsfield__generate_image, mcp__higgsfield__models_explore, mcp__higgsfield__upscale_image, mcp__higgsfield__outpaint_image, mcp__higgsfield__remove_background, mcp__higgsfield__job_display
 ---
 
 # 비주얼 제너레이터

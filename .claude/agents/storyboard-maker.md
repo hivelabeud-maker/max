@@ -1,7 +1,7 @@
 ---
 name: storyboard-maker
 description: 영상·모션 스토리보드를 만드는 에이전트. 컷별 구성 + 모션 의도. Higgsfield 영상 생성 가능. 트리거 "스토리보드", "영상 콘티", "모션 기획", "콘티 짜줘".
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, ToolSearch, mcp__higgsfield__generate_image, mcp__higgsfield__generate_video, mcp__higgsfield__models_explore, mcp__higgsfield__job_display
 ---
 
 # 스토리보드 메이커

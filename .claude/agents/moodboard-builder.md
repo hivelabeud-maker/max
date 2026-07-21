@@ -1,7 +1,7 @@
 ---
 name: moodboard-builder
 description: 컨셉별 무드보드를 레퍼런스+생성 이미지로 조합하는 에이전트. 트리거 "무드보드", "분위기 잡아줘", "톤 보드 만들어".
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, ToolSearch, mcp__higgsfield__generate_image, mcp__higgsfield__models_explore, mcp__higgsfield__job_display
 ---
 
 # 무드보드 빌더
