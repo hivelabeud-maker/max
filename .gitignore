@@ -1,0 +1,13 @@
+# 팀 공용 저장소 — 민감 자산 커밋 방지
+# 단가·견적 원본은 개인 워크스페이스에서만 관리한다.
+unit-rates.md
+**/unit-rates.md
+quote-sot/
+**/quote-sot/
+data-sources.md
+**/data-sources.md
+
+# 클라이언트 프로젝트 산출물 (개인 작업물은 커밋하지 않는다)
+# .claude/projects/ 는 폴더 구조(.gitkeep)만 공유하고 내용은 로컬 유지
+.claude/projects/*
+!.claude/projects/.gitkeep
