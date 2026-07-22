@@ -1,0 +1,64 @@
+# MIGRATION — 브랜드 리서치·전략 OS (팀 공용 승격) · 2026.07.21
+
+기존 자산을 **삭제·전면교체 없이 재사용**해, RFP/신규 프로젝트마다 동일 수준의
+`deck.html`을 생성하는 팀 공용 리서치·전략 파이프라인으로 승격했다.
+(1차 구축 기록은 같은 폴더 `MIGRATION.md` 참조. 이 문서는 2차 확장 = DEEP·이종업계·61섹션.)
+
+## 배경 / 문제
+- 기존 `marketer`는 Task/Agent 툴이 없어 다른 에이전트를 실제 호출하지 못하고 사양을 흉내만 냈다.
+- Manus 리서치(경쟁 30·클러스터·축·T1~T4)는 `library/prompts`에 흩어져 있고 HTML 산출과 끊겨 있었다.
+- GRAIN·Boomi 골든은 `.gitignore(.claude/projects/*)`로 팀 저장소에 없었다. GRAIN은 제공 URL에서 확보.
+
+## 변경 요약
+
+### 신규 스킬 (marketer가 순서대로 호출)
+| 스킬 | 역할 |
+|---|---|
+| `project-discovery/SKILL.md` | STEP 1~3: 프로젝트 성격·팩트북·타깃·문제 재정의 + 정보 상태 태그(FACT~UNKNOWN) |
+| `wide-market-research/SKILL.md` | STEP 4~5: 경쟁 30+·카테고리 군집·축 후보 3+·XY맵·화이트스페이스 4유형·이종업계 30+ + T1~T4·Evidence ID |
+| `insight-strategy/SKILL.md` | STEP 6~7: 인사이트(관찰→긴장→기회)·전략 대안 2+·추천(자산×기회 연결) |
+| `quality-gate/SKILL.md` | 완료 게이트 5영역(프로젝트·경쟁·이종·전략·HTML) 체크리스트 |
+
+### 확장/수정
+| 파일 | 내용 |
+|---|---|
+| `brand-strategy-deck/REPORT_SCHEMA.md` | 22블록 → **4PART 61섹션** + `report-data.json` 전체 골격(competitors/cross_industry/insights/strategy/sources) |
+| `brand-strategy-deck/COMPONENTS.md` | 13 → **25 컴포넌트**(RFP·자산·격차·필터·축·사분면·화이트스페이스 유형·BTA·인사이트·비교표·리스크·한계) |
+| `brand-strategy-deck/template.html` | 슬롯형 재작성 — 4PART 섹션 마커 + 경쟁 유형 필터 JS + 신규 컴포넌트 CSS |
+| `brand-strategy-deck/SKILL.md` | 골든 3종 참조·게이트 연동·13단계 생성 절차 |
+| `brand-strategy-deck/references/maxos-golden-example.html` | `maxos-slide-example.html`에서 rename(요청 파일명 정렬) |
+| `brand-strategy-deck/references/boomi-golden-example.html` | **stub 생성**(원본 미확보 — 확보 시 교체, 파일명 유지) |
+| `.claude/agents/marketer.md` | Senior Brand Strategy Marketer로 재정의. 툴에 **Write·Edit·Skill·Bash 추가**. 18스텝 총괄 + 스킬 호출. |
+| `CLAUDE.md` | "브랜드 리서치·전략 프로젝트" 운영 원칙 8줄 + 파이프라인 스킬 5종 등록 |
+
+### 백업 (삭제 없음)
+- `.claude/_backup_20260721/round2/` : `marketer.md` · `CLAUDE.md` · `brand-strategy-deck/`(확장 전 전체)
+- 1차 백업 `.claude/_backup_20260721/` : `hivelab-proposal-style.md` · `marketer.md` · `CLAUDE.md`
+
+## 재사용한 기존 자산
+- GRAIN 덱의 색 토큰·타이포·`.brand-card`/`.tier-badge`/`.cat-card`/포지셔닝맵/`.concept-card`/`.strategy-slide` CSS 계승.
+- Manus `manus-1-brand-planning.md`의 **경쟁 30 매트릭스·클러스터·축 3안·Source Tier T1~T4·Hypothesis 표기** 로직을 스킬로 정식화.
+- `wide-research.md`(경쟁 30→8속성→3그룹) 원형을 `wide-market-research` 스킬 기준으로 흡수.
+- `mx-deck-design/template.html` → maxos 골든(슬라이드 포맷 보조).
+- `hivelab-proposal-style` 폴더 구조만 정식화(내용 보존).
+
+## 새로 보강한 것
+- **이종업계 와이드 리서치 30+**(경쟁 밖 차용 원리) + Borrow/Translate/Avoid — 기존엔 없던 축.
+- **정보 상태 태그**(FACT/CLIENT CLAIM/INFERENCE/HYPOTHESIS/UNKNOWN)와 **Evidence ID** 연결 강제.
+- **화이트스페이스 4유형**(TRUE/EMERGING/FALSE/CAPABILITY GAP) — 기회·함정 동시 표기 강제.
+- `report-data.json` **데이터 정본화**(HTML에만 데이터 두지 않음) + `*_count` 게이트 대조.
+- 프로젝트 폴더 표준 `inputs/outputs/deck.html`.
+
+## 호환성 / 되돌리기
+기존 에이전트(rfp-analyst, market-research, manus-1/2, runable-3, brand-pipeline)와 스킬은 **그대로 유지**.
+`marketer`는 상위 오케스트레이터로서 이들과 충돌하지 않는다(마케터는 스킬 호출, brand-pipeline은 manus 계열 호출).
+```bash
+cp .claude/_backup_20260721/round2/marketer.md .claude/agents/marketer.md
+cp .claude/_backup_20260721/round2/CLAUDE.md CLAUDE.md
+cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand-strategy-deck/
+```
+
+## 남은 수동 판단
+- **Boomi 골든 미확보**: stub 상태. 실제 Boomi `deck.html`을 `references/boomi-golden-example.html`로 덮어쓰면 활성화.
+- **DEEP 30+30 실데이터**: 실제 "마케터 돌려" 실행 시 WebSearch로 확보. 샘플(LUMEN)은 구조·파이프라인 검증용이라 실카운트는 30 미만(아래 검증 리포트에 명시).
+- **폰트 CDN**: 샌드박스 프록시가 Pretendard CDN 차단 → 시스템 폰트 폴백(실환경 정상).

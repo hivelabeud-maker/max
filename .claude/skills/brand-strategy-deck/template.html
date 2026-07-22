@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} — Brand Strategy Deck</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  /* brand-strategy-deck template — GRAIN 골든 시각 문법. 색/카드/등급/맵 = references/grain-golden-example.html 실측 */
+  :root {
+    --bg:#EBEBEB; --card:#FFFFFF; --ink:#111111; --ink2:#4A4944; --ink3:#8A8780; --border:#E2E2E2; --link:#2454C7;
+    --t1:#2D7A4F; --t2:#C77A0F; --t3:#999999; --t4:#B23B3B;
+    --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:var(--sans); background:var(--bg); margin:0; color:var(--ink); -webkit-font-smoothing:antialiased; }
+  a { color:inherit; }
+  /* nav */
+  .topnav { position:sticky; top:0; z-index:50; background:rgba(235,235,235,0.92); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid var(--border); }
+  .topnav-inner { max-width:1100px; margin:0 auto; padding:12px 40px; display:flex; align-items:center; gap:24px; }
+  .topnav .brand { font-weight:800; font-size:15px; }
+  .topnav .brand .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--t1); margin-right:8px; vertical-align:middle; }
+  .topnav nav { display:flex; gap:16px; overflow-x:auto; font-size:12px; color:var(--ink3); }
+  .topnav nav a { text-decoration:none; white-space:nowrap; font-weight:600; }
+  .topnav nav a:hover, .topnav nav a.current { color:var(--ink); }
+  .page { max-width:1100px; margin:0 auto; padding:40px; }
+  .part-label { font-size:12px; font-weight:800; letter-spacing:0.12em; color:var(--ink3); margin:48px 0 8px; text-transform:uppercase; }
+  /* section card */
+  .cat-card { background:var(--bg); border-radius:16px; padding:40px 44px 48px; margin-bottom:40px; position:relative; scroll-margin-top:72px; }
+  .cat-label { font-size:13px; font-weight:700; color:var(--ink2); margin-bottom:8px; }
+  .cat-title { font-size:42px; font-weight:800; letter-spacing:-0.02em; margin:0 0 16px; }
+  .cat-bullets { margin-bottom:28px; }
+  .cat-bullets div { font-size:14px; color:var(--ink2); margin-bottom:4px; }
+  .cat-bullets div::before { content:"· "; }
+  .note { font-size:13px; color:var(--ink2); margin-top:16px; }
+  /* snapshot / fact */
+  .snap-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; }
+  .snap-item { background:var(--card); border-radius:10px; padding:20px 22px; }
+  .snap-item .k { font-size:11px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+  .snap-item .v { font-size:17px; font-weight:700; }
+  /* rfp requirement */
+  .req-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+  .req-card { background:var(--card); border-radius:10px; padding:20px 22px; }
+  .req-card .rk { font-size:12px; font-weight:700; color:var(--t2); margin-bottom:6px; }
+  .req-card .rv { font-size:13px; color:var(--ink2); line-height:1.5; }
+  /* asset / gap */
+  .asset-card, .gap-card { background:var(--card); border-radius:10px; padding:18px 20px; }
+  .asset-card { border-left:3px solid var(--t1); }
+  .gap-card { border-left:3px solid var(--t4); }
+  /* status tag */
+  .status { font-size:9px; font-weight:700; border-radius:6px; padding:1px 6px; color:#fff; background:var(--ink3); }
+  .status.fact { background:var(--t1); } .status.claim { background:var(--t2); } .status.hyp { background:#6b6b6b; } .status.unknown { background:var(--t4); }
+  /* brand cards + tier */
+  .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .filter-bar button { font-size:12px; font-weight:600; border:1px solid var(--border); background:var(--card); border-radius:20px; padding:5px 14px; cursor:pointer; }
+  .filter-bar button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .brand-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .brand-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 18px 16px; display:flex; flex-direction:column; gap:6px; position:relative; }
+  .brand-mark { font-weight:800; font-size:15px; padding-right:40px; }
+  .brand-meta { font-size:10.5px; color:var(--ink3); line-height:1.5; }
+  .brand-meta b { color:var(--ink2); font-weight:700; }
+  .brand-desc { font-size:11px; color:var(--ink2); line-height:1.45; margin-top:2px; }
+  .brand-desc b { color:var(--ink); }
+  .brand-more { font-size:10.5px; color:var(--ink2); line-height:1.5; padding-top:6px; }
+  .brand-card details summary { font-size:10.5px; color:var(--link); cursor:pointer; }
+  .brand-source { font-size:10px; margin-top:6px; }
+  .brand-source a { color:var(--link); text-decoration:none; }
+  .brand-source .ev { color:var(--ink3); }
+  .tier-badge { font-size:8.5px; font-weight:700; color:#fff; background:#999; border-radius:8px; padding:2px 7px; position:absolute; top:16px; right:16px; }
+  .tier-1 { background:var(--t1); } .tier-2 { background:var(--t2); } .tier-3 { background:var(--t3); } .tier-4 { background:var(--t4); }
+  @media (max-width:900px) { .brand-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px) { .brand-grid { grid-template-columns:1fr; } }
+  /* flow table / compare */
+  .flow-table, .compare-table { width:100%; border-collapse:collapse; background:var(--card); border-radius:10px; overflow:hidden; font-size:13px; }
+  .flow-table th, .compare-table th { background:#f4f4f4; text-align:left; padding:14px 16px; }
+  .flow-table td, .compare-table td { padding:12px 16px; border-top:1px solid #eee; }
+  .flow-table td:first-child, .compare-table td:first-child { font-weight:700; }
+  .compare-table .win { background:#F4F9F5; }
+  /* pov */
+  .pov { max-width:660px; } .pov .cat-title { font-size:36px; } .pov p { font-size:15px; color:var(--ink2); line-height:1.6; }
+  /* axis */
+  .axis-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .axis-card { background:var(--card); border-radius:10px; padding:20px; }
+  .axis-card .ax { font-weight:800; font-size:15px; margin-bottom:4px; }
+  .axis-card .pick { font-size:11px; font-weight:700; border-radius:20px; padding:2px 8px; display:inline-block; margin-bottom:8px; }
+  .axis-card .pick.on { background:var(--t1); color:#fff; } .axis-card .pick.off { background:#eee; color:#999; }
+  .axis-card p { font-size:12px; color:var(--ink2); line-height:1.5; }
+  /* positioning map */
+  .pmap { background:var(--card); border-radius:12px; padding:32px; position:relative; height:440px; }
+  .pmap .pm-title { font-weight:800; font-size:15px; margin-bottom:16px; }
+  .pm-field { position:absolute; top:44px; left:32px; right:32px; bottom:60px; border-left:1px solid #ddd; border-bottom:1px solid #ddd; }
+  .pm-axis { position:absolute; font-size:10px; color:var(--ink3); }
+  .pm-axis.top { top:-20px; left:calc(50% - 24px); } .pm-axis.bottom { bottom:-24px; left:calc(50% - 24px); }
+  .pm-axis.left { top:calc(50% - 8px); left:-58px; writing-mode:vertical-rl; } .pm-axis.right { top:calc(50% - 8px); right:-64px; writing-mode:vertical-rl; }
+  .pm-node { position:absolute; font-size:11px; font-weight:700; cursor:help; }
+  .pm-goal { width:70px; height:70px; border:2px solid var(--t1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:var(--t1); text-align:center; }
+  .coord-detail { font-size:11px; color:var(--ink2); margin-top:14px; line-height:1.6; }
+  /* quadrant */
+  .quad-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .quad-card { background:var(--card); border-radius:10px; padding:18px 20px; }
+  .quad-card .qh { font-weight:700; margin-bottom:6px; } .quad-card .qb { font-size:12px; color:var(--ink2); line-height:1.5; }
+  @media (max-width:700px) { .quad-grid { grid-template-columns:1fr; } }
+  /* whitespace */
+  .ws-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .ws-card { background:var(--card); border-radius:10px; padding:20px 22px; }
+  .ws-card .ws-type { font-size:10px; font-weight:800; letter-spacing:0.05em; padding:2px 8px; border-radius:6px; color:#fff; }
+  .ws-card.opp .ws-type { background:var(--t1); } .ws-card.trap .ws-type { background:var(--t4); } .ws-card.emerging .ws-type { background:var(--t2); } .ws-card.capgap .ws-type { background:#6b6b6b; }
+  .ws-card .h { font-weight:700; margin:8px 0; } .ws-card .b { font-size:13px; line-height:1.6; color:var(--ink2); }
+  @media (max-width:700px) { .ws-grid { grid-template-columns:1fr; } }
+  /* borrow/translate/avoid */
+  .bta-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .bta-card { background:var(--card); border-radius:10px; padding:20px 22px; }
+  .bta-card .h { font-weight:800; font-size:13px; margin-bottom:8px; letter-spacing:0.03em; }
+  .bta-card.borrow .h { color:var(--t1); } .bta-card.translate .h { color:var(--t2); } .bta-card.avoid .h { color:var(--t4); }
+  .bta-card .b { font-size:12px; color:var(--ink2); line-height:1.55; }
+  @media (max-width:800px) { .bta-grid { grid-template-columns:1fr; } }
+  /* insight */
+  .insight-card { background:var(--card); border-radius:10px; padding:22px 24px; margin-bottom:14px; }
+  .insight-card .ih { font-size:12px; font-weight:700; color:var(--ink3); margin-bottom:8px; }
+  .insight-card .ib { font-size:14px; line-height:1.6; color:var(--ink2); } .insight-card .ib b { color:var(--ink); }
+  .insight-card .ev { font-size:10.5px; color:var(--ink3); margin-top:8px; }
+  /* concept / strategy */
+  .concept-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .concept-card { background:var(--card); border-radius:12px; padding:24px 22px; display:flex; flex-direction:column; gap:10px; position:relative; }
+  .concept-rank { font-size:11px; font-weight:700; color:#fff; background:var(--ink); border-radius:20px; padding:3px 10px; width:fit-content; }
+  .concept-score { position:absolute; top:20px; right:20px; font-size:20px; font-weight:900; }
+  .concept-title { font-size:22px; font-weight:800; margin-top:4px; }
+  .concept-mood { font-size:11.5px; color:var(--ink3); font-style:italic; }
+  .concept-field { font-size:11px; line-height:1.5; color:var(--ink2); } .concept-field b { color:var(--ink); }
+  .concept-risk { font-size:10.5px; color:var(--t4); margin-top:4px; }
+  @media (max-width:900px) { .concept-grid { grid-template-columns:1fr; } }
+  /* recommended strategy */
+  .strategy-slide { position:relative; min-height:460px; color:#fff; margin-bottom:40px; border-radius:16px; overflow:hidden; display:flex; align-items:center; background:#23201c; }
+  .strategy-slide.has-img::before { content:""; position:absolute; inset:0; background-size:cover; background-position:center; filter:brightness(0.55); }
+  .strategy-slide::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,0,0,0.5) 0%,transparent 70%); }
+  .strategy-inner { position:relative; z-index:2; display:grid; grid-template-columns:380px 1fr; gap:40px; width:100%; padding:56px; }
+  .strategy-label { font-size:13px; font-weight:700; opacity:0.7; margin-bottom:6px; }
+  .strategy-title { font-size:40px; font-weight:800; letter-spacing:-0.02em; margin:0 0 28px; line-height:1.05; }
+  .strategy-field { margin-bottom:18px; }
+  .strategy-field .fk { font-size:10px; font-weight:700; opacity:0.6; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:3px; }
+  .strategy-field .fv { font-size:15px; font-weight:700; margin-bottom:3px; }
+  .strategy-field .fd { font-size:12px; opacity:0.8; line-height:1.4; }
+  @media (max-width:900px) { .strategy-inner { grid-template-columns:1fr; } }
+  /* risk / sources / limits */
+  .risk-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .risk-card { background:var(--card); border-radius:10px; padding:20px 22px; }
+  .risk-card .keep { color:var(--t1); font-weight:700; margin-bottom:8px; } .risk-card .drop { color:var(--t4); font-weight:700; margin-bottom:8px; }
+  .risk-card .b { font-size:13px; line-height:1.6; color:var(--ink2); }
+  @media (max-width:700px) { .risk-grid { grid-template-columns:1fr; } }
+  .src-list { list-style:none; padding:0; margin:0; font-size:12px; color:var(--ink2); }
+  .src-list li { padding:8px 0; border-top:1px solid #eee; display:flex; gap:10px; align-items:baseline; }
+  .src-list li:first-child { border-top:none; }
+  .src-list .tier-badge { position:static; } .src-list a { color:var(--link); text-decoration:none; }
+  .limits { font-size:12px; color:var(--ink3); margin-top:14px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- 데이터 정본은 report-data.json. 아래 아일랜드는 추적/재생성용 사본. -->
+<script type="application/json" id="report-data">
+{{REPORT_DATA_JSON}}
+</script>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><span class="dot"></span>{{PROJECT_NAME}}</div>
+    <nav>
+      <a href="#p1">Project</a><a href="#factbook">Brand</a><a href="#problem">Problem</a>
+      <a href="#p2">Competitive</a><a href="#pmap">Positioning</a><a href="#whitespace">Whitespace</a>
+      <a href="#p3">Cross-Industry</a><a href="#p4">Strategy</a><a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ============ PART 1 — PROJECT & BRAND ============ -->
+  <div class="part-label" id="p1">PART 1 · Project &amp; Brand</div>
+  <section id="cover" class="cat-card"><!-- 1 Cover / 2 Executive Summary / 3 Snapshot -->
+    <!-- PROJECT_COVER --></section>
+  <section id="brief" class="cat-card"><!-- 4 RFP / 5 Context -->
+    <!-- RFP_BRIEF --></section>
+  <section id="factbook" class="cat-card"><!-- 6~13 Brand at a Glance ~ Brand Assets/Gaps -->
+    <!-- BRAND_FACTBOOK --></section>
+  <section id="unknowns" class="cat-card"><!-- 14 Unknowns & Validation -->
+    <!-- UNKNOWNS --></section>
+  <section id="gap" class="cat-card"><!-- 15 Current vs Desired / 16 Reframed Goal -->
+    <!-- CURRENT_VS_DESIRED --></section>
+  <section id="problem" class="cat-card pov"><!-- 17 Real Problem / 18 Research Agenda -->
+    <!-- REAL_PROBLEM --></section>
+
+  <!-- ============ PART 2 — COMPETITIVE LANDSCAPE ============ -->
+  <div class="part-label" id="p2">PART 2 · Competitive Landscape</div>
+  <section id="market" class="cat-card"><!-- 19 Market Definition / 20 Universe -->
+    <!-- MARKET_DEFINITION --></section>
+  <section id="competitor-universe" class="cat-card"><!-- 21~25 Competitor Cards 30+ (filter) -->
+    <!-- COMPETITOR_CARDS --></section>
+  <section id="competitive-categories" class="cat-card"><!-- 26~30 Category A/B/C + deep dive -->
+    <!-- COMPETITIVE_CATEGORY_CARDS --></section>
+  <section id="axes" class="cat-card"><!-- 31~34 Axis Candidates + Selected -->
+    <!-- AXIS_CANDIDATES --></section>
+  <section id="pmap" class="cat-card"><!-- 35 XY Map / 36 Quadrant -->
+    <!-- XY_POSITIONING_MAP --></section>
+  <section id="whitespace" class="cat-card"><!-- 37 Whitespace / 38 False / 39 Implications -->
+    <!-- WHITESPACE_CARDS --></section>
+
+  <!-- ============ PART 3 — CROSS-INDUSTRY RESEARCH ============ -->
+  <div class="part-label" id="p3">PART 3 · Cross-Industry Research</div>
+  <section id="cross-industry" class="cat-card"><!-- 40~42 Scope + 30+ Case Cards -->
+    <!-- CROSS_INDUSTRY_CARDS --></section>
+  <section id="cross-categories" class="cat-card"><!-- 43~46 Groups A/B/C -->
+    <!-- CROSS_CATEGORY_CARDS --></section>
+  <section id="bta" class="cat-card"><!-- 47~49 Borrow / Translate / Avoid -->
+    <!-- BORROW_TRANSLATE_AVOID --></section>
+
+  <!-- ============ PART 4 — INSIGHT & STRATEGY ============ -->
+  <div class="part-label" id="p4">PART 4 · Insight &amp; Strategy</div>
+  <section id="insights" class="cat-card"><!-- 50 Findings / 51 Insights / 52 Opportunity -->
+    <!-- CORE_INSIGHTS --></section>
+  <section id="strategy-options" class="cat-card"><!-- 53~56 Options A/B/C + Comparison -->
+    <!-- STRATEGY_OPTIONS --></section>
+  <section id="recommended" class="cat-card" style="padding:0; background:transparent;"><!-- 57 Recommended / 58 Principles -->
+    <!-- RECOMMENDED_STRATEGY --></section>
+  <section id="risk" class="cat-card"><!-- 59 Risk & Validation -->
+    <!-- RISK_VALIDATION --></section>
+  <section id="sources" class="cat-card"><!-- 60 Sources / 61 Limitations -->
+    <!-- SOURCES_LIMITATIONS --></section>
+
+</div>
+
+<script>
+  // nav 하이라이트
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.topnav nav a'));
+    var map = {}; links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting && map[e.target.id]) {
+        links.forEach(function (l) { l.classList.remove('current'); }); map[e.target.id].classList.add('current'); } });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    document.querySelectorAll('.page section[id]').forEach(function (s) { obs.observe(s); });
+  })();
+  // 경쟁 유형 필터
+  (function () {
+    document.querySelectorAll('.filter-bar').forEach(function (bar) {
+      bar.addEventListener('click', function (e) {
+        var btn = e.target.closest('button'); if (!btn) return;
+        var f = btn.dataset.f, scope = bar.closest('section');
+        bar.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+        scope.querySelectorAll('.brand-card[data-type]').forEach(function (c) {
+          c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
