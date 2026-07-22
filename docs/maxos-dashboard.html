@@ -63,13 +63,24 @@
 
   /* lanes */
   .board{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
-  .lanes{display:flex;gap:12px;min-width:1080px;align-items:flex-start}
+  .lanes{display:flex;gap:12px;min-width:880px;align-items:flex-start}
   .lane{flex:1;min-width:172px;background:#faf9f6;border:1px solid var(--line);border-radius:14px;
     padding:0 0 12px;overflow:hidden;transition:.2s}
   .lane.pulse{box-shadow:0 0 0 3px rgba(47,111,237,.28)}
   .lane-head{padding:11px 14px;color:#fff;font-weight:800;font-size:13.5px;letter-spacing:.4px}
   .lane-head small{display:block;font-weight:600;font-size:11px;opacity:.9;margin-top:2px;letter-spacing:0}
   .lane-head .always{float:right;font-size:9.5px;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:999px;font-weight:700}
+
+  /* 정리·제외 영역 */
+  .tidied{margin-top:16px;border:1.4px dashed #d6d3cc;border-radius:14px;background:#f6f5f2;padding:14px 18px 16px}
+  .tidied .tt{font-size:12px;font-weight:800;color:#8b877f;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+  .tidied .tt .tb{font-size:9.5px;font-weight:800;background:#e6e3dc;color:#6b6862;padding:2px 8px;border-radius:999px;letter-spacing:.3px}
+  .tidied .tsub{font-size:11.5px;color:#a29e96;margin:4px 0 12px;line-height:1.5}
+  .tidied .trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 0;border-top:1px dashed #e4e1da}
+  .tidied .trow:first-of-type{border-top:none}
+  .tidied .tgroup{font-size:12px;font-weight:800;color:#6b6862;min-width:92px}
+  .tidied .tchip{font-size:11px;color:#8f8b82;background:#eeece7;border:1px solid #e0ddd6;padding:3px 9px;border-radius:7px;text-decoration:line-through;text-decoration-color:#c9c5bd}
+  .tidied .treason{flex-basis:100%;font-size:11px;color:#a8a49b;margin-top:2px}
   .lane-body{padding:12px 12px 0;display:flex;flex-direction:column;align-items:stretch}
   .conn{width:2px;height:14px;background:#d8d4cc;margin:0 auto}
   .conn::after{content:"▾";display:block;text-align:center;color:#c3bfb6;font-size:11px;margin-top:-4px}
@@ -192,12 +203,12 @@
     <h1>MAX실 OS v8 — 에이전트 조직도</h1>
     <div class="sub">역할 에이전트가 각각 어떤 스킬을 담당하는지 레인으로 보여준다. 노드를 누르면 상세가 열리고, 에이전트에게 말하면 담당 스킬이 자동 호출된다. <b>업무가 들어오면 「사용설명서」 탭</b>부터.</div>
   </div>
-  <div class="period"><b>하이브랩 MX센터</b><br/>26 에이전트 · 5 역할 레인 · 3 게이트</div>
+  <div class="period"><b>하이브랩 MX센터</b><br/>26 에이전트 · 4 활성 레인 · 3 게이트</div>
 </div>
 
 <div class="tiles">
   <div class="tile"><div class="k">등록 에이전트</div><div class="v">26<small> 종</small></div></div>
-  <div class="tile"><div class="k">역할 레인</div><div class="v">5<small> 레인</small></div></div>
+  <div class="tile"><div class="k">활성 역할 레인</div><div class="v">4<small> + 정리영역</small></div></div>
   <div class="tile"><div class="k">검증 게이트</div><div class="v">3<small> 게이트</small></div></div>
   <div class="tile"><div class="k">흐름</div><div class="v">인입<small> → 발송 1흐름</small></div></div>
 </div>
@@ -218,6 +229,7 @@
     <span class="lg"><span class="dm" style="background:#fbf1de;border:2px solid var(--amber)"></span>검증 게이트 (앰버)</span>
     <span class="lg"><span class="dm" style="background:#fbe6e8;border:2px solid var(--red)"></span>최종 게이트 (레드)</span>
     <span class="lg"><span class="ds"></span>에이전트 간 전달</span>
+    <span class="lg"><span class="sw" style="background:#eeece7;border:1.4px dashed #d6d3cc"></span>정리·제외 (프로세스 밖)</span>
   </div>
 
   <!-- 인입 -->
@@ -240,6 +252,8 @@
   </div>
 
   <div class="xlegend" id="xlegend"></div>
+
+  <div class="tidied" id="tidied"></div>
 </div>
 
 <!-- ════════ TAB 2 : 역할 상세 ════════ -->
@@ -301,9 +315,6 @@ const D = {
   "delivery-gate":{ko:"딜리버리 게이트",badge:"게이트",bc:"#e0555f",role:"라이트모드·PII·텍스트 잘림·마크다운·링크를 결정론적으로 린트한다. 외부 발송 직전 자동 경유.",tg:["발송 전 점검","딜리버리 체크"]},
   "tone-guardian":{ko:"톤 가디언",badge:"게이트",bc:"#e0a23d",role:"회신·메일 초안의 톤·매너를 컨펌·교정한다. 너무 딱딱하거나 가볍지 않게 발송 전 다듬는다.",tg:["톤 봐줘","이 메일 괜찮아","회신 다듬어줘"]},
   "creative-director":{ko:"크리에이티브 디렉터",badge:"Production",bc:"#0f5a4a",role:"최종 시안의 톤·퀄리티를 확정하고 신규/외주 온보딩 팩 1장을 만든다.",tg:["CD 검수","톤 최종 점검","온보딩 만들어줘"]},
-  "hiring-radar":{ko:"채용 레이더",badge:"상시",bc:"#33312c",role:"9→20명 증원 채용 파이프라인(JD·소싱·면접·오퍼)을 단계별 현황·병목·다음 액션으로 정리한다.",tg:["채용 상황","JD 써줘","채용 현황"]},
-  "vendor-radar":{ko:"벤더 레이더",badge:"상시",bc:"#33312c",role:"외주·프리랜서 풀을 역량·단가·평판으로 관리하고 프로젝트별 외주비를 산정한다.",tg:["외주 찾자","프리랜서 풀","외주비 계산"]},
-  "legal-compliance":{ko:"법무",badge:"상시",bc:"#33312c",role:"클라/외주/근로 계약·NDA의 쟁점·독소조항을 플래그하고 권장 조치를 낸다(법무 자문 대체 아님).",tg:["계약서 검토","NDA 봐줘","독소조항"]},
   "marketer":{ko:"마케터 (역할)",badge:"오케스트레이터",bc:"#ea6a2e",role:"rfp-analyst·market-research·design-trend·reference-curator·brainstormer를 하나의 흐름으로 이어서 실행한다. 제안 착수 전 진짜 니즈 + 노릴 빈자리 + 방향 후보를 출처 있게 깔아준다.",tg:["마케터 돌려","리서치 쭉 돌려줘","시장조사","트렌드 봐줘","레퍼런스 찾아줘","브레인스토밍"]},
   "brand-pipeline":{ko:"브랜드 파이프라인 (역할)",badge:"오케스트레이터",bc:"#2f6fed",role:"브랜드 제안 풀프로세스를 manus-1 → manus-2 → runable-3 순으로 오케스트레이션한다. 각 단계 게이트를 통과해야 다음으로. 슬라이드는 runable-3에서만.",tg:["브랜드 제안 시작","풀 프로세스","처음부터 해줘","제안서 만들어줘"]},
   "manus-1":{ko:"마누스 1차",badge:"Pipeline",bc:"#2f6fed",role:"경쟁 리서치·포지셔닝·BX 비주얼 프롬프트를 만든다. 최종 슬라이드는 절대 만들지 않고 manus_1_state로만 산출.",tg:["브랜드 기획","제안 시작","포지셔닝","경쟁사 분석"]},
@@ -358,14 +369,16 @@ const LANES = [
      {t:"skill",a:"delivery-gate",d:"라이트모드·PII 린트"},
      {t:"gate",g:"gate-final"},
    ]},
-  {id:"ops",name:"HR · LEGAL",tag:"사람·외주·계약을 지킨다",color:"var(--ops)",tint:"#f1f0ec",always:true,
-   nodes:[
-     {t:"skill",a:"hiring-radar",d:"9→20 채용 파이프라인"},
-     {t:"skill",a:"vendor-radar",d:"외주 풀·외주비"},
-     {t:"skill",a:"legal-compliance",d:"계약·NDA 쟁점"},
-   ]},
 ];
-const LANE_COLOR = {marketer:"#ea6a2e",strategist:"#2f6fed",designer:"#e0669a",director:"#0f5a4a",ops:"#33312c"};
+const LANE_COLOR = {marketer:"#ea6a2e",strategist:"#2f6fed",designer:"#e0669a",director:"#0f5a4a"};
+
+/* 정리·제외 영역 — 팀 OS 활성 프로세스에서 빠진 것 (이름만 표기, 상세 없음) */
+const TIDIED = [
+  {group:"OPERATOR", agents:["project-manager","quote-accountant","account-radar"],
+   reason:"매출·견적·단가 등 민감 재정 자료 → 팀 공용 저장소에서 제외, 개인 워크스페이스에서 각자 운영."},
+  {group:"HR · LEGAL", agents:["hiring-radar","vendor-radar","legal-compliance"],
+   reason:"현재 업무 프로세스 범위 밖 · 필요 시 상시 별도 운영."},
+];
 
 /* 크로스레인 전달 */
 const XFERS = [
@@ -423,6 +436,16 @@ let xh='<div class="xt">에이전트 간 전달 흐름</div>';
 XFERS.forEach(x=>{xh+='<div class="xr"><span class="ds" style="border-color:'+LANE_COLOR[x.to]+'"></span><b>'+x.label+'</b> · '+x.note+'</div>';});
 xl.innerHTML=xh;
 
+/* ── 정리·제외 영역 ──────────────────────────────────── */
+const tz=document.getElementById("tidied");
+let th='<div class="tt">정리·제외 영역 <span class="tb">활성 프로세스 밖</span></div>'
+  +'<div class="tsub">팀 OS 활성 흐름(Marketer→Director)에는 포함하지 않는 기능. 조직도상 위치만 남기고 상세는 생략한다.</div>';
+TIDIED.forEach(t=>{
+  const chips=t.agents.map(a=>'<span class="tchip mono">'+a+'</span>').join("");
+  th+='<div class="trow"><span class="tgroup">'+t.group+'</span>'+chips+'<span class="treason">'+t.reason+'</span></div>';
+});
+tz.innerHTML=th;
+
 /* ── 상세 패널 ───────────────────────────────────────── */
 const detail=document.getElementById("detail");
 function clearActive(){document.querySelectorAll(".node.active,.snode.active,.gate.active").forEach(e=>e.classList.remove("active"));}
@@ -470,10 +493,6 @@ const ROLES=[
    desc:"시안 검수·톤 점검·팩트 체크·발송 게이트를 통해 최종 품질을 보증하고 외부 발송을 결정한다.",
    skills:[["design-critique","6영역 검수"],["design-system-guardian","시스템 준수 점검"],["creative-director","CD 톤 최종 확정"],["fact-checker","사실·숫자 반증"],["tone-guardian","회신 톤 교정"],["delivery-gate","발송 직전 린트"]],
    call:"시안 검수 · CD 검수 · 시스템 점검 · 팩트체크 · 톤 봐줘 · 발송 전 점검"},
-  {id:"ops",name:"HR · LEGAL",tag:"사람·외주·계약을 지킨다",
-   desc:"채용 파이프라인·외주 풀 관리·계약/NDA 검토를 통해 조직의 인적 자산과 법적 리스크를 관리한다. 상시 운영.",
-   skills:[["hiring-radar","채용 파이프라인"],["vendor-radar","외주 풀·외주비"],["legal-compliance","계약·NDA 쟁점"]],
-   call:"채용 상황 · JD 써줘 · 외주비 계산 · 프리랜서 풀 · 계약서 검토 · NDA 봐줘"},
 ];
 const rg=document.getElementById("rolegrid");
 ROLES.forEach(R=>{
@@ -506,7 +525,7 @@ STEPS.forEach(s=>{
     +'<span class="kk">산출물</span><span>'+s.out+'</span></div></div>';
   stepsEl.appendChild(el);
 });
-document.getElementById("alwaysRow").innerHTML='<b>상시 운영(HR·Legal):</b> 채용 "JD 써줘" → <span class="mono">hiring-radar</span> · 외주 "외주비 계산" → <span class="mono">vendor-radar</span> · 계약 "NDA 봐줘" → <span class="mono">legal-compliance</span>. 이 흐름은 프로젝트 인입과 무관하게 언제든 호출된다.';
+document.getElementById("alwaysRow").innerHTML='<b>프로세스 밖(정리·제외):</b> Operator(재정 3종)은 팀 공용 저장소에서 제외돼 개인 워크스페이스에서 운영하고, HR·Legal(채용·외주·법무)은 현재 업무 프로세스 범위 밖입니다. 「레인 조직도」 탭 하단 <b>정리·제외 영역</b> 참고.';
 
 /* ── 트리거 사전 ─────────────────────────────────────── */
 const cb=document.getElementById("cheatBody");
