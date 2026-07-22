@@ -13,12 +13,14 @@
 | 요청→재정의 대비 | `.request-vs` `.request-box` `.request-box.real` | 01 브리프 |
 | 확인 질문 리스트 | `.question-list` `.question` | 01 브리프 |
 | 조사 스트림 카드 | `.streams` `.stream` | 03 경쟁 리서치 |
-| 필터+검색 바 | `.filters` `.filter` `.search` | 03·06 표 상단 |
-| 데이터 표 | `.table-wrap` `.table` | 03·06 |
-| Evidence ID 칩 | `.eid` | 표·인사이트 |
-| 신뢰도 점 | `.confidence` (i.on = 채움) | 03 표 |
-| 출처 등급 배지 | `.source-type.t1~t4` | 03·06 표, 10 출처 |
+| 필터+검색 바 | `.filters` `.filter` `.search` | 03·06 카드 그리드 상단 |
+| 그룹 헤더 | `.group-block` `.group-head` | 03·06 (카테고리별 카드 묶음) |
+| 브랜드/사례 카드 | `.brand-grid` `.brand-card` | 03·06 (표 대체, 리스트가 길 때 스캔용) |
+| Evidence ID 칩 | `.eid` `.ev` | 카드·인사이트 |
+| 신뢰도 점 | `.confidence` (i.on = 채움) | 카드 상세 |
+| 출처 등급 배지 | `.source-type.t1~t4` | 03·06 카드, 11 출처 |
 | 카테고리 카드 | `.cat-cards` `.cat-card2` | 03·06 |
+| 브랜드 밸류 키워드 | `.bvk-grid` `.bvk-col` `.bvk-title` `.bvk-tags` | 08 (인사이트→감각 언어 3갈래) |
 | 축 후보 카드 | `.axis-grid` `.axis-card` `.axis-card.on` | 04 포지셔닝 |
 | 포지셔닝 맵 | `.pmap` `.pm-field` `.pm-node` `.pm-node.goal` | 04 포지셔닝 |
 | 화이트스페이스 카드 | `.ws-grid` `.ws-card.opp` `.ws-card.trap` `.ws-type` | 05 화이트스페이스 |
@@ -58,3 +60,8 @@ opp(기회) 계열은 라임, trap(함정) 계열은 오렌지.
 ### 전략 대안 카드
 전략명 · 한 줄 요약 · 자산×기회 연결 · 위험 · 포기할 것 · 7기준 점수(customer/differentiation/feasibility/durability/evidence 등, 0~5) · 종합점수(0~35).
 추천안은 `.strategy-card.recommended` + 리본, 색은 모노톤 강조(포인트색 남용 금지).
+
+### 브랜드 밸류 키워드 (3갈래 A/B/C)
+클러스터 id · 2행 타이틀(감각어—오브젝트/모티프) · 태그 3개 · 설명 문단 · 그래픽 모티프·사운드 힌트 · 출처 인사이트 ID.
+→ `report-data.json: brand_value_keywords[]`. 클러스터당 상단 바 색을 다르게(blue/pink/lime/orange 순환)해 세 감각이 시각적으로도 분리되게 한다.
+Manus-1의 "전략 키워드 10→5→3" 발산을 잇는 단계 — `insight-strategy` 스킬 STEP 6.5에서 생성.

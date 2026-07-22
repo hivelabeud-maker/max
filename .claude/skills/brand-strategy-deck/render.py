@@ -73,32 +73,51 @@ def factbook(d):
         f'<p style="font-weight:700;color:var(--red);margin:0 0 5px">메워야 할 격차</p><ul style="margin:0;padding-left:16px;font-size:11px;line-height:1.7">{gaps}</ul></div></div>'
         f'<div class="section-title"><h3>타깃</h3><p>인구통계가 아니라 행동·욕구·선택 기준으로</p></div><div class="grid cols-2">{tgt}</div>')
 
+def brand_card(name, type_attr, tier, meta, desc, url, ev):
+    return (f'<div class="brand-card" data-type="{e(type_attr)}">'
+        f'<span class="tb source-type {TIERC[tier]}">{e(tier)}</span>'
+        f'<div class="nm">{e(name)}</div><div class="meta">{e(meta)}</div>'
+        f'<div class="desc">{e(desc)}</div>'
+        f'<div class="src"><a href="https://{e(url.split("//")[-1])}" target="_blank">출처↗</a><span class="ev">{e(ev)}</span></div></div>')
+
 def competitors(d):
     cr=d["competitive_research"]
     types={"direct":"직접","indirect":"간접","alternative":"대체","adjacent":"인접"}
     cnt={k:sum(1 for c in cr["competitors"] if c["type"]==k) for k in types}
     streams="".join(f'<div class="stream active"><div class="count">{cnt[k]:02d}</div><strong>{e(v)} 경쟁</strong><p>{e({"direct":"같은 값·같은 고객","indirect":"다른 방식 같은 니즈","alternative":"향을 대신하는 선택","adjacent":"곁의 인접 시장"}[k])}</p></div>' for k,v in types.items())
-    rows=""
-    for c in cr["competitors"]:
-        s=c["sources"][0]
-        rows+=(f'<tr data-type="{e(c["type"])}"><td><span class="eid">{e(c["evidence_id"])}</span></td>'
-            f'<td>{e(types.get(c["type"],c["type"]))}</td><td><b>{e(c["name"])}</b><br><span style="color:#999">{e(c["country"])} · {e(c["price"])}</span></td>'
-            f'<td>{e(c["value"])}<br><span style="color:#999">{e(c["positioning"])}</span></td><td>{e(c["relevance"])}</td>'
-            f'<td><span class="source-type {TIERC[s["tier"]]}">{e(s["tier"])}</span></td><td>{conf_dots(c["confidence"])}</td>'
-            f'<td><a class="claim-link" href="https://{e(s["url"].split("//")[-1])}" target="_blank">출처↗</a></td></tr>')
-    filt=('<div class="filters" data-table="compTable"><button class="filter active" data-filter="all">전체</button>'
+    filt=('<div class="filters" data-table="compGrid"><button class="filter active" data-filter="all">전체</button>'
         +''.join(f'<button class="filter" data-filter="{k}">{e(v)}</button>' for k,v in types.items())
         +'<input class="search" placeholder="브랜드·가치 검색" /></div>')
+    by_cat={}
+    for c in cr["competitors"]: by_cat.setdefault(c.get("category","기타"), []).append(c)
+    groups=""
+    for cat in cr["categories"]:
+        items=by_cat.pop(cat["id"], [])
+        if not items: continue
+        cards="".join(brand_card(c["name"], c["type"], c["sources"][0]["tier"],
+            f'{types.get(c["type"],c["type"])} · {c["country"]} · {c["price"]}',
+            f'{c["value"]} — {c["positioning"]} · {c["relevance"]}',
+            c["sources"][0]["url"], c["evidence_id"]) for c in items)
+        groups+=(f'<div class="group-block"><div class="group-head"><span class="gname">Category {cat["id"]} · {e(cat["name"])}</span>'
+            f'<span class="gcount">{len(items)}개</span></div><div class="brand-grid">{cards}</div></div>')
+    if by_cat:
+        rest=[c for v in by_cat.values() for c in v]
+        cards="".join(brand_card(c["name"], c["type"], c["sources"][0]["tier"],
+            f'{types.get(c["type"],c["type"])} · {c["country"]} · {c["price"]}',
+            f'{c["value"]} — {c["positioning"]} · {c["relevance"]}',
+            c["sources"][0]["url"], c["evidence_id"]) for c in rest)
+        groups+=(f'<div class="group-block"><div class="group-head"><span class="gname">기타 · 추가조사 대상</span>'
+            f'<span class="gcount">{len(rest)}개</span></div><div class="brand-grid">{cards}</div></div>')
     cats="".join(f'<div class="cat-card2"><div class="cid">Category {c["id"]}</div><h4>{e(c["name"])}</h4>'
         f'<div class="brands">{e(" · ".join(c["brand_ids"]))}</div>'
         f'<div class="sw"><b>강점</b> {e(c["strength"])}<br><b>한계</b> {e(c["limit"])}</div></div>' for c in cr["categories"] if c["id"] in ("A","B","C"))
     return (f'<div class="page-head"><div class="page-title"><div class="eyebrow">COMPETITIVE RESEARCH</div>'
-        f'<h2>경쟁·대체 브랜드 {cr["actual_count"]}개를 한 표에서 봅니다</h2><p>사실·해석·출처를 나눠 담고, 프로젝트와 연결되는 것만 남깁니다.</p></div>'
+        f'<h2>경쟁·대체 브랜드 {cr["actual_count"]}개를 카드로 봅니다</h2><p>사실·해석·출처를 나눠 담고, 프로젝트와 연결되는 것만 남깁니다.</p></div>'
         f'<div class="head-meta"><span class="tag green">{cr["actual_count"]}개 조사</span><span class="tag">목표 {cr["required_count"]}+</span></div></div>'
         f'<div class="streams">{streams}</div>'
-        f'<div class="section-title"><h3>경쟁 브랜드 표</h3><p>유형으로 거르거나 검색하세요</p></div>{filt}'
-        f'<div class="table-wrap"><table class="table" id="compTable"><thead><tr><th>ID</th><th>유형</th><th>브랜드</th><th>핵심 가치·포지셔닝</th><th>우리와 연결</th><th>출처</th><th>신뢰도</th><th>링크</th></tr></thead><tbody>{rows}</tbody></table></div>'
-        f'<div class="section-title"><h3>3개 카테고리 군집</h3><p>데이터에서 나온 묶음(그룹 먼저 정하지 않음)</p></div><div class="cat-cards">{cats}</div>')
+        f'<div class="section-title"><h3>3개 카테고리 군집</h3><p>데이터에서 나온 묶음(그룹 먼저 정하지 않음)</p></div><div class="cat-cards">{cats}</div>'
+        f'<div class="section-title"><h3>경쟁 브랜드 카드</h3><p>유형으로 거르거나 검색하세요</p></div>{filt}'
+        f'<div id="compGrid">{groups}</div>')
 
 def positioning(d):
     cr=d["competitive_research"]; s=cr["selected_axes"]
@@ -139,17 +158,27 @@ def whitespace(d):
 
 def cross(d):
     xr=d["cross_industry_research"]
-    rows=""
-    for c in xr["cases"]:
-        s=c["sources"][0]
-        rows+=(f'<tr data-type="{e(c["category"])}"><td><span class="eid">{e(c["evidence_id"])}</span></td>'
-            f'<td><b>{e(c["name"])}</b><br><span style="color:#999">{e(c["industry"])} · {e(c["country"])}</span></td>'
-            f'<td>{e(c["problem_solved"])}</td><td>{e(c["method"])}</td><td><b>{e(c["borrow"])}</b></td>'
-            f'<td><span class="source-type {TIERC[s["tier"]]}">{e(s["tier"])}</span></td>'
-            f'<td><a class="claim-link" href="https://{e(s["url"].split("//")[-1])}" target="_blank">출처↗</a></td></tr>')
-    filt=('<div class="filters" data-table="crossTable"><button class="filter active" data-filter="all">전체</button>'
+    filt=('<div class="filters" data-table="crossGrid"><button class="filter active" data-filter="all">전체</button>'
         +''.join(f'<button class="filter" data-filter="{c["id"]}">{e(c["name"][:10])}</button>' for c in xr["categories"])
         +'<input class="search" placeholder="사례·원리 검색" /></div>')
+    by_cat={}
+    for c in xr["cases"]: by_cat.setdefault(c.get("category","기타"), []).append(c)
+    groups=""
+    for cat in xr["categories"]:
+        items=by_cat.pop(cat["id"], [])
+        if not items: continue
+        cards="".join(brand_card(c["name"], cat["id"], c["sources"][0]["tier"],
+            f'{c["industry"]} · {c["country"]}', f'{c["problem_solved"]} — {c["method"]} → {c["borrow"]}',
+            c["sources"][0]["url"], c["evidence_id"]) for c in items)
+        groups+=(f'<div class="group-block"><div class="group-head"><span class="gname">Group {cat["id"]} · {e(cat["name"])}</span>'
+            f'<span class="gcount">{len(items)}개</span></div><div class="brand-grid">{cards}</div></div>')
+    if by_cat:
+        rest=[c for v in by_cat.values() for c in v]
+        cards="".join(brand_card(c["name"], "기타", c["sources"][0]["tier"],
+            f'{c["industry"]} · {c["country"]}', f'{c["problem_solved"]} — {c["method"]} → {c["borrow"]}',
+            c["sources"][0]["url"], c["evidence_id"]) for c in rest)
+        groups+=(f'<div class="group-block"><div class="group-head"><span class="gname">기타 · 추가조사 대상</span>'
+            f'<span class="gcount">{len(rest)}개</span></div><div class="brand-grid">{cards}</div></div>')
     cats="".join(f'<div class="cat-card2"><div class="cid">Group {c["id"]}</div><h4>{e(c["name"])}</h4>'
         f'<div class="brands">{e(" · ".join(c["case_names"]))}</div>'
         f'<div class="sw"><b>원리</b> {e(c["common_principle"])}<br><b>적용</b> {e(c["apply"])}</div></div>' for c in xr["categories"])
@@ -160,8 +189,9 @@ def cross(d):
     return (f'<div class="page-head"><div class="page-title"><div class="eyebrow">CROSS-INDUSTRY</div>'
         f'<h2>다른 업계 {xr["actual_count"]}곳에서 원리만 빌립니다</h2><p>유명해서가 아니라, 우리 문제와 맞닿는 사례만 골랐습니다.</p></div>'
         f'<div class="head-meta"><span class="tag green">{xr["actual_count"]}개</span><span class="tag">목표 {xr["required_count"]}+</span></div></div>'
-        f'{filt}<div class="table-wrap"><table class="table" id="crossTable"><thead><tr><th>ID</th><th>사례</th><th>해결한 문제</th><th>방식</th><th>빌릴 원리</th><th>출처</th><th>링크</th></tr></thead><tbody>{rows}</tbody></table></div>'
         f'<div class="section-title"><h3>3개 그룹</h3><p>공통 원리로 묶음</p></div><div class="cat-cards">{cats}</div>'
+        f'<div class="section-title"><h3>이종업계 사례 카드</h3><p>그룹으로 거르거나 검색하세요</p></div>{filt}'
+        f'<div id="crossGrid">{groups}</div>'
         f'<div class="section-title"><h3>가져오기 · 바꾸기 · 피하기</h3><p>표면 모방을 막는 정리</p></div>{bta}')
 
 def insights(d):
@@ -175,6 +205,21 @@ def insights(d):
     return (f'<div class="page-head"><div class="page-title"><div class="eyebrow">KEY INSIGHTS</div>'
         f'<h2>요약이 아니라, 전략에 쓸 의미로 바꿉니다</h2><p>각 인사이트는 근거와 “그래서 뭘 하나”를 함께 답합니다.</p></div>'
         f'<div class="head-meta"><span class="tag green">근거 연결 100%</span></div></div><div class="grid cols-3">{cards}</div>')
+
+def keywords(d):
+    bvk=d.get("brand_value_keywords", [])
+    colorcls={"A":"c-blue","B":"c-pink","C":"c-lime","D":"c-orange"}
+    cols=""
+    for k in bvk:
+        tags="".join(f"<span>{e(t)}</span>" for t in k["tags"])
+        cols+=(f'<div class="bvk-col {colorcls.get(k["id"],"c-blue")}"><div class="bvk-id">{e(k["id"])}</div>'
+            f'<div class="bvk-title">{e(k["title_top"])} —<br>{e(k["title_bottom"])}</div>'
+            f'<div class="bvk-tags">{tags}</div><div class="bvk-desc">{e(k["description"])}</div>'
+            f'<div class="bvk-sensory"><b>{e(k["sensory_label"])}</b>{e(k["sensory_note"])}</div></div>')
+    return (f'<div class="page-head"><div class="page-title"><div class="eyebrow">BRAND VALUE KEYWORDS</div>'
+        f'<h2>인사이트를 감각 언어 {len(bvk)}갈래로 번역합니다</h2><p>전략 대안을 고르기 전, 각 방향이 어떤 감각·톤으로 느껴지는지 먼저 잡습니다.</p></div>'
+        f'<div class="head-meta"><span class="tag blue">인사이트 연결</span></div></div>'
+        f'<div class="bvk-grid">{cols}</div>')
 
 def options(d):
     labels=[("customer","고객가치"),("differentiation","차별성"),("feasibility","실행성"),("durability","지속성"),("evidence","근거")]
@@ -232,7 +277,7 @@ def sources(d):
 
 SLOTS={"<!-- OVERVIEW -->":overview,"<!-- BRIEF -->":brief,"<!-- FACTBOOK -->":factbook,"<!-- COMPETITORS -->":competitors,
  "<!-- POSITIONING -->":positioning,"<!-- WHITESPACE -->":whitespace,"<!-- CROSS -->":cross,"<!-- INSIGHTS -->":insights,
- "<!-- OPTIONS -->":options,"<!-- RECOMMENDATION -->":recommendation,"<!-- SOURCES -->":sources}
+ "<!-- KEYWORDS -->":keywords,"<!-- OPTIONS -->":options,"<!-- RECOMMENDATION -->":recommendation,"<!-- SOURCES -->":sources}
 
 def render(data, tpl):
     p=data["project"]; bn=data["brand_factbook"]["brand_name"]
@@ -241,6 +286,7 @@ def render(data, tpl):
         "{{COMP_COUNT}}":str(data["competitive_research"]["actual_count"]),
         "{{CROSS_COUNT}}":str(data["cross_industry_research"]["actual_count"]),
         "{{INSIGHT_COUNT}}":str(len(data["insights"])),"{{STRAT_COUNT}}":str(len(data["strategy_options"])),
+        "{{BVK_COUNT}}":str(len(data.get("brand_value_keywords", []))),
         "{{SOURCE_COUNT}}":str(len({(s["id"],s["url"]) for s in data["sources"]}))}
     out=tpl
     for k,v in toks.items(): out=out.replace(k,e(v))

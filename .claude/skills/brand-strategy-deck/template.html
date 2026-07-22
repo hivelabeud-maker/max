@@ -48,6 +48,30 @@ button,input{font:inherit}.app{min-height:100vh}
 .bta{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.bta-card{border-radius:11px;padding:16px;border:1px solid var(--line)}.bta-card.b{background:var(--lime2);border-color:#c8f0a0}.bta-card.t{background:var(--blue2);border-color:#c7d3fb}.bta-card.a{background:var(--orange2);border-color:#ffc6a0}.bta-card h4{font-size:11px;margin:0 0 8px;letter-spacing:.03em}.bta-card.b h4{color:#4f6e1c}.bta-card.t h4{color:var(--blue)}.bta-card.a h4{color:#a04a10}.bta-card ul{margin:0;padding-left:15px}.bta-card li{font-size:9.5px;line-height:1.6;margin:4px 0}
 .source-card{display:grid;grid-template-columns:96px 1fr auto;gap:15px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:8px}.source-card .domain{font-size:9px;font-weight:800;color:#555}.source-card h4{font-size:10.5px;margin:0 0 4px}.source-card p{font-size:9px;color:var(--muted);margin:0;line-height:1.5}.source-card a{color:var(--blue);text-decoration:none}.source-card .used{font-size:8px;color:var(--blue);background:var(--blue2);padding:4px 6px;border-radius:5px;white-space:nowrap}
 .footer-note{margin-top:24px;font-size:9px;color:#9a978f;text-align:center}
+/* 표 → 카드 그리드 (경쟁·이종업계 리스트, 탭/필터는 유지) */
+.group-block{margin-bottom:26px}.group-head{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}.group-head .gname{font-size:13px;font-weight:800}.group-head .gcount{font-size:10px;color:var(--muted)}
+.brand-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.brand-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:5px;min-height:150px}
+.brand-card .tb{position:absolute;top:12px;right:12px;font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px}
+.brand-card .nm{font-weight:800;font-size:12px;padding-right:30px}
+.brand-card .meta{font-size:9.5px;color:var(--muted);line-height:1.5}
+.brand-card .desc{font-size:10px;color:#4f4d47;line-height:1.5;flex:1}
+.brand-card .src{font-size:9px;margin-top:auto;padding-top:4px}.brand-card .src a{color:var(--blue);text-decoration:none}.brand-card .src .ev{color:var(--muted);margin-left:4px}
+@media(max-width:1300px){.brand-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:1000px){.brand-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:740px){.brand-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.brand-grid{grid-template-columns:1fr}}
+/* 브랜드 밸류 키워드 */
+.bvk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.bvk-col{border-top:3px solid var(--line);padding-top:16px;display:flex;flex-direction:column;min-height:280px}
+.bvk-col.c-blue{border-top-color:var(--blue)}.bvk-col.c-lime{border-top-color:var(--lime)}.bvk-col.c-pink{border-top-color:var(--pink)}.bvk-col.c-orange{border-top-color:var(--orange)}
+.bvk-id{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.bvk-title{font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+.bvk-col.c-blue .bvk-title{color:var(--blue)}.bvk-col.c-lime .bvk-title{color:#5a7d1a}.bvk-col.c-pink .bvk-title{color:#c23bb3}.bvk-col.c-orange .bvk-title{color:var(--orange)}
+.bvk-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.bvk-tags span{font-size:10px;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2)}
+.bvk-desc{font-size:12px;color:#4f4d47;line-height:1.7;flex:1}
+.bvk-sensory{font-size:9.5px;color:var(--muted);margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.bvk-sensory b{display:block;font-size:8.5px;color:#9a978f;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+@media(max-width:900px){.bvk-grid{grid-template-columns:1fr}}
 @media(max-width:1100px){.layout{grid-template-columns:205px minmax(0,1fr)}.main{padding:25px 22px 60px}.grid.cols-4{grid-template-columns:repeat(2,1fr)}.grid.cols-3{grid-template-columns:1fr}.flow{grid-template-columns:repeat(4,1fr)}.decision,.reco-head{grid-template-columns:1fr}.decision-side,.reco-score{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:15px 0 0;align-items:flex-start}.streams{grid-template-columns:repeat(2,1fr)}.principles,.roadmap,.not-doing,.axis-grid,.cat-cards,.bta{grid-template-columns:1fr}.risk{grid-template-columns:1fr 1fr}.request-vs,.ws-grid{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
 @media(max-width:740px){.topbar{padding:0 16px}.top-actions .pill,.top-btn.print{display:none}.layout{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;overflow:auto;gap:4px}.project-mini,.nav-label{display:none}.nav-item{width:auto;white-space:nowrap}.nav-item .nav-num,.nav-item .nav-badge{display:none}.main{padding:20px 14px 50px}.grid.cols-4,.grid.cols-2{grid-template-columns:1fr}.page-head{display:block}.head-meta{justify-content:flex-start;margin-top:12px}.flow{grid-template-columns:repeat(2,1fr)}.streams{grid-template-columns:1fr}.search{margin-left:0;width:100%}.risk{grid-template-columns:1fr}.source-card{grid-template-columns:1fr}}
 @media print{.topbar,.sidebar,.filters,.top-actions{display:none!important}.layout{display:block}.main{padding:0;max-width:none}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:auto}.card,.strategy-card,.reco-hero,.decision,.pmap{box-shadow:none;break-inside:avoid}.page-head{margin-top:24px}body{background:#fff}}
@@ -79,10 +103,11 @@ button,input{font:inherit}.app{min-height:100vh}
   <button class="nav-item" data-view="whitespace"><span class="nav-num">05</span>화이트스페이스</button>
   <button class="nav-item" data-view="cross"><span class="nav-num">06</span>이종업계<span class="nav-badge">{{CROSS_COUNT}}</span></button>
   <button class="nav-item" data-view="insights"><span class="nav-num">07</span>핵심 인사이트<span class="nav-badge">{{INSIGHT_COUNT}}</span></button>
-  <button class="nav-item" data-view="options"><span class="nav-num">08</span>전략 대안<span class="nav-badge">{{STRAT_COUNT}}</span></button>
-  <button class="nav-item" data-view="recommendation"><span class="nav-num">09</span>추천 전략</button>
+  <button class="nav-item" data-view="keywords"><span class="nav-num">08</span>브랜드 밸류 키워드<span class="nav-badge">{{BVK_COUNT}}</span></button>
+  <button class="nav-item" data-view="options"><span class="nav-num">09</span>전략 대안<span class="nav-badge">{{STRAT_COUNT}}</span></button>
+  <button class="nav-item" data-view="recommendation"><span class="nav-num">10</span>추천 전략</button>
   <div class="nav-label">AUDIT & TRACE</div>
-  <button class="nav-item" data-view="sources"><span class="nav-num">10</span>출처·근거 추적<span class="nav-badge">{{SOURCE_COUNT}}</span></button>
+  <button class="nav-item" data-view="sources"><span class="nav-num">11</span>출처·근거 추적<span class="nav-badge">{{SOURCE_COUNT}}</span></button>
 </aside>
 
 <main class="main">
@@ -94,6 +119,7 @@ button,input{font:inherit}.app{min-height:100vh}
   <section class="view" id="whitespace"><!-- WHITESPACE --></section>
   <section class="view" id="cross"><!-- CROSS --></section>
   <section class="view" id="insights"><!-- INSIGHTS --></section>
+  <section class="view" id="keywords"><!-- KEYWORDS --></section>
   <section class="view" id="options"><!-- OPTIONS --></section>
   <section class="view" id="recommendation"><!-- RECOMMENDATION --></section>
   <section class="view" id="sources"><!-- SOURCES --></section>
@@ -107,7 +133,9 @@ function goView(id){document.querySelectorAll('.view').forEach(v=>v.classList.re
 navItems.forEach(n=>n.addEventListener('click',()=>goView(n.dataset.view)));
 window.addEventListener('load',()=>{const h=location.hash.replace('#','');if(document.getElementById(h))goView(h)});
 document.querySelectorAll('[data-goto]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();goView(a.dataset.goto)}));
-function filterTable(tableId){const wrap=document.getElementById(tableId).closest('.view');const type=wrap.querySelector('.filter.active')?.dataset.filter||'all';const q=(wrap.querySelector('.search')?.value||'').toLowerCase();document.querySelectorAll('#'+tableId+' tbody tr').forEach(r=>{const mt=type==='all'||r.dataset.type===type;const mq=!q||r.innerText.toLowerCase().includes(q);r.style.display=mt&&mq?'':'none'})}
+function filterTable(gridId){const el=document.getElementById(gridId);if(!el)return;const wrap=el.closest('.view');const type=wrap.querySelector('.filter.active')?.dataset.filter||'all';const q=(wrap.querySelector('.search')?.value||'').toLowerCase();
+  el.querySelectorAll('[data-type]').forEach(r=>{const mt=type==='all'||r.dataset.type===type;const mq=!q||r.innerText.toLowerCase().includes(q);r.style.display=mt&&mq?'':'none'});
+  el.querySelectorAll('.group-block').forEach(g=>{const anyVisible=[...g.querySelectorAll('[data-type]')].some(c=>c.style.display!=='none');g.style.display=anyVisible?'':'none'})}
 document.querySelectorAll('.filters').forEach(bar=>{bar.addEventListener('click',e=>{const b=e.target.closest('.filter');if(!b)return;bar.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filterTable(bar.dataset.table)});const s=bar.querySelector('.search');if(s)s.addEventListener('input',()=>filterTable(bar.dataset.table))});
 let expanded=false;function toggleAll(){expanded=!expanded;document.querySelector('.top-actions .top-btn').textContent=expanded?'대시보드 보기':'전체 펼침';document.querySelector('.sidebar').style.display=expanded?'none':'';document.querySelector('.layout').style.gridTemplateColumns=expanded?'1fr':'';document.querySelectorAll('.view').forEach(v=>v.style.display=expanded?'block':'');if(!expanded){document.querySelectorAll('.view').forEach(v=>v.style.display='');document.querySelector('.view.active').style.display='block'}}
 </script>
