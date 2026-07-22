@@ -7,9 +7,9 @@
 <style>
   :root{
     --surface:#fcfcfb; --card:#ffffff; --line:#eceae4; --line2:#f2f0ea;
-    --ink:#1f1d1a; --ink2:#6b6862; --ink3:#a29e96; --accent:#2f6fed;
-    --marketer:#ea6a2e; --strategist:#2f6fed; --designer:#e0669a; --director:#0f5a4a; --ops:#33312c;
-    --amber:#e0a23d; --red:#e0555f;
+    --ink:#1f1d1a; --ink2:#6b6862; --ink3:#a29e96; --accent:#2e53f9;
+    --marketer:#ff6e23; --strategist:#2e53f9; --designer:#ff86f6; --director:#c5ff79;
+    --amber:#c5ff79; --red:#ff6e23;
     --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.04),0 1px 8px rgba(0,0,0,.03);
   }
   *{box-sizing:border-box}
@@ -66,8 +66,10 @@
   .lanes{display:flex;gap:12px;min-width:880px;align-items:flex-start}
   .lane{flex:1;min-width:172px;background:#faf9f6;border:1px solid var(--line);border-radius:14px;
     padding:0 0 12px;overflow:hidden;transition:.2s}
-  .lane.pulse{box-shadow:0 0 0 3px rgba(47,111,237,.28)}
+  .lane.pulse{box-shadow:0 0 0 3px rgba(46,83,249,.28)}
   .lane-head{padding:11px 14px;color:#fff;font-weight:800;font-size:13.5px;letter-spacing:.4px}
+  .lane-head.dark-text{color:var(--ink)}
+  .lane-head.dark-text small{opacity:.72}
   .lane-head small{display:block;font-weight:600;font-size:11px;opacity:.9;margin-top:2px;letter-spacing:0}
   .lane-head .always{float:right;font-size:9.5px;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:999px;font-weight:700}
   .lane-body{padding:12px 12px 0;display:flex;flex-direction:column;align-items:stretch}
@@ -77,18 +79,19 @@
   .node{border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--card);
     cursor:pointer;transition:.15s;position:relative}
   .node:hover{border-color:#cfccc3;box-shadow:var(--shadow)}
-  .node.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(47,111,237,.15)}
+  .node.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(46,83,249,.15)}
   .node .nm{font-size:12.5px;font-weight:800}
   .node .ds{font-size:11px;color:var(--ink2);line-height:1.4;margin-top:3px}
   .node.inlet{border-style:dashed;background:#f5f4f0;text-align:center;padding:6px 8px;cursor:default}
   .node.inlet .nm{font-size:11.5px;color:var(--ink2)}
   .xfer{display:inline-block;margin-top:6px;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;
-    border:1px dashed #cdcabf;color:#fff;cursor:pointer}
-  .sub{border:1.4px dashed #b9c6e6;border-radius:10px;padding:8px;background:#f5f8ff}
-  .sub .st{font-size:10.5px;font-weight:800;color:#3a63c0;letter-spacing:.4px;margin-bottom:6px}
-  .sub .snode{border:1.2px solid #dde4f4;border-radius:8px;padding:6px 8px;background:var(--card);cursor:pointer;transition:.15s}
-  .sub .snode:hover{border-color:#b9c6e6}
-  .sub .snode.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(47,111,237,.15)}
+    border:1px dashed rgba(255,255,255,.5);color:#fff;cursor:pointer}
+  .xfer.dark-text{color:var(--ink);border-color:rgba(31,29,26,.28)}
+  .sub{border:1.4px dashed #b7c2f2;border-radius:10px;padding:8px;background:#eef1fe}
+  .sub .st{font-size:10.5px;font-weight:800;color:#2e53f9;letter-spacing:.4px;margin-bottom:6px}
+  .sub .snode{border:1.2px solid #d7ddf9;border-radius:8px;padding:6px 8px;background:var(--card);cursor:pointer;transition:.15s}
+  .sub .snode:hover{border-color:#b7c2f2}
+  .sub .snode.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(46,83,249,.15)}
   .sub .snode+.snode{margin-top:5px}
   .sub .snode .nm{font-size:11.5px;font-weight:800}
   .sub .snode .ds{font-size:10.5px;color:var(--ink2);margin-top:2px}
@@ -96,13 +99,13 @@
   /* gate */
   .gate{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer}
   .diamond{width:26px;height:26px;transform:rotate(45deg);border-radius:5px;border:2px solid;margin-bottom:6px;transition:.15s}
-  .gate.amber .diamond{border-color:var(--amber);background:#fbf1de}
-  .gate.red .diamond{border-color:var(--red);background:#fbe6e8}
+  .gate.amber .diamond{border-color:var(--amber);background:#f2ffdf}
+  .gate.red .diamond{border-color:var(--red);background:#ffe7d8}
   .gate:hover .diamond{transform:rotate(45deg) scale(1.08)}
-  .gate.active .diamond{box-shadow:0 0 0 3px rgba(224,162,61,.25)}
-  .gate.red.active .diamond{box-shadow:0 0 0 3px rgba(224,85,95,.25)}
+  .gate.active .diamond{box-shadow:0 0 0 3px rgba(197,255,121,.45)}
+  .gate.red.active .diamond{box-shadow:0 0 0 3px rgba(255,110,35,.25)}
   .gate .gl{font-size:11.5px;font-weight:800}
-  .gate.amber .gl{color:#a5701c}.gate.red .gl{color:#b23640}
+  .gate.amber .gl{color:#3f6b12}.gate.red .gl{color:#b3450f}
   .gate .gd{font-size:10.5px;color:var(--ink2);line-height:1.4;margin-top:2px}
 
   /* detail panel */
@@ -154,10 +157,26 @@
   .step .sc .sit{font-size:12.5px;color:var(--ink2);margin-bottom:9px}
   .step .kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12.5px;align-items:baseline}
   .step .kv .kk{color:var(--ink3);font-weight:700;white-space:nowrap}
-  .step .kv .say{color:#2454c4;font-weight:700}
+  .step .kv .say{color:#2e53f9;font-weight:700}
   .step .kv .agn{font-weight:800}
   .always-row{margin-top:14px;background:#f7f6f2;border:1px solid var(--line);border-radius:12px;padding:13px 16px;font-size:12.5px;color:var(--ink2);line-height:1.7}
   .always-row b{color:var(--ink)}
+
+  .factbox{border:1.4px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:22px;background:var(--card)}
+  .factbox h4{margin:0 0 4px;font-size:14.5px;font-weight:800}
+  .factbox .fa{display:inline-block;font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px;margin-left:8px;background:#ffe7d8;color:#b3450f}
+  .factbox p{font-size:13px;color:var(--ink2);line-height:1.7;margin:8px 0}
+  .factbox code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f2f0ea;padding:1px 6px;border-radius:5px;font-size:12px;color:var(--ink)}
+
+  .scenario-title{font-size:16px;font-weight:800;margin:26px 0 4px}
+  .sc-steps{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .sc-step{display:grid;grid-template-columns:26px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-left-width:4px;border-radius:12px;padding:13px 16px;box-shadow:var(--shadow)}
+  .sc-step .scno{font-weight:800;font-size:13px;color:var(--ink3)}
+  .sc-step .sctxt{font-size:13px;line-height:1.6}
+  .sc-step .say{color:#2e53f9;font-weight:700}
+  .sc-step .arrow{color:var(--ink3);margin:0 4px}
+  .sc-step .lane-tag{font-size:10.5px;font-weight:800;padding:1px 8px;border-radius:999px;margin-left:4px}
   .gate-rules{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .grule{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--card)}
   .grule .gg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;margin-bottom:6px}
@@ -215,8 +234,8 @@
 
   <div class="legend">
     <span class="lg"><span class="sw" style="background:#fff;border:1.5px solid var(--line)"></span>스킬 노드</span>
-    <span class="lg"><span class="dm" style="background:#fbf1de;border:2px solid var(--amber)"></span>검증 게이트 (앰버)</span>
-    <span class="lg"><span class="dm" style="background:#fbe6e8;border:2px solid var(--red)"></span>최종 게이트 (레드)</span>
+    <span class="lg"><span class="dm" style="background:#f2ffdf;border:2px solid var(--amber)"></span>검증 게이트 (앰버)</span>
+    <span class="lg"><span class="dm" style="background:#ffe7d8;border:2px solid var(--red)"></span>최종 게이트 (레드)</span>
     <span class="lg"><span class="ds"></span>에이전트 간 전달</span>
   </div>
 
@@ -259,13 +278,49 @@
     </ol>
   </div>
 
-  <p class="sec-desc">업무 유형이 뭐든 아래 6단계 위를 흐른다. <b>왼쪽 상황을 만나면 「이렇게 말한다」의 트리거를 던지면</b> 담당 에이전트가 활성화되고 산출물이 나온다.</p>
+  <div class="factbox">
+    <h4>새 대화를 열면 마케터가 저절로 켜지나<span class="fa">아니다</span></h4>
+    <p>새 대화창을 열고 프로젝트명만 쳐도 아무 에이전트도 안 켜진다. 켜지는 조건은 하나, <b>문장 안에 트리거 단어가 있어야 한다.</b> "크래프톤"이라고만 치면 대기 상태다. "크래프톤 RFP 분석해줘"라고 쳐야 <code class="mono">rfp-analyst</code>가 켜진다.</p>
+    <p>지금 <code>CLAUDE.md</code>에는 "새 프로젝트 인입 시 자동으로 마케터부터 돈다"는 규칙이 없다. 자동으로 켜지게 만들고 싶으면 이 한 줄을 <code>CLAUDE.md</code>에 추가하면 된다. 그 전까지는 매번 트리거 단어를 직접 던져야 한다.</p>
+  </div>
+
+  <div class="scenario-title">레인 조직도는 실제로 이렇게 움직인다 — 예시 1건</div>
+  <p class="sec-desc" style="margin-top:4px">가상 프로젝트 "하이브 신작 게임 브랜딩"으로 처음부터 발송까지 따라가 본다. 「레인 조직도」 탭을 같이 열어두고 순서대로 눌러보면 노드가 켜지는 순서와 똑같다.</p>
+  <div class="sc-steps">
+    <div class="sc-step" style="border-left-color:var(--marketer)">
+      <div class="scno">1</div>
+      <div class="sctxt">"<span class="say">하이브 신작 RFP 분석해줘</span>"라고 친다 → 인입 박스의 <b class="mono">rfp-analyst</b>가 켜진다 → 4분류(명시·숨은·미정의·위험) + 확인 질문 3개가 나온다.
+        <span class="lane-tag" style="background:#fff1e6;color:#b3450f">MARKETER 진입</span></div>
+    </div>
+    <div class="sc-step" style="border-left-color:var(--marketer)">
+      <div class="scno">2</div>
+      <div class="sctxt">"<span class="say">마케터 돌려</span>"라고 친다 → MARKETER 레인이 위에서 아래로 순서대로 켜진다: <b class="mono">market-research</b>(경쟁 맵) <span class="arrow">→</span> GATE·리서치 통과 <span class="arrow">→</span> <b class="mono">design-trend-radar</b> <span class="arrow">→</span> <b class="mono">reference-curator</b> <span class="arrow">→</span> <b class="mono">brainstormer</b>(방향 후보 2~3개).
+        <span class="lane-tag" style="background:#fff1e6;color:#b3450f">MARKETER</span></div>
+    </div>
+    <div class="sc-step" style="border-left-color:var(--strategist)">
+      <div class="scno">3</div>
+      <div class="sctxt">방향 후보가 나오면 "<span class="say">관점 잡아줘</span>"라고 친다 → STRATEGIST 레인의 <b class="mono">concept-director</b>가 켜진다 → 브랜드 관점 한 문장이 고정된다. 이 문장을 이후 모든 매체가 상속한다.
+        <span class="lane-tag" style="background:#eaeffe;color:#2e53f9">STRATEGIST</span></div>
+    </div>
+    <div class="sc-step" style="border-left-color:var(--designer)">
+      <div class="scno">4</div>
+      <div class="sctxt">관점이 고정되면 "<span class="say">무드보드 만들어줘</span>" 또는 "<span class="say">키비주얼 뽑아줘</span>"라고 친다 → DESIGNER 레인이 순서대로 켜진다: <b class="mono">moodboard-builder</b> <span class="arrow">→</span> <b class="mono">visual-generator</b> <span class="arrow">→</span> 필요하면 <b class="mono">storyboard-maker</b> · <b class="mono">figma-bridge</b>.
+        <span class="lane-tag" style="background:#ffeafd;color:#b3459a">DESIGNER</span></div>
+    </div>
+    <div class="sc-step" style="border-left-color:#8fae2a">
+      <div class="scno">5</div>
+      <div class="sctxt">시안이 나오면 "<span class="say">시안 검수</span>"라고 친다 → DIRECTOR 레인이 순서대로 켜진다: <b class="mono">design-critique</b> <span class="arrow">→</span> <b class="mono">design-system-guardian</b> <span class="arrow">→</span> <b class="mono">creative-director</b> <span class="arrow">→</span> <b class="mono">fact-checker</b> <span class="arrow">→</span> <b class="mono">tone-guardian</b> <span class="arrow">→</span> <b class="mono">delivery-gate</b> <span class="arrow">→</span> GATE FINAL. 여기서 하나라도 걸리면 발송이 멈춘다.
+        <span class="lane-tag" style="background:#f2ffe0;color:#4a6b12">DIRECTOR</span></div>
+    </div>
+  </div>
+
+  <p class="sec-desc" style="margin-top:18px">업무 유형이 뭐든 아래 6단계 위를 흐른다. <b>왼쪽 상황을 만나면 「이렇게 말한다」의 트리거를 던지면</b> 담당 에이전트가 활성화되고 산출물이 나온다.</p>
   <div class="steps" id="steps"></div>
 
   <div class="gate-rules">
-    <div class="grule"><span class="gg"><span class="dm" style="background:#fbf1de;border-color:var(--amber)"></span>GATE · 리서치</span><div class="gt">market-research·트렌드·레퍼런스의 <b>출처·빈자리 근거</b>가 충족돼야 발산(brainstormer)으로 넘어간다.</div></div>
-    <div class="grule"><span class="gg"><span class="dm" style="background:#fbf1de;border-color:var(--amber)"></span>GATE · 단계</span><div class="gt">brand-pipeline은 <b>Phase 게이트</b>. manus_1_state → manus_2_state가 채워지고 slide_generation_ready=true일 때만 최종 덱.</div></div>
-    <div class="grule"><span class="gg"><span class="dm" style="background:#fbe6e8;border-color:var(--red)"></span>GATE FINAL</span><div class="gt">fact-checker·delivery-gate·tone-guardian를 <b>전부 통과해야 외부 발송</b>. 하나라도 🔴이면 발송 중단.</div></div>
+    <div class="grule"><span class="gg"><span class="dm" style="background:#f2ffdf;border-color:var(--amber)"></span>GATE · 리서치</span><div class="gt">market-research·트렌드·레퍼런스의 <b>출처·빈자리 근거</b>가 충족돼야 발산(brainstormer)으로 넘어간다.</div></div>
+    <div class="grule"><span class="gg"><span class="dm" style="background:#f2ffdf;border-color:var(--amber)"></span>GATE · 단계</span><div class="gt">brand-pipeline은 <b>Phase 게이트</b>. manus_1_state → manus_2_state가 채워지고 slide_generation_ready=true일 때만 최종 덱.</div></div>
+    <div class="grule"><span class="gg"><span class="dm" style="background:#ffe7d8;border-color:var(--red)"></span>GATE FINAL</span><div class="gt">fact-checker·delivery-gate·tone-guardian를 <b>전부 통과해야 외부 발송</b>. 하나라도 🔴이면 발송 중단.</div></div>
   </div>
 
   <div class="cheat-title">트리거 사전 — 이렇게 말하면 이게 돈다</div>
@@ -281,29 +336,29 @@
 <script>
 /* ── 에이전트 상세 (26종) ─────────────────────────────── */
 const D = {
-  "rfp-analyst":{ko:"RFP 분석가",badge:"Logical",bc:"#2f6fed",role:"RFP·과업지시서를 명시요구·숨은니즈·미정의·위험 4가지로 분해하고, 클라이언트에 되물을 확인 질문 3개를 뽑는다. 여기서 잡은 니즈가 이후 전 단계의 기준선.",tg:["RFP 분석","과업 분석","제안요청서 봐줘","니즈 뽑아줘"]},
-  "market-research":{ko:"시장조사",badge:"Logical",bc:"#2f6fed",role:"경쟁 브랜드 N개를 소비자 언어의 XY축으로 정리해 포지셔닝 맵과 화이트스페이스(우리가 노릴 빈자리)를 도출한다. 모든 주장에 출처 URL 필수.",tg:["시장조사","경쟁사 분석","포지셔닝 맵 그려줘","화이트스페이스 찾아줘"]},
-  "concept-director":{ko:"컨셉 디렉터 ⭐",badge:"사전 게이트",bc:"#e0a23d",role:"모든 디자인 작업 이전에 핵심 제품/타이틀 기준 브랜드 관점을 한 문장으로 고정한다. 이 문장을 평면·영상·UI 전 매체가 상속한다. 관점 없이는 시작하지 않는다.",tg:["관점 잡아줘","컨셉 정의해줘","핵심가치 한 문장으로","브랜딩 관점부터"]},
-  "brainstormer":{ko:"브레인스토머",badge:"Creative",bc:"#d9789c",role:"리서치·빈자리·트렌드를 재료로 서로 겹치지 않는 방향 후보를 발산한다. 각 방향에 키워드·약식 포지셔닝 축을 붙인다.",tg:["아이디어 줘","브레인스토밍","발산해줘","방향 좀 뽑아줘"]},
-  "critic":{ko:"냉정한 비평가",badge:"Logical",bc:"#2f6fed",role:"아이디어를 비용·기간·역량·실현가능·설득력으로 점수화(각 1–5)하고 리스크와 우선순위를 지적한다.",tg:["이거 현실적으로 돼?","평가해줘","냉정하게 봐줘","리스크 짚어줘"]},
-  "design-trend-radar":{ko:"트렌드 레이더",badge:"Logical",bc:"#2f6fed",role:"최근 3개월 이내 글로벌 디자인 트렌드 3–5개와 약신호를 추출하고 우리 작업과의 관련성을 붙인다. 출처 URL 필수.",tg:["트렌드","요즘 뭐가 유행","디자인 트렌드 봐줘","분기 트렌드"]},
-  "reference-curator":{ko:"레퍼런스 큐레이터",badge:"Logical",bc:"#2f6fed",role:"클라이언트·카테고리·톤별 레퍼런스를 큐레이션한다. 각 사례에 출처 URL + '훔칠 포인트' 한 줄.",tg:["레퍼런스 찾아줘","참고 사례","벤치마크 모아줘"]},
-  "design-system-guardian":{ko:"시스템 가디언",badge:"검수",bc:"#0f5a4a",role:"시안이 사내 디자인 시스템(컬러·타입·컴포넌트·그리드)을 지키는지 준수율 %로 점검하고 위반·교정안을 낸다.",tg:["시스템 점검","가이드 맞나","토큰 확인","컴포넌트 일관성"]},
-  "design-critique":{ko:"디자인 비평가",badge:"검수",bc:"#0f5a4a",role:"시안을 UI·콘텐츠·GUI·UA·상세·브랜딩 6영역으로 검수해 🟢완성 🟡보완 🔴재작업으로 판정한다.",tg:["시안 검수","이 시안 봐줘","디자인 점검","QC 봐줘"]},
-  "visual-generator":{ko:"비주얼 제너레이터",badge:"Creative",bc:"#d9789c",role:"키비주얼·목업·스타일프레임 이미지를 생성한다(Higgsfield). 산출물에 사용 프롬프트를 함께 남긴다.",tg:["키비주얼 뽑아","이미지 생성","목업 만들어","스타일프레임"]},
-  "moodboard-builder":{ko:"무드보드 빌더",badge:"Creative",bc:"#d9789c",role:"컨셉별 무드보드를 레퍼런스+생성 이미지로 조합하고 톤·색감·타이포그래피 가이드를 정의한다.",tg:["무드보드","분위기 잡아줘","톤 보드 만들어"]},
-  "figma-bridge":{ko:"피그마 브릿지",badge:"Production",bc:"#d9789c",role:"코드와 Figma를 양방향으로 동기화한다. 디자인을 Figma로 보내거나 코드 컴포넌트로 가져온다.",tg:["Figma 보내","Figma 가져와","피그마 동기화"]},
-  "storyboard-maker":{ko:"스토리보드 메이커",badge:"Creative",bc:"#d9789c",role:"영상·모션 스토리보드를 컷별 구성·모션 의도·음향 가이드로 작성한다(Higgsfield 통합).",tg:["스토리보드","영상 콘티","모션 기획","콘티 짜줘"]},
-  "fact-checker":{ko:"팩트 체커",badge:"게이트",bc:"#e0a23d",role:"산출물의 사실·숫자·인용을 반증 먼저(refute-first)로 검증해 ✅정확 / ⚠️유보 / ❌오류로 판정한다.",tg:["팩트체크","이 숫자 맞아","출처 확인"]},
-  "review-panel":{ko:"5관점 패널",badge:"검수",bc:"#0f5a4a",role:"제안안을 기획·크리에이터·사업·마케팅·B2B고객 5관점으로 병렬 검토하고 종합 점수·통과 여부를 낸다.",tg:["5관점","패널 검토","다각도 검토"]},
-  "delivery-gate":{ko:"딜리버리 게이트",badge:"게이트",bc:"#e0555f",role:"라이트모드·PII·텍스트 잘림·마크다운·링크를 결정론적으로 린트한다. 외부 발송 직전 자동 경유.",tg:["발송 전 점검","딜리버리 체크"]},
-  "tone-guardian":{ko:"톤 가디언",badge:"게이트",bc:"#e0a23d",role:"회신·메일 초안의 톤·매너를 컨펌·교정한다. 너무 딱딱하거나 가볍지 않게 발송 전 다듬는다.",tg:["톤 봐줘","이 메일 괜찮아","회신 다듬어줘"]},
-  "creative-director":{ko:"크리에이티브 디렉터",badge:"Production",bc:"#0f5a4a",role:"최종 시안의 톤·퀄리티를 확정하고 신규/외주 온보딩 팩 1장을 만든다.",tg:["CD 검수","톤 최종 점검","온보딩 만들어줘"]},
-  "marketer":{ko:"마케터 (역할)",badge:"오케스트레이터",bc:"#ea6a2e",role:"rfp-analyst·market-research·design-trend·reference-curator·brainstormer를 하나의 흐름으로 이어서 실행한다. 제안 착수 전 진짜 니즈 + 노릴 빈자리 + 방향 후보를 출처 있게 깔아준다.",tg:["마케터 돌려","리서치 쭉 돌려줘","시장조사","트렌드 봐줘","레퍼런스 찾아줘","브레인스토밍"]},
-  "brand-pipeline":{ko:"브랜드 파이프라인 (역할)",badge:"오케스트레이터",bc:"#2f6fed",role:"브랜드 제안 풀프로세스를 manus-1 → manus-2 → runable-3 순으로 오케스트레이션한다. 각 단계 게이트를 통과해야 다음으로. 슬라이드는 runable-3에서만.",tg:["브랜드 제안 시작","풀 프로세스","처음부터 해줘","제안서 만들어줘"]},
-  "manus-1":{ko:"마누스 1차",badge:"Pipeline",bc:"#2f6fed",role:"경쟁 리서치·포지셔닝·BX 비주얼 프롬프트를 만든다. 최종 슬라이드는 절대 만들지 않고 manus_1_state로만 산출.",tg:["브랜드 기획","제안 시작","포지셔닝","경쟁사 분석"]},
-  "manus-2":{ko:"마누스 2차",badge:"Pipeline",bc:"#2f6fed",role:"비주얼 아이덴티티를 추출하고 컨셉·무드보드를 발산한다. manus_1_state 없으면 시작 안 함. manus_2_state로만 산출.",tg:["2차 진행","비주얼 아이덴티티","컨셉 발산","무드보드"]},
-  "runable-3":{ko:"러너블 3차",badge:"Pipeline",bc:"#2f6fed",role:"브랜드를 시스템화하고 최종 슬라이드 덱을 생성한다. manus_1·manus_2_state가 모두 있고 slide_generation_ready=true일 때만.",tg:["3차 진행","브랜드 시스템","슬라이드 만들어줘","최종 덱"]},
+  "rfp-analyst":{ko:"RFP 분석가",badge:"Logical",bc:"#2e53f9",role:"RFP·과업지시서를 명시요구·숨은니즈·미정의·위험 4가지로 분해하고, 클라이언트에 되물을 확인 질문 3개를 뽑는다. 여기서 잡은 니즈가 이후 전 단계의 기준선.",tg:["RFP 분석","과업 분석","제안요청서 봐줘","니즈 뽑아줘"]},
+  "market-research":{ko:"시장조사",badge:"Logical",bc:"#2e53f9",role:"경쟁 브랜드 N개를 소비자 언어의 XY축으로 정리해 포지셔닝 맵과 화이트스페이스(우리가 노릴 빈자리)를 도출한다. 모든 주장에 출처 URL 필수.",tg:["시장조사","경쟁사 분석","포지셔닝 맵 그려줘","화이트스페이스 찾아줘"]},
+  "concept-director":{ko:"컨셉 디렉터 ⭐",badge:"사전 게이트",bc:"#ff6e23",role:"모든 디자인 작업 이전에 핵심 제품/타이틀 기준 브랜드 관점을 한 문장으로 고정한다. 이 문장을 평면·영상·UI 전 매체가 상속한다. 관점 없이는 시작하지 않는다.",tg:["관점 잡아줘","컨셉 정의해줘","핵심가치 한 문장으로","브랜딩 관점부터"]},
+  "brainstormer":{ko:"브레인스토머",badge:"Creative",bc:"#ff86f6",role:"리서치·빈자리·트렌드를 재료로 서로 겹치지 않는 방향 후보를 발산한다. 각 방향에 키워드·약식 포지셔닝 축을 붙인다.",tg:["아이디어 줘","브레인스토밍","발산해줘","방향 좀 뽑아줘"]},
+  "critic":{ko:"냉정한 비평가",badge:"Logical",bc:"#2e53f9",role:"아이디어를 비용·기간·역량·실현가능·설득력으로 점수화(각 1–5)하고 리스크와 우선순위를 지적한다.",tg:["이거 현실적으로 돼?","평가해줘","냉정하게 봐줘","리스크 짚어줘"]},
+  "design-trend-radar":{ko:"트렌드 레이더",badge:"Logical",bc:"#2e53f9",role:"최근 3개월 이내 글로벌 디자인 트렌드 3–5개와 약신호를 추출하고 우리 작업과의 관련성을 붙인다. 출처 URL 필수.",tg:["트렌드","요즘 뭐가 유행","디자인 트렌드 봐줘","분기 트렌드"]},
+  "reference-curator":{ko:"레퍼런스 큐레이터",badge:"Logical",bc:"#2e53f9",role:"클라이언트·카테고리·톤별 레퍼런스를 큐레이션한다. 각 사례에 출처 URL + '훔칠 포인트' 한 줄.",tg:["레퍼런스 찾아줘","참고 사례","벤치마크 모아줘"]},
+  "design-system-guardian":{ko:"시스템 가디언",badge:"검수",bc:"#c5ff79",dark:true,role:"시안이 사내 디자인 시스템(컬러·타입·컴포넌트·그리드)을 지키는지 준수율 %로 점검하고 위반·교정안을 낸다.",tg:["시스템 점검","가이드 맞나","토큰 확인","컴포넌트 일관성"]},
+  "design-critique":{ko:"디자인 비평가",badge:"검수",bc:"#c5ff79",dark:true,role:"시안을 UI·콘텐츠·GUI·UA·상세·브랜딩 6영역으로 검수해 🟢완성 🟡보완 🔴재작업으로 판정한다.",tg:["시안 검수","이 시안 봐줘","디자인 점검","QC 봐줘"]},
+  "visual-generator":{ko:"비주얼 제너레이터",badge:"Creative",bc:"#ff86f6",role:"키비주얼·목업·스타일프레임 이미지를 생성한다(Higgsfield). 산출물에 사용 프롬프트를 함께 남긴다.",tg:["키비주얼 뽑아","이미지 생성","목업 만들어","스타일프레임"]},
+  "moodboard-builder":{ko:"무드보드 빌더",badge:"Creative",bc:"#ff86f6",role:"컨셉별 무드보드를 레퍼런스+생성 이미지로 조합하고 톤·색감·타이포그래피 가이드를 정의한다.",tg:["무드보드","분위기 잡아줘","톤 보드 만들어"]},
+  "figma-bridge":{ko:"피그마 브릿지",badge:"Production",bc:"#ff86f6",role:"코드와 Figma를 양방향으로 동기화한다. 디자인을 Figma로 보내거나 코드 컴포넌트로 가져온다.",tg:["Figma 보내","Figma 가져와","피그마 동기화"]},
+  "storyboard-maker":{ko:"스토리보드 메이커",badge:"Creative",bc:"#ff86f6",role:"영상·모션 스토리보드를 컷별 구성·모션 의도·음향 가이드로 작성한다(Higgsfield 통합).",tg:["스토리보드","영상 콘티","모션 기획","콘티 짜줘"]},
+  "fact-checker":{ko:"팩트 체커",badge:"게이트",bc:"#ff6e23",role:"산출물의 사실·숫자·인용을 반증 먼저(refute-first)로 검증해 ✅정확 / ⚠️유보 / ❌오류로 판정한다.",tg:["팩트체크","이 숫자 맞아","출처 확인"]},
+  "review-panel":{ko:"5관점 패널",badge:"검수",bc:"#c5ff79",dark:true,role:"제안안을 기획·크리에이터·사업·마케팅·B2B고객 5관점으로 병렬 검토하고 종합 점수·통과 여부를 낸다.",tg:["5관점","패널 검토","다각도 검토"]},
+  "delivery-gate":{ko:"딜리버리 게이트",badge:"게이트",bc:"#ff6e23",role:"라이트모드·PII·텍스트 잘림·마크다운·링크를 결정론적으로 린트한다. 외부 발송 직전 자동 경유.",tg:["발송 전 점검","딜리버리 체크"]},
+  "tone-guardian":{ko:"톤 가디언",badge:"게이트",bc:"#ff6e23",role:"회신·메일 초안의 톤·매너를 컨펌·교정한다. 너무 딱딱하거나 가볍지 않게 발송 전 다듬는다.",tg:["톤 봐줘","이 메일 괜찮아","회신 다듬어줘"]},
+  "creative-director":{ko:"크리에이티브 디렉터",badge:"Production",bc:"#c5ff79",dark:true,role:"최종 시안의 톤·퀄리티를 확정하고 신규/외주 온보딩 팩 1장을 만든다.",tg:["CD 검수","톤 최종 점검","온보딩 만들어줘"]},
+  "marketer":{ko:"마케터 (역할)",badge:"오케스트레이터",bc:"#ff6e23",role:"rfp-analyst·market-research·design-trend·reference-curator·brainstormer를 하나의 흐름으로 이어서 실행한다. 제안 착수 전 진짜 니즈 + 노릴 빈자리 + 방향 후보를 출처 있게 깔아준다.",tg:["마케터 돌려","리서치 쭉 돌려줘","시장조사","트렌드 봐줘","레퍼런스 찾아줘","브레인스토밍"]},
+  "brand-pipeline":{ko:"브랜드 파이프라인 (역할)",badge:"오케스트레이터",bc:"#2e53f9",role:"브랜드 제안 풀프로세스를 manus-1 → manus-2 → runable-3 순으로 오케스트레이션한다. 각 단계 게이트를 통과해야 다음으로. 슬라이드는 runable-3에서만.",tg:["브랜드 제안 시작","풀 프로세스","처음부터 해줘","제안서 만들어줘"]},
+  "manus-1":{ko:"마누스 1차",badge:"Pipeline",bc:"#2e53f9",role:"경쟁 리서치·포지셔닝·BX 비주얼 프롬프트를 만든다. 최종 슬라이드는 절대 만들지 않고 manus_1_state로만 산출.",tg:["브랜드 기획","제안 시작","포지셔닝","경쟁사 분석"]},
+  "manus-2":{ko:"마누스 2차",badge:"Pipeline",bc:"#2e53f9",role:"비주얼 아이덴티티를 추출하고 컨셉·무드보드를 발산한다. manus_1_state 없으면 시작 안 함. manus_2_state로만 산출.",tg:["2차 진행","비주얼 아이덴티티","컨셉 발산","무드보드"]},
+  "runable-3":{ko:"러너블 3차",badge:"Pipeline",bc:"#2e53f9",role:"브랜드를 시스템화하고 최종 슬라이드 덱을 생성한다. manus_1·manus_2_state가 모두 있고 slide_generation_ready=true일 때만.",tg:["3차 진행","브랜드 시스템","슬라이드 만들어줘","최종 덱"]},
 };
 
 /* ── 게이트 상세 ──────────────────────────────────────── */
@@ -315,7 +370,7 @@ const G = {
 
 /* ── 레인 구조 ────────────────────────────────────────── */
 const LANES = [
-  {id:"marketer",name:"MARKETER",tag:"시장을 읽고 아이디어를 벌린다",color:"var(--marketer)",tint:"#fdf1ea",
+  {id:"marketer",name:"MARKETER",tag:"시장을 읽고 아이디어를 벌린다",color:"var(--marketer)",tint:"#fff1e6",
    nodes:[
      {t:"inlet",label:"← rfp-analyst",agent:"rfp-analyst"},
      {t:"skill",a:"market-research",d:"경쟁 N개 → XY 맵 + 빈자리",xfer:{to:"strategist",label:"리서치 시사점 →"}},
@@ -324,7 +379,7 @@ const LANES = [
      {t:"skill",a:"reference-curator",d:"카테고리 레퍼런스 3~5"},
      {t:"skill",a:"brainstormer",d:"방향 발산 + 아날로지",xfer:{to:"designer",label:"Direction →"}},
    ]},
-  {id:"strategist",name:"STRATEGIST",tag:"방향을 정하고 제안을 만든다",color:"var(--strategist)",tint:"#eef2fe",
+  {id:"strategist",name:"STRATEGIST",tag:"방향을 정하고 제안을 만든다",color:"var(--strategist)",tint:"#eaeffe",
    nodes:[
      {t:"skill",a:"concept-director",d:"핵심 관점 한 문장 고정 ⭐"},
      {t:"sub",st:"BRAND-PIPELINE",items:[
@@ -336,14 +391,14 @@ const LANES = [
      {t:"skill",a:"review-panel",d:"5관점 병렬 검토"},
      {t:"skill",a:"critic",d:"비용·기간·역량 점수화"},
    ]},
-  {id:"designer",name:"DESIGNER",tag:"눈에 보이는 결과물을 만든다",color:"var(--designer)",tint:"#fbeef4",
+  {id:"designer",name:"DESIGNER",tag:"눈에 보이는 결과물을 만든다",color:"var(--designer)",tint:"#ffeafd",
    nodes:[
      {t:"skill",a:"moodboard-builder",d:"레퍼런스+생성 무드보드"},
      {t:"skill",a:"visual-generator",d:"키비주얼·목업 이미지",xfer:{to:"director",label:"시안 완성 →"}},
      {t:"skill",a:"storyboard-maker",d:"영상·모션 콘티"},
      {t:"skill",a:"figma-bridge",d:"코드 ↔ Figma 연동"},
    ]},
-  {id:"director",name:"DIRECTOR",tag:"품질을 지키고 발송을 결정한다",color:"var(--director)",tint:"#e9f4f0",
+  {id:"director",name:"DIRECTOR",tag:"품질을 지키고 발송을 결정한다",color:"var(--director)",tint:"#f2ffe0",fg:"dark",
    nodes:[
      {t:"skill",a:"design-critique",d:"6영역 검수 🟢🟡🔴"},
      {t:"skill",a:"design-system-guardian",d:"디자인 시스템 준수"},
@@ -354,7 +409,8 @@ const LANES = [
      {t:"gate",g:"gate-final"},
    ]},
 ];
-const LANE_COLOR = {marketer:"#ea6a2e",strategist:"#2f6fed",designer:"#e0669a",director:"#0f5a4a"};
+const LANE_COLOR = {marketer:"#ff6e23",strategist:"#2e53f9",designer:"#ff86f6",director:"#c5ff79"};
+const LANE_DARK = {director:true};
 
 /* 크로스레인 전달 */
 const XFERS = [
@@ -369,14 +425,16 @@ function connEl(){const c=document.createElement("div");c.className="conn";retur
 function skillNode(a,d,xfer){
   const el=document.createElement("div");el.className="node";el.dataset.agent=a;
   let h='<div class="nm mono">'+a+'</div><div class="ds">'+d+'</div>';
-  if(xfer) h+='<span class="xfer" data-target="'+xfer.to+'" style="background:'+LANE_COLOR[xfer.to]+'">'+xfer.label+'</span>';
+  if(xfer){const dk=LANE_DARK[xfer.to]?" dark-text":"";
+    h+='<span class="xfer'+dk+'" data-target="'+xfer.to+'" style="background:'+LANE_COLOR[xfer.to]+'">'+xfer.label+'</span>';}
   el.innerHTML=h;return el;
 }
 const lanesEl=document.getElementById("lanes");
 LANES.forEach(L=>{
   const lane=document.createElement("div");lane.className="lane";lane.dataset.lane=L.id;
   const always=L.always?'<span class="always">상시</span>':'';
-  let html='<div class="lane-head" style="background:'+L.color+'">'+always+L.name+'<small>'+L.tag+'</small></div>';
+  const headDark=L.fg==="dark"?" dark-text":"";
+  let html='<div class="lane-head'+headDark+'" style="background:'+L.color+'">'+always+L.name+'<small>'+L.tag+'</small></div>';
   const body=document.createElement("div");body.className="lane-body";
   lane.innerHTML=html;lane.appendChild(body);
 
@@ -397,7 +455,8 @@ LANES.forEach(L=>{
       n.items.forEach(it=>{
         const sn=document.createElement("div");sn.className="snode";sn.dataset.agent=it.a;
         let ih='<div class="nm mono">'+it.a+'</div><div class="ds">'+it.d+'</div>';
-        if(it.xfer) ih+='<span class="xfer" data-target="'+it.xfer.to+'" style="background:'+LANE_COLOR[it.xfer.to]+'">'+it.xfer.label+'</span>';
+        if(it.xfer){const dk=LANE_DARK[it.xfer.to]?" dark-text":"";
+          ih+='<span class="xfer'+dk+'" data-target="'+it.xfer.to+'" style="background:'+LANE_COLOR[it.xfer.to]+'">'+it.xfer.label+'</span>';}
         sn.innerHTML=ih;el.appendChild(sn);
       });
       body.appendChild(el);
@@ -419,8 +478,9 @@ function showAgent(a){
   const d=D[a];if(!d)return;clearActive();
   document.querySelectorAll('[data-agent="'+a+'"]').forEach(e=>e.classList.add("active"));
   let tg=d.tg.map(t=>'<span class="tg">"'+t+'"</span>').join("");
+  const badgeFg=d.dark?"#1f1d1a":"#fff";
   detail.innerHTML='<div class="dhead"><span class="dn mono">'+a+'</span><span class="dk">'+d.ko+'</span>'
-    +'<span class="dbadge" style="background:'+d.bc+'">'+d.badge+'</span></div>'
+    +'<span class="dbadge" style="background:'+d.bc+';color:'+badgeFg+'">'+d.badge+'</span></div>'
     +'<div class="drole">'+d.role+'</div>'
     +'<div class="tglabel">이렇게 부르세요</div><div class="tgs">'+tg+'</div>';
 }
@@ -428,8 +488,9 @@ function showGate(g){
   const x=G[g];if(!x)return;clearActive();
   document.querySelectorAll('[data-gate="'+g+'"]').forEach(e=>e.classList.add("active"));
   const c=x.level==="red"?"var(--red)":"var(--amber)";
+  const gateFg=x.level==="red"?"#fff":"#1f1d1a";
   detail.innerHTML='<div class="dhead"><span class="dn">◆ '+x.gl+'</span>'
-    +'<span class="dbadge" style="background:'+c+'">'+(x.level==="red"?"최종 게이트":"검증 게이트")+'</span></div>'
+    +'<span class="dbadge" style="background:'+c+';color:'+gateFg+'">'+(x.level==="red"?"최종 게이트":"검증 게이트")+'</span></div>'
     +'<div class="drole">'+x.role+'</div>';
 }
 lanesEl.addEventListener("click",e=>{
