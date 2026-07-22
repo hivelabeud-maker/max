@@ -22,7 +22,7 @@ RFP·초기 자료를 해석하고, 브랜드·프로젝트 현황을 조사하�
 | STEP 1~3 | `project-discovery` | `01_project_discovery.md` · `02_brand_factbook.md` · `03_problem_definition.md` |
 | STEP 4~5 | `wide-market-research` | `04~09_*.json` · `12_sources.json` |
 | STEP 6~7 | `insight-strategy` | `10_insights.md` · `11_strategy.md` |
-| 게이트 | `quality-gate` | 완료 점검(경쟁 30+·이종 30+·출처·근거·연결) |
+| 게이트 | `quality-gate` | 완료 점검(경쟁·이종 각 목표 30·최소 20·출처·근거·연결) |
 | STEP 18 | `brand-strategy-deck` | `report-data.json` → `deck.html` |
 | 톤(선택) | `hivelab-proposal-style` | 모노톤 슬라이드가 필요할 때 |
 
@@ -45,7 +45,7 @@ RFP·초기 자료를 해석하고, 브랜드·프로젝트 현황을 조사하�
 ## 리서치 모드
 RFP · 신규 브랜드 · 리브랜딩 · 신규 사업 · 브랜드 포지셔닝 · 공간 브랜딩 · 대형 캠페인 · 디자인 전략 제안서,
 그리고 "와이드 리서치"/"Manus 방식"/"제대로 조사"/"경쟁 구도"/"포지셔닝 맵"/"화이트스페이스" 요청은
-**자동으로 DEEP 모드** — 경쟁·대체 30+, 이종업계 30+. 기존 자료가 부족하면 **수량을 줄이지 말고 WebSearch로 보강**.
+**자동으로 DEEP 모드** — 경쟁·대체·이종업계 각 목표 30+. 기존 자료가 부족하면 WebSearch로 최대한 보강하되, **20개 미만으로만 안 떨어지면 진행** — 못 넘어가는 것보다 20개로라도 진행하는 게 낫다. 30 미달 시 부족분·이유를 기록한다.
 
 ## 라우팅 (부분 실행)
 | 요청 | 실행 |

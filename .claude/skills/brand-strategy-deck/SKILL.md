@@ -15,9 +15,9 @@ description: 브랜드 리서치·전략 결과를 좌측 번호 네비게이터
 | `COMPONENTS.md` | 대시보드 컴포넌트 목록(카드·표·맵·점수바 등) |
 | `template.html` | 좌측 네비게이터형 대시보드 셸(모노톤+포인트 4색 CSS 포함) |
 | `render.py` | **`report-data.json` → `deck.html` 자동 렌더러.** CLI로 직접 실행 |
-| `references/grain-golden-example.html` | 참고용 — 이전 세대 스크롤형 골든(정보 밀도·출처 표현 판단 기준) |
+| `references/dashboard-golden-example.html` | **현재 골든 예시.** 지금 `template.html`·`render.py`로 실제 생성된 완성 덱(LUMEN 샘플) — 좌측 네비·카드 그리드·BVK·포인트 4색 전부 포함. 완성 기준으로 이 파일을 본다 |
+| `references/grain-golden-example.html` | 참고용(구세대) — 이전 스크롤형 디자인. 지금 디자인과 다르므로 완성 기준으로 쓰지 않는다. 정보 밀도·출처 표현 아이디어만 참고 |
 | `references/maxos-golden-example.html` | 16:9 슬라이드 포맷이 필요할 때 별도 참조 |
-| `references/boomi-golden-example.html` | (원본 확보 시 교체 · 현재 stub) |
 
 ## 생성 절차 (자동 · render.py)
 HTML은 손으로 슬롯을 채우지 않는다. **`report-data.json`이 완성되면 `render.py`가 결정론적으로 `deck.html`을 만든다.** 이래야 매 프로젝트 같은 구조·같은 문체·같은 색 규칙이 자동으로 나온다.

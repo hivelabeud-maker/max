@@ -109,3 +109,14 @@ cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand
 | `insight-strategy/SKILL.md` | STEP 6.5 예시를 GRAIN 실제 문구(SLOW—JELLY WOBBLE 등)에서 **빈 자리표시자**로 교체, "다른 프로젝트 감각 언어를 재사용하지 않는다"는 경고 문장 추가 |
 
 **검증**: `SLOW`·`HEAVY`·`JELLY WOBBLE` 등 참고 이미지/GRAIN 원본 문구가 `deck.html`에 잔존하지 않음을 grep으로 확인. div/section 태그 균형 OK, 슬롯 미충전 0.
+
+## 6차 개정 — 골든 예시 교체, Boomi stub 삭제, 게이트 기준 완화
+사용자 결정 3건 반영.
+
+| 변경 | 내용 |
+|---|---|
+| 골든 예시 교체 | `references/dashboard-golden-example.html` 신설(현재 `template.html`·`render.py`로 만든 LUMEN 완성 덱 — 좌측 네비·카드 그리드·BVK·포인트 4색 전부 포함). `SKILL.md` 참조 표에서 **이걸 현재 골든**으로 명시. GRAIN은 "구세대 참고"로 격하(디자인이 다름) |
+| Boomi stub 삭제 | `references/boomi-golden-example.html` 제거. 대시보드 골든 하나로 충분하다는 판단 |
+| 게이트 기준 완화 | 경쟁·이종업계 "30개 미달 시 HTML 금지" → **"20개 미만일 때만 막고, 20~29개는 조건부 통과"**로 완화. 이유: 못 넘어가는 것보다 20개로라도 진행하는 게 낫다. `quality-gate`·`wide-market-research`·`REPORT_SCHEMA.md`·`marketer.md` 4곳에 일관되게 반영. 부족분은 사유와 함께 기록 |
+
+**남은 이슈**: concept-director를 마케터 파이프라인의 어느 시점에 연결할지는 대안을 마련해 별도로 확인 필요(아래 AskUserQuestion).
