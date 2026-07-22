@@ -314,7 +314,7 @@
     </div>
   </div>
 
-  <p class="sec-desc" style="margin-top:18px">업무 유형이 뭐든 아래 6단계 위를 흐른다. <b>왼쪽 상황을 만나면 「이렇게 말한다」의 트리거를 던지면</b> 담당 에이전트가 활성화되고 산출물이 나온다.</p>
+  <p class="sec-desc" style="margin-top:18px">업무 유형이 뭐든 아래 6단계를 거친다. <b>왼쪽 상황을 만나면 「이렇게 말한다」의 트리거를 던지면</b> 담당 에이전트가 활성화되고 산출물이 나온다.</p>
   <div class="steps" id="steps"></div>
 
   <div class="gate-rules">
@@ -505,19 +505,19 @@ document.querySelector('.intake-box').addEventListener("click",e=>{showAgent("rf
 /* ── 역할 상세 카드 ──────────────────────────────────── */
 const ROLES=[
   {id:"marketer",name:"MARKETER",tag:"시장을 읽고 아이디어를 벌린다",
-   desc:"경쟁사 분석·트렌드 리서치·레퍼런스 큐레이션·아이디어 발산을 통해 프로젝트의 시장적 기반을 마련한다.",
+   desc:"경쟁사를 뜯어보고, 트렌드·레퍼런스를 모으고, 방향 후보를 발산한다. 프로젝트가 설 자리는 여기서 나온다.",
    skills:[["rfp-analyst","RFP → 4분류 + 확인 질문"],["market-research","경쟁 분석 → 포지셔닝 맵"],["design-trend-radar","3개월 트렌드 + 약신호"],["reference-curator","방향별 레퍼런스"],["brainstormer","키워드 발산 + 아날로지"]],
    call:"시장조사 · 경쟁사 분석 · 트렌드 봐줘 · 레퍼런스 찾아줘 · 아이디어 줘 · 화이트스페이스 · 마케터 돌려"},
   {id:"strategist",name:"STRATEGIST",tag:"방향을 정하고 제안을 만든다",
-   desc:"RFP 분석·컨셉 정의·브랜드 제안 풀파이프라인을 통해 프로젝트의 전략적 방향을 수립하고 검증한다.",
+   desc:"RFP를 분석해 진짜 니즈를 잡고, 브랜드 관점을 한 문장으로 고정하고, 나온 제안을 심사한다. 방향은 여기서 정해지고 여기서 걸러진다.",
    skills:[["concept-director","관점 한 문장 정의 ⭐"],["brand-pipeline","manus 1→2→runable 3"],["review-panel","5관점 병렬 검토"],["critic","비용·기간·역량 점수화"]],
    call:"관점 잡아줘 · 컨셉 정의해줘 · 브랜드 제안 시작 · 냉정하게 봐줘 · 5관점"},
   {id:"designer",name:"DESIGNER",tag:"눈에 보이는 결과물을 만든다",
-   desc:"비주얼 생성·무드보드·영상 콘티·Figma 연동을 통해 프로젝트의 모든 시각적 결과물을 구현한다.",
+   desc:"무드보드를 짜고, 키비주얼을 뽑고, 영상 콘티를 그리고, Figma로 넘긴다. 눈에 보이는 건 전부 여기서 나온다.",
    skills:[["moodboard-builder","레퍼런스+생성 무드보드"],["visual-generator","키비주얼·목업 생성"],["storyboard-maker","영상·모션 콘티"],["figma-bridge","코드 ↔ Figma 연동"]],
    call:"무드보드 · 키비주얼 뽑아 · 목업 만들어 · 스토리보드 · 영상 콘티 · Figma 동기화"},
   {id:"director",name:"DIRECTOR",tag:"품질을 지키고 발송을 결정한다",
-   desc:"시안 검수·톤 점검·팩트 체크·발송 게이트를 통해 최종 품질을 보증하고 외부 발송을 결정한다.",
+   desc:"시안을 6영역으로 검수하고, 사실과 톤을 확인하고, 마지막 게이트를 통과한 것만 내보낸다.",
    skills:[["design-critique","6영역 검수"],["design-system-guardian","시스템 준수 점검"],["creative-director","CD 톤 최종 확정"],["fact-checker","사실·숫자 반증"],["tone-guardian","회신 톤 교정"],["delivery-gate","발송 직전 린트"]],
    call:"시안 검수 · CD 검수 · 시스템 점검 · 팩트체크 · 톤 봐줘 · 발송 전 점검"},
 ];
