@@ -17,7 +17,9 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     -webkit-font-smoothing:antialiased;padding:28px 30px 72px;max-width:1320px;margin:0 auto;line-height:1.5}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,"Roboto Mono",monospace}
-  h1{font-size:29px;font-weight:800;margin:0;letter-spacing:-.5px}
+  h1{font-size:29px;font-weight:800;margin:0;letter-spacing:-.5px;display:inline}
+  .verbadge{display:inline-block;vertical-align:middle;margin-left:10px;font-size:12px;font-weight:800;
+    background:var(--ink);color:#fff;padding:3px 10px;border-radius:999px;letter-spacing:.3px}
   .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
   .head .sub{color:var(--ink2);font-size:14px;margin-top:6px;max-width:720px}
   .period{color:var(--ink2);font-size:13px;text-align:right;line-height:1.5;padding-top:6px}
@@ -208,10 +210,10 @@
 
 <div class="head">
   <div>
-    <h1>MAX실 OS v8 — 에이전트 조직도</h1>
+    <h1>MAX실 OS v8 — 에이전트 조직도</h1><span class="verbadge">정리 v1</span>
     <div class="sub">역할 에이전트가 각각 어떤 스킬을 담당하는지 레인으로 보여준다. 노드를 누르면 상세가 열리고, 에이전트에게 말하면 담당 스킬이 자동 호출된다. <b>업무가 들어오면 「사용설명서」 탭</b>부터.</div>
   </div>
-  <div class="period"><b>하이브랩 MX센터</b><br/>26 에이전트 · 4 활성 레인 · 3 게이트</div>
+  <div class="period"><b>하이브랩 MX센터</b><br/>26 에이전트 · 4 활성 레인 · 3 게이트<br/>대시보드 첫 정리본 · v1</div>
 </div>
 
 <div class="tiles">
@@ -329,7 +331,7 @@
 </div>
 
 <footer>
-  <span>MAX실 OS v8 · 에이전트 조직도 & 사용설명서</span>
+  <span>MAX실 OS v8 · 에이전트 조직도 & 사용설명서 · 문서 v1(첫 정리본)</span>
   <span>출처: .claude/agents · CLAUDE.md · 이원화 사고방식(Logical ↔ Creative)</span>
 </footer>
 
