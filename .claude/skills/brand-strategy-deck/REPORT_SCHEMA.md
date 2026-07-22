@@ -1,47 +1,34 @@
-# REPORT_SCHEMA — 브랜드 리서치·전략 덱 콘텐츠 구조 (61섹션)
+# REPORT_SCHEMA — 브랜드 리서치·전략 덱 콘텐츠 구조
 
-`deck.html`과 정본 `report-data.json`이 담아야 할 콘텐츠 구조. GRAIN 골든 예시(`references/grain-golden-example.html`)의 정보 밀도·흐름을 계승한다.
+`deck.html`(좌측 번호 네비게이터형 대시보드)과 정본 `report-data.json`이 담아야 할 콘텐츠 구조.
 
 > 원칙: 데이터 정본은 `report-data.json`(+ `outputs/*.md|json`). HTML에만 데이터를 두지 않는다.
 > 모든 수치·브랜드·사례에 출처(T1~T4) + Evidence ID. 없으면 상태 태그(FACT~UNKNOWN)로 표시.
-> 프로젝트 성격상 불필요한 섹션은 숨길 수 있으나 **생략 이유를 기록**한다.
+> `render.py`가 아래 11개 뷰를 `report-data.json` 하나로 자동 생성한다 — 뷰를 프로젝트마다 새로 짜지 않는다.
 
 ---
 
-## HTML 섹션 (4 PART · 61)
+## HTML 뷰 (좌측 네비게이터 00~10)
 
-### PART 1 — PROJECT & BRAND
-1 Cover · 2 Executive Summary · 3 Project Snapshot · 4 RFP / Initial Brief · 5 Project Context ·
-6 Brand at a Glance · 7 Brand Factbook · 8 Product·Service·Experience · 9 Target Definition ·
-10 Current Brand Identity · 11 Name & Brand Story · 12 Brand Assets · 13 Brand Gaps ·
-14 Unknowns & Validation Questions · 15 Current State vs Desired State · 16 Reframed Goal ·
-17 Real Problem Definition · 18 Research Agenda
-
-### PART 2 — COMPETITIVE LANDSCAPE
-19 Market Definition · 20 Competitive Universe · 21 Direct Competitors · 22 Indirect Competitors ·
-23 Alternatives · 24 Adjacent Categories · 25 Competitor Cards 30+ · 26 Competitive Category A ·
-27 Competitive Category B · 28 Competitive Category C · 29 Additional Categories · 30 Category Deep Dive ·
-31 Axis Candidate 01 · 32 Axis Candidate 02 · 33 Axis Candidate 03 · 34 Selected Axes ·
-35 XY Positioning Map · 36 Quadrant Analysis · 37 Whitespace Opportunities · 38 False White Spaces ·
-39 Competitive Implications
-
-### PART 3 — CROSS-INDUSTRY RESEARCH
-40 Cross-industry Research Scope · 41 Cross-industry Universe 30+ · 42 Cross-industry Case Cards ·
-43 Cross-category Group A · 44 Cross-category Group B · 45 Cross-category Group C · 46 Additional Groups ·
-47 What to Borrow · 48 What to Translate · 49 What to Avoid
-
-### PART 4 — INSIGHT & STRATEGY
-50 Core Findings · 51 Core Insights · 52 Opportunity Areas · 53 Strategy Option A · 54 Strategy Option B ·
-55 Strategy Option C · 56 Strategy Comparison · 57 Recommended Strategy · 58 Strategic Principles ·
-59 Risk & Validation Plan · 60 Sources · 61 Research Limitations
-
----
+| # | 뷰 | 담는 내용 | report-data.json 소스 |
+|---|---|---|---|
+| 00 | 요약 대시보드 | 핵심 지표 4개 · 진행 파이프라인 · 추천 결론 요약 | project, recommended_strategy, insights[:3] |
+| 01 | 브리프·문제 정의 | 클라이언트 요청 → 재정의 목표 → 진짜 문제 · 미확인 사항 | project, brand_factbook.unknowns |
+| 02 | 브랜드 팩트북 | 목적·제공물·자산·격차·타깃 | brand_factbook |
+| 03 | 경쟁 리서치 | 경쟁·대체 30+ 표(유형 필터) + 3~5 카테고리 | competitive_research.competitors/categories |
+| 04 | 포지셔닝 맵 | 축 후보 3+ → 선정 축 → 좌표(근거 포함) | competitive_research.axis_candidates/selected_axes/positioning_points |
+| 05 | 화이트스페이스 | 기회(TRUE/EMERGING) vs 함정(FALSE/CAPABILITY GAP) | competitive_research.whitespaces |
+| 06 | 이종업계 | 사례 30+ 표 + 3~5 그룹 + Borrow/Translate/Avoid | cross_industry_research |
+| 07 | 핵심 인사이트 | 관찰→긴장→so what, Evidence ID 연결 | insights |
+| 08 | 전략 대안 | 옵션별 7기준 점수바 비교 | strategy_options |
+| 09 | 추천 전략 | 추천 이유·원칙·우선순위·하지 않을 것·리스크 | recommended_strategy |
+| 10 | 출처·근거 추적 | 전체 출처 목록 + 조사 한계 | sources, limitations |
 
 ## 최소 통과 기준 (quality-gate 스킬과 연동)
-- [ ] 팩트북(7) · 타깃(9) · 진짜 문제(17)
-- [ ] 경쟁사 30+ 카드(25) · 3~5 카테고리(26~29) · 축 후보 3(31~33) · 선정 축(34) · XY맵+근거(35) · 화이트스페이스 기회+함정(37~38)
-- [ ] 이종업계 30+ 카드(42) · 3~5 카테고리(43~46) · Borrow/Translate/Avoid(47~49)
-- [ ] 전략 대안 2+(53~55) · 추천+미선택 이유(57) · 리스크·검증(59) · 출처(60)
+- [ ] 팩트북(02) · 타깃 · 진짜 문제(01)
+- [ ] 경쟁사 30+ 표(03) · 3~5 카테고리(03) · 축 후보 3+(04) · 선정 축 근거(04) · 좌표 근거(04) · 화이트스페이스 기회+함정(05)
+- [ ] 이종업계 30+ 표(06) · 3~5 그룹(06) · Borrow/Translate/Avoid(06)
+- [ ] 전략 대안 2+(08) · 추천+미선택 이유(09) · 리스크·검증(09) · 출처(10)
 
 ---
 

@@ -11,3 +11,4 @@ data-sources.md
 # .claude/projects/ 는 폴더 구조(.gitkeep)만 공유하고 내용은 로컬 유지
 .claude/projects/*
 !.claude/projects/.gitkeep
+__pycache__/

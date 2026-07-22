@@ -62,3 +62,20 @@ cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand
 - **Boomi 골든 미확보**: stub 상태. 실제 Boomi `deck.html`을 `references/boomi-golden-example.html`로 덮어쓰면 활성화.
 - **DEEP 30+30 실데이터**: 실제 "마케터 돌려" 실행 시 WebSearch로 확보. 샘플(LUMEN)은 구조·파이프라인 검증용이라 실카운트는 30 미만(아래 검증 리포트에 명시).
 - **폰트 CDN**: 샌드박스 프록시가 Pretendard CDN 차단 → 시스템 폰트 폴백(실환경 정상).
+
+## 3차 개정 — 대시보드 셸 전환 + 자동 렌더러 (같은 날 후속)
+사용자 피드백 2건 반영: (1) 상단 탭 구분이 잘 안 보임 → 좌측 네비게이터로 교체, (2) HTML 문장이 AI 티가 나고 읽기 어려움 → anti-ai-writing/dumbify 강제.
+추가로 사용자가 참조 HTML(좌측 번호 네비 + 뷰 전환형 대시보드)을 제공해 `template.html`을 전면 교체했다.
+
+| 변경 | 내용 |
+|---|---|
+| `template.html` | GRAIN 스크롤형 → **좌측 번호 네비게이터(00~10) + 뷰 전환형 대시보드**로 전면 교체. 데스크톱 사이드바 고정, 740px 이하 상단 가로 필 바 |
+| `render.py` (신규, 스킬 폴더로 승격) | `report-data.json → deck.html` **결정론적 렌더러**. CLI로 직접 실행(`python3 render.py data.json out.html`) — 다음 회차부터 슬롯을 손으로 채우지 않고 이 스크립트로 자동 생성 |
+| 색 시스템 | 그린/앰버/레드 임의 배색 → **모노톤 + 포인트 4색 고정**(`#2e53f9` 블루=T1·핵심정보, `#c5ff79` 라임=T2·기회, `#ff86f6` 핑크=T3·중간위험, `#ff6e23` 오렌지=T4·위험·회피). 분류가 필요한 곳(출처 등급·화이트스페이스·리스크)에만 사용, 장식 금지 |
+| `SKILL.md`/`REPORT_SCHEMA.md`/`COMPONENTS.md` | 61섹션 스크롤 구조 → **11개 뷰 대시보드 구조**로 재작성. 생성 절차를 "슬롯 채우기"에서 "render.py 실행"으로 변경 |
+| 글쓰기 필터 | `SKILL.md`에 anti-ai-writing/dumbify 규칙 명문화(본문 중2 난도·한 문장 한 생각·구체성 레벨3+·부정병렬 금지). `marketer.md`에도 상시 원칙으로 추가 |
+| LUMEN 샘플 | `render.py` 로컬 사본 제거, `build_deck.py`가 스킬 폴더의 `render.py`를 직접 import하도록 정리(정본 이원화 방지) |
+
+**검증**: 스킬 `render.py`로 LUMEN 재빌드 → 슬롯 미충전 0, div/section 태그 균형 OK, 포인트 4색 전부 사용 확인, 구 identity 색(#1c3f3a 등) 잔존 없음.
+
+**남은 수동 판단**: `references/grain-golden-example.html`은 이제 "1차 골든"이 아니라 정보 밀도·출처 표현을 참고하는 보조 자료로 격하됨 — SKILL.md에 반영함. Boomi 골든 stub 상태는 그대로.
