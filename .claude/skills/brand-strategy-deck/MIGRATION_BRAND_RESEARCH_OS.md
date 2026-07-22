@@ -92,3 +92,20 @@ cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand
 | LUMEN 샘플 | 인사이트 3개(I1~I3) 각각에 대응하는 감각 클러스터 3개(왁스 무늬·돌 용기·저녁 전환) 추가, 카드 그리드로 재빌드 |
 
 **검증**: `<table>` 0개, `.brand-card` 60개(경쟁30+이종30), `.group-block` 7개, `.bvk-col` 3개, div/section 태그 균형 OK, 필터 버튼 9개 정상 동작.
+
+## 5차 개정 — BVK·경쟁사·이종업계 콘텐츠를 LUMEN 전용으로 재작성
+사용자가 "BRAND VALUE KEYWORDS 영역과 경쟁·이종업계 내용이 첨부 이미지 그대로 반영된 것 같다"고 지적.
+확인 결과 브랜드명·수치는 LUMEN 고유였으나 (1) BVK 3개 중 "SLOW"·"HEAVY" 두 단어를 참고 이미지에서 그대로 가져왔고,
+(2) 경쟁사 30개·이종업계 30개의 "관련성"/"빌릴 원리" 필드가 LUMEN의 실제 문제(한국 계절 서사 공백·오브제 vs 향
+긴장·저녁 리추얼 기회)에 연결되지 않은 일반적인 한 줄 설명에 머물러 있었다.
+추가로, 참고 이미지의 "SLOW—JELLY WOBBLE"류 문구는 실제로 `references/grain-golden-example.html`
+(GRAIN 실제 프로젝트 원본)에 이미 있던 Brand Value Keywords 컴포넌트였음을 확인 — 다른 프로젝트의 완성 사례였다.
+
+| 변경 | 내용 |
+|---|---|
+| BVK 3개 전면 교체 | SLOW/WAX BLOOM·HEAVY/STONE VESSEL·QUIET/THRESHOLD FLICKER → **ETCHED/SEASON GRAIN·SCARRED/REFILL RING·DIM/LAST LIGHT**로 재작성. 참고 이미지·GRAIN 원본의 단어를 전혀 재사용하지 않고 LUMEN 인사이트 I1/I2/I3에서만 도출 |
+| 경쟁사 30개 relevance 필드 | 전부 재작성 — 브랜드별로 LUMEN이 "무엇을 배우거나 피해야 하는지"를 화이트스페이스·인사이트에 직접 연결한 문장으로 교체 |
+| 이종업계 30개 borrow 필드 | 전부 재작성 — "가져올 원리 → LUMEN에 어떻게 적용" 형식으로 구체화 |
+| `insight-strategy/SKILL.md` | STEP 6.5 예시를 GRAIN 실제 문구(SLOW—JELLY WOBBLE 등)에서 **빈 자리표시자**로 교체, "다른 프로젝트 감각 언어를 재사용하지 않는다"는 경고 문장 추가 |
+
+**검증**: `SLOW`·`HEAVY`·`JELLY WOBBLE` 등 참고 이미지/GRAIN 원본 문구가 `deck.html`에 잔존하지 않음을 grep으로 확인. div/section 태그 균형 OK, 슬롯 미충전 0.
