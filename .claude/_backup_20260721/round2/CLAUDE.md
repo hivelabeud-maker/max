@@ -101,27 +101,15 @@
 ## 현재 등록된 스킬
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
+- `brand-strategy-deck` — 브랜드 리서치·전략 deck.html 생성 (GRAIN 골든 예시 시각 문법, 22블록 구조, template.html·REPORT_SCHEMA·COMPONENTS·references 동반). marketer가 최종 단계에서 호출. 트리거 "리서치 덱 만들어줘"/"전략 덱 HTML"/"deck.html 생성"
 - `hivelab-proposal-style` — HIVELAB 모노톤 제안서 디자인 시스템 (정식 스킬 폴더 구조로 이전됨)
-- **브랜드 리서치·전략 파이프라인 (marketer가 순서대로 호출)**
-  - `project-discovery` — STEP 1~3: 프로젝트 성격·브랜드 팩트북·타깃·문제 재정의(정보 상태 태그)
-  - `wide-market-research` — STEP 4~5: 경쟁 30+·카테고리 군집·XY맵·화이트스페이스·이종업계 30+(T1~T4·Evidence ID)
-  - `insight-strategy` — STEP 6~7: 핵심 인사이트·전략 대안·추천 전략(자산×기회 연결)
-  - `quality-gate` — 완료 게이트(경쟁 30+·이종 30+·출처·근거·연결 점검)
-  - `brand-strategy-deck` — STEP 18: report-data.json → GRAIN 골든 문법 deck.html (4PART 61섹션, template·schema·components·references 동반)
 
-## 브랜드 리서치·전략 프로젝트
-
-- RFP와 신규 프로젝트는 `marketer`가 총괄한다.
-- 브랜드 현황과 진짜 문제를 정의한 뒤 시장조사를 시작한다.
-- RFP·신규 브랜드·리브랜딩은 기본적으로 DEEP 리서치를 적용한다.
-- 경쟁·대체 브랜드 30개 이상과 이종업계 사례 30개 이상을 조사한다.
-- 리서치와 전략 원본은 Markdown·JSON으로 먼저 저장한다.
-- 최종 HTML은 `brand-strategy-deck` 스킬로 생성한다.
-- 기존 골든 예시와 `template.html`을 출력 기준으로 사용한다.
-- 프로젝트마다 HTML을 처음부터 재디자인하지 않는다.
-
-> 상세 규칙은 각 스킬과 참조 파일(`REPORT_SCHEMA.md`·`COMPONENTS.md`)에 둔다.
-> 프로젝트 산출물 구조: `.claude/projects/YYYYMM_PROJECT/{inputs,outputs,deck.html}` — 이식·검증 기록은 `.claude/skills/brand-strategy-deck/MIGRATION_BRAND_RESEARCH_OS.md`.
+## 브랜드 전략 프로젝트 운영 원칙
+- 브랜드 전략 프로젝트는 **marketer가 총괄**한다 (RFP → 리서치 → 전략 → 덱).
+- 리서치와 전략은 **Markdown·JSON으로 먼저 저장**한다 (`report-data.json`이 데이터 정본).
+- 최종 HTML은 **`brand-strategy-deck` 스킬을 통해** 생성한다.
+- 기존 **골든 예시(GRAIN)와 template.html**을 출력 기준으로 사용한다.
+- HTML을 **프로젝트마다 처음부터 재디자인하지 않는다.**
 
 ## 프로젝트 관리
 - 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식

@@ -1,92 +1,113 @@
-# REPORT_SCHEMA — 브랜드 리서치·전략 덱 콘텐츠 구조
+# REPORT_SCHEMA — 브랜드 리서치·전략 덱 콘텐츠 구조 (61섹션)
 
-`deck.html`(그리고 정본 `report-data.json`)이 반드시 담아야 할 **22개 콘텐츠 블록**의 순서·필수 요소를 정의한다.
-GRAIN 골든 예시(`references/grain-golden-example.html`)에서 실제로 검증된 흐름이다.
+`deck.html`과 정본 `report-data.json`이 담아야 할 콘텐츠 구조. GRAIN 골든 예시(`references/grain-golden-example.html`)의 정보 밀도·흐름을 계승한다.
 
-> 원칙: **모든 수치·브랜드·주장에는 출처(매체명 + URL)와 등급(T1~T4)**을 붙인다. 없으면 "추정/미확인"으로 명시.
-> 데이터는 `report-data.json`에 먼저 저장하고, HTML은 그로부터 생성한다. HTML에만 존재하는 데이터 금지.
-
----
-
-## 블록 순서
-
-| # | 블록 | 필수 요소 | 대응 컴포넌트 | JSON 키 |
-|---|---|---|---|---|
-| 1 | **Project Snapshot** | 클라이언트 · 카테고리 · 조사기준일 · 산출물 | snapshot 카드 | `project` |
-| 2 | **RFP / 초기 브리프** | 명시요구 · 숨은니즈 · 미정의 · 위험 (4분류) | cat-bullets | `brief` |
-| 3 | **브랜드 팩트북** | 브랜드명 · 제품/서비스 · 가격대 · 헤리티지 · 보유자산 · 지금 인상 | 브랜드 팩트 카드 | `factbook` |
-| 4 | **타깃 정의** | 1차/2차 타깃 · 페르소나 · 니즈·불만 | 타깃 카드(concept-card) | `target` |
-| 5 | **현재 상태 vs 목표 상태** | 영역별 현재↔목표 대비 표 | flow-table | `gap` |
-| 6 | **목표 재정의** | 표면 목표 → 진짜 목표 한 줄 | note | `gap.reframe` |
-| 7 | **진짜 해결 문제** | 한 문장 헤드라인 + 근거 3줄 (내부 POV) | pov | `problem` |
-| 8 | **시장 정의** | 시장 범위·경계·기준시점 | cat-bullets | `market` |
-| 9 | **경쟁사 전체 목록** | 조사 브랜드 전체(이름·업계·국가) | (report-data.json) | `competitors[]` |
-| 10 | **경쟁사 카드** | 브랜드마다: 국가·가격대·타깃·핵심메시지·출처·등급 | 경쟁 브랜드 카드 | `competitors[]` |
-| 11 | **3~5개 카테고리 군집** | 경쟁사를 A/B/C… 로 군집, 각 공통 관점 1줄 | Category 카드 | `categories[]` |
-| 12 | **카테고리별 상세 분석** | 각 군집의 함의 + 소속 브랜드 그리드 | Category + brand-grid | `categories[].brands[]` |
-| 13 | **XY축 후보와 선정 근거** | 축 후보 2~3쌍 + 채택/기각 사유 | 축 후보 카드 | `axes.candidates[]` |
-| 14 | **XY 포지셔닝 맵** | 채택 X/Y축 + 브랜드 좌표 배치 + Goal 위치 | XY 포지셔닝 맵 | `axes.selected`, `positioning[]` |
-| 15 | **사분면 분석** | 4개 사분면 각 군집·공백 해석 | cat-bullets | `positioning_analysis` |
-| 16 | **화이트스페이스** | 빈자리 = 우리 자리. **기회 + 함정 반드시 함께** | 화이트스페이스 카드(기회/함정) | `whitespace` |
-| 17 | **이종업계 크로스카테고리 사례** | 타 업계에서 공명하는 브랜드 + 공명 지점 + 출처 | 이종업계 레퍼런스 카드 | `cross_category[]` |
-| 18 | **핵심 인사이트** | 리서치를 관통하는 한 문장 + 해설 | note | `insight` |
-| 19 | **전략 대안** | 서로 겹치지 않는 방향 2~3 + 점수/리스크 | 전략 카드(concept-card) | `strategy_options[]` |
-| 20 | **추천 전략** | 1안 + **브랜드 자산 ↔ 시장 기회 연결 논리** + 필드(톤·컬러·모션 등) | 추천 전략(strategy-slide) | `recommended` |
-| 21 | **리스크와 검증 계획** | 차용/배제 + 리스크 + 검증(다음 라운드 조사) | 리스크 카드 | `risks[]`, `validation` |
-| 22 | **출처와 조사 한계** | 전체 출처 목록(등급별) + 미확보·추정 항목 명시 | 출처 목록 | `sources[]`, `limits` |
+> 원칙: 데이터 정본은 `report-data.json`(+ `outputs/*.md|json`). HTML에만 데이터를 두지 않는다.
+> 모든 수치·브랜드·사례에 출처(T1~T4) + Evidence ID. 없으면 상태 태그(FACT~UNKNOWN)로 표시.
+> 프로젝트 성격상 불필요한 섹션은 숨길 수 있으나 **생략 이유를 기록**한다.
 
 ---
 
-## 최소 통과 기준 (이게 없으면 덱을 내지 않는다)
+## HTML 섹션 (4 PART · 61)
 
-- [ ] 브랜드 팩트북이 채워졌는가 (블록 3)
-- [ ] 경쟁사 카드 + 최소 3개 카테고리 군집 (블록 10~11)
-- [ ] **모든 경쟁/이종 카드에 출처 또는 "미확인" 라벨** (블록 10·17·22)
-- [ ] XY맵에 축 선정 근거가 있는가 (블록 13~14)
-- [ ] 화이트스페이스에 **기회와 함정이 함께** (블록 16)
-- [ ] 추천 전략이 브랜드 자산과 시장 기회를 **연결**하는가 (블록 20)
+### PART 1 — PROJECT & BRAND
+1 Cover · 2 Executive Summary · 3 Project Snapshot · 4 RFP / Initial Brief · 5 Project Context ·
+6 Brand at a Glance · 7 Brand Factbook · 8 Product·Service·Experience · 9 Target Definition ·
+10 Current Brand Identity · 11 Name & Brand Story · 12 Brand Assets · 13 Brand Gaps ·
+14 Unknowns & Validation Questions · 15 Current State vs Desired State · 16 Reframed Goal ·
+17 Real Problem Definition · 18 Research Agenda
+
+### PART 2 — COMPETITIVE LANDSCAPE
+19 Market Definition · 20 Competitive Universe · 21 Direct Competitors · 22 Indirect Competitors ·
+23 Alternatives · 24 Adjacent Categories · 25 Competitor Cards 30+ · 26 Competitive Category A ·
+27 Competitive Category B · 28 Competitive Category C · 29 Additional Categories · 30 Category Deep Dive ·
+31 Axis Candidate 01 · 32 Axis Candidate 02 · 33 Axis Candidate 03 · 34 Selected Axes ·
+35 XY Positioning Map · 36 Quadrant Analysis · 37 Whitespace Opportunities · 38 False White Spaces ·
+39 Competitive Implications
+
+### PART 3 — CROSS-INDUSTRY RESEARCH
+40 Cross-industry Research Scope · 41 Cross-industry Universe 30+ · 42 Cross-industry Case Cards ·
+43 Cross-category Group A · 44 Cross-category Group B · 45 Cross-category Group C · 46 Additional Groups ·
+47 What to Borrow · 48 What to Translate · 49 What to Avoid
+
+### PART 4 — INSIGHT & STRATEGY
+50 Core Findings · 51 Core Insights · 52 Opportunity Areas · 53 Strategy Option A · 54 Strategy Option B ·
+55 Strategy Option C · 56 Strategy Comparison · 57 Recommended Strategy · 58 Strategic Principles ·
+59 Risk & Validation Plan · 60 Sources · 61 Research Limitations
+
+---
+
+## 최소 통과 기준 (quality-gate 스킬과 연동)
+- [ ] 팩트북(7) · 타깃(9) · 진짜 문제(17)
+- [ ] 경쟁사 30+ 카드(25) · 3~5 카테고리(26~29) · 축 후보 3(31~33) · 선정 축(34) · XY맵+근거(35) · 화이트스페이스 기회+함정(37~38)
+- [ ] 이종업계 30+ 카드(42) · 3~5 카테고리(43~46) · Borrow/Translate/Avoid(47~49)
+- [ ] 전략 대안 2+(53~55) · 추천+미선택 이유(57) · 리스크·검증(59) · 출처(60)
 
 ---
 
 ## report-data.json 골격
-
 ```json
 {
-  "project":   { "name": "", "title": "", "client": "", "category": "", "as_of": "YYYY.MM", "deliverable": "" },
-  "brief":     { "explicit": [], "hidden": [], "undefined": [], "risks": [] },
-  "factbook":  { "title": "", "cards": [ { "k": "", "v": "" } ], "note": "", "assets": [] },
-  "target":    { "title": "", "personas": [ { "name": "", "who": "", "needs": "", "pains": "" } ] },
-  "gap":       { "title": "", "rows": [ { "area": "", "current": "", "goal": "" } ], "reframe": "" },
-  "problem":   { "headline": "", "body": "" },
-  "market":    { "title": "", "bullets": [] },
-  "competitors": [
-    { "name": "", "industry": "", "country": "", "price": "", "target": "", "message": "",
-      "tier": "T1|T2|T3|T4", "sources": [ { "label": "", "url": "" } ], "category": "A" }
-  ],
-  "categories": [ { "id": "A", "title": "", "bullets": [], "brand_ids": [] } ],
-  "axes": {
-    "candidates": [ { "axis": "", "picked": true, "reason": "" } ],
-    "selected":  { "x": { "left": "", "right": "" }, "y": { "top": "", "bottom": "" } }
+  "research_mode": "deep",
+  "project": {
+    "client": "", "project_name": "", "project_type": "", "background": "",
+    "stated_request": "", "reframed_goal": "", "real_problem": "",
+    "decision_to_make": "", "success_criteria": []
   },
-  "positioning": [ { "name": "", "x": 0.0, "y": 0.0, "goal": false } ],
-  "positioning_analysis": [],
-  "whitespace": { "opportunity": "", "trap": "" },
-  "cross_category": [
-    { "name": "", "industry": "", "country": "", "resonance": "", "tier": "T1", "sources": [ { "label": "", "url": "" } ] }
-  ],
-  "insight": { "headline": "", "body": "" },
-  "strategy_options": [ { "rank": "", "title": "", "mood": "", "fields": [], "score": "", "risk": "" } ],
-  "recommended": {
-    "label": "", "title": "", "bg_image": "",
-    "asset_opportunity_link": "",
-    "fields": [ { "k": "", "v": "", "d": "" } ]
+  "brand_factbook": {
+    "brand_name": "", "purpose": "", "products_services": [], "targets": [],
+    "brand_assets": [], "brand_gaps": [], "unknowns": []
   },
-  "risks": [ { "keep": [], "drop": [] } ],
-  "validation": "",
-  "sources": [ { "tier": "T1", "label": "", "url": "" } ],
-  "limits": ""
+  "competitive_research": {
+    "required_count": 30, "actual_count": 0,
+    "competitors": [
+      { "id": "C01", "name": "", "type": "direct|indirect|alternative|adjacent",
+        "country": "", "price": "", "target": "", "buyer_user": "", "value": "",
+        "positioning": "", "features": "", "experience": "", "visual": "",
+        "strengths": "", "weaknesses": "", "relevance": "",
+        "x": 0.0, "x_reason": "", "y": 0.0, "y_reason": "",
+        "sources": [ { "tier": "T1", "label": "", "url": "" } ], "confidence": "",
+        "evidence_id": "EV-C01", "category": "A" }
+    ],
+    "categories": [
+      { "id": "A", "name": "", "definition": "", "brand_ids": [], "common_target": "",
+        "common_value": "", "common_message": "", "common_design": "", "buy_reason": "",
+        "strength": "", "limit": "", "oversupplied": "", "undersupplied": "",
+        "rep_source": "", "source_count": 0, "confidence": "",
+        "deep_dive": { "core_value": "", "reps": [], "desire": "", "message": "",
+          "visual": "", "strength": "", "weakness": "", "borrow": "", "avoid": "" } }
+    ],
+    "axis_candidates": [ { "id": 1, "x": "", "y": "", "picked": true, "reason": "", "reject_reason": "" } ],
+    "selected_axes": { "x": { "left": "", "right": "" }, "y": { "top": "", "bottom": "" }, "reason": "", "rejected": [] },
+    "positioning_points": [ { "id": "C01", "name": "", "x": 0.0, "y": 0.0, "x_reason": "", "y_reason": "", "evidence_id": "EV-C01", "confidence": "", "goal": false } ],
+    "quadrants": [ { "name": "", "brands": [], "reading": "" } ],
+    "whitespaces": [ { "name": "", "quadrant": "", "why_empty": "", "demand_signal": "",
+      "market_basis": "", "asset_link": "", "feasibility": "", "score": 0, "risk": "",
+      "validation": [], "sources": [], "type": "TRUE OPPORTUNITY|EMERGING SPACE|FALSE WHITE SPACE|CAPABILITY GAP" } ]
+  },
+  "cross_industry_research": {
+    "required_count": 30, "actual_count": 0,
+    "cases": [
+      { "id": "X01", "name": "", "industry": "", "country": "", "problem_solved": "",
+        "method": "", "why_worked": "", "customer_value": "", "resonance": "",
+        "borrow": "", "avoid": "", "sources": [], "confidence": "", "evidence_id": "EV-X01", "category": "A" }
+    ],
+    "categories": [ { "id": "A", "name": "", "common_problem": "", "common_principle": "",
+      "case_ids": [], "why_works": "", "apply": "", "transform": "", "avoid": "", "rep_source": "" } ],
+    "what_to_borrow": [], "what_to_translate": [], "what_to_avoid": []
+  },
+  "insights": [ { "id": "I1", "observation": "", "evidence_ids": [], "why": "", "tension": "",
+    "unmet_need": "", "opportunity": "", "meaning": "", "confidence": "" } ],
+  "strategy_options": [ { "id": "A", "name": "", "one_line": "", "problem": "", "target": "",
+    "value": "", "differentiation": "", "assets_used": [], "opportunity_link": "",
+    "cross_industry_borrow": "", "execution": "", "effect": "", "risk": "", "conditions": "",
+    "tradeoff": "", "evidence_ids": [],
+    "scores": { "customer": 0, "brand_fit": 0, "differentiation": 0, "feasibility": 0, "durability": 0, "scalability": 0, "evidence": 0 } } ],
+  "recommended_strategy": { "option_id": "", "why": "", "not_chosen": [], "why_not": "",
+    "principles": [], "priorities": [], "risk": "", "validation": "", "success_criteria": "" },
+  "sources": [ { "id": "EV-C01", "tier": "T1", "label": "", "url": "", "for": "" } ],
+  "limitations": []
 }
 ```
-
-> 좌표(`positioning[].x/y`)는 -1.0 ~ 1.0 정규화. 0,0 = 원점. Goal은 `goal:true`.
-> HTML 생성 시 `x`,`y`를 `left%`,`top%`로 환산(예: `left = (x+1)/2*100`).
+> 좌표 x/y는 -1.0~1.0. HTML 환산: `left% = (x+1)/2*100`, `top% = (1-(y+1)/2)*100`.
+> `actual_count`는 실제 카드 수와 일치해야 한다(quality-gate 대조).
