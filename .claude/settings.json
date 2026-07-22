@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/autosave-project-notes.sh",
+            "timeout": 30,
+            "statusMessage": "프로젝트 노트 자동 저장 중…"
+          }
+        ]
+      }
+    ]
+  }
+}

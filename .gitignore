@@ -7,7 +7,6 @@ quote-sot/
 data-sources.md
 **/data-sources.md
 
-# 클라이언트 프로젝트 산출물 (개인 작업물은 커밋하지 않는다)
-# .claude/projects/ 는 폴더 구조(.gitkeep)만 공유하고 내용은 로컬 유지
-.claude/projects/*
-!.claude/projects/.gitkeep
+# 참고: .claude/projects/ 노트는 팀 공유·커밋 대상이다(반자동 저장 훅이 커밋).
+# 특정 클라이언트 기밀 산출물만 로컬에 두려면 아래에 파일 단위로 개별 추가한다.
+# (폴더 전체를 무시하면 프로젝트 노트가 커밋되지 않으니 블랭킷 무시 금지)
