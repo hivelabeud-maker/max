@@ -100,7 +100,7 @@
 
 ## 현재 등록된 스킬
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
-- `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
+- `mx-deck-design` — MX실 표준 16:9 슬라이드형 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "MX 덱"/"슬라이드로 정리"/"BEREX 스타일로". **브랜드 리서치·전략 프로젝트는 대상 아님** — 그건 `brand-strategy-deck`
 - `hivelab-proposal-style` — HIVELAB 모노톤 제안서 디자인 시스템 (정식 스킬 폴더 구조로 이전됨)
 - **브랜드 리서치·전략 파이프라인 (marketer가 순서대로 호출)**
   - `project-discovery` — STEP 1~3: 프로젝트 성격·브랜드 팩트북·타깃·문제 재정의(정보 상태 태그)

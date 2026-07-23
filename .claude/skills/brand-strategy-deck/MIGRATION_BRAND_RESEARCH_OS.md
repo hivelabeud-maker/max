@@ -129,3 +129,16 @@ cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand
 | `marketer.md` | `deck.html` 완성 시 마지막 줄에 "다음 단계로 관점을 잡으려면 concept-director를 부르세요" 안내 문구 명문화. 자동 호출은 하지 않음 — marketer의 역할은 덱 완성까지로 한정 |
 
 이유: marketer(리서치·전략)와 concept-director(관점 게이트)는 서로 다른 결정 시점의 작업이라 자동으로 잇지 않되, 다음 단계를 놓치지 않도록 항상 안내한다.
+
+## 8차 개정 — mx-deck-design과 트리거 충돌 해소
+`mx-deck-design`의 트리거 "덱 만들어줘"가 `brand-strategy-deck`("리서치 덱 만들어줘")과 겹치고,
+설명에 "리서치덱"까지 자기 영역이라 적혀 있어 리서치·전략 진행 중 일반적인 "덱 만들어줘" 요청이
+16:9 MX 슬라이드 스타일로 잘못 갈 위험이 있었다.
+
+| 변경 | 내용 |
+|---|---|
+| `mx-deck-design/SKILL.md` | 설명에서 "리서치덱" 제거, 트리거를 "MX 덱"/"슬라이드로 정리"/"BEREX 스타일로"/"제안서 슬라이드"로 좁힘. "브랜드 리서치·전략 프로젝트는 대상 아님" 명시 |
+| `CLAUDE.md` 스킬 목록 | mx-deck-design 항목에서 "덱 만들어줘" 제거, "브랜드 리서치·전략 프로젝트는 대상 아님 — brand-strategy-deck" 명시 |
+| `marketer.md` | "진행 중엔 계속 brand-strategy-deck으로만 생성한다" 원칙 추가. MX 슬라이드는 명시적 요청 + 최종 단계에서만 사용하도록 라우팅 표 문구 수정 |
+
+결과: 리서치·전략 파이프라인이 도는 동안은 항상 `deck.html`(대시보드)로 계속 생성되고, MX 슬라이드 스타일은 "MX 덱으로"처럼 명시적으로 요청했을 때만, 그것도 최종 단계에서 별도 산출물로 쓰인다.
