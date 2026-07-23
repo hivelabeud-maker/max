@@ -120,3 +120,12 @@ cp -r .claude/_backup_20260721/round2/brand-strategy-deck/. .claude/skills/brand
 | 게이트 기준 완화 | 경쟁·이종업계 "30개 미달 시 HTML 금지" → **"20개 미만일 때만 막고, 20~29개는 조건부 통과"**로 완화. 이유: 못 넘어가는 것보다 20개로라도 진행하는 게 낫다. `quality-gate`·`wide-market-research`·`REPORT_SCHEMA.md`·`marketer.md` 4곳에 일관되게 반영. 부족분은 사유와 함께 기록 |
 
 **남은 이슈**: concept-director를 마케터 파이프라인의 어느 시점에 연결할지는 대안을 마련해 별도로 확인 필요(아래 AskUserQuestion).
+
+## 7차 개정 — concept-director 연결 시점 확정 (안내만, 자동 호출 없음)
+대안 3개(자동 연결 / 안내만 / 완전 분리) 제시 후 사용자가 **"안내만"**을 선택.
+
+| 변경 | 내용 |
+|---|---|
+| `marketer.md` | `deck.html` 완성 시 마지막 줄에 "다음 단계로 관점을 잡으려면 concept-director를 부르세요" 안내 문구 명문화. 자동 호출은 하지 않음 — marketer의 역할은 덱 완성까지로 한정 |
+
+이유: marketer(리서치·전략)와 concept-director(관점 게이트)는 서로 다른 결정 시점의 작업이라 자동으로 잇지 않되, 다음 단계를 놓치지 않도록 항상 안내한다.
