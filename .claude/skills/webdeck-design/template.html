@@ -145,14 +145,8 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .pdf-btn svg{width:15px;height:15px}
 @media (max-width:600px){.pdf-btn{right:14px;bottom:14px;padding:11px 15px}}
 
-/* print / PDF export — force light palette, unfold all tabs */
+/* print / PDF export — 팔레트는 :root 그대로 상속(순백 단일 테마), 탭만 모두 펼침 */
 @media print{
-  :root{
-    --bg:#fff;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#5c5a54;--line:#e3e1da;
-    --accent:#1a1a17;--shadow:none;
-    --blue:#2e53f9;--lime:#5fae1f;--pink:#c14bb0;--orange:#ff6e23;
-    --blue2:#e7ecfe;--lime2:#eef7e0;--pink2:#fbeaf8;--orange2:#ffe4d3;
-  }
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:#fff}
   .pdf-btn{display:none}

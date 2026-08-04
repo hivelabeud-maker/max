@@ -127,8 +127,9 @@ cp .claude/skills/webdeck-design/template.html ./<프로젝트명>.html
 ## PDF 추출 (내장)
 
 - 우하단 `.pdf-btn`(`onclick="window.print()"`) — 고객이 직접 저장.
-- `@media print`가 **6개 view를 모두 펼치고**(`display:block!important` + `page-break-after`),
-  사이드바·버튼을 숨기고, **라이트 팔레트로 강제**한다. 다크 카드 배경은 `print-color-adjust:exact`로 유지.
+- `@media print`가 **모든 view를 펼치고**(`display:block!important` + `page-break-after`), 사이드바·버튼을 숨긴다.
+  **팔레트는 `:root`를 그대로 상속** — 순백 단일 테마라 인쇄용 재정의가 필요 없다(화면 = PDF 동일).
+  다크 topbar·다크 카드 배경은 `print-color-adjust:exact`로 유지.
 - 실제 .pdf 파일 산출: 사전 설치 Chromium으로 렌더.
   ```bash
   CHROME=/opt/pw-browsers/chromium-1194/chrome-linux/chrome
