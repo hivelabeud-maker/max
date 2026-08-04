@@ -42,7 +42,7 @@ cp .claude/skills/webdeck-design/template.html ./<프로젝트명>.html
 :root, :root[data-theme="dark"], :root[data-theme="light"]{
   --bg:#ffffff;      /* 페이지 배경 — 항상 순백 */
   --panel:#ffffff;   /* 카드 표면 (보더로 분리, 그림자 없음) */
-  --panel2:#f6f6f4;  /* flat 카드·표 헤더·플로우 스텝 배경 (아주 옅은 무채색) */
+  --panel2:#f5f5f5;  /* ★ 면처리 표준 그레이 — flat 카드·표 헤더·플로우 스텝·강조 열·note 배경 */
   --ink:#161616;     /* 잉크 & 다크 강조 카드 배경 */
   --muted:#6f6d66;   /* 보조 텍스트 */
   --line:#e6e4de;    /* 보더·디바이더 — 라인 카드의 핵심 */
@@ -58,6 +58,9 @@ cp .claude/skills/webdeck-design/template.html ./<프로젝트명>.html
 
 - **라인 카드 = `border:1px solid var(--line)` + 그림자 없음.** 모든 `.card`가 기본으로 보더를 갖는다.
   변형: `.card.flat`은 배경만 `--panel2`로 한 톤 눌러 부차 정보에, `.card.metric`은 순백.
+- **면처리(박스 배경)가 필요한 곳은 전부 `--panel2`(#f5f5f5) 중립 그레이로.** 색 면(파스텔 배경)으로 강조하지 않는다.
+  강조 열(`.cmp .c-hivelab`)·안내 박스(`.note`)·AS-IS 카드·플로우 스텝 모두 회색 면 + 보더.
+  포인트 색은 **면이 아니라 pill·라벨·강조 텍스트**로만 낸다(예: 회색 열 위에 파랑 pill — Mobbin 'Popular' 방식).
 - **topbar(#151817)와 다크 강조 카드(`--ink` 배경)는 의도된 대비 요소** — 화이트로 바꾸지 않는다.
 - 포인트 색은 `pill`·`section-title .dot`·`.card-body b` 강조·`v-eyebrow`에만. 장식으로 남발 금지.
 
@@ -112,7 +115,7 @@ cp .claude/skills/webdeck-design/template.html ./<프로젝트명>.html
 좌 현재(옅은 배경)·우 개선(다크 `--ink` 배경, 지표는 라임). 각 카드 안에 `.flow` + `.tt-metric`.
 
 ### 비교표 — `.card.flat > .cmp-wrap > table.cmp`
-`.cmp-wrap`는 `overflow-x:auto`(모바일 가로 스크롤). 강조 열은 `td.c-hivelab`(`--blue2` 배경).
+`.cmp-wrap`는 `overflow-x:auto`(모바일 가로 스크롤). 강조 열은 `td.c-hivelab`(`--panel2` 회색 면).
 **마지막 행 아래 여백/선 제거: `.cmp tr:last-child td{border-bottom:none}` 반드시 유지.**
 
 ### 주석 — `.note`
