@@ -38,7 +38,9 @@
 ├── CLAUDE.md (이 파일 — 핵심만)
 ├── agents/README.md           # 에이전트 상세 설명
 ├── skills/                    # 커스텀 스킬
-│   └── list-deck-design/
+│   ├── list-deck-design/
+│   ├── mx-deck-design/
+│   └── webdeck-design/        # 사이드바 내비형 웹 문서 (template.html 동반)
 ├── projects/                   # 프로젝트별 노트
 └── library/
     ├── core-directives.md     # 5가지 핵심 원칙
@@ -98,6 +100,7 @@
 ## 현재 등록된 스킬
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
+- `webdeck-design` — 사이드바 내비형 단일 페이지 웹 문서(대응안·제안 페이지) HTML 생성 (순수 화이트 배경 + 무채색 + 포인트 4색, 탭 전환·PDF 추출 내장, template.html 동반). Artifact URL 공유용. 트리거 "웹 문서로 정리"/"대응안 페이지 만들어"/"웹으로 정리해줘"/"웹덱"/"이 레이아웃으로"
 
 ## 프로젝트 관리
 - 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식

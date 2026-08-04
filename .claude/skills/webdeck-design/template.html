@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>WEBDECK · 사이드바 내비형 웹 문서 템플릿</title>
+</head>
+<body>
+<!-- ↓↓↓ Artifact 게시 시에는 이 doctype/head/body 래퍼를 제거하고 <style>부터 붙여넣는다 (하네스가 head를 자동으로 감쌈) ↓↓↓ -->
+<style>
+/* 순수 화이트 단일 테마 (다크모드 미사용) */
+:root, :root[data-theme="dark"], :root[data-theme="light"]{
+  --bg:#ffffff;--panel:#ffffff;--panel2:#f6f6f4;--ink:#161616;--muted:#6f6d66;--line:#e6e4de;
+  --accent:#1a1a17;--accent2:#e6e4dd;--shadow:0 10px 28px rgba(24,24,24,.07);
+  --blue:#2e53f9;--lime:#5fae1f;--pink:#c14bb0;--orange:#ff6e23;
+  --blue2:#e7ecfe;--lime2:#eef7e0;--pink2:#fbeaf8;--orange2:#ffe4d3;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Apple SD Gothic Neo','Pretendard','Noto Sans KR','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  letter-spacing:-.015em;-webkit-font-smoothing:antialiased}
+.app{min-height:100vh}
+
+/* topbar */
+.topbar{height:64px;background:#151817;color:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;position:sticky;top:0;z-index:30;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:32px;height:32px;border:1px solid rgba(255,255,255,.24);border-radius:8px;display:grid;place-items:center;
+  font-weight:900;font-size:11px;background:linear-gradient(145deg,#2b2a26,#0f0f0e)}
+.brand-tit{font-size:14px;font-weight:800}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.top-meta{font-family:'Courier New',monospace;font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.04em}
+
+.layout{display:grid;grid-template-columns:250px 1fr;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr}}
+
+/* sidebar */
+.sidebar{position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;padding:22px 16px;
+  background:var(--panel);border-right:1px solid var(--line)}
+@media (max-width:860px){.sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.nav-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin:16px 8px 8px}
+.nav-item{width:100%;text-align:left;border:none;background:transparent;color:var(--ink);cursor:pointer;
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;
+  transition:background .15s}
+.nav-item:hover{background:var(--panel2)}
+.nav-item.active{background:var(--accent);color:var(--bg)}
+.nav-item:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.nav-num{font-family:'Courier New',monospace;font-size:11px;opacity:.6}
+.nav-item.active .nav-num{opacity:.8}
+
+/* main */
+.main{padding:34px 40px 90px;max-width:1000px}
+@media (max-width:600px){.main{padding:24px 18px 70px}}
+.view{display:none;animation:fade .3s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}}
+.v-head{margin-bottom:26px}
+.v-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:9px}
+.v-title{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.18;text-wrap:balance}
+.v-title .thin{font-weight:300;color:var(--muted)}
+.v-lead{font-size:14px;color:var(--muted);margin-top:11px;line-height:1.7;max-width:660px}
+.section-title{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--ink);margin:30px 0 14px;
+  padding-bottom:9px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.section-title .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+
+.grid{display:grid;gap:12px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:1fr 1fr 1fr}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:720px){.cols-2,.cols-3,.cols-4{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none;border:1px solid var(--line);background:var(--panel2)}
+.card.metric{background:var(--panel);box-shadow:var(--shadow)}
+.metric .m-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.03em}
+.metric .m-val{font-size:30px;font-weight:900;letter-spacing:-.03em;margin-top:6px;line-height:1}
+.metric .m-unit{font-size:14px;font-weight:700;color:var(--muted);margin-left:3px}
+.metric .m-sub{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+.card-tit{font-size:14.5px;font-weight:800;margin-bottom:8px;letter-spacing:-.01em}
+.card-body{font-size:13px;color:var(--muted);line-height:1.68}
+.card-body b{color:var(--ink);font-weight:700}
+
+.pill{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 10px;border-radius:100px;margin-bottom:10px}
+.pill.blue{background:var(--blue2);color:var(--blue)}
+.pill.lime{background:var(--lime2);color:var(--lime)}
+.pill.pink{background:var(--pink2);color:var(--pink)}
+.pill.orange{background:var(--orange2);color:var(--orange)}
+
+/* request example */
+.req-grid{display:grid;grid-template-columns:150px 1fr;gap:0}
+.req-row{display:contents}
+.req-k{padding:13px 16px;background:var(--panel2);border-bottom:1px solid var(--line);font-size:12px;font-weight:800;color:var(--ink)}
+.req-v{padding:13px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink);line-height:1.6}
+.req-v .ph{color:var(--muted)}
+.req-row:last-child .req-k,.req-row:last-child .req-v{border-bottom:none}
+@media (max-width:600px){.req-grid{grid-template-columns:110px 1fr}}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flow-step{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-size:12.5px;font-weight:700}
+.flow-step.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.flow-arr{color:var(--muted);font-size:13px}
+
+/* asis-tobe */
+.tt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.tt-grid{grid-template-columns:1fr}}
+.tt-card{border-radius:14px;padding:22px}
+.tt-card.asis{background:var(--panel2);border:1px solid var(--line)}
+.tt-card.tobe{background:var(--ink);color:var(--bg)}
+.tt-card.tobe .flow-step{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:var(--bg)}
+.tt-metric{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-top:14px}
+.tt-card.tobe .tt-metric{color:#9fd45f}
+
+/* compare table (differentiation) */
+.cmp-wrap{overflow-x:auto}
+.cmp{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+.cmp th,.cmp td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp th{font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+.cmp td.dim{color:var(--muted)}
+.cmp td.hi{font-weight:700;color:var(--ink)}
+.cmp tr:last-child td{border-bottom:none}
+.cmp .c-hivelab{background:var(--blue2)}
+
+.note{font-size:12px;color:var(--muted);margin-top:12px;padding:11px 14px;background:var(--orange2);
+  border-radius:10px;line-height:1.6}
+.note b{color:var(--orange)}
+
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:'Courier New',monospace;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* PDF save button */
+.pdf-btn{position:fixed;right:22px;bottom:22px;z-index:40;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:100px;
+  background:var(--ink);color:var(--bg);font-family:inherit;font-size:13px;font-weight:800;letter-spacing:-.01em;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);transition:transform .15s,box-shadow .15s}
+.pdf-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.pdf-btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.pdf-btn svg{width:15px;height:15px}
+@media (max-width:600px){.pdf-btn{right:14px;bottom:14px;padding:11px 15px}}
+
+/* print / PDF export — force light palette, unfold all tabs */
+@media print{
+  :root{
+    --bg:#fff;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#5c5a54;--line:#e3e1da;
+    --accent:#1a1a17;--shadow:none;
+    --blue:#2e53f9;--lime:#5fae1f;--pink:#c14bb0;--orange:#ff6e23;
+    --blue2:#e7ecfe;--lime2:#eef7e0;--pink2:#fbeaf8;--orange2:#ffe4d3;
+  }
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff}
+  .pdf-btn{display:none}
+  .topbar{position:static;box-shadow:none}
+  .sidebar{display:none}
+  .layout{display:block}
+  .main{max-width:100%;padding:0}
+  .view{display:block!important;animation:none;padding:26px 30px;page-break-after:always;break-after:page}
+  .view:last-child{page-break-after:auto;break-after:auto}
+  .view,.card,.tt-card,.tt-grid,.grid{break-inside:avoid}
+  .foot{margin-top:24px}
+}
+@page{margin:12mm}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">HL</div>
+      <div>
+        <div class="brand-tit">HIVELAB × NETMARBLE</div>
+        <div class="brand-sub">AI 제작 대응 방안 · 8월 파일럿</div>
+      </div>
+    </div>
+    <div class="top-meta">RESPONSE PLAN · 2026.08</div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="eyebrow" style="margin:0 8px 4px">Contents</div>
+      <div class="nav-label">대응 방안</div>
+      <button class="nav-item active" data-v="overview"><span class="nav-num">00</span> 개요 · 운영 체제</button>
+      <button class="nav-item" data-v="video"><span class="nav-num">01</span> 영상 제작 프로세스</button>
+      <button class="nav-item" data-v="lead"><span class="nav-num">02</span> 소요 일정</button>
+      <button class="nav-item" data-v="tt"><span class="nav-num">03</span> AS-IS → TO-BE</button>
+      <button class="nav-item" data-v="image"><span class="nav-num">04</span> 이미지 제작 대응</button>
+      <div class="nav-label">차별화</div>
+      <button class="nav-item" data-v="diff"><span class="nav-num">05</span> 왜 하이브랩인가</button>
+      <button class="nav-item" data-v="notice"><span class="nav-num">06</span> 유의 사항</button>
+    </aside>
+
+    <main class="main">
+
+      <!-- 00 OVERVIEW -->
+      <section class="view active" data-view="overview">
+        <div class="v-head">
+          <div class="v-eyebrow">Overview · 운영 체제</div>
+          <h1 class="v-title">키워드만 주시면,<br><span class="thin">영상 한 편이 나옵니다</span></h1>
+          <p class="v-lead">넷마블 피드백을 반영했습니다. 8월부터 두 달간 AI 제작을 먼저 시범 운영하고, 이후 보강해 연말까지 이어갑니다. 추가 인력(TO) 없이, 웍스 메신저로 방향만 주시면 하이브랩이 영상까지 만듭니다.</p>
+        </div>
+
+        <div class="grid cols-3">
+          <div class="card metric">
+            <div class="m-label">운영 기간</div>
+            <div class="m-val">2<span class="m-unit">개월</span></div>
+            <div class="m-sub">8월 시범 운영 → 이후 보강해 연말까지</div>
+          </div>
+          <div class="card metric">
+            <div class="m-label">제작 라인</div>
+            <div class="m-val">2<span class="m-unit">종</span></div>
+            <div class="m-sub">Fast · 키워드 직행 / Precision · 정교 제작</div>
+          </div>
+          <div class="card metric">
+            <div class="m-label">추가 TO</div>
+            <div class="m-val">0<span class="m-unit">건</span></div>
+            <div class="m-sub">기획·디자인 인력 추가 발주 없음</div>
+          </div>
+        </div>
+
+        <div class="section-title"><span class="dot"></span>이번 시범 운영에서 바뀌는 것</div>
+        <div class="grid cols-3">
+          <div class="card flat">
+            <span class="pill blue">접수</span>
+            <div class="card-tit">창구는 웍스 메신저 하나</div>
+            <div class="card-body">기획안·활용 어셋·방향성만 메신저로 주세요. 하이브랩이 확인 후 바로 착수합니다.</div>
+          </div>
+          <div class="card flat">
+            <span class="pill lime">속도</span>
+            <div class="card-tit">중간 단계를 줄였습니다</div>
+            <div class="card-body">영상 1종 <b>5~7일 → 2~3일</b>. 이미지·영상 컨펌을 주고받는 단계를 줄였습니다.</div>
+          </div>
+          <div class="card flat">
+            <span class="pill pink">다양성</span>
+            <div class="card-tit">AI 시안 3~4종 동시</div>
+            <div class="card-body">콘셉트·연출이 다른 3~4종을 한 번에 드립니다. 비교해서 고르시면 됩니다.</div>
+          </div>
+        </div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>00 / 06</span></div>
+      </section>
+
+      <!-- 01 VIDEO -->
+      <section class="view" data-view="video">
+        <div class="v-head">
+          <div class="v-eyebrow">Process · 영상 제작</div>
+          <h1 class="v-title">영상 제작 <span class="thin">프로세스</span></h1>
+          <p class="v-lead">웍스 메신저로 기획안·어셋·방향성을 주시면, 하이브랩이 확인 후 바로 영상 제작에 들어갑니다. 필요하면 내부 기획·디자인 인력이 붙습니다. 추가 TO는 없습니다.</p>
+        </div>
+
+        <div class="section-title"><span class="dot"></span>접수 → 착수 흐름</div>
+        <div class="flow">
+          <div class="flow-step on">웍스 메신저 전달</div><span class="flow-arr">→</span>
+          <div class="flow-step">하이브랩 내용 확인</div><span class="flow-arr">→</span>
+          <div class="flow-step">영상 제작 착수</div><span class="flow-arr">→</span>
+          <div class="flow-step">1차본 전달</div>
+        </div>
+
+        <div class="section-title"><span class="dot"></span>영상 제작 요청 예시</div>
+        <div class="card flat" style="padding:0;overflow:hidden">
+          <div class="req-grid">
+            <div class="req-row"><div class="req-k">기획 의도</div><div class="req-v">솔: 인챈트 소재 중 고효율이었던 &lt;24시간 무접속 / 완전 자동 플레이&gt; 소재 영상</div></div>
+            <div class="req-row"><div class="req-k">세부 내용</div><div class="req-v">직장인·바쁜 현대인을 타겟으로, &lt;24시간 무접속 플레이&gt;와 &lt;완전 자동 플레이&gt;의 MMO 편의성을 강조</div></div>
+            <div class="req-row"><div class="req-k">활용 어셋</div><div class="req-v"><span class="ph">어셋 경로 (캐릭터·아이템 등)</span></div></div>
+            <div class="req-row"><div class="req-k">필요 소재·스펙</div><div class="req-v">16:9 영상 1종</div></div>
+            <div class="req-row"><div class="req-k">레퍼런스 URL</div><div class="req-v"><span class="ph">참고 URL — 없으면 제외</span></div></div>
+          </div>
+        </div>
+        <div class="note">위 5칸을 그대로 채워 주세요. <b>기획 의도 · 세부 내용 · 활용 어셋 · 필요 소재/스펙</b> 4가지만 있으면 바로 제작합니다. 참고 URL은 있으면 함께, 없으면 빼셔도 됩니다.</div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>01 / 06</span></div>
+      </section>
+
+      <!-- 02 LEAD TIME -->
+      <section class="view" data-view="lead">
+        <div class="v-head">
+          <div class="v-eyebrow">Lead Time · 소요 일정</div>
+          <h1 class="v-title">소요 일정 <span class="thin">(1차본 전달 기준)</span></h1>
+          <p class="v-lead">소재와 작업 스펙에 따라 달라질 수 있습니다. 기본 일정은 아래와 같고, 급한 소재는 협의해 최대한 빠르게 맞춥니다.</p>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card metric">
+            <span class="pill blue">15초 영상</span>
+            <div class="m-val" style="margin-top:6px">약 2<span class="m-unit">일</span></div>
+            <div class="m-sub">전달일 기준 · 1차본</div>
+          </div>
+          <div class="card metric">
+            <span class="pill lime">30초 영상</span>
+            <div class="m-val" style="margin-top:6px">약 3<span class="m-unit">일</span></div>
+            <div class="m-sub">전달일 기준 · 1차본</div>
+          </div>
+        </div>
+
+        <div class="note" style="background:var(--panel2);color:var(--muted)">예) 월요일에 주시면 → 15초는 수요일, 30초는 목요일에 1차본을 드립니다.</div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>02 / 06</span></div>
+      </section>
+
+      <!-- 03 AS-IS TO-BE -->
+      <section class="view" data-view="tt">
+        <div class="v-head">
+          <div class="v-eyebrow">AS-IS → TO-BE</div>
+          <h1 class="v-title">중간 단계를 줄여,<br><span class="thin">영상 1종당 2~3일로</span></h1>
+          <p class="v-lead">지금은 기획·이미지·영상을 하나씩 순서대로 밟아 영상 1종에 5~7일이 걸립니다. 시범 운영에서는 중간 컨펌을 줄여 2~3일로 당깁니다.</p>
+        </div>
+
+        <div class="tt-grid">
+          <div class="tt-card asis">
+            <span class="pill orange">AS-IS</span>
+            <div class="card-tit" style="margin:8px 0 14px">최소 5일 ~ 최대 7일</div>
+            <div class="flow" style="gap:6px">
+              <div class="flow-step">업무요청</div><span class="flow-arr">→</span>
+              <div class="flow-step">기획</div><span class="flow-arr">→</span>
+              <div class="flow-step">기획 컨펌</div><span class="flow-arr">→</span>
+              <div class="flow-step">이미지 제작</div><span class="flow-arr">→</span>
+              <div class="flow-step">이미지 컨펌</div><span class="flow-arr">→</span>
+              <div class="flow-step">영상 제작</div><span class="flow-arr">→</span>
+              <div class="flow-step">영상 컨펌</div>
+            </div>
+            <div class="tt-metric">5~7일</div>
+          </div>
+          <div class="tt-card tobe">
+            <span class="pill lime">TO-BE</span>
+            <div class="card-tit" style="margin:8px 0 14px;color:var(--bg)">영상 1종당 2~3일</div>
+            <div class="flow" style="gap:6px">
+              <div class="flow-step on" style="background:#9fd45f;color:#161616;border-color:#9fd45f">업무요청</div><span class="flow-arr" style="color:rgba(255,255,255,.4)">→</span>
+              <div class="flow-step">기획</div><span class="flow-arr" style="color:rgba(255,255,255,.4)">→</span>
+              <div class="flow-step">제작</div><span class="flow-arr" style="color:rgba(255,255,255,.4)">→</span>
+              <div class="flow-step">컨펌</div>
+            </div>
+            <div class="card-body" style="color:rgba(255,255,255,.6);margin-top:12px">중간 이미지·영상 컨펌을 최소화</div>
+            <div class="tt-metric">2~3일</div>
+          </div>
+        </div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>03 / 06</span></div>
+      </section>
+
+      <!-- 04 IMAGE -->
+      <section class="view" data-view="image">
+        <div class="v-head">
+          <div class="v-eyebrow">Image · 이미지 제작</div>
+          <h1 class="v-title">이미지 제작 <span class="thin">대응 방안</span></h1>
+          <p class="v-lead">이미지도 AI로 만듭니다. 시안 하나가 아니라, 콘셉트·연출이 다른 여러 안을 빠르게 드립니다.</p>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <span class="pill blue">01</span>
+            <div class="card-tit">AI 시안 3~4종 동시 제안</div>
+            <div class="card-body">AI로 콘셉트·연출이 다른 시안 <b>3~4종</b>을 빠르게 만듭니다. 마음에 드는 방향을 비교해서 고르시면 됩니다.</div>
+          </div>
+          <div class="card">
+            <span class="pill pink">02</span>
+            <div class="card-tit">AI 크리에이티브 · 리소스 선제안</div>
+            <div class="card-body">월간 AI 리포트로 최신 크리에이티브 방향과 쓸 수 있는 리소스를 먼저 공유합니다. 이 리소스를 미리 쌓아두면, <b>핵심 문구·콘셉트를 받는 즉시 시안을 뽑습니다.</b></div>
+          </div>
+        </div>
+        <div class="note"><b>*</b> AI 활용이 가능한 타이틀인지 먼저 확인이 필요합니다. IP·캐릭터 활용 범위를 함께 정해 주시면 그 안에서 다양하게 제안드립니다.</div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>04 / 06</span></div>
+      </section>
+
+      <!-- 05 DIFFERENTIATION -->
+      <section class="view" data-view="diff">
+        <div class="v-head">
+          <div class="v-eyebrow">Differentiation · 차별화</div>
+          <h1 class="v-title">속도는 기본,<br><span class="thin">넷마블을 아는 기준까지</span></h1>
+          <p class="v-lead">AI Fast Line으로 대응 속도를 확보하고, 하이브랩이 축적해 온 타이틀 이해와 제작 기준을 함께 적용합니다. 빠르게 만드는 데서 끝나지 않고, 넷마블에 맞는 결과로 완성합니다.</p>
+        </div>
+
+        <div class="section-title"><span class="dot"></span>결과로 드리는 것</div>
+        <div class="grid cols-3">
+          <div class="card flat"><span class="pill blue">Fast</span><div class="card-tit">키워드 → 영상 직행</div><div class="card-body">스토리보드 없이 키워드·방향만으로 바로 결과물. 급한 UA 소재에 바로 대응합니다.</div></div>
+          <div class="card flat"><span class="pill lime">Variety</span><div class="card-tit">한 번에 3~4종</div><div class="card-body">콘셉트·톤이 다른 3~4종을 동시에. 성과 좋은 소재를 빠르게 골라 쓰시면 됩니다.</div></div>
+          <div class="card flat"><span class="pill pink">Proactive</span><div class="card-tit">월간 선제안</div><div class="card-body">요청을 기다리지 않고, 트렌드 기반 크리에이티브를 먼저 제안합니다.</div></div>
+        </div>
+
+        <div class="section-title"><span class="dot" style="background:var(--orange)"></span>일반 에이전시(현시점) vs 하이브랩</div>
+        <div class="card flat" style="padding:6px 0">
+          <div class="cmp-wrap">
+          <table class="cmp">
+            <thead><tr><th style="width:32%">항목</th><th style="width:34%">일반 에이전시 (현시점)</th><th style="width:34%" class="c-hivelab">하이브랩 (+α)</th></tr></thead>
+            <tbody>
+              <tr><td class="hi">제작 속도</td><td class="dim">키워드로 빠른 결과물</td><td class="c-hivelab">Fast 라인으로 같은 속도 <b>+ 스펙별 표준 일정</b></td></tr>
+              <tr><td class="hi">소재 다양성</td><td class="dim">단발 결과물 위주</td><td class="c-hivelab">같은 콘셉트 <b>3~4종 세트</b> + 잘 됐던 패턴으로 변주</td></tr>
+              <tr><td class="hi">데이터 활용</td><td class="dim">건별 제작, 쌓이지 않음</td><td class="c-hivelab">과거 고효율 소재 <b>큐레이션</b> — 잘 된 소재에서 출발</td></tr>
+              <tr><td class="hi">운영 방식</td><td class="dim">요청 단위 대응</td><td class="c-hivelab"><b>전담 유닛</b>이 기획~영상 전 구간 담당</td></tr>
+              <tr><td class="hi">남는 자산</td><td class="dim">결과물만 전달</td><td class="c-hivelab">쓸수록 정확해지는 <b>검증 데이터가 넷마블에 축적</b></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div class="note">빠른 걸 넘어, <b>이번에 뭐가 잘 됐는지가 데이터로 남고 다음 제작의 시작점이 됩니다.</b> 이게 하이브랩의 +α입니다.</div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>05 / 06</span></div>
+      </section>
+
+      <!-- 06 NOTICE -->
+      <section class="view" data-view="notice">
+        <div class="v-head">
+          <div class="v-eyebrow">Notice · 유의 사항</div>
+          <h1 class="v-title">유의 사항</h1>
+          <p class="v-lead">원활한 협업을 위해 아래 두 가지를 함께 확인해 주세요.</p>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <span class="pill orange">공수</span>
+            <div class="card-tit">별도 기획·디자인 공수가 생길 때</div>
+            <div class="card-body">주시는 소재·작업 스펙에 따라 별도 기획/디자인 작업이 필요하면, 이미지 또는 기획 TO를 투입할 수 있습니다. <b>(기존 프로세스)</b></div>
+          </div>
+          <div class="card">
+            <span class="pill blue">확인</span>
+            <div class="card-tit">AI 활용 가능 타이틀</div>
+            <div class="card-body">IP·캐릭터의 AI 활용 범위를 타이틀별로 미리 정해 주세요. 그 범위 안에서 최대한 다양하게 제안드립니다.</div>
+          </div>
+        </div>
+
+        <div class="foot"><span>HIVELAB × NETMARBLE · AI Creative Response Plan</span><span>06 / 06</span></div>
+      </section>
+
+    </main>
+  </div>
+
+  <button class="pdf-btn" type="button" onclick="window.print()" aria-label="PDF로 저장">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    PDF로 저장
+  </button>
+</div>
+
+<script>
+(function(){
+  var items=document.querySelectorAll('.nav-item');
+  var views=document.querySelectorAll('.view');
+  items.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var v=btn.getAttribute('data-v');
+      items.forEach(function(i){i.classList.remove('active')});
+      btn.classList.add('active');
+      views.forEach(function(s){s.classList.toggle('active',s.getAttribute('data-view')===v)});
+      var m=document.querySelector('.main');if(m)m.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
