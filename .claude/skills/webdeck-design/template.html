@@ -74,9 +74,10 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .cols-4{grid-template-columns:repeat(4,1fr)}
 @media (max-width:720px){.cols-2,.cols-3,.cols-4{grid-template-columns:1fr}}
 
-.card{background:var(--panel);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
-.card.flat{box-shadow:none;border:1px solid var(--line);background:var(--panel2)}
-.card.metric{background:var(--panel);box-shadow:var(--shadow)}
+/* 라인 카드 — 무채색 보더 기반, 그림자 없음 */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:none}
+.card.flat{background:var(--panel2)}
+.card.metric{background:var(--panel)}
 .metric .m-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.03em}
 .metric .m-val{font-size:30px;font-weight:900;letter-spacing:-.03em;margin-top:6px;line-height:1}
 .metric .m-unit{font-size:14px;font-weight:700;color:var(--muted);margin-left:3px}
