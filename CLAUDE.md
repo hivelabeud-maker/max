@@ -98,6 +98,14 @@
 ## 현재 등록된 스킬
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
+- `intel-deck-design` — 뷰 전환형 리서치 대시보드 HTML 생성 (좌측 번호 네비 + 탭 구조, 모노톤+포인트 4색, SAFE/CAUTION/DO NOT USE 라벨, DATA GAP 박스, template.html 동반). 트리거 "인텔 대시보드"/"탭 구조로"/"항목별 상세 보게"/"팩트북 만들어줘"/"대시보드로 정리"
+
+### HTML 산출물 스킬 3종 선택 기준
+| 상황 | 스킬 |
+|---|---|
+| 클라이언트 제안서·컨셉덱 (슬라이드 나열) | `mx-deck-design` |
+| 수치 중심 리포트 (세로 스크롤 한 장) | `list-deck-design` |
+| 항목 5개 이상, 각 항목마다 같은 구조의 깊은 정보 (탭 전환) | `intel-deck-design` |
 
 ## 프로젝트 관리
 - 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식
