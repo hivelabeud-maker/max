@@ -17,7 +17,7 @@
 | 트리거 상황 | 게이트 순서 |
 |---|---|
 | 외부 제안서·메일 발송 직전 | fact-checker → delivery-gate → tone-guardian |
-| 시안 업로드 | design-critique → design-system-guardian → creative-director |
+| 시안 업로드 | design-critique → design-system-guardian |
 | 제안안 셀렉 직후 | review-panel(5관점) |
 
 ## 수동 호출 (👆)

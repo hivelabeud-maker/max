@@ -1,6 +1,6 @@
 # 에이전트 운영 가이드
 
-당신의 18가지 커스텀 에이전트는 5개 그룹으로 분류되며, **Logical Mode ↔ Creative Mode**의 이원화 사고방식을 실현합니다. (별도로 브랜드 리서치·전략을 총괄하는 `marketer`와 브랜드 파이프라인 오케스트레이터는 `CLAUDE.md`에 정리됩니다.)
+당신의 17가지 커스텀 에이전트는 5개 그룹으로 분류되며, **Logical Mode ↔ Creative Mode**의 이원화 사고방식을 실현합니다. (별도로 브랜드 리서치·전략을 총괄하는 `marketer`와 브랜드 파이프라인 오케스트레이터는 `CLAUDE.md`에 정리됩니다.)
 
 ---
 
@@ -92,11 +92,6 @@ RFP 수주부터 포지셔닝까지, 데이터와 논리 기반의 의사결정�
 - **출력**: Figma 파일 또는 코드 컴포넌트
 - **트리거**: "Figma 보내", "Figma 가져와", "피그마 동기화"
 
-### `creative-director` (크리에이티브 디렉터)
-- **역할**: 최종 시안의 톤·퀄리티 점검 + 온보딩 팩 생성
-- **출력**: 톤 검수 결과 + 온보딩 표준 1장
-- **트리거**: "CD 검수", "톤 최종 점검", "온보딩 만들어줘"
-
 ---
 
 ## ⑤ 검수 게이트 (Quality Gate)
@@ -148,9 +143,7 @@ RFP 수주부터 포지셔닝까지, 데이터와 논리 기반의 의사결정�
   ↓
 9️⃣ 시안 검수? → design-critique, design-system-guardian
   ↓
-🔟 최종 톤 점검? → creative-director
-  ↓
-1️⃣1️⃣ 발송 전 검증? → fact-checker, delivery-gate, tone-guardian
+🔟 발송 전 검증? → fact-checker, delivery-gate, tone-guardian
   ↓
 완료
 ```
@@ -173,8 +166,8 @@ brainstormer → moodboard-builder → storyboard-maker → visual-generator
 
 ### Quality Gate 흐름
 ```
-creative-director → design-critique → review-panel → delivery-gate → tone-guardian
-  (톤 최종 확정)    (6영역 검수)      (다각도 검토)   (최종 린트)      (소통 톤 점검)
+design-critique → review-panel → delivery-gate → tone-guardian
+  (6영역 검수)      (다각도 검토)   (최종 린트)      (소통 톤 점검)
 ```
 
 ---
