@@ -1819,12 +1819,23 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
 
 <script>
 var navItems = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+function scrollTop(){
+  // 아티팩트는 iframe 안에서 렌더되고 스크롤 주체가 호스트 페이지라
+  // window.scrollTo만으로는 상단으로 올라가지 않는 경우가 있습니다.
+  // scrollIntoView는 상위 프레임까지 스크롤을 전파하므로 양쪽 모두에서 동작합니다.
+  var anchor = document.querySelector('.topbar') || document.body;
+  try{ anchor.scrollIntoView({block:'start', behavior:'smooth'}); }
+  catch(e){ try{ anchor.scrollIntoView(true); }catch(e2){} }
+  try{ window.scrollTo({top:0, behavior:'smooth'}); }
+  catch(e){ try{ window.scrollTo(0,0); }catch(e2){} }
+}
+
 function goView(id){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
   var el = document.getElementById(id);
   if(el) el.classList.add('active');
   navItems.forEach(function(n){n.classList.toggle('active', n.dataset.view === id)});
-  window.scrollTo({top:0, behavior:'smooth'});
+  scrollTop();
   try{history.replaceState(null,'','#'+id)}catch(e){}
 }
 navItems.forEach(function(n){n.addEventListener('click', function(){goView(n.dataset.view)})});

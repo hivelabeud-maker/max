@@ -195,12 +195,13 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
     <div class="brand-mark">08</div>
     <div>
       <h1>돌봄종사자 APP <span>/ 08.10 미팅 정리 &amp; 실행 계획</span></h1>
-      <p>2026.08.10(월) 16:16 · 66분 · NHN 김유미 파트장 × 하이브랩</p>
+      <p>2026.08.10(월) 미팅 · 66분 · NHN 김유미 파트장 × 하이브랩 — 08.11 회신 반영</p>
     </div>
   </div>
   <div class="top-pills">
     <span class="tpill">실행 <b>8/13–8/28</b></span>
     <span class="tpill">영업일 <b>11일</b></span>
+    <span class="tpill">QA 시작 <b>10/26</b></span>
     <span class="tpill">서비스 오픈 <b>11/18</b></span>
   </div>
 </header>
@@ -221,11 +222,11 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <button class="nav-item" data-view="v-fix"><span class="nav-num">03</span>확정 · 변경 · TBD</button>
 
   <div class="nav-label">실행</div>
-  <button class="nav-item" data-view="v-act"><span class="nav-num">04</span>액션 아이템<span class="nav-badge">13</span></button>
+  <button class="nav-item" data-view="v-act"><span class="nav-num">04</span>액션 아이템<span class="nav-badge">14</span></button>
   <button class="nav-item" data-view="v-wbs"><span class="nav-num">05</span>WBS · 일정</button>
   <button class="nav-item" data-view="v-collab"><span class="nav-num">06</span>협업 체계</button>
   <button class="nav-item" data-view="v-tone"><span class="nav-num">07</span>톤앤매너 방향</button>
-  <button class="nav-item" data-view="v-mail"><span class="nav-num">08</span>회신 메일 초안</button>
+  <button class="nav-item" data-view="v-mail"><span class="nav-num">08</span>회신 메일 기록<span class="nav-badge new">2</span></button>
 
   <div class="nav-label lock">🔒 내부 전용</div>
   <button class="nav-item lock" data-view="v-internal"><span class="nav-num">09</span>리스크 · 협상 메모<span class="nav-badge new">삭제</span></button>
@@ -503,9 +504,9 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
     <div class="page-title">
       <div class="eyebrow">03 · Decided &amp; TBD</div>
       <h2>확정 · 변경 · TBD</h2>
-      <p>회의로 닫힌 것과 아직 열려 있는 것입니다.</p>
+      <p>회의로 닫힌 것과 아직 열려 있는 것입니다. <b>8/11 NHN 회신으로 BI·QA 두 건이 닫혔습니다.</b></p>
     </div>
-    <div class="head-meta"><span class="tag core">확정 11</span><span class="tag warn">TBD 7</span></div>
+    <div class="head-meta"><span class="tag core">확정 11</span><span class="tag warn">TBD 6</span><span class="tag easy">08.11 해소 2</span></div>
   </div>
 
   <div class="gloss-note ok">
@@ -560,9 +561,10 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <div class="table-wrap"><table class="t">
     <thead><tr><th style="min-width:130px">항목</th><th>현재 상태</th><th style="min-width:70px">누가</th><th>다음 액션</th></tr></thead>
     <tbody>
-      <tr><td><b>BI 진행 여부</b></td><td>돌봄종사자 앱 BI를 사업에서 진행하는지 확인 필요. 통합 어드민 BI는 NHN BX팀이 제작했으나 <b>다른 서비스라 그대로 활용 불가</b></td><td>NHN</td><td class="yes">최우선 확인. 진행 안 하면 범위·비용 별도 협의</td></tr>
-      <tr><td><b>개발 데드라인·QA</b></td><td>11/18 오픈에서 역산 필요. 앱 심사 → 설치 → 개발 2개월</td><td>NHN</td><td class="yes">확인 후 QA 대응 인력 배정</td></tr>
+      <tr><td><b>BI 진행 여부</b> <span class="tag easy">08.11 해소</span></td><td><b>NHN 내부 진행으로 확정.</b> 우리 과업이 아닙니다. 다만 완성 시점이 우리 일정보다 뒤라 <b>UI 무드를 먼저 확정하고 BI를 나중에 얹는</b> 순서가 됩니다</td><td>NHN</td><td class="yes">BI의 전반적 인상 + 권장 폰트 러프 공유 요청 중</td></tr>
+      <tr><td><b>개발 데드라인·QA</b> <span class="tag easy">08.11 해소</span></td><td><b>QA 시작 10/26(월)</b>로 확인. 8/28 납품 후 약 두 달의 공백이 확정됐습니다</td><td>NHN</td><td>QA 3일 확보 · 대응 범위 3구분 회신함. 온도 차 확인 대기</td></tr>
       <tr><td><b>앱 이름</b></td><td>미확정. 사업에서는 "AX HOME" 계열 표현</td><td>NHN</td><td>어르신 관련 서비스인데 이름이 어렵다는 의견 있음</td></tr>
+      <tr><td><b>BI 인상 · 권장 폰트</b> <span class="tag new">신규</span></td><td>BI가 내부 진행으로 정해지면서 새로 생긴 항목. 확정본이 아니라 <b>러프한 방향</b>이어도 UI 무드를 그쪽에 맞춰 잡을 수 있습니다</td><td>NHN</td><td class="yes">회신 없으면 폰트는 <b>우리가 결정</b>하고 진행</td></tr>
       <tr><td><b>화면 총량</b></td><td>상세 기획 진행 중. <b>플러스될 수도, 빠질 수도</b> 있음</td><td>NHN</td><td class="yes">우선순위 목록 + TBD 표기 요청</td></tr>
       <tr><td><b>이용자 상세 정보</b></td><td>부가 디테일 항목 확정 전</td><td>NHN</td><td>확정 시 공유하기로</td></tr>
       <tr><td><b>안부 연동 서비스명</b></td><td>회의에서 언급됐으나 정확한 서비스명 불명</td><td>NHN</td><td>화면 표기에만 영향</td></tr>
@@ -583,9 +585,9 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
     <div class="page-title">
       <div class="eyebrow">04 · Action Items</div>
       <h2>액션 아이템</h2>
-      <p>회의에서 각자 하기로 한 것입니다. 기한이 없던 항목은 <b>금주 내</b>로 잡았습니다.</p>
+      <p>회의에서 각자 하기로 한 것입니다. 기한이 없던 항목은 <b>금주 내</b>로 잡았습니다. <b>8/11 기준 NHN 4건 완료</b>, 하이브랩에 QA 대응 1건이 추가됐습니다.</p>
     </div>
-    <div class="head-meta"><span class="tag core">하이브랩 5</span><span class="tag easy">NHN 8</span></div>
+    <div class="head-meta"><span class="tag core">하이브랩 6</span><span class="tag easy">NHN 8</span><span class="tag easy">완료 4</span></div>
   </div>
 
   <div class="section-title"><h3>하이브랩</h3></div>
@@ -597,6 +599,7 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
       <tr><td>3</td><td><b>선작업 화면 무드 적용</b></td><td>확정 방향을 <b>홈 · 방문 전 · 돌봄 기록</b>에 적용해 무드 재확인 → 이후 전체 전개</td><td>8/18~8/20</td></tr>
       <tr><td>4</td><td><b>모션 필요 범위 조사</b></td><td>모션이 필요한 지점과 개발 R&amp;R 얼라인 필요 여부 판단</td><td>8/14(금)</td></tr>
       <tr><td>5</td><td><b>개발 전달</b></td><td>확정 시안을 우리가 개발사에 직접 전달, 파트장 참조</td><td>단계별</td></tr>
+      <tr><td>6</td><td><b>디자인 QA 3일 확보</b> <span class="tag new">08.11 추가</span></td><td>10/26(월) QA 시작 기준. 본 작업 종료 두 달 뒤라 <b>유휴 인력 재배정</b> 형태. 시안 반영 확인 · 경미한 보완까지가 3일 범위, <b>신규 제작은 별도 협의</b></td><td>10/26 주간</td></tr>
     </tbody>
   </table></div>
 
@@ -604,12 +607,12 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <div class="table-wrap"><table class="t">
     <thead><tr><th style="width:36px">#</th><th style="min-width:170px">할 일</th><th>내용</th><th style="min-width:86px">기한</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td class="yes"><b>BI 진행 여부 확인</b></td><td>돌봄종사자 앱 BI를 사업에서 진행하는지. 진행 안 하면 범위·비용 별도 협의 필요</td><td class="yes">최우선</td></tr>
-      <tr><td>2</td><td class="yes"><b>개발 데드라인·QA 기간 확인</b></td><td>11/18 오픈 역산. 디자인 최종 완료 희망일도 함께</td><td class="yes">최우선</td></tr>
-      <tr><td>3</td><td><b>BI·브랜드 가이드 확인</b></td><td>AX 통합 어드민 BI 확인. <b>폰트는 맞추는 게 좋겠다</b>는 방향</td><td>금주</td></tr>
-      <tr><td>4</td><td class="yes"><b>우선순위 화면 목록 전달</b></td><td>선작업 대상과 우선순위. <b>미완성 영역은 TBD로 표기</b> 요청</td><td class="yes">8/13(목)</td></tr>
+      <tr><td>1</td><td><b>BI 진행 여부 확인</b> <span class="tag easy">완료</span></td><td>8/11 회신 — <b>NHN 내부 진행</b>. 우리 과업 아님</td><td>8/11 완료</td></tr>
+      <tr><td>2</td><td><b>개발 데드라인·QA 기간 확인</b> <span class="tag easy">완료</span></td><td>8/11 회신 — <b>QA 시작 10/26(월)</b></td><td>8/11 완료</td></tr>
+      <tr><td>3</td><td class="yes"><b>BI 인상 · 권장 폰트 공유</b></td><td>BI 내부 진행이 확정되면서 항목이 바뀌었습니다. <b>확정본이 아니라 러프한 방향</b>이어도 됨. 권장 폰트가 없으면 우리가 결정</td><td class="yes">회신 대기</td></tr>
+      <tr><td>4</td><td><b>우선순위 화면 목록 전달</b> <span class="tag easy">완료</span></td><td>8/11 — 전체 서비스 구조도 · 우선 작업 섹션 <b>피그마 링크로 수령</b></td><td>8/11 완료</td></tr>
       <tr><td>5</td><td class="yes"><b>UX 상세 기획 완료</b></td><td>디스크립션·부가 화면 포함. 파트장 "이번 주 안에 정리가 돼야"</td><td class="yes">8/14(금)</td></tr>
-      <tr><td>6</td><td><b>두레이 멤버 등록</b></td><td>AI 스마트홈 사업에서 쓰는 두레이에 하이브랩 멤버 추가</td><td>금주</td></tr>
+      <tr><td>6</td><td><b>두레이 멤버 등록</b> <span class="tag easy">완료</span></td><td>8/11 — <b>초대 메일 수신 확인</b>. 메일·메신저 상황에 맞게 병행 사용</td><td>8/11 완료</td></tr>
       <tr><td>7</td><td><b>v0.2.0 링크 공유</b></td><td>우리가 검토한 건 v0.1.0. 갱신본 필요</td><td>금주</td></tr>
       <tr><td>8</td><td><b>초기 맥락 정리 자료 공유</b></td><td>파트장이 정리한 사업 구조 자료. "캡처해서라도 주실 수 있으면"</td><td>금주</td></tr>
       <tr><td>—</td><td>이용자 상세 정보 항목</td><td>확정되면 공유하기로</td><td>확정 시</td></tr>
@@ -623,7 +626,7 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
     <div class="page-title">
       <div class="eyebrow">05 · Schedule &amp; R&amp;R</div>
       <h2>진행 일정 · 양사 액션 아이템</h2>
-      <p>계약상 착수일은 8/18이지만, 개발 일정을 역산해 <b>8/11 채널 세팅부터 시작해 8/28에 마무리</b>합니다. 세부 WBS는 8/12에 별도 제출합니다.</p>
+      <p>계약상 착수일은 8/18이지만, 개발 일정을 역산해 <b>8/11 채널 세팅부터 시작해 8/28에 마무리</b>합니다. 세부 WBS는 8/12에 별도 제출합니다. 8/11 회신으로 <b>개발 QA 시작이 10/26(월)</b>로 확정돼, 납품 이후 별도 구간이 하나 더 붙습니다.</p>
     </div>
     <div class="head-meta"><span class="tag core">NHN</span><span class="tag easy">HL 하이브랩</span></div>
   </div>
@@ -641,7 +644,7 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
         <td><span class="tag easy">HL</span> 세부 일정표(WBS) 작성 제출 및 톤앤무드 추천 레퍼런스 방향 제안 예정</td>
       </tr>
       <tr style="background:var(--pt-lime-soft)">
-        <td class="yes">8/13 ~ 14 (금)</td><td>방향 확정 및<br>기획서 전달</td><td class="yes">🚩 <b>톤앤무드 1개 방향 확정 / 기획서 전달</b></td>
+        <td class="yes">8/13 (목)<br><span style="color:var(--muted)">~ 8/14 (금)</span></td><td>방향 확정 및<br>기획서 전달</td><td class="yes">🚩 <b>8/13 톤앤무드 1개 방향 확정</b> / 기획서 전달</td>
         <td class="yes"><span class="tag core">NHN</span> 제안된 추천 방향 중 최종 1개 방향 확정 회신 및 <b>주요 화면 선작업 가능 기획서 전달</b></td>
       </tr>
       <tr>
@@ -659,6 +662,15 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
         <td class="yes">8/27 ~ 8/28</td><td>최종 전달</td><td class="yes">🚩 <b>가이드·컴포넌트 정리 및 납품</b></td>
         <td class="yes"><span class="tag easy">HL</span> 아이콘, 컴포넌트, 가이드 정돈 후 최종 산출물 전달</td>
       </tr>
+      <tr>
+        <td>8/29 ~ 10/23</td><td>대기</td><td>개발 진행 구간</td>
+        <td><span style="color:var(--muted)">약 두 달 공백. 이 기간 우리 인력은 다른 프로젝트에 배정됩니다</span></td>
+      </tr>
+      <tr>
+        <td class="yes">10/26 (월) ~</td><td>개발 QA</td><td class="yes"><b>디자인 QA 대응 3일</b> <span class="tag new">08.11 확정</span></td>
+        <td><span class="tag easy">HL</span> 시안 반영 확인 · 경미한 보완까지 <b>확보한 3일 내 대응</b>. <b>신규 제작·기획 변경 재설계는 별도 일정·산정 협의</b><br>
+        <span class="tag core">NHN</span> 10/26 QA 시작. 대응 범위 온도 차 확인 회신 대기</td>
+      </tr>
     </tbody>
   </table></div>
 
@@ -668,11 +680,12 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   </div>
 
   <div class="section-title"><h3>구간별 성격</h3></div>
-  <div class="grid g4">
+  <div class="grid" style="grid-template-columns:repeat(5,minmax(0,1fr))">
     <div class="card flat metric"><div class="k">준비</div><div class="value">8/11–12</div><div class="sub">채널 세팅 · WBS · 레퍼런스 제안</div></div>
     <div class="card flat metric"><div class="k">방향 확정</div><div class="value">8/13</div><div class="sub">톤앤무드 1개 픽스</div></div>
     <div class="card flat metric"><div class="k">UI 전개</div><div class="value">8/13–26</div><div class="sub">선작업 3~4화면 → 순차 전개</div></div>
     <div class="card flat metric"><div class="k">QA · 납품</div><div class="value">8/26–28</div><div class="sub">QA 반영 · 아이콘 · 컴포넌트</div></div>
+    <div class="card flat metric"><div class="k">개발 QA</div><div class="value">10/26–</div><div class="sub">3일 확보 · 유휴 인력 재배정</div></div>
   </div>
 
   <div class="gloss-note risk">
@@ -780,12 +793,13 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <div class="gloss-note warn">
     회의 지적 — "<b>BI가 어떤 느낌을 주느냐에 따라 이 무드가</b> 달라진다. 라운딩을 많이 써서 <b>캐주얼한 느낌</b>이 나느냐, 아니면 조금 더 <b>딱딱한 느낌</b>이 나느냐, 이런 거에도 다 영향이 되니까."
     <br><br>
-    <b>현재</b> — 앱 이름 미확정, BI 진행 여부 미확정, 로고 없음.<br>
-    <b>대안</b> — UI를 먼저 작업하고 나중에 스킨을 입히는 방식. <b>BI 자리는 마련해 둘 수 있습니다.</b><br>
-    <b>합의</b> — 통합 어드민 BI는 다른 서비스라 그대로 못 쓰지만, <b>폰트는 맞추는 게 좋겠다</b>는 방향.
+    <b>8/11 확정</b> — BI는 <b>NHN 내부에서 진행</b>합니다. 우리 과업이 아니며, 완성 시점은 우리 일정보다 뒤입니다.<br>
+    <b>따라서</b> — UI 무드를 <b>8/13에 먼저 확정</b>하고, BI가 나오면 <b>로고 적용 + 키컬러 계열 반영 수준</b>으로 얹습니다. 앱 이름·로고는 여전히 미확정이므로 <b>BI 자리는 비워 둔 채로</b> 설계합니다.<br>
+    <b>요청 중</b> — BI의 <b>전반적 인상</b>과 <b>권장 폰트</b>. 확정본이 아니어도 방향만 있으면 그쪽으로 무드를 잡아둘 수 있습니다. 권장 폰트가 없으면 우리가 정합니다.<br>
+    <b>방어선</b> — BI가 확정된 UI 무드와 크게 다르면 전체 무드 재작업은 현 일정 안에서 어렵고, <b>일정·범위 산정이 별도</b>가 될 수 있음을 8/11 회신으로 전달했습니다.
   </div>
 
-  <div class="section-title"><h3>레퍼런스 제안 전략</h3><p>8/14까지 준비할 것</p></div>
+  <div class="section-title"><h3>레퍼런스 제안 전략</h3><p>8/12(수)까지 준비 → 8/13(목) 방향 확정</p></div>
   <div class="panel"><ol>
     <li><strong>1개를 추천하고 나머지는 선택지로.</strong> 회의 합의 그대로 — "이런 방향이 가장 적합하다는 걸 하나 제안하고 나머지는 선택해서 주시는 걸로."</li>
     <li><strong>따뜻함 ↔ 전문성 축을 눈에 보이게.</strong> NHN이 방향을 못 정한 이유는 선택지가 없었기 때문입니다. 축을 보여주면 고르기 쉬워집니다.</li>
@@ -799,11 +813,71 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
 <section class="view" id="v-mail">
   <div class="page-head">
     <div class="page-title">
-      <div class="eyebrow">08 · Follow-up Mail</div>
-      <h2>회신 메일 초안</h2>
-      <p>미팅 직후 첫 회신이라 협업적 톤으로 두되, <b>날짜와 확인 요청은 명확히</b> 박았습니다.</p>
+      <div class="eyebrow">08 · Mail Thread</div>
+      <h2>회신 메일 기록</h2>
+      <p>미팅 이후 오간 회신을 <b>최신순</b>으로 쌓습니다. 아래로 내려갈수록 과거 문안이며, 히스토리로 그대로 남깁니다.</p>
     </div>
-    <div class="head-meta"><span class="tag core">발송 전 검토</span></div>
+    <div class="head-meta"><span class="tag core">2건</span><span class="tag new">08.11 갱신</span></div>
+  </div>
+
+  <div class="section-title">
+    <h3>② 2차 회신 — 8/11(화) 발송</h3>
+    <p>NHN 회신에 대한 우리 의견. BI·QA 두 건이 여기서 닫혔습니다</p>
+  </div>
+
+  <div class="mail">
+    <div class="subj">회신: NHN 회신 건에 대한 하이브랩 의견 · 2026.08.11(화) 발송</div>
+
+    <p>안녕하세요. 하이브랩 김효정 입니다.</p>
+    <p>빠르게 확인해 주시고 회신해 주셔서 감사합니다. 주신 내용에 대한 저희 의견 정리해 전달드립니다.</p>
+
+    <h4>1. 확인 주신 내용</h4>
+    <p>· 전체 서비스 구조도, 우선 작업 섹션 — 피그마 링크로 확인하였으며, 작업 시 참고하여 진행하겠습니다.<br>
+    · 두레이 — 초대 메일 확인되었으며, 메일·메신저 상황에 맞게 활용하도록 하겠습니다.<br>
+    · QA 일정 — <b>10/26(월) QA 시작</b>으로 확인하였습니다.</p>
+
+    <h4>2. BI 관련</h4>
+    <p>BI는 <b>NHN 내부 진행</b>으로 이해했습니다.</p>
+    <p>아시다시피 BI 완성을 기다린 뒤 톤앤무드를 잡기는 어려울 것 같아 어제 메일드린 일정으로 계획하여 진행하려 합니다.
+    <b>8/12(수) 레퍼런스 제안 → 8/13(목) 방향 확정</b> 일정에 맞춰 UI 무드를 먼저 확정 → 이후 BI가 나오면 <b>로고 적용과 키컬러 계열 반영 수준</b>으로 대응이 예상됩니다.</p>
+    <p>추후 BI 방향이 확정된 UI 무드와 크게 다를 경우, 전체 무드를 다시 잡는 작업은 계획된 일정 안에서는 어려울 수 있어, 이 경우 일정·범위 산정이 별도로 이뤄져야 할 수 있어 참고차 미리 말씀드립니다.</p>
+    <p>이 부분을 최소화하기 위해, BI에서 잡고 계신 <b>전반적인 인상만이라도 먼저 공유</b>해 주시면 UI 무드를 그 방향에 맞춰 잡아둘 예정입니다. 확정 전 러프한 방향이어도 충분히 도움이 될 것 같습니다.
+    더불어 폰트의 경우 <b>권장 폰트만이라도 먼저 확정</b>해 주시면 이후 재작업을 줄일 수 있을 것 같은데요, 권장 폰트가 없다면 저희 측에서 적합한 방향으로 진행하겠습니다.</p>
+
+    <h4>3. 디자인 QA 관련</h4>
+    <p>10/26(월) QA 일정을 고려하여 <b>QA 3일 정도를 별도로 확보</b>해 대응할 예정입니다.
+    본 작업 종료 후 약 두 달 뒤이다보니, 해당 시점에 유휴 인력을 다시 배정하는 형태가 될 것 같습니다.</p>
+    <p>대응 범위는 아래 기준으로 이해하고 준비하려 하는데, 생각하고 계신 온도와 차이가 없을지 확인 부탁드립니다.</p>
+
+    <div class="table-wrap"><table class="t">
+      <thead><tr><th style="width:15%">구분</th><th>내용</th><th style="width:22%">대응</th></tr></thead>
+      <tbody>
+      <tr><td><b>시안 반영 확인</b></td><td>여백·컬러·타이포·아이콘이 시안과 다르게 구현된 부분, 컴포넌트 오적용, 정의된 상태 누락</td><td>확보한 3일 내 대응</td></tr>
+      <tr><td><b>경미한 보완</b></td><td>기존 컴포넌트 조합으로 해결되는 예외 케이스, 실제 데이터 길이에 따른 레이아웃 조정, 누락 팝업</td><td>확보한 3일 내 대응</td></tr>
+      <tr><td><b>신규 제작</b></td><td>시안에 없던 신규 제작, 기획 변경에 따른 재설계</td><td class="yes">별도 일정·산정 협의</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>이외 진행하면서 화면 범위나 작업 과정에서의 실무적인 문의 사항은 두레이를 통해 연락드리겠습니다.
+    궁금하신 점이나 의견 있으시면 언제든 편하게 말씀해 주세요.</p>
+    <p>감사합니다.<br>김효정 드림</p>
+  </div>
+
+  <div class="gloss-note" style="margin-top:16px">
+    <b>이 회신으로 닫힌 것 —</b>
+    ① <b>BI는 NHN 내부 진행</b>. 우리 과업이 아니므로 별도 견적 이슈는 사라졌습니다. 대신 <b>BI 후행 적용</b>이라는 새 조건이 생겼습니다 — UI 무드를 먼저 확정하고, BI가 나오면 로고·키컬러 수준으로 얹습니다.
+    ② <b>QA 시작 10/26(월)</b>. 8/28 납품 후 약 두 달의 공백이 확정됐고, 그 시점에 <b>QA 3일</b>을 별도 확보해 유휴 인력을 재배정합니다.
+    ③ 구조도·우선 작업 섹션(피그마), 두레이 초대 <b>수령 완료</b>.
+    <br><br>
+    <b>남은 것 —</b> BI의 <b>전반적 인상</b>과 <b>권장 폰트</b>. 둘 다 "확정본"이 아니라 <b>러프한 방향이어도 된다</b>고 문턱을 낮춰 요청했습니다. 회신이 없으면 폰트는 우리가 정합니다.
+    <br><br>
+    <b>방어선 —</b> "BI가 확정된 UI 무드와 크게 다를 경우 일정·범위 산정이 별도로 이뤄져야 할 수 있다"를 <b>지금</b> 박아뒀습니다. 나중에 전체 무드를 다시 잡아야 할 때 근거가 되는 문장입니다.
+    QA도 <b>신규 제작은 3일 밖</b>이라고 선을 그어, QA를 명목으로 신규 화면이 들어오는 경로를 막았습니다.
+  </div>
+
+  <div class="section-title">
+    <h3>① 1차 회신 — 8/10(월) 발송</h3>
+    <p>미팅 직후 첫 회신. 협업적 톤으로 두되 날짜와 확인 요청은 명확히 박았습니다 — 히스토리로 보존</p>
   </div>
 
   <div class="mail">
@@ -876,6 +950,7 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <p class="footnote">
     <b>이 문서에 대하여</b><br>
     2026.08.10(월) 16:16 · 66분 26초 미팅 기록 기반. 참석 — NHN 김유미 파트장 / 하이브랩 김효정 · 김준환 외.<br>
+    <b>2026.08.11(화) 갱신</b> — NHN 회신 및 2차 회신 내용 반영(BI 내부 진행 확정 · QA 10/26 시작 · 방향 확정 8/13).<br>
     인용된 발언은 회의 기록 원문을 옮긴 것이며, 음성 인식 특성상 일부 표현이 부정확할 수 있습니다.<br>
     WBS의 날짜는 계약상 착수일(8/18)과 3주 기간을 기준으로 <b>작성자가 배분한 것</b>이며 NHN과 합의된 값이 아닙니다. 컨펌 후 확정됩니다.
   </p>
@@ -909,14 +984,14 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
         <td class="yes">레퍼런스에 <b>선택 이유 한 문장</b>을 붙여 위로 보고하기 쉽게 만든다. <b>8/14 무드 픽스를 반드시 관철</b>. 그 이후 뒤집히면 일정 재산정 대상임을 사전에 알린다</td>
       </tr>
       <tr>
-        <td><b>BI 미확정으로 무드 확정 지연</b></td><td><span class="tag new">높음</span></td>
-        <td>앱 이름·로고·BI 진행 여부 모두 미정. BI 느낌이 무드에 직접 영향</td>
-        <td class="yes">BI 진행 여부 최우선 확인. 지연되면 UI 선작업 + BI 자리만 마련. <b>우리가 BI까지 하면 별도 견적</b> — UI와 완전 다른 영역</td>
+        <td><b>BI 후행 적용으로 무드 재작업</b> <span class="tag new">08.11 갱신</span></td><td><span class="tag new">높음</span></td>
+        <td>BI는 <b>NHN 내부 진행으로 확정</b>(별도 견적 이슈는 소멸). 다만 완성이 우리 일정보다 뒤라 <b>UI 무드를 먼저 확정하고 BI를 나중에 얹는</b> 역순이 됩니다. BI 인상이 확정 무드와 크게 다르면 전체를 다시 잡아야 합니다</td>
+        <td class="yes">8/11 회신에 <b>"전체 무드 재작업은 현 일정 안에서 어렵고 일정·범위 산정이 별도가 될 수 있다"</b>를 박아뒀습니다. BI <b>전반적 인상 + 권장 폰트</b>를 러프하게라도 먼저 받아 무드를 그쪽으로 당겨 놓는 것이 실질 대응. 회신 없으면 폰트는 우리가 결정</td>
       </tr>
       <tr>
-        <td><b>개발 QA 일정 공백</b></td><td><span class="tag new">높음</span></td>
-        <td>11/18 오픈 역산인데 개발 데드라인·QA 기간 미확인. 우리 납품 종료(8/28) 이후가 비어 있음</td>
-        <td class="yes">확인 후 QA 대응 인력 배정. <b>8/28 납품 → 대기 → QA 구조면 그 대기 기간이 비용</b>이므로 별도 과업 여부를 정리</td>
+        <td><b>개발 QA 인력 재배정</b> <span class="tag new">08.11 갱신</span></td><td><span class="tag warn">중간</span></td>
+        <td><b>QA 시작 10/26(월)로 확정.</b> 8/28 납품 후 약 두 달 공백이라 그 시점에 <b>유휴 인력을 다시 배정</b>하는 형태가 됩니다. 담당자가 바뀌면 컨텍스트가 끊깁니다</td>
+        <td class="yes">QA <b>3일</b> 확보를 회신에 명시. 범위는 <b>시안 반영 확인 · 경미한 보완까지 3일 내 / 신규 제작은 별도 협의</b>로 선을 그었습니다. 온도 차 회신을 받아두고, <b>컴포넌트·가이드 문서 품질</b>로 인수인계 비용을 줄이는 게 실질 방어</td>
       </tr>
       <tr>
         <td><b>화면 수 증가</b></td><td><span class="tag warn">중간</span></td>
@@ -989,14 +1064,14 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
   <div class="panel"><ol>
     <li><strong>3주는 컨펌 포함 총 기간입니다.</strong> 회의에서 "3주까지 수정 사항을 다 반영하는 것"으로 정리했고, "한 달 두 달 넘게 딜레이되는 구조는 아니다"라고 못 박았습니다. 게이트가 밀리면 뒤가 밀린다는 걸 <b>WBS 컨펌 시점에 한 번 더 명시</b>하는 게 안전합니다.</li>
     <li><strong>통상 두 달짜리를 3주에 합니다.</strong> 회의에서 "저희가 보통 이런 거 구축할 때는 최소 두 달은 두는 것 같다"고 언급했습니다. 이건 협상 카드로 남겨둘 수 있습니다 — 범위가 늘어날 때 꺼낼 근거입니다.</li>
-    <li><strong>BI는 별도 견적 영역입니다.</strong> 회의에서도 "BI는 완전 다른 영역이라 UI랑 비용이 추가가 돼야 되는 게 맞다"고 정리했습니다. 요청이 오면 <b>범위와 금액을 먼저 정리</b>한 뒤 착수합니다.</li>
-    <li><strong>개발 QA 대응이 과업에 포함되는지 미정입니다.</strong> 8/28 납품 후 QA 시점까지 공백이 생기면 그 기간 인력 배정이 애매해집니다. <b>개발 데드라인 확인과 함께 QA 대응 범위를 문서로 정리</b>해두는 게 좋습니다.</li>
+    <li><strong>BI는 NHN 내부 진행으로 확정(8/11).</strong> 우리 과업이 아니므로 별도 견적 논의는 종료됐습니다. 대신 협상 축이 <b>"BI 후행 적용에 따른 무드 재작업"</b>으로 옮겨갔습니다 — 8/11 회신의 "일정·범위 산정 별도" 문장이 그 근거입니다. 만약 나중에 BI 제작 요청이 오면 그때는 <b>범위와 금액을 먼저 정리</b>한 뒤 착수합니다.</li>
+    <li><strong>개발 QA는 10/26 시작 · 3일 대응으로 정리했습니다(8/11).</strong> 범위를 <b>시안 반영 확인 / 경미한 보완 / 신규 제작</b> 3구분으로 회신해, 앞의 둘만 3일 안에 넣고 <b>신규 제작은 별도 산정</b>으로 밀어냈습니다. QA를 명목으로 신규 화면이 들어오는 경로를 막는 장치입니다. NHN이 이 구분에 동의했는지 <b>회신으로 확보</b>해 두는 것이 남은 일입니다.</li>
   </ol></div>
 
   <div class="section-title"><h3>확인 체크리스트</h3></div>
   <ul class="checks">
-    <li><span class="box" aria-hidden="true"></span><span>BI 진행 여부 확인 — 우리가 할 경우 <b>별도 견적 산정</b></span></li>
-    <li><span class="box" aria-hidden="true"></span><span>개발 데드라인·QA 기간 확인 → <b>QA 대응 인력 배정</b></span></li>
+    <li><span class="box" aria-hidden="true"></span><span><s>BI 진행 여부 확인</s> → <b>8/11 NHN 내부 진행 확정.</b> 남은 것은 <b>BI 인상 · 권장 폰트</b> 러프 수령</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><s>개발 데드라인·QA 기간 확인</s> → <b>8/11 QA 10/26 시작 확정.</b> 남은 것은 <b>QA 대응 범위 3구분에 대한 NHN 동의 회신</b> 확보</span></li>
     <li><span class="box" aria-hidden="true"></span><span>우선순위 화면 목록 수령 → <b>WBS 재계산</b> → 3주 확약 여부 최종 판단</span></li>
     <li><span class="box" aria-hidden="true"></span><span>8/14 무드 픽스 관철 — 이후 방향 변경은 일정 재산정 대상임을 사전 고지</span></li>
     <li><span class="box" aria-hidden="true"></span><span>한강시스템 = 케어포 제작사 여부 확인 (확인 전 대외 언급 금지)</span></li>
@@ -1009,12 +1084,23 @@ details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 
 
 <script>
 var navItems = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+function scrollTop(){
+  // 아티팩트는 iframe 안에서 렌더되고 스크롤 주체가 호스트 페이지라
+  // window.scrollTo만으로는 상단으로 올라가지 않는 경우가 있습니다.
+  // scrollIntoView는 상위 프레임까지 스크롤을 전파하므로 양쪽 모두에서 동작합니다.
+  var anchor = document.querySelector('.topbar') || document.body;
+  try{ anchor.scrollIntoView({block:'start', behavior:'smooth'}); }
+  catch(e){ try{ anchor.scrollIntoView(true); }catch(e2){} }
+  try{ window.scrollTo({top:0, behavior:'smooth'}); }
+  catch(e){ try{ window.scrollTo(0,0); }catch(e2){} }
+}
+
 function goView(id){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
   var el = document.getElementById(id);
   if(el) el.classList.add('active');
   navItems.forEach(function(n){n.classList.toggle('active', n.dataset.view === id)});
-  window.scrollTo({top:0, behavior:'smooth'});
+  scrollTop();
   try{history.replaceState(null,'','#'+id)}catch(e){}
 }
 navItems.forEach(function(n){n.addEventListener('click', function(){goView(n.dataset.view)})});
