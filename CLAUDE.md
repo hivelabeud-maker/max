@@ -66,6 +66,7 @@
 │   ├── intel-deck-design/
 │   ├── list-deck-design/
 │   ├── mx-deck-design/
+│   ├── mx-research-dashboard-design/
 │   └── research-deck-design/
 ├── projects/                   # 프로젝트별 노트
 └── library/
@@ -115,7 +116,7 @@
 - `legal-compliance` (법무) — 계약·NDA 쟁점 플래그(자문 대체 아님)
 
 **⑥ 역할·파이프라인 오케스트레이터**
-- `marketer` (마케터) — RFP부터 리서치·발산까지 통합 역할. RFP 분석 → 시장조사 → 와이드 리서치 → 디자인 리서치(트렌드·레퍼런스) → 발산을 순서대로. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"
+- `marketer` (마케터) — RFP부터 발산까지 **4챕터 자동 체이닝**. `0 RFP 분석 → CH1 현황 조사(팩트) → CH2 진단(포지셔닝·빈자리) → CH3 문제 정의(한 문장) → CH4 발산(방향 후보)`. 각 챕터가 끝나면 자동으로 다음 챕터로 넘어간다. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer (CH2·CH3은 marketer 자체 수행). **산출 포맷은 `mx-research-dashboard-design`(좌측 탭 12뷰 대시보드)이 표준** — `mx-deck-design`은 발표용 제안서에만. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"브랜드 진단"/"문제 정의"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"/"마케터 돌려"
 - `brand-pipeline` (브랜드 파이프라인) — 브랜드 제안 풀프로세스 오케스트레이션(manus-1 → manus-2 → runable-3, 단계 게이트 필수)
 - `manus-1` (마누스 1차) — 경쟁 리서치·포지셔닝·BX 비주얼 프롬프트(슬라이드 생성 금지)
 - `manus-2` (마누스 2차) — 비주얼 아이덴티티 추출·컨셉/무드보드 발산(슬라이드 생성 금지)
@@ -128,12 +129,14 @@
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
 - `research-deck-design` — 좌측 네비 + 뷰 전환형 리서치·전략 대시보드 덱 (Research & Strategy OS, 모노톤+포인트 4색, 00~11 12개 뷰, template.html 동반). 마케터/리서치 산출을 근거 추적까지 되는 대시보드로 조판. 트리거 "리서치 덱"/"리서치·전략 deck"/"마케터 결과 덱으로"/"포지셔닝 맵 덱"
 - `intel-deck-design` — 항목 N개를 같은 구조로 반복하는 인텔리전스 DB (좌측 번호 네비 + 항목별 탭, 모노톤+포인트 4색, SAFE/CAUTION/DO NOT USE 라벨, DATA GAP 박스, 검색·필터, template.html 동반). 트리거 "인텔 대시보드"/"항목별 상세 보게"/"팩트북 만들어줘"/"타이틀별로 정리"
+- `mx-research-dashboard-design` — **마케터 에이전트 산출 표준 포맷**. 좌측 사이드바 + 12뷰 탭 전환(00 요약 → 01 브리프·문제정의 → 02 팩트북 → 03 경쟁리서치 → 04 포지셔닝맵 → 05 화이트스페이스 → 06 이종업계 → 07 인사이트 → 08 밸류키워드 → 09 전략대안 → 10 추천전략 → 11 출처추적). 모노톤+포인트 4색(출처 티어 T1~T4 고정). **"마케터 돌려" 라우팅이 문서·HTML 산출로 이어지면 자동으로 이 레이아웃**. 트리거 "리서치 대시보드로 정리"/"마케터 산출물 만들어줘"/"좌측 탭으로 정리"
 
-### HTML 산출물 스킬 4종 선택 기준
+### HTML 산출물 스킬 선택 기준
 | 상황 | 스킬 |
 |---|---|
 | 클라이언트 제안서·컨셉덱 (슬라이드 나열) | `mx-deck-design` |
 | 수치 중심 리포트 (세로 스크롤 한 장) | `list-deck-design` |
+| **마케터 에이전트 리서치 결과** (기본값) | `mx-research-dashboard-design` |
 | **하나의 주제**를 12개 관점으로 (경쟁·포지셔닝·전략대안…) | `research-deck-design` |
 | **N개 항목**을 같은 구조로 반복 (팩트북·경쟁사 DB) | `intel-deck-design` |
 
