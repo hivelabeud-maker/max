@@ -19,7 +19,6 @@
 | 외부 제안서·메일 발송 직전 | fact-checker → delivery-gate → tone-guardian |
 | 시안 업로드 | design-critique → design-system-guardian → creative-director |
 | 제안안 셀렉 직후 | review-panel(5관점) |
-| 계약서 첨부 | legal-compliance |
 
 ## 수동 호출 (👆)
 나머지 전략·생성·운영 에이전트는 트리거 단어로 호출(각 에이전트 description 참조).
