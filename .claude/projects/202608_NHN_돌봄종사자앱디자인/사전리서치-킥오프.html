@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>돌봄종사자 APP — 사전 리서치 &amp; 킥오프 준비</title>
+<style>
+:root{
+  --bg:#f5f5f4;--panel:#ffffff;--panel2:#fafaf9;--ink:#161616;--ink2:#454542;--muted:#71716e;
+  --line:#e5e4e0;--line-soft:#efeeeb;--shadow:0 10px 26px rgba(20,20,20,.05);
+  --pt-pink:#ff86f6;--pt-pink-deep:#c81fb7;--pt-pink-soft:#ffe9fc;
+  --pt-blue:#2e53f9;--pt-blue-soft:#e9edfe;
+  --pt-lime:#c5ff79;--pt-lime-deep:#4a7a00;--pt-lime-soft:#f1ffd9;
+  --pt-orange:#ff6e23;--pt-orange-deep:#d1530e;--pt-orange-soft:#ffeadd;
+  --sans:Pretendard,"Pretendard Variable",-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","D2Coding",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13.5px;line-height:1.65;letter-spacing:-.015em;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+a{color:inherit}
+.term .slug a,.term .file a,table.t td a,.footnote a{color:var(--pt-blue);text-decoration:none;border-bottom:1px solid rgba(46,83,249,.35);word-break:break-all}
+.term .slug a:hover,.term .file a:hover,table.t td a:hover,.footnote a:hover{background:var(--pt-blue-soft);border-bottom-color:var(--pt-blue)}
+@media print{.term .slug a,.term .file a,table.t td a{color:#000;border-bottom:0}}
+code.c{font-family:var(--mono);font-size:.86em;background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap}
+
+.topbar{height:66px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:40;box-shadow:0 2px 12px rgba(0,0,0,.16)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{flex:none;width:33px;height:33px;border:1px solid rgba(255,255,255,.25);border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:11px;background:#222}
+.brand h1{font-size:14.5px;margin:0 0 2px;font-weight:800;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1 span{font-weight:400;color:rgba(255,255,255,.45)}
+.brand p{font-size:10px;color:rgba(255,255,255,.48);margin:0;letter-spacing:.02em}
+.top-pills{display:flex;gap:7px;align-items:center}
+.tpill{font-size:10px;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);white-space:nowrap}
+.tpill b{color:#fff}
+
+.layout{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:calc(100vh - 66px)}
+.sidebar{background:#faf9f7;border-right:1px solid var(--line);padding:20px 14px 40px;position:sticky;top:66px;height:calc(100vh - 66px);overflow:auto}
+.side-intro{padding:13px 13px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:14px}
+.eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.side-intro h2{font-size:13px;margin:6px 0 4px;line-height:1.45;letter-spacing:-.3px}
+.side-intro p{font-size:10.5px;color:var(--muted);margin:0;line-height:1.55}
+.nav-label{font-size:9px;font-weight:800;color:#9b9a94;letter-spacing:.13em;margin:16px 10px 6px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:7px;color:#67665f;text-align:left;cursor:pointer;font-size:12px;margin:2px 0;letter-spacing:-.2px}
+.nav-item:hover{background:#efeeea;color:#1a1a1a}
+.nav-item.active{background:#161616;color:#fff;font-weight:700}
+.nav-num{font-family:var(--mono);font-size:9px;opacity:.65;width:18px;flex:none}
+.nav-badge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 6px;background:rgba(0,0,0,.07);flex:none}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.18)}
+.nav-badge.new{background:var(--pt-pink-soft);color:var(--pt-pink-deep);font-weight:800}
+.nav-item.active .nav-badge.new{background:var(--pt-pink);color:#3d0038}
+
+.main{padding:30px 32px 70px;max-width:1240px;width:100%}
+.view{display:none}
+.view.active{display:block}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:20px;flex-wrap:wrap}
+.page-title h2{font-size:24px;line-height:1.2;margin:4px 0 7px;letter-spacing:-.045em;font-weight:800;text-wrap:balance}
+.page-title p{font-size:12.5px;color:var(--muted);margin:0;max-width:62ch}
+.head-meta{display:flex;gap:7px;flex-wrap:wrap}
+
+.tag{font-size:9.5px;font-weight:700;border-radius:999px;padding:4px 9px;background:var(--panel);border:1px solid var(--line);color:#555;white-space:nowrap;display:inline-block}
+.tag.core{color:var(--pt-blue);background:var(--pt-blue-soft);border-color:#ccd6fc}
+.tag.easy{color:var(--pt-lime-deep);background:var(--pt-lime-soft);border-color:#d8f3a8}
+.tag.warn{color:var(--pt-orange-deep);background:var(--pt-orange-soft);border-color:#ffd2b5}
+.tag.new{color:var(--pt-pink-deep);background:var(--pt-pink-soft);border-color:#ffc7f6}
+.tag.skip{color:#8a8983;background:var(--panel2);border-color:var(--line)}
+
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.card h3{font-size:13.5px;margin:0 0 8px;letter-spacing:-.3px}
+.card p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 0 8px}
+.card p:last-child{margin-bottom:0}
+.card .impact{margin-top:9px;font-size:10.5px;color:var(--pt-blue);background:var(--pt-blue-soft);border-radius:6px;padding:6px 10px;line-height:1.55}
+.k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.metric .value{font-size:26px;font-weight:900;letter-spacing:-.045em;margin:5px 0 2px;font-variant-numeric:tabular-nums}
+.metric .sub{font-size:9.5px;color:var(--muted)}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:28px 0 11px;flex-wrap:wrap}
+.section-title h3{font-size:15px;margin:0;letter-spacing:-.35px}
+.section-title p{font-size:10.5px;color:var(--muted);margin:0}
+.divider{height:1px;background:var(--line);margin:24px 0}
+
+.decision{background:linear-gradient(135deg,#161616,#2b2b2b);color:#fff;border-radius:14px;padding:24px;display:grid;grid-template-columns:1.5fr .8fr;gap:22px;box-shadow:0 14px 32px rgba(15,15,15,.18)}
+.decision .eyebrow{color:rgba(255,255,255,.5)}
+.decision h3{font-size:20px;line-height:1.42;letter-spacing:-.04em;margin:8px 0 10px;font-weight:800;text-wrap:balance}
+.decision p{font-size:11.5px;line-height:1.75;color:rgba(255,255,255,.68);margin:0}
+.decision-side{border-left:1px solid rgba(255,255,255,.15);padding-left:20px;display:flex;flex-direction:column;justify-content:center;gap:9px}
+.decision-side .row{font-size:11px;color:rgba(255,255,255,.75);display:flex;gap:8px;align-items:baseline}
+.decision-side .row b{color:#fff;font-variant-numeric:tabular-nums}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px 18px;margin:0 0 12px}
+.panel>h4{font-size:12.5px;margin:0 0 10px;letter-spacing:-.3px}
+.panel ol,.panel ul{margin:0;padding-left:20px}
+.panel li{margin:7px 0;font-size:12px;line-height:1.7;color:var(--ink2)}
+.panel li strong{color:var(--ink)}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--panel);margin-bottom:12px}
+table.t{border-collapse:collapse;width:100%;min-width:560px}
+table.t th{background:var(--panel2);color:#7c7b75;font-size:9px;text-align:left;letter-spacing:.07em;text-transform:uppercase;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:800;white-space:nowrap}
+table.t td{font-size:11.5px;line-height:1.6;padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--ink2)}
+table.t tr:last-child td{border-bottom:0}
+table.t td b{color:var(--ink)}
+td.no{color:#9b9a94}
+td.yes{font-weight:700;color:var(--ink)}
+
+.term{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px 18px}
+.term .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.term .name{font-size:14px;font-weight:800;letter-spacing:-.3px}
+.term .slug{font-family:var(--mono);font-size:9.5px;color:var(--muted)}
+.term .myth{font-size:12.5px;line-height:1.7;color:var(--ink);margin:0 0 7px}
+.term .myth b{background:linear-gradient(180deg,transparent 62%,var(--pt-lime) 62%);padding:0 1px}
+.term .real{font-size:11.5px;line-height:1.7;color:var(--ink2);margin:0}
+.term .file{margin-top:9px;font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line-soft);border-radius:6px;padding:5px 9px;display:inline-block;word-break:break-all}
+.term .warnline{margin-top:9px;font-size:10.5px;color:var(--pt-orange-deep);background:var(--pt-orange-soft);border-radius:6px;padding:6px 10px;line-height:1.55}
+.gloss-note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--pt-blue);border-radius:8px;padding:13px 16px;font-size:12px;color:var(--ink2);margin-bottom:14px;line-height:1.7}
+.gloss-note.warn{border-left-color:var(--pt-orange)}
+.gloss-note.risk{border-left-color:var(--pt-pink)}
+
+ul.checks{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+ul.checks li{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-size:12px;color:var(--ink2)}
+ul.checks li .box{flex:none;width:15px;height:15px;border:1.5px solid #b9b8b2;border-radius:4px;margin-top:2px}
+
+details.day{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden}
+details.day summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 17px;user-select:none;flex-wrap:wrap}
+details.day summary::-webkit-details-marker{display:none}
+details.day summary:hover{background:var(--panel2)}
+.dnum{flex:none;font-family:var(--mono);font-size:10px;font-weight:800;background:#161616;color:#fff;border-radius:6px;padding:4px 8px}
+.dtitle{font-size:13px;font-weight:700;letter-spacing:-.3px}
+.dtime{margin-left:auto;font-size:10px;color:var(--muted);flex:none}
+.chev{flex:none;width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .18s;margin-left:4px}
+details[open].day .chev{transform:rotate(-135deg)}
+details.day .body{padding:4px 18px 18px;border-top:1px solid var(--line-soft)}
+details.day .body h3{font-size:12px;margin:13px 0 5px;color:var(--muted);letter-spacing:.02em}
+details.day .body p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin:0 0 4px}
+.result{margin-top:11px;background:var(--pt-orange-soft);border:1px solid #ffd2b5;border-radius:8px;padding:9px 13px;font-size:11.5px;color:var(--pt-orange-deep);line-height:1.6}
+
+.swatch{display:flex;gap:5px;margin:10px 0 4px}
+.swatch i{width:100%;height:34px;border-radius:6px;border:1px solid rgba(0,0,0,.08);display:block}
+
+.footnote{margin-top:22px;font-size:10px;color:#9b9a94;line-height:1.7}
+:focus-visible{outline:2px solid var(--pt-blue);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+
+@media(max-width:1080px){
+  .main{padding:24px 20px 60px}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr 1fr}
+  .decision{grid-template-columns:1fr}
+  .decision-side{border-left:0;border-top:1px solid rgba(255,255,255,.15);padding:14px 0 0}
+}
+@media(max-width:740px){
+  .topbar{padding:0 15px}.top-pills{display:none}
+  .layout{display:block}
+  .sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:9px 10px;display:flex;overflow-x:auto;gap:3px}
+  .side-intro,.nav-label{display:none}
+  .nav-item{width:auto;white-space:nowrap;flex:none}
+  .nav-item .nav-num,.nav-item .nav-badge{display:none}
+  .main{padding:20px 14px 50px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .page-head{display:block}.head-meta{margin-top:10px}
+}
+@media print{
+  .topbar,.sidebar{display:none!important}
+  .layout{display:block}.main{padding:0;max-width:none}
+  .view{display:block!important;page-break-before:always}
+  .view:first-child{page-break-before:auto}
+  details.day{page-break-inside:avoid}
+  details.day .body{display:block!important}
+  body{background:#fff}
+}
+</style>
+<noscript><style>.view{display:block!important;border-bottom:1px solid var(--line);padding-bottom:40px;margin-bottom:40px}</style></noscript>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">CG</div>
+    <div>
+      <h1>돌봄종사자 APP <span>/ Pre-Kickoff Research</span></h1>
+      <p>사전 리서치 · 확인 질문 · 킥오프 아젠다 — 2026.08.10 기준</p>
+    </div>
+  </div>
+  <div class="top-pills">
+    <span class="tpill">기능명세 <b>v0.1.0</b></span>
+    <span class="tpill">FR <b>1–55</b></span>
+    <span class="tpill">화면 ID <b>28</b></span>
+  </div>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="side-intro">
+    <div class="eyebrow">Kickoff Prep</div>
+    <h2>따뜻한 앱이 아니라, 틀리지 않는 업무 도구</h2>
+    <p>확정된 것과 아직 아닌 것을 색으로 갈라놨습니다. 왼쪽 순서대로 보세요.</p>
+  </div>
+
+  <div class="nav-label">정의</div>
+  <button class="nav-item active" data-view="v-def"><span class="nav-num">00</span>프로젝트 핵심 정의</button>
+  <button class="nav-item" data-view="v-fact"><span class="nav-num">01</span>확정 · 패턴 · 가설 · 미확인</button>
+
+  <div class="nav-label">리서치</div>
+  <button class="nav-item" data-view="v-svc"><span class="nav-num">02</span>국내외 서비스<span class="nav-badge">19</span></button>
+  <button class="nav-item" data-view="v-bench"><span class="nav-num">03</span>벤치마킹 비교표</button>
+  <button class="nav-item" data-view="v-field"><span class="nav-num">04</span>현장 사용 환경<span class="nav-badge">13</span></button>
+
+  <div class="nav-label">설계</div>
+  <button class="nav-item" data-view="v-flow"><span class="nav-num">05</span>업무 플로우 대조<span class="nav-badge">20</span></button>
+  <button class="nav-item" data-view="v-tone"><span class="nav-num">06</span>비주얼 톤앤무드 3안</button>
+  <button class="nav-item" data-view="v-motion"><span class="nav-num">07</span>모션·상태 피드백<span class="nav-badge">13</span></button>
+  <button class="nav-item" data-view="v-scope"><span class="nav-num">08</span>아이콘·이미지·컴포넌트</button>
+  <button class="nav-item" data-view="v-verify"><span class="nav-num">09</span>디자인 검증 기준</button>
+
+  <div class="nav-label">미팅</div>
+  <button class="nav-item" data-view="v-agenda"><span class="nav-num">10</span>킥오프 아젠다<span class="nav-badge">15</span></button>
+  <button class="nav-item" data-view="v-assets"><span class="nav-num">11</span>사전 요청 자료<span class="nav-badge">17</span></button>
+  <button class="nav-item" data-view="v-quest"><span class="nav-num">12</span>질문 A · B · C</button>
+  <button class="nav-item" data-view="v-risk"><span class="nav-num">13</span>리스크와 대응<span class="nav-badge new">10</span></button>
+  <button class="nav-item" data-view="v-check"><span class="nav-num">14</span>의사결정 체크리스트</button>
+</aside>
+
+<main class="main">
+
+<!-- ════════════════ 00 프로젝트 핵심 정의 ════════════════ -->
+<section class="view active" id="v-def">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">00 · Definition</div>
+      <h2>프로젝트 핵심 정의</h2>
+      <p>기능명세서 v0.1.0과 IA v0.1.0을 확보한 시점 기준으로 다시 쓴 정의입니다. 미팅 전 이 페이지만 읽어도 논의가 됩니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag core">명세 확보</span><span class="tag warn">범위 미확정</span></div>
+  </div>
+
+  <div class="gloss-note ok" style="border-left-color:var(--pt-lime-deep)">
+    <b>📌 2026-08-10 미팅으로 갱신된 사항 —</b> 이 문서는 <b>미팅 전에 작성</b>됐습니다. 회의 후 아래 항목이 바뀌었으니 함께 읽어주세요.
+    <br><br>
+    · <b>글자 크기 대응(FR50)</b> — 이 문서에서 "3주 최대 리스크"로 잡았으나, 회의에서 <b>개발단이 배수 처리</b>하는 것으로 정리됐습니다. 디자인은 <b>기본 1벌만</b> 제공합니다. <b>리스크 해소.</b><br>
+    · <b>모션 범위</b> — 업무 완료 / 하루 완료 <b>수준으로 축소</b> 확정. 음성 파동 애니메이션은 불필요.<br>
+    · <b>AI 표현</b> — 이 문서는 "AI가 판정하는 인상 금지"로 정리했는데, 회의에서 NHN은 <b>"AI를 활용하는 느낌"은 원한다</b>고 했습니다. <b>도와주는 인상은 살리되 판정하는 인상은 피하는</b> 균형으로 읽어야 합니다.<br>
+    · <b>기획 버전</b> — 이 문서의 근거는 v0.1.0입니다. 현재 <b>v0.2.0</b>으로 업데이트됐습니다.<br>
+    · <b>기록 화면</b> — 요양/생활 2분기로 봤으나 실제로는 <b>요양 방문 / 생활 / 전화 3분기</b>입니다.<br>
+    · <b>개발사</b> — NHN 내부가 아닌 <b>한강시스템</b>(외부 업체)으로 확인됐습니다.
+    <br><br>
+    회의 내용·액션 아이템·WBS는 <b>별도 문서</b>(<code class="c">회의록-20260810-공유용.html</code>)에 정리했습니다.
+  </div>
+
+  <div class="decision">
+    <div>
+      <div class="eyebrow">이 프로젝트의 한 문장</div>
+      <h3>돌봄을 따뜻하게 보이게 하는 앱이 아니라,<br>바쁜 현장에서 <em>틀리지 않게</em> 만드는 업무 도구입니다.</h3>
+      <p>종사자가 다음 행동을 즉시 알고, 기록을 빠뜨리지 않고, 저장·전송이 됐는지 확신할 수 있는 것 — 이 세 가지가 안 되면 나머지 심미성은 의미가 없습니다. 기능명세서 FR49가 이미 같은 방향을 못 박고 있습니다: 앱은 판정·해석을 산출하지 않고 수신·표시·업링크만 합니다.</p>
+    </div>
+    <div class="decision-side">
+      <div class="row"><b>2종</b><span>사용자 (요양보호사 · 생활지원사)</span></div>
+      <div class="row"><b>4+1</b><span>하단 탭 4개 + 돌봄 업무 플로우</span></div>
+      <div class="row"><b>55</b><span>기능 요구사항 FR1–FR55</span></div>
+      <div class="row"><b>28</b><span>화면 ID (CG-*)</span></div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>사업 배경 — 공개 자료로 확인한 것</h3><p>브리프 밖에서 역추적한 내용. 이 프로젝트의 성격을 바꿉니다</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">보건복지부 AI 스마트홈 돌봄 사업</span><span class="slug">AX-Sprint 과제</span><span class="tag easy">공개 확인</span></div>
+      <p class="myth">NHN이 <b>주관기관으로 선정</b>됐고, 실증 범위는 <b>경기도·전라남도 총 400가구</b>입니다. 도시·농촌 양쪽에서 검증합니다.</p>
+      <p class="real" style="color:var(--pt-blue)"><b>의미 —</b> 이건 민간 앱이 아니라 <b>공공 사업</b>입니다. 접근성 준수가 권고가 아니라 요건일 가능성이 높고, 농촌 실증이 포함되므로 <b>네트워크 불안정이 예외가 아니라 상수</b>입니다(FR31·32의 배경).</p>
+      <div class="file"><a href="https://www.coindeskkorea.com/4679" target="_blank" rel="noopener">coindeskkorea.com/4679</a> · <a href="https://weekly.hankooki.com/news/articleView.html?idxno=7163109" target="_blank" rel="noopener">weekly.hankooki.com</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">NHN와플랫 — AI 생활지원사</span><span class="slug"><a href="https://play.google.com/store/apps/details?id=com.nhn.waplat" target="_blank" rel="noopener">com.nhn.waplat</a></span><span class="tag new">최우선 확인</span></div>
+      <p class="myth">「와플랫 공공 — 알림 기반 AI생활지원사 플랫폼」 앱이 <b>이미 구글플레이에 실재합니다.</b> 와플랫은 NHN 시니어케어 법인으로, 2024년 7월 출시 후 <b>전국 38개 지자체·기관과 협약</b>했습니다.</p>
+      <p class="real">기능명세서의 "AI 생활지원사 연동"(FR54·55)과 "AI 생활지원사 회원"(FR3)이 바로 이것으로 보입니다.</p>
+      <p class="warnline"><b>확인 질문 —</b> 이번 돌봄종사자 APP은 <b>이 기존 앱의 개편입니까, 별도 신규입니까?</b> 개편이라면 현재 앱 화면 캡처 일체를 즉시 받아야 합니다. "UX 구조 변경 없이"의 실제 제약 범위가 여기서 결정됩니다.</p>
+      <div class="file"><a href="https://play.google.com/store/apps/details?id=com.nhn.waplat" target="_blank" rel="noopener">play.google.com/…id=com.nhn.waplat</a> · <a href="https://waplat.co.kr/" target="_blank" rel="noopener">waplat.co.kr</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="gloss-note warn" style="margin-top:12px">
+    <b>컨소시엄 구성이 보도마다 다릅니다 —</b> NHN·NHN와플랫 + <b>카카오헬스케어</b>(헤럴드경제) / <b>아이클로</b>(NHN inside) / <b>헬스맥스</b>(경향게임스)로 각각 표기돼 있습니다.
+    다자 컨소시엄이면 <b>의사결정 라인이 복잡하다는 신호</b>입니다. 3주 일정에서 승인권자가 불명확하면 그것만으로 일정이 무너집니다.
+    킥오프에서 <b>단일 승인권자 1인 지정</b>을 요구해야 합니다.
+  </div>
+
+  <div class="section-title"><h3>확보한 자료로 확정된 것</h3><p>Figma 기능명세서 v0.1.0 · IA v0.1.0 · 확인 2026-08-10</p></div>
+  <div class="grid g2">
+    <div class="card flat">
+      <div class="k">돌봄 분야 <span class="tag core">확정</span></div>
+      <h3>노인 돌봄 2종을 하나의 앱에서</h3>
+      <p><b>장기요양</b>(요양보호사) + <b>노인맞춤돌봄</b>(생활지원사). 명세의 REC 단계가 <code class="c">(요양) 장기요양 항목</code>과 <code class="c">(생활) 생활지원 업무</code>로 갈립니다.</p>
+      <p class="impact">→ 같은 기록 플로우가 사용자 유형에 따라 <b>4단계 / 3단계</b>로 갈라집니다. 컴포넌트를 분기 대응으로 정의해야 합니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">연계 시스템 <span class="tag core">확정</span></div>
+      <h3>통합 ADMIN + AI 생활지원사</h3>
+      <p>통합 ADMIN — 이용자 등록 대조(FR2), 일정 등록 전달(FR18), 업무 취소 전달(FR33), 급여 인정 판단.<br>AI 생활지원사 — 안부 확인(FR54), 긴급 안부 확인(FR55).</p>
+      <p class="impact">→ 앱은 <b>단독 시스템이 아니라 창구</b>입니다. "여기서 결정되지 않고 넘어간다"를 화면에서 알려줘야 오해가 없습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">정보구조 <span class="tag core">확정</span></div>
+      <h3>하단 탭 4개 + 별도 업무 플로우</h3>
+      <p>오늘(홈) · 일정 · 이용자 · 내 정보. 여기에 탭 밖으로 <b>[돌봄 업무] 방문 전 → 방문 중 → 방문 기록 → 방문 종료</b> 플로우가 별도로 붙습니다.</p>
+      <p class="impact">→ 업무 중에는 탭 구조를 벗어납니다. <b>진행 중 플로팅 숏컷</b>(FR51)과 <b>백그라운드 알림</b>(FR52)이 복귀 경로입니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">과업 전제 <span class="tag core">확정</span></div>
+      <h3>UX 구조 변경 없음</h3>
+      <p>위 IA를 그대로 두고 UI 디자인 · 디자인 가이드 · 컴포넌트 정의를 수행합니다.</p>
+      <p class="impact">→ 킥오프에서 IA 변경 요구가 나오면 <b>그 자리에서 일정·범위 재산정 대상</b>임을 명확히 해야 합니다.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>이 프로젝트를 다르게 만드는 제약 3가지</h3><p>일반적인 돌봄 앱 레퍼런스를 그대로 쓸 수 없는 이유</p></div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="k">FR48 <span class="tag core">확정</span></div>
+      <h3>위치를 수집하지 않습니다</h3>
+      <p>위치 권한을 <b>아예 요청하지 않습니다.</b> 출퇴근은 시각 기록 방식(FR20 설정 · FR21 기록 · 중복 기록 방지)입니다.</p>
+      <p class="impact">→ 해외 EVV의 GPS 체크인, 스마트장기요양의 RFID 태그, 케어포의 NFC 체크판 — <b>세 레퍼런스 모두 이 프로젝트엔 적용 불가.</b> "위치로 증명"이 아니라 "시각으로 증명"입니다.</p>
+    </div>
+    <div class="card">
+      <div class="k">FR49 <span class="tag core">확정</span></div>
+      <h3>앱은 판단하지 않습니다</h3>
+      <p>명세 원문: <b>판정·해석 미산출 / 수신·표시·업링크만.</b> AI 업무 가이드는 있지만 앱이 결론을 내지 않습니다.</p>
+      <p class="impact">→ 비주얼·카피에서 "AI가 진단해준다"는 인상을 주면 <b>명세 위반</b>입니다. 톤앤무드 3안 모두 이 선을 지켜야 합니다.</p>
+    </div>
+    <div class="card">
+      <div class="k">FR50 <span class="tag core">확정</span></div>
+      <h3>앱 안에서 글자 크기를 바꿉니다</h3>
+      <p>OS 설정이 아니라 <b>앱 자체 설정</b>으로 글자 크기를 조정합니다(내 정보 → 서비스 설정 → 글자 크기 조정).</p>
+      <p class="impact">→ <b>08.10 회의로 해소.</b> 배수 처리는 개발단이 맡고 <b>디자인은 기본 1벌만</b> 제공합니다. 특정 디바이스에서 깨지는 경우만 개별 대응합니다.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>화면 ID 체계에 대하여</h3><p><code class="c">CG-HOME</code> 같은 코드는 업계 표준이 아니라 이 프로젝트 내부 약속입니다</p></div>
+  <div class="gloss-note">
+    <b>읽는 법 —</b> <code class="c">CG</code>는 CareGiver(돌봄종사자)의 약어로 보입니다. 기능명세서 헤더가 <code class="c">FS-CG-ALL</code>
+    (Functional Spec · CareGiver · ALL)입니다. 뒤에 화면 이름이 붙고, 변형이 있으면 접미사가 하나 더 붙는 구조입니다 —
+    <code class="c">CG-SCHED-ADD</code>(일정 등록) · <code class="c">CG-SCHED-REQ</code>(일정 요청) ·
+    <code class="c">CG-USER-DTL</code>(이용자 상세) · <code class="c">CG-EXP-LIST</code>(지출결의 내역).
+    <br><br>
+    이런 ID를 쓰는 <b>관행 자체는 표준</b>입니다. 기획·디자인·개발·QA가 같은 화면을 각자 다른 이름으로 부르는 걸 막아주기 때문입니다.
+    하지만 <b>코드 자체는 프로젝트마다 새로 만듭니다.</b> 다른 회사에서 <code class="c">CG-HOME</code>이라고 하면 통하지 않습니다.
+  </div>
+
+  <div class="gloss-note risk">
+    <b>⚠️ 두 문서가 서로 다른 체계를 씁니다 —</b> 기능명세서는 <code class="c">CG-*</code> ID를 쓰는데,
+    실제 <b>유저 플로우 문서에는 이 ID가 한 번도 나오지 않습니다.</b> 대신 시나리오 번호를 씁니다
+    (<code class="c">1. 출근 전</code> · <code class="c">2.1. 방문 전</code> · <code class="c">2.3. 돌봄 기록(요양)</code>).
+    <br><br>
+    두 문서를 잇는 <b>매핑표가 없다는 뜻</b>입니다. 이 상태로 디자인에 들어가면 "그 화면"이 서로 다른 걸 가리키는 일이 생깁니다.
+    킥오프에서 <b>ID ↔ 플로우 매핑표</b>를 요청해야 합니다. 없으면 우리가 만들어 승인받는 편이 안전합니다.
+  </div>
+
+  <div class="gloss-note risk">
+    <b>지금 당장 답이 필요한 한 가지 —</b> 화면 ID에 <code class="c">CG-HOME</code>과 <code class="c">CG-HOME-L</code>이 <b>둘 다</b> 있습니다.
+    어느 쪽이든 <b>홈 화면은 2벌</b>이 됩니다.
+    <br><br>
+    유저 플로우 문서에서 <code class="c">1.1. 역할 별 화면</code>이라는 프레임을 찾았고, 그 안에 <b>홈 화면 2개가 나란히</b> 놓여 있습니다.
+    따라서 <code class="c">-L</code>은 큰 글씨(Large)보다 <b>역할 구분일 가능성이 높습니다</b> — 요양보호사용 홈과 생활지원사용 홈.
+    <span class="tag warn">가설</span>
+    <br><br>
+    <b>어느 쪽인지가 과업량을 크게 바꿉니다.</b> 큰 글씨 변형이면 홈 하나의 레이아웃 대응이지만,
+    <b>역할 구분이면 홈 말고 다른 화면들도 역할별로 갈라질 수 있습니다.</b>
+    기록 화면은 이미 요양 4단계 / 생활 3단계로 갈라져 있으니, 분기가 어디까지 번지는지 확인이 필요합니다.
+  </div>
+
+  <p class="footnote">작성 기준일 2026-08-10 · 출처: <a href="https://www.figma.com/design/mlbVOnLJQUULWK80c3Fo1B/?node-id=67-13668" target="_blank" rel="noopener">Figma 기능명세서 v0.1.0(node 67:13668)</a> · <a href="https://www.figma.com/design/mlbVOnLJQUULWK80c3Fo1B/?node-id=0-1" target="_blank" rel="noopener">IA v0.1.0(page 0:1)</a> + 공개 자료 데스크 리서치. 실기기 설치·스크린샷 검증은 미실시.</p>
+</section>
+
+<!-- ════════════════ 01 확정·패턴·가설·미확인 ════════════════ -->
+<section class="view" id="v-fact">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">01 · Status Legend</div>
+      <h2>확정 · 패턴 · 가설 · 미확인</h2>
+      <p>이 문서의 모든 주장에는 아래 네 태그 중 하나가 붙습니다. 색이 곧 신뢰도입니다.</p>
+    </div>
+  </div>
+
+  <div class="grid g4">
+    <div class="card flat">
+      <span class="tag core">확정</span>
+      <p style="margin-top:9px"><b>클라이언트 문서에 명시된 것.</b> 기능명세서 v0.1.0 또는 IA v0.1.0에 적혀 있습니다. FR 번호나 화면 ID를 함께 표기합니다.</p>
+    </div>
+    <div class="card flat">
+      <span class="tag easy">업계 패턴</span>
+      <p style="margin-top:9px"><b>외부 사례에서 확인된 일반적 방식.</b> 출처 URL과 확인일이 붙습니다. 이 프로젝트에 적용된다는 뜻은 아닙니다.</p>
+    </div>
+    <div class="card flat">
+      <span class="tag warn">가설</span>
+      <p style="margin-top:9px"><b>우리 판단·제안.</b> 근거는 있지만 확정이 아닙니다. NHN 확인이 필요한 항목입니다.</p>
+    </div>
+    <div class="card flat">
+      <span class="tag new">미확인</span>
+      <p style="margin-top:9px"><b>아직 아무 데도 답이 없는 것.</b> 방치하면 리스크가 됩니다. 12번 탭에 질문으로 전부 모아뒀습니다.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>주요 항목 상태판</h3><p>미팅에서 무엇을 결정해야 하는지가 여기 다 있습니다</p></div>
+  <div class="table-wrap"><table class="t">
+    <thead><tr><th style="min-width:150px">항목</th><th>상태</th><th>근거 / 현재 내용</th><th>다음 액션</th></tr></thead>
+    <tbody>
+      <tr><td><b>사업 성격</b></td><td><span class="tag easy">공개 확인</span></td><td>보건복지부 AI 스마트홈 돌봄 사업(AX-Sprint). NHN 주관. 경기·전남 400가구 실증</td><td>공공 사업 기준 적용 여부 확인</td></tr>
+      <tr style="background:var(--pt-pink-soft)"><td><b>기존 와플랫 앱</b></td><td><span class="tag new">미확인</span></td><td class="yes">「와플랫 공공 — AI 생활지원사 플랫폼」(<code class="c">com.nhn.waplat</code>)이 이미 운영 중. 이번 앱과의 관계 불명</td><td class="yes">최우선 확인 — 개편이면 화면 캡처 필수</td></tr>
+      <tr><td><b>승인 라인</b></td><td><span class="tag new">미확인</span></td><td>컨소시엄 파트너 표기가 보도마다 상이(카카오헬스케어/아이클로/헬스맥스)</td><td class="yes">단일 승인권자 1인 지정 요구</td></tr>
+      <tr><td><b>기록의 정산 근거 여부</b></td><td><span class="tag new">미확인</span></td><td>기록이 급여 청구·바우처·실적 보고의 근거인지 불명. 명세에 "급여 인정 판단은 통합 소관"만 존재</td><td class="yes">톤앤무드 방향 필터링 기준</td></tr>
+      <tr><td><b>돌봄 분야</b></td><td><span class="tag core">확정</span></td><td>노인 돌봄 2종 — 장기요양(요양보호사) + 노인맞춤돌봄(생활지원사)</td><td class="no">—</td></tr>
+      <tr><td><b>앱 사용자</b></td><td><span class="tag core">확정</span></td><td>요양보호사 · 생활지원사. 앱 내 명칭 "AI 생활지원사 회원"(FR3)</td><td>두 유형 비율·연령 분포 확인</td></tr>
+      <tr><td><b>정보구조(IA)</b></td><td><span class="tag core">확정</span></td><td>탭 4개 + 돌봄 업무 플로우. UX 구조 변경 없이 진행</td><td class="no">—</td></tr>
+      <tr><td><b>기능 범위</b></td><td><span class="tag core">확정</span></td><td>FR1–FR55, 9개 기능군(A–I), 화면 ID 28개</td><td>FR↔디자인 대상 화면 매핑표 요청</td></tr>
+      <tr><td><b>위치 수집</b></td><td><span class="tag core">확정</span></td><td>미수집. 위치 권한 미요청(FR48). 출퇴근은 시각 기록(FR20·21)</td><td class="no">—</td></tr>
+      <tr><td><b>오프라인 대응</b></td><td><span class="tag core">확정</span></td><td>오프라인 보존 → 복귀 동기화 → 저장 확인(FR31·32)</td><td>동기화 실패 시 UX 정의 필요</td></tr>
+      <tr><td><b>음성 입력</b></td><td><span class="tag core">확정</span></td><td>STT 구술 + 사진 첨부, 3분 제한·경고(FR29)</td><td>3분 초과 시 처리 방식 확인</td></tr>
+      <tr><td><b>개인정보 등급</b></td><td><span class="tag core">확정</span></td><td>GREEN 마스킹 / ORANGE 암호화(FR46), 조회 로그 자동 기록(FR47)</td><td>등급별 표기 규칙 문서 요청</td></tr>
+      <tr><td><b>앱 내 글자 크기</b></td><td><span class="tag core">확정</span></td><td>내 정보 → 서비스 설정 → 글자 크기 조정(FR50)</td><td>08.10 회의 — 배수 처리는 개발단, 디자인 1벌. 해소</td></tr>
+      <tr><td><b>CG-HOME-L</b></td><td><span class="tag warn">가설</span></td><td>유저 플로우에 <code class="c">1.1. 역할 별 화면</code> 프레임이 있고 홈이 2개 놓여 있음 → <b>역할 구분(요양/생활)</b>일 가능성</td><td class="yes">최우선 확인 — 분기가 홈에만인지, 다른 화면까지인지</td></tr>
+      <tr><td><b>디자인 대상 화면 수</b></td><td><span class="tag warn">가설</span></td><td class="yes">유저 플로우 기준 모바일 프레임 <b>42~43개</b>(두 버전). 기능명세 ID 28개와 불일치. 상태·예외·빈 화면은 별도</td><td class="yes">확정 화면 목록 + 최신 버전 확인</td></tr>
+      <tr><td><b>유저 플로우 버전</b></td><td><span class="tag new">미확인</span></td><td class="yes">유저 플로우 문서가 <b>2벌</b> 존재(42개 / 43개). 후자에만 <code class="c">2.6. 긴급 안부 확인</code>이 있음</td><td class="yes">어느 쪽이 최신인지 확인</td></tr>
+      <tr><td><b>ID ↔ 플로우 매핑</b></td><td><span class="tag new">미확인</span></td><td class="yes">기능명세서는 <code class="c">CG-*</code>, 유저 플로우는 시나리오 번호. <b>두 체계를 잇는 매핑표 없음</b></td><td class="yes">매핑표 요청 또는 우리가 작성 후 승인</td></tr>
+      <tr><td><b>돌봄 기록 변형</b></td><td><span class="tag warn">가설</span></td><td class="yes">유저 플로우에 <b>요양 / 생활 / 전화</b> 3종. 기능명세서·IA에는 <b>"전화" 변형이 없음</b></td><td class="yes">전화 기반 돌봄 기록이 범위인지 확인</td></tr>
+      <tr><td><b>NHN 디자인 시스템</b></td><td><span class="tag new">미확인</span></td><td>브랜드 가이드·컴포넌트 라이브러리 존재 여부 불명</td><td class="yes">있으면 즉시 공유 요청</td></tr>
+      <tr><td><b>개발 방식</b></td><td><span class="tag new">미확인</span></td><td>Native / Hybrid / WebView 미확인. 지원 OS·최소 버전 미확인</td><td>모션·컴포넌트 정의 전 필수</td></tr>
+      <tr><td><b>서명 첨부</b></td><td><span class="tag new">미확인</span></td><td>명세에 서명 관련 기능 없음. 사진 첨부만 존재(FR29·44)</td><td>범위 외인지 확인</td></tr>
+      <tr><td><b>다크모드</b></td><td><span class="tag new">미확인</span></td><td>명세·IA 모두 언급 없음</td><td class="yes">대응 시 컴포넌트 2배 — 반드시 확인</td></tr>
+      <tr><td><b>태블릿 대응</b></td><td><span class="tag new">미확인</span></td><td>언급 없음</td><td>범위 외 확인</td></tr>
+      <tr><td><b>기초평가 화면</b></td><td><span class="tag warn">가설</span></td><td>IA에는 있으나(이용자 상세 하위) 기능명세서 F섹션에 미기재</td><td>범위 포함 여부 확인</td></tr>
+      <tr><td><b>사후 기록 수정</b></td><td><span class="tag warn">가설</span></td><td>"수정 없이 저장 가능"(FR30) / "수정은 어드민 소관"(F섹션). 종사자 수정 범위 불명확</td><td>수정 가능 시점·범위 확인</td></tr>
+      <tr><td><b>보호자 직접 보고</b></td><td><span class="tag new">미확인</span></td><td>명세에 보호자 대상 발신 기능 없음. 보호자 정보 조회·전화만(FR35)</td><td>범위 외 확인</td></tr>
+      <tr><td><b>교육 자료</b></td><td><span class="tag new">미확인</span></td><td>수행기관 소식(PDF·이미지 열람, FR43)만 존재</td><td>교육 콘텐츠 별도 여부 확인</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note">
+    <b>집계 —</b> 확정 9 · 공개 확인 1 · 가설 5 · 미확인 12.<br><br>
+    유저 플로우 문서까지 확인해 <b>화면 총량이 42~43개</b>로 좁혀졌습니다(기능명세 ID 28개와 불일치 — 두 문서가 다른 체계를 씁니다).
+    <b>남은 최대 변수는 역할별 분기가 어디까지 번지느냐</b>입니다. 기록은 이미 요양/생활로 갈라져 있고, 홈도 갈라지는 정황이 있으며,
+    유저 플로우에는 명세에 없는 <b>전화 기반 돌봄 기록</b>까지 있습니다. 분기가 화면 전반으로 번지면 42개가 실질 60개가 됩니다.
+  </div>
+</section>
+
+<!-- ════════════════ 02 국내외 서비스 리서치 ════════════════ -->
+<section class="view" id="v-svc">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">02 · Service Research</div>
+      <h2>국내외 서비스 리서치</h2>
+      <p>실존이 확인된 서비스만 실었습니다. 서비스명·기능을 만들어내지 않았고, 확인 못 한 항목은 비워뒀습니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag easy">서비스 19</span><span class="tag easy">규범 4</span><span class="tag">확인 2026-08-10</span></div>
+  </div>
+
+  <div class="gloss-note warn">
+    <b>검증 수준 고지 —</b> 이 리서치는 <b>공개 자료 기반 데스크 리서치</b>입니다. 각 서비스의 존재와 공개된 기능 설명까지는 확인했으나,
+    <b>실기기 설치·스크린샷을 통한 UI 세부 검증은 하지 않았습니다.</b> 홈 화면 정보구조·정확한 버튼 배치 등은 03번 비교표에서 <span class="tag warn">확인 필요</span>로 남겨뒀습니다.
+    이 표를 클라이언트 대면 자료로 쓸 때는 이 한계를 함께 알려야 합니다.
+  </div>
+
+  <div class="section-title"><h3>① 국내 공공 — 돌봄·사회서비스</h3><p>제도가 UI를 결정하는 영역. 우리 프로젝트와 규제 환경이 가장 가깝습니다</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">스마트 장기요양</span><span class="slug">국민건강보험공단 · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">장기요양요원이 가정방문급여(방문요양·방문목욕·방문간호)의 <b>서비스 시작·종료 시간과 내용을 실시간 전송</b>하는 앱.</p>
+      <p class="real">재가급여전자관리시스템(RFID) 기반. 보호자가 앱을 설치하면 전송 내용을 실시간 통보받아 수급자 권리를 보호하는 구조. iOS는 앱스토어 미배포이며 공단 사이트 QR로 설치.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-orange-deep)"><b>우리 조건과의 차이 —</b> 태그(RFID) 기반 증빙. 우리 앱은 위치·태그를 쓰지 않으므로(FR48) <b>증빙 메커니즘이 다릅니다.</b> 가져올 것은 "제공 내용이 실시간으로 어딘가에 남는다"는 사실을 종사자에게 알려주는 방식뿐입니다.</p>
+      <div class="file"><a href="https://play.google.com/store/apps/details?id=kr.or.nhis.longtermcare&amp;hl=ko" target="_blank" rel="noopener">play.google.com/…id=kr.or.nhis.longtermcare</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">재가급여전자관리시스템 (RFID)</span><span class="slug">제도 · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">방문급여 제공 시 <b>태그로 시작·종료를 남기는</b> 국민건강보험공단 제도.</p>
+      <p class="real">공단이 재가기관용 전산 가이드북을 배포. 기관·종사자 모두 이 절차를 전제로 업무 흐름이 짜여 있습니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-orange-deep)"><b>확인 필요 —</b> 우리 앱 사용자(요양보호사)가 <b>이 제도와 별개로 우리 앱에도 기록해야 하는지</b>, 즉 이중 입력이 발생하는지. 발생한다면 이는 UX가 아니라 제도 이슈이며, 앱이 할 수 있는 건 "중복 부담을 최소화한 입력 설계"뿐입니다.</p>
+      <div class="file"><a href="https://www.carefor.co.kr/ct_att/contents_article/0/202402/44604/D0BLtemMIF.pdf" target="_blank" rel="noopener">carefor.co.kr — 공단 RFID 전산 가이드북 PDF</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">사회서비스 전자바우처 결제 앱</span><span class="slug">한국사회보장정보원 · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">장애인활동지원·지역사회서비스투자사업 등의 <b>바우처 결제를 전용단말기 대신 스마트폰으로</b> 처리하는 앱.</p>
+      <p class="real">제공인력이 결제 수단으로 전용단말기와 스마트폰 중 하나를 선택. 공개 자료 기준 2곳 이상 제공기관에 소속된 제공인력이 전국 약 5만 명(전체의 약 20%).</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 시사점 —</b> <b>한 사람이 여러 기관에 소속된다</b>는 사실. 우리 앱도 종사자가 복수 수행기관에 속할 수 있는지 확인이 필요하고, 그렇다면 "지금 어느 기관 업무인지"가 화면에 상시 보여야 합니다.</p>
+      <div class="file"><a href="https://www.ssis.or.kr/lay1/bbs/S1T1910C1976/B/101/view.do?article_seq=122737" target="_blank" rel="noopener">ssis.or.kr 보도</a> · <a href="https://play.google.com/store/apps/details?id=m.kr.or.socialservice" target="_blank" rel="noopener">play.google.com/…id=m.kr.or.socialservice</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">아이돌봄서비스</span><span class="slug"><a href="https://www.idolbom.go.kr/front/" target="_blank" rel="noopener">idolbom.go.kr</a> · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">시간제·영아종일제·질병감염아동지원·긴급돌봄 4개 유형의 <b>아동 돌봄 공공 서비스</b>.</p>
+      <p class="real">공식 앱은 사업 소개·이용 안내·신청 중심. 아동 돌봄 영역이라 우리 프로젝트(노인 돌봄)와 대상은 다릅니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 시사점 —</b> <b>서비스 유형이 4개로 갈리는 구조를 어떻게 한 앱에서 다루는가.</b> 우리도 요양/생활 2종 분기가 있으므로 유형 전환·구분 표기 방식이 참고가 됩니다.</p>
+      <div class="file"><a href="https://www.idolbom.go.kr/front/" target="_blank" rel="noopener">idolbom.go.kr</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>② 국내 민간 — 돌봄·요양·간병 종사자 앱</h3><p>우리 사용자와 가장 가까운 사람들이 실제로 쓰고 있는 앱</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">온맘터치홈 — 요양보호사</span><span class="slug">피플체인스 · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">노인장기요양보험 종사 요양보호사가 <b>기관에 방문하지 않고</b> 업무를 처리하는 앱.</p>
+      <p class="real">공개 설명 기준 <b>급여제공기록지</b>·<b>상태변화기록지</b> 작성, 방문목욕 차량일지 등을 앱에서 처리.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 시사점 —</b> 우리 명세의 REC-3 변화상태(신체·식사·인지 호전/유지/악화)가 <b>업계 표준 서식인 상태변화기록지와 같은 계열</b>입니다. 종사자가 이미 아는 서식 언어를 UI에서 유지하면 학습 비용이 거의 0이 됩니다. <b>서식을 예쁘게 재해석하려는 유혹을 경계해야 합니다.</b></p>
+      <div class="file"><a href="https://play.google.com/store/apps/details?id=com.peoplechains.onmomtouch.homecare&amp;hl=ko" target="_blank" rel="noopener">play.google.com/…id=com.peoplechains.onmomtouch.homecare</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">케어포</span><span class="slug"><a href="https://www.carefor.co.kr/" target="_blank" rel="noopener">carefor.co.kr</a> · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">시설·주야간보호·가정방문 업무를 관리하는 노인장기요양 관리 프로그램. <b>NFC 태그 출퇴근 체크판</b>을 별도 판매.</p>
+      <p class="real">출입문 벽에 부착한 NFC 태그로 출퇴근을 체크하는 방식. 체크판은 별도 구매 품목.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-orange-deep)"><b>우리 조건과의 차이 —</b> 하드웨어 태그 의존. 우리는 태그·위치 없이 <b>시각만으로</b> 출퇴근을 기록합니다(FR20·21). 이 차이는 신뢰 설계 부담이 우리 쪽이 더 크다는 뜻입니다 — 중복 기록 방지와 기록 시각의 가시성이 그만큼 중요해집니다.</p>
+      <div class="file"><a href="https://www.carefor.co.kr/addservice/info_nfc.php" target="_blank" rel="noopener">carefor.co.kr/addservice/info_nfc.php</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">케어네이션 (파트너)</span><span class="slug"><a href="https://play.google.com/store/apps/details?id=kr.carenation.caregiver" target="_blank" rel="noopener">kr.carenation.caregiver</a> · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">간병인·병원동행인·요양보호사가 <b>일감을 찾는</b> 앱. 보호자용 앱(<code class="c">kr.carenation.protector</code>)과 <b>완전히 분리</b>돼 있습니다.</p>
+      <p class="real">종사자용과 보호자용을 별개 앱으로 배포하는 구조.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 시사점 —</b> 국내 돌봄 플랫폼의 <b>표준 관행이 "종사자 앱과 보호자 앱을 분리"</b>라는 점. 우리 앱도 종사자 전용이므로, 보호자 대상 기능이 요구되면 그건 별도 과업임을 근거로 제시할 수 있습니다.</p>
+      <div class="file"><a href="https://play.google.com/store/apps/details?id=kr.carenation.caregiver" target="_blank" rel="noopener">play.google.com/…id=kr.carenation.caregiver</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">케어닥</span><span class="slug">caredoc · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">간병인·요양보호사·케어코디의 <b>일자리 찾기</b> 앱. 역시 보호자용 앱과 분리 배포.</p>
+      <p class="real">돌봄 종사자 대상 구인·매칭 중심. 방문 중 업무 기록보다 일감 수급이 주 목적.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-orange-deep)"><b>주의 —</b> 케어네이션·케어닥은 <b>매칭 플랫폼</b>입니다. 우리 앱은 이미 배정된 업무를 수행·기록하는 <b>업무 도구</b>이므로, 이들의 비주얼 톤(구직 앱 특유의 밝고 상업적인 톤)을 그대로 참조하면 방향이 어긋납니다.</p>
+      <div class="file"><a href="https://apps.apple.com/kr/app/id1495648451" target="_blank" rel="noopener">apps.apple.com/kr/app/…id1495648451</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>③ 해외 — 돌봄 종사자용 앱</h3><p>현장 기록 UX가 가장 성숙한 영역. 단, GPS 전제가 깔려 있어 선별 인용이 필요합니다</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">Birdie</span><span class="slug"><a href="https://www.birdie.care/" target="_blank" rel="noopener">birdie.care</a> · UK</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">영국 재가돌봄 플랫폼. 케어러 앱에 <b>오프라인 동작 · 음성→텍스트 방문기록 · eMAR · 디지털 바디맵</b>이 들어 있습니다.</p>
+      <p class="real">공개 자료 기준: GPS 또는 QR 위치 검증 체크인·아웃 / 신호가 약한 지역에서 오프라인 작동 후 복귀 시 자동 동기화 / 방문 기록을 텍스트 또는 음성으로 입력 / PRN 프로토콜 포함 eMAR / 상처·욕창용 디지털 바디맵 / 타임스탬프 사진 / 읽음 확인이 있는 메시지 센터 / 인앱 타임시트.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> ① 오프라인 → 복귀 자동 동기화 흐름(우리 FR31·32와 정확히 같은 요구) ② 음성 입력을 <b>보조가 아닌 기본 입력</b>으로 두는 태도(우리 FR29와 같음) ③ 타임스탬프 사진.<br><b>버릴 것 —</b> GPS/QR 위치 검증(FR48 위배).</p>
+      <div class="file"><a href="https://www.birdie.care/product-features/carer-app" target="_blank" rel="noopener">birdie.care/product-features/carer-app</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">AlayaCare</span><span class="slug"><a href="https://alayacare.com/" target="_blank" rel="noopener">alayacare.com</a> · CA/US</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">케어워커 모바일 앱. <b>오프라인 모드가 "사전 다운로드" 방식</b>이라는 점이 특징입니다.</p>
+      <p class="real">일정 확인, 방문 오퍼 응답, clock in/out, 임상 기록 열람·수정. 오프라인 모드는 <b>미리 데이터를 내려받아</b> 연결이 끊긴 상태에서 방문을 완료할 수 있게 하는 구조.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> 오프라인을 "실패 대응"이 아니라 <b>"미리 준비하는 상태"</b>로 다루는 관점. 우리 앱도 방문 전 화면(FR23)에서 필요한 데이터를 미리 확보해두면, 방문 중 연결이 끊겨도 종사자가 불안해하지 않습니다. <b>"오프라인 준비됨" 표시를 방문 전 화면에 두는 안</b>을 제안 후보로 검토할 만합니다.</p>
+      <div class="file"><a href="https://alayacare.com/platform/overview/mobile-app-for-real-time-access/" target="_blank" rel="noopener">alayacare.com/platform</a> · <a href="https://alayacare.zendesk.com/hc/en-us/articles/360025454831-What-is-available-in-Offline-Mode-on-Mobile" target="_blank" rel="noopener">alayacare.zendesk.com — 오프라인 모드 문서</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">Mobile Caregiver+</span><span class="slug">Netsmart/Tellus · US</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">HIPAA 준수 EVV 솔루션. 흐름이 <b>체크인 → 케어 태스크 체크 → 체크아웃</b> 세 동작으로 압축돼 있습니다.</p>
+      <p class="real">미국 21st Century Cures Act에 따라 Medicaid 재원 방문(PCS·HHCS)의 전자적 검증이 의무화된 배경에서 나온 제품군.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> <b>핵심 업무를 3동작으로 줄인 단순함.</b> 우리 명세도 방문 전 → 방문 중 → 방문 기록 → 방문 종료 4단계입니다. 이 뼈대를 흐리지 않는 게 화면 설계의 1순위입니다.</p>
+      <div class="file"><a href="https://apps.apple.com/us/app/mobile-caregiver/id1273282237" target="_blank" rel="noopener">apps.apple.com/us/app/mobile-caregiver/id1273282237</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">カイポケ 訪問記録</span><span class="slug"><a href="https://ads.kaipoke.biz/home-visit/" target="_blank" rel="noopener">kaipoke.biz</a> · JP</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">일본 방문개호 기록 앱. <b>체크리스트 체크만으로 기록이 완성</b>되고, 스마트폰이 익숙하지 않은 헬퍼를 위한 <b>음성 입력</b>을 제공합니다.</p>
+      <p class="real">공개 설명 기준: 실시 서비스를 체크하는 것만으로 기록 완료 / 음성 입력 기능 / 기록과 청구 데이터 자동 연동으로 종이 기록 불필요 / 보기 쉬운 화면을 명시적 설계 목표로 언급.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> 이 프로젝트와 <b>사용자 조건(고령·저디지털숙련)이 가장 유사한 사례</b>입니다. ① 자유 입력을 최소화하고 체크로 끝내는 구조 ② 음성 입력을 "잘 못 쓰는 사람을 위한 배려"로 명시적 포지셔닝 — 둘 다 우리 FR27·FR29와 직결됩니다.</p>
+      <div class="file"><a href="https://ads.kaipoke.biz/home-visit/function/visit-record.html" target="_blank" rel="noopener">ads.kaipoke.biz/home-visit/function/visit-record.html</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>④ 필드서비스 — 돌봄은 아니지만 구조가 같은 앱</h3><p>방문 일정 · 현장 기록 · 오프라인이라는 뼈대가 동일합니다</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">Salesforce Field Service</span><span class="slug"><a href="https://www.salesforce.com/service/field-service-management/" target="_blank" rel="noopener">salesforce.com</a> · Global</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth"><b>오프라인 우선(offline-first) 설계.</b> "Briefcase"라는 필터 규칙으로 필요한 레코드를 미리 내려받습니다.</p>
+      <p class="real">브리프케이스 = 어떤 레코드를 기기에 미리 받을지 결정하는 필터 규칙 모음. 사용자별 맞춤 데이터 부분집합이 기기와 함께 이동. 터치 서명 캡처, 작업 후 서비스 리포트 생성·발송.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> 오프라인을 <b>제품의 기본 전제로 설계</b>하는 방식. 우리 FR31·32도 같은 요구인데, 명세에는 "보존·동기화"만 있고 <b>사용자에게 어떻게 보여줄지가 비어 있습니다.</b> 이 빈칸을 우리가 채워야 합니다.</p>
+      <div class="file"><a href="https://help.salesforce.com/s/articleView?id=service.mfs_offline_parent.htm&amp;language=en_US&amp;type=5" target="_blank" rel="noopener">help.salesforce.com — Offline Priming in the Field Service Mobile App</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">ServiceTitan Mobile</span><span class="slug"><a href="https://www.servicetitan.com/" target="_blank" rel="noopener">servicetitan.com</a> · US</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">Mobile 2.0의 <b>오프라인 아키텍처</b>가 강점으로 언급되는 현장 기술자 앱.</p>
+      <p class="real">신호 없는 현장에서 인보이스 생성, 서명 캡처, 영수증 발행을 그 자리에서 처리.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> 필드서비스 업계 공통 요구가 <b>"오프라인 · GPS 시간 기록 · 사진과 서명 · 현장에서 완결"</b>이라는 점. 우리는 이 중 GPS와 서명이 빠진 조합입니다. <b>빠진 만큼 남은 수단(시각·사진·체크)의 신뢰도 표현이 더 정교해야 합니다.</b></p>
+      <div class="file"><a href="https://www.servicetitan.com/features/field-mobile-app" target="_blank" rel="noopener">servicetitan.com/features/field-mobile-app</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>⑤ 추가 벤치마크 — 축별 보강</h3><p>구조적으로 배울 점이 뚜렷한 사례만 추렸습니다</p></div>
+  <div class="grid g2">
+    <div class="term">
+      <div class="top"><span class="name">아이돌보미 앱</span><span class="slug"><a href="https://www.idolbom.go.kr/front/" target="_blank" rel="noopener">idolbom.go.kr</a> · KR 공공</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">국내 공공 중 <b>가장 종사자 친화적</b>입니다. 활동일정 달력 · 활동일지 모바일 작성 · 연차 확인·신청 · <b>급여 상세 확인</b> · 알림센터.</p>
+      <p class="real">복무관리시스템의 체크인이 <b>QR / 위치확인 / 활동일지 작성 3택1</b>입니다(2022-12-05 시범운영).</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> ① <b>연차·급여까지 "내 일" 관점으로 묶은 것.</b> 우리 앱도 근무일지·출퇴근·지출결의가 있으니 같은 계열입니다. ② 체크인을 단일 방식으로 강제하지 않은 것 — 우리는 시각 기록 단일이므로, <b>실패 시 대체 경로가 무엇인지</b>를 반드시 정의해야 합니다.</p>
+      <div class="file"><a href="https://www.idolbom.go.kr/front/board/notice/5768" target="_blank" rel="noopener">idolbom.go.kr/front/board/notice/5768</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">하이케어</span><span class="slug">한국시니어연구소 · KR</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">공단 '롱텀' 양방향 연동. <b>RFID 태그 전송 내역과 오류 사항을 한 화면에서 확인·수정</b>하면 롱텀에 자동 반영됩니다.</p>
+      <p class="real">방문요양센터 관리자 중심 B2B SaaS. 모바일 앱 존재(<code class="c">com.kslab.highcare_mobile</code>).</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 — 이번 조사에서 가장 유용한 발견입니다.</b> 정상 건이 아니라 <b>어긋난 건만 골라 보여주는 화면</b>이 이 카테고리의 실질적 핵심 기능입니다. 우리 앱에도 <b>"미전송·미기록만 모아 보는 뷰"</b>가 필요합니다.</p>
+      <div class="file"><a href="https://support.highcare.kr" target="_blank" rel="noopener">support.highcare.kr</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">ServiceTitan — My Forms</span><span class="slug">US · 필드서비스</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">기술자가 <b>매일 아침 "My Forms"에서 오늘 완료해야 할 폼을 확인</b>합니다. Incomplete / Complete 상태 지표로 남은 항목을 추적합니다.</p>
+      <p class="real">앱의 전 기능이 오프라인에서 동작하고, 폼도 오프라인 작성 후 재접속 시 동기화됩니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> <b>"오늘 내가 아직 안 낸 것" 리스트를 하루의 시작점에 두는 것.</b> 기록 누락 방지의 가장 단순하고 검증된 패턴입니다. 우리 홈(FR11·12)에 미전송·미기록 배지를 붙이는 근거가 됩니다.</p>
+      <div class="file"><a href="https://help.servicetitan.com/v1/docs/add-technician-forms-in-fma" target="_blank" rel="noopener">help.servicetitan.com — Add Technician Forms in FMA</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">HHAeXchange+ · Log my Care · CareViewer</span><span class="slug">US · UK · JP</span><span class="tag easy">업계 패턴</span></div>
+      <p class="myth">셋 다 <b>입력 수단을 사용자가 고르게</b> 합니다. HHAeXchange는 타이핑 / 음성 녹음 / 사진 3택, Log my Care는 기기 내장 받아쓰기, CareViewer는 손가락 입력 또는 음성.</p>
+      <p class="real">CareViewer는 <b>누락 방지 자동 알림</b>을 명시적 기능으로 둡니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>가져올 것 —</b> 고령·저숙련 사용자에게 <b>단일 입력 강제는 곧 미기록</b>입니다. 우리 FR29는 STT + 사진이므로 이미 2택이지만, <b>키보드 입력도 항상 살아 있어야</b> 합니다(소음 환경에서 음성은 실패율이 높습니다).</p>
+      <div class="file"><a href="https://www.hhaexchange.com/solutions/providers/mobile-app" target="_blank" rel="noopener">hhaexchange.com/solutions/providers/mobile-app</a> · <a href="https://support.logmycare.co.uk/en/collections/794813-the-carer-app" target="_blank" rel="noopener">support.logmycare.co.uk</a> · <a href="https://care-viewer.com/" target="_blank" rel="noopener">care-viewer.com</a> ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>⑥ 접근성 · 설계 규범</h3><p>제안의 근거가 되는 공식 기준. 수치의 출처를 정확히 구분했습니다</p></div>
+
+  <div class="gloss-note warn">
+    <b>수치 출처 주의 —</b> 흔히 "접근성 최소 터치 타깃 44×44px"로 뭉뚱그려 인용되지만, 이 숫자는 기준마다 다릅니다.
+    아래 표의 <b>출처와 등급을 정확히 구분해서</b> 인용해야 클라이언트 논의에서 신뢰를 잃지 않습니다.
+  </div>
+
+  <div class="table-wrap"><table class="t" style="min-width:760px">
+    <thead><tr><th style="min-width:150px">기준</th><th>수치</th><th>등급 / 성격</th><th>출처</th></tr></thead>
+    <tbody>
+      <tr><td><b>KWCAG 2.2 — 명도 대비</b></td><td class="yes">4.5 : 1</td><td>기본. <b>화면 확대 가능한 콘텐츠는 3:1까지 완화</b></td><td><a href="https://a11ykr.github.io/kwcag22/" target="_blank" rel="noopener">a11ykr.github.io/kwcag22</a></td></tr>
+      <tr><td><b>KWCAG 2.2 — 구성</b></td><td>4원칙 · 14지침 · 33 검사항목</td><td>웹 기준. WebView 개발 시 적용 대상</td><td>동일</td></tr>
+      <tr><td><b>KS X 3253</b> 모바일 앱 콘텐츠 접근성 지침 2.0</td><td>19개 항목</td><td class="yes">국가표준. 「지능정보화 기본법」상 준수·인증 대상</td><td><a href="http://www.webwatch.or.kr/MA/020201.html?MenuCD=220" target="_blank" rel="noopener">webwatch.or.kr</a></td></tr>
+      <tr><td>└ KS X 3253 컨트롤 크기 구체 수치</td><td class="no">확인 필요</td><td class="no">PDF 원문 직접 확인 필요 — 스니펫으로 미확인</td><td class="no">—</td></tr>
+      <tr><td><b>WCAG 2.2 SC 2.5.8</b> Target Size (Minimum)</td><td>24 × 24 CSS px</td><td class="yes">AA — 5개 예외 있음</td><td><a href="https://www.w3.org/TR/WCAG22/#target-size-minimum" target="_blank" rel="noopener">w3.org/TR/WCAG22</a></td></tr>
+      <tr><td><b>WCAG 2.2 SC 2.5.5</b> Target Size (Enhanced)</td><td>44 × 44 CSS px</td><td>AAA</td><td><a href="https://a11ykr.github.io/wai/wcag22/understanding/target-size-enhanced.html" target="_blank" rel="noopener">WAI 이해문서</a></td></tr>
+      <tr><td><b>Material Design</b></td><td>48 × 48 dp</td><td>플랫폼 가이드(Android)</td><td><a href="https://support.google.com/accessibility/android/answer/7101858?hl=ko" target="_blank" rel="noopener">support.google.com/accessibility/android</a></td></tr>
+      <tr><td><b>Apple HIG</b></td><td>44 × 44 pt</td><td>플랫폼 가이드(iOS)</td><td>동일 정리</td></tr>
+      <tr><td><b>서울디지털재단</b> 고령층 친화 표준</td><td class="yes">글자 14pt 이상 권장</td><td class="yes">고령 사용자 특화 — 우리 프로젝트에 가장 근접</td><td><a href="https://smart.seoul.go.kr/board/41/4901/board_view.do" target="_blank" rel="noopener">smart.seoul.go.kr</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note">
+    <b>우리 적용 기준 제안 —</b> 명도 대비 <b>4.5:1</b>(KWCAG), 터치 타깃 <b>48dp 이상</b>(Material 기준이 가장 보수적이고 안드로이드 비중이 높은 사용자층에 안전), 본문 <b>14pt 이상</b>(서울 표준).
+    KS X 3253의 컨트롤 구체 수치는 <b>PDF 원문 확인 후 확정</b>합니다. 아이콘 자체는 작아도 되고 <b>패딩으로 탭 영역을 확보</b>하면 됩니다 — 시각적 밀도와 접근성을 동시에 잡는 방법입니다.
+  </div>
+
+  <div class="grid g2" style="margin-top:12px">
+    <div class="term">
+      <div class="top"><span class="name">서울디지털재단 고령층 친화 디지털 접근성 표준</span><span class="slug">모바일웹·앱 10대 지침</span><span class="tag core">핵심 근거</span></div>
+      <p class="myth">① 글자는 크고 선명하게 ② 필수 요소로만 구성 ③ 정보 구조는 단순·친숙하게 ④ 용어는 이해하기 쉽게 <b>⑤ 시스템 상태는 가시적으로</b> <b>⑥ 컨트롤은 행동을 유발하게</b> ⑦ 신속·정확한 조작 <b>⑧ 조작 결과 피드백 제공</b> <b>⑨ 오류 예방·복구 가능하게</b> ⑩ 심리적 부담 감소</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>이 문서에서 가장 중요한 발견입니다.</b> 이 프로젝트의 명제 3개가 위 지침과 <b>문장 단위로 대응</b>합니다 — "다음 행동을 빠르게 이해"=⑥, "기록 누락·실수 감소"=⑨, "완료·저장·전송 상태 인지"=⑤+⑧.<br>즉 <b>"따뜻한 앱이 아니라 업무 도구"라는 방향은 우리 취향이 아니라 공공 접근성 표준의 요구</b>입니다. 09번 검증 기준 탭에 매핑표를 넣어뒀습니다.</p>
+      <div class="file"><a href="https://smart.seoul.go.kr/board/41/4901/board_view.do" target="_blank" rel="noopener">smart.seoul.go.kr/board/41/4901</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">KRDS 범정부 UI/UX 디자인 시스템</span><span class="slug">행안부·디플정 · 2025.01 공개</span><span class="tag warn">활용 후보</span></div>
+      <p class="myth">원칙·스타일·컴포넌트·기본패턴·서비스패턴 구성. 서체 <b>Pretendard GOV</b>. <b>각 컴포넌트 페이지에 WCAG 적합성이 명시</b>돼 있고 <b>Figma 파일도 제공</b>됩니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>제안 —</b> NHN 디자인 시스템이 없거나 늦게 나오면, <b>KRDS를 접근성 베이스라인으로 삼고 그 위에 NHN 브랜드 레이어를 얹는 2층 구조</b>를 제안합니다. 복지부 사업이라는 성격상 설득이 쉽고, <b>3주 일정에서 컴포넌트를 처음부터 만드는 리스크를 크게 줄입니다.</b></p>
+      <p class="warnline">단, <b>민간 컨소시엄 사업에 KRDS 준수 의무가 있는지는 미확인</b>입니다. 킥오프에서 확인이 필요합니다.</p>
+      <div class="file"><a href="https://v04.krds.go.kr/" target="_blank" rel="noopener">v04.krds.go.kr</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">Google Open Health Stack — Offline &amp; Sync 설계 가이드</span><span class="slug">헬스케어 도메인 공식 가이드</span><span class="tag core">규범 근거</span></div>
+      <p class="myth">① 초기 동기화 시 <b>명확한 안내 + 소요 시간 예상치</b> ② <b>오프라인 / 동기화중 / 성공 / 실패 4상태 표시 바</b> ③ 적정 간격 백그라운드 동기화 ④ 주요 화면에 진행 표시 ⑤ <b>최근 갱신 타임스탬프</b> ⑥ 친화적 동기화 리마인더</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)"><b>왜 중요한가 —</b> 우리 FR31·32에는 "보존·동기화"만 있고 <b>사용자에게 어떻게 보일지가 비어 있습니다.</b> 그 빈칸을 채울 때 "우리 생각"이 아니라 <b>헬스케어 도메인 공식 가이드</b>를 근거로 제시할 수 있습니다.</p>
+      <div class="file"><a href="https://developers.google.com/open-health-stack/design/offline-sync-guideline" target="_blank" rel="noopener">developers.google.com/open-health-stack/design/offline-sync-guideline</a> ↗ · 확인 2026-08-10</div>
+    </div>
+    <div class="term">
+      <div class="top"><span class="name">사용자 인구통계</span><span class="slug">매체 인용 · 원자료 재확인 필요</span><span class="tag warn">2차 출처</span></div>
+      <p class="myth">요양보호사 <b>60세 이상 63.4%</b>, 재가급여 종사자 중 <b>70세 이상 20.2%</b>, 20대 이하는 1,080명. 전체 장기요양 종사인력 약 72.7만 명 중 요양보호사 65.4만 명.</p>
+      <p class="warnline"><b>인용 주의 —</b> 이 수치는 <b>매체 보도 인용</b>이며 공단·복지부 원자료를 직접 확인하지 않았습니다. 클라이언트 문서에 쓸 때는 원자료 대조 후 사용하거나 "보도 인용"으로 명시해야 합니다.</p>
+      <p class="real" style="margin-top:7px;color:var(--pt-blue)">확인된다면 <b>"통합 기능을 평면 나열하면 못 쓴다"는 것이 인구통계로 뒷받침</b>됩니다. 04번 현장 조건 분석의 근거가 추론에서 사실로 올라갑니다.</p>
+      <div class="file"><a href="https://v.daum.net/v/20251120131813218" target="_blank" rel="noopener">v.daum.net/v/20251120131813218</a> (보도) ↗ · 확인 2026-08-10</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 03 벤치마킹 비교표 ════════════════ -->
+<section class="view" id="v-bench">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">03 · Benchmark Matrix</div>
+      <h2>벤치마킹 비교표</h2>
+      <p>열이 19개면 표가 읽히지 않습니다. 같은 서비스를 <b>업무 구조</b>와 <b>UX·표현</b> 두 표로 나눴습니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag warn">확인 필요 = 데스크 리서치로 검증 못 한 칸</span></div>
+  </div>
+
+  <div class="section-title"><h3>A. 업무 구조</h3><p>누가 · 무엇을 · 어떤 순서로</p></div>
+  <div class="table-wrap"><table class="t" style="min-width:1050px">
+    <thead><tr>
+      <th style="min-width:130px">서비스 / 국가</th><th>돌봄 분야</th><th>앱 사용자</th><th>핵심 업무</th>
+      <th>체크인·아웃</th><th>기록 방식</th><th>오프라인</th><th>알림·긴급</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>스마트 장기요양</b><br>KR · 공공</td><td>노인 장기요양</td><td>장기요양요원</td>
+        <td>서비스 시작·종료 및 내용 실시간 전송</td><td class="yes">RFID 태그</td>
+        <td>제공 내용 전송</td><td class="no">확인 필요</td><td>보호자 실시간 통보</td>
+      </tr>
+      <tr>
+        <td><b>사회서비스 전자바우처</b><br>KR · 공공</td><td>장애인활동지원 외</td><td>서비스 제공인력</td>
+        <td>바우처 결제</td><td class="yes">결제로 갈음</td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>아이돌봄서비스</b><br>KR · 공공</td><td>아동 돌봄 4유형</td><td>이용자 중심</td>
+        <td>안내·신청</td><td class="no">해당 없음</td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>온맘터치홈</b><br>KR · 민간</td><td>노인 장기요양</td><td>요양보호사</td>
+        <td>급여제공기록지·상태변화기록지·방문목욕 차량일지</td><td class="no">확인 필요</td>
+        <td class="yes">표준 서식 기반</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>케어포</b><br>KR · 민간</td><td>시설·주야간·가정방문</td><td>기관·종사자</td>
+        <td>기관 통합 관리</td><td class="yes">NFC 태그판</td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>케어네이션 파트너</b><br>KR · 민간</td><td>간병·요양·동행</td><td>간병인·요양보호사</td>
+        <td>일감 탐색·수임</td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>Birdie</b><br>UK</td><td>재가 돌봄</td><td>케어러</td>
+        <td>방문 수행·기록·투약·소통</td><td class="yes">GPS 또는 QR</td>
+        <td class="yes">텍스트 또는 음성(STT)</td><td class="yes">오프라인 작동 후 자동 동기화</td><td>메시지 센터(읽음 확인)</td>
+      </tr>
+      <tr>
+        <td><b>AlayaCare</b><br>CA/US</td><td>홈케어·임상</td><td>케어워커·임상인력</td>
+        <td>일정·방문 오퍼·clock in/out·임상 기록</td><td class="yes">clock in/out</td>
+        <td class="yes">Visit/Progress Notes</td><td class="yes">사전 다운로드형</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>Mobile Caregiver+</b><br>US</td><td>퍼스널·홈헬스</td><td>케어기버</td>
+        <td>EVV 방문 검증</td><td class="yes">체크인·체크아웃</td>
+        <td>태스크 체크</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>カイポケ 訪問記録</b><br>JP</td><td>방문개호</td><td>홈헬퍼</td>
+        <td>실시 기록 → 청구 연동</td><td class="no">확인 필요</td>
+        <td class="yes">체크리스트 + 음성 입력</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>Salesforce Field Service</b><br>Global</td><td>필드서비스</td><td>현장 기술자</td>
+        <td>작업 지시 수행·리포트</td><td class="no">확인 필요</td>
+        <td class="yes">서비스 리포트 + 서명</td><td class="yes">Briefcase 사전 프라이밍</td><td class="no">확인 필요</td>
+      </tr>
+      <tr>
+        <td><b>ServiceTitan Mobile</b><br>US</td><td>필드서비스</td><td>현장 기술자</td>
+        <td>현장 완결(인보이스·영수증)</td><td class="no">확인 필요</td>
+        <td class="yes">서명 캡처</td><td class="yes">오프라인 아키텍처</td><td class="no">확인 필요</td>
+      </tr>
+      <tr style="background:var(--pt-blue-soft)">
+        <td><b>돌봄종사자 APP</b><br>KR · 우리 과제</td><td class="yes">노인 장기요양 + 노인맞춤돌봄</td>
+        <td class="yes">요양보호사 · 생활지원사</td>
+        <td class="yes">방문 전→중→기록→종료 + 출퇴근·근무일지·지출결의</td>
+        <td class="yes">시각 기록 (위치·태그 없음)</td>
+        <td class="yes">체크 + STT 3분 + 사진</td>
+        <td class="yes">보존→복귀 동기화→저장 확인</td>
+        <td class="yes">푸시·플로팅·백그라운드·긴급 안부</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title"><h3>B. UX · 표현</h3><p>어떻게 보여주고 · 무엇을 지키는가</p></div>
+  <div class="table-wrap"><table class="t" style="min-width:900px">
+    <thead><tr>
+      <th style="min-width:130px">서비스</th><th>상태 표시</th><th>접근성 특징</th><th>비주얼 톤</th>
+      <th style="min-width:200px">우리 프로젝트 시사점</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>스마트 장기요양</b></td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td>제도적 증빙이 자동으로 남는다는 <b>안심 신호</b>를 종사자에게도 보여줄 것. 우리는 태그가 없으므로 시각 기록이 그 역할</td>
+      </tr>
+      <tr>
+        <td><b>온맘터치홈</b></td><td class="no">확인 필요</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td class="yes">표준 서식(급여제공기록지·상태변화기록지) 용어를 그대로 유지. <b>서식을 재해석하지 말 것</b></td>
+      </tr>
+      <tr>
+        <td><b>케어네이션 · 케어닥</b></td><td class="no">확인 필요</td><td class="no">확인 필요</td><td>구직 플랫폼 톤</td>
+        <td class="yes">종사자 앱 / 보호자 앱 <b>분리가 국내 표준 관행</b> — 보호자 기능 요구 시 별도 과업 근거</td>
+      </tr>
+      <tr>
+        <td><b>Birdie</b></td><td>오프라인 후 자동 동기화</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td class="yes">음성 입력을 <b>기본 입력 수단</b>으로. 타임스탬프 사진. GPS 부분은 버릴 것</td>
+      </tr>
+      <tr>
+        <td><b>AlayaCare</b></td><td>오프라인 데이터 사전 다운로드</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td class="yes">오프라인을 <b>사후 대응이 아닌 사전 준비</b>로. "방문 전 준비 완료" 표시 제안 근거</td>
+      </tr>
+      <tr>
+        <td><b>カイポケ</b></td><td class="no">확인 필요</td><td>스마트폰 미숙자 대상 음성 입력 명시</td><td>"보기 쉬운 화면"을 설계 목표로 명시</td>
+        <td class="yes"><b>사용자 조건이 가장 유사.</b> 자유 입력 최소화 + 체크로 완결 + 음성 보완</td>
+      </tr>
+      <tr>
+        <td><b>Salesforce FS</b></td><td>Briefcase 프라이밍 상태</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td class="yes">오프라인을 제품 기본 전제로 설계. 명세에 빈 <b>"사용자에게 어떻게 보일지"를 우리가 채운다</b></td>
+      </tr>
+      <tr>
+        <td><b>ServiceTitan</b></td><td>오프라인 처리 후 동기화</td><td class="no">확인 필요</td><td class="no">확인 필요</td>
+        <td>GPS·서명이 빠진 우리 조합에서는 <b>남은 수단의 신뢰 표현이 더 정교해야</b></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note warn">
+    <b>"확인 필요"가 많은 이유 —</b> 상태 표시·접근성·비주얼 톤은 <b>실제 앱을 설치해 화면을 봐야</b> 판단할 수 있는 항목입니다.
+    이번 리서치는 공개 문서 기반이라 추정으로 채우지 않았습니다.
+    이 칸들을 채우려면 <b>주요 3~4개 앱 실기기 설치 + 화면 캡처 스터디(0.5~1일)</b>가 별도로 필요합니다.
+    범위에 넣을지 판단이 필요합니다.
+  </div>
+</section>
+
+<!-- ════════════════ 04 현장 사용 환경 ════════════════ -->
+<section class="view" id="v-field">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">04 · Field Conditions</div>
+      <h2>사용자와 현장 사용 환경</h2>
+      <p>조건 13개를 나열하지 않고, 각 조건이 <b>화면의 무엇을 바꾸는지</b>까지 붙였습니다. 파란 줄이 설계 결론입니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag warn">가설 — 실사용자 인터뷰 미실시</span></div>
+  </div>
+
+  <div class="gloss-note warn">
+    이 페이지는 <b>일반적 돌봄 현장 조건에 기반한 우리 추론</b>입니다. NHN의 실제 사용자 조사 자료가 있으면 이 페이지 전체를 그것으로 교체해야 합니다(11번 요청 자료 참조).
+  </div>
+
+  <div class="grid g3">
+    <div class="card flat">
+      <div class="k">01 · 연령·디지털 숙련도</div>
+      <h3>연령대가 넓고 숙련도 편차가 큽니다</h3>
+      <p>요양보호사·생활지원사는 중장년 비중이 높은 직군입니다. 같은 화면을 20대와 60대가 함께 씁니다.</p>
+      <p class="impact">→ 숙련자용 단축 경로를 만들되 <b>기본 경로는 항상 한 갈래</b>로. 제스처·롱프레스 같은 숨은 조작에 필수 기능을 두지 않습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">02 · 이동 중 · 선 자세</div>
+      <h3>앉아서 쓰는 앱이 아닙니다</h3>
+      <p>이동 중이거나 서 있는 상태에서 조작합니다. 화면을 오래 응시할 수 없습니다.</p>
+      <p class="impact">→ 한 화면의 <b>결정 지점은 하나</b>로. 스크롤해야 다음 행동이 나오는 구조를 피하고, 주요 액션은 하단 고정.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">03 · 한 손 조작</div>
+      <h3>다른 손은 비어 있지 않습니다</h3>
+      <p>짐·문·이용자 부축 등으로 한 손만 쓰는 경우가 잦습니다.</p>
+      <p class="impact">→ 주요 액션을 <b>엄지 도달 범위(화면 하단 1/3)</b>에 배치. 상단 우측 코너에 파괴적 액션(삭제·종료)을 두지 않습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">04 · 손이 자유롭지 않은 상황</div>
+      <h3>장갑·젖은 손·물건을 든 상태</h3>
+      <p>터치 정확도가 떨어지고 오조작이 늘어납니다.</p>
+      <p class="impact">→ 터치 타깃 <b>최소 48×48dp, 간격 8~10px 이상</b>(Material 기준 — 02번 표 참조. KS X 3253의 구체 수치는 PDF 원문 확인 전입니다). 인접 버튼의 결과가 크게 다르면 물리적으로 떨어뜨립니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">05 · 조명 변화</div>
+      <h3>실내 어둠 ↔ 실외 직사광</h3>
+      <p>같은 화면을 어두운 실내와 밝은 야외에서 번갈아 봅니다.</p>
+      <p class="impact">→ 명도 대비를 <b>4.5:1 기준선이 아니라 여유값</b>으로 잡습니다. 연한 회색 위 연한 회색 조합을 상태 표시에 쓰지 않습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">06 · 작은 화면 · 구형 기기</div>
+      <h3>최신 기기를 전제할 수 없습니다</h3>
+      <p>개인 기기 사용 시 화면 크기·성능 편차가 큽니다.</p>
+      <p class="impact">→ 최소 기준 폭을 <b>360px</b>로 잡고 레이아웃을 검증. 무거운 모션·실시간 애니메이션을 필수 경로에 두지 않습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">07 · 불안정한 네트워크</div>
+      <h3>가정 실내·지하·엘리베이터</h3>
+      <p>방문지 실내에서 신호가 끊기는 상황이 상시 발생합니다. <span class="tag core">FR31·32</span></p>
+      <p class="impact">→ <b>저장 / 전송 / 동기화를 각각 다른 상태로</b> 표시. "저장됨"과 "서버에 전송됨"이 같은 아이콘이면 종사자는 확신할 수 없습니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">08 · 연속 방문</div>
+      <h3>하루에 여러 이용자를 이어서</h3>
+      <p>이전 방문의 기록이 끝나기 전에 다음 방문이 시작될 수 있습니다. <span class="tag core">FR51·52</span></p>
+      <p class="impact">→ <b>진행 중 업무 플로팅</b>과 백그라운드 알림이 "지금 뭐가 안 끝났는지"를 항상 알려야 합니다. 미완 기록이 조용히 사라지면 안 됩니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">09 · 제한된 기록 시간</div>
+      <h3>방문 사이 이동 시간에 기록</h3>
+      <p>기록에 쓸 수 있는 시간이 몇 분 단위입니다. <span class="tag core">FR29 STT 3분</span></p>
+      <p class="impact">→ 입력 단계 수를 줄이고 <b>기본값을 미리 채워둡니다</b>(REC-3 변화상태 기본값 "유지"가 명세에 이미 있음). 자유 텍스트는 최후 수단.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">10 · 대상자·보호자 앞에서 사용</div>
+      <h3>화면이 상대에게 보입니다</h3>
+      <p>이용자나 보호자가 옆에서 화면을 볼 수 있습니다.</p>
+      <p class="impact">→ 부정적 평가 항목(악화·거부 등)이 <b>큰 글씨로 노출되지 않게</b> 설계. 색으로 나쁨을 강조하는 방식은 대면 상황에서 위험합니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">11 · 개인정보 노출</div>
+      <h3>주변에 정보가 보일 수 있습니다</h3>
+      <p>질환 정보·보호자 연락처 등이 화면에 있습니다. <span class="tag core">FR46 GREEN 마스킹 / ORANGE 암호화</span></p>
+      <p class="impact">→ 마스킹이 <b>기본 상태</b>이고 해제가 의도적 행동이어야 합니다. 등급별 시각 표기를 컴포넌트로 정의합니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">12 · 긴급·예외 상황</div>
+      <h3>평소 흐름이 통하지 않는 순간</h3>
+      <p>이상 징후 발견, 부재·거부, 기상특보·재난 시 긴급 안부. <span class="tag core">FR40·FR33·FR55</span></p>
+      <p class="impact">→ 이상보고는 <b>어느 화면에서든 상시 접근</b> 가능해야 합니다(명세도 "상시 전송"). 긴급 경로는 평상 경로보다 짧아야 합니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">13 · 사후 수정·보고</div>
+      <h3>끝난 뒤에 고쳐야 하는 일</h3>
+      <p>기록 완료 후 수정 필요가 생깁니다. <span class="tag new">범위 불명확</span></p>
+      <p class="impact">→ 명세상 "수정 없이 저장 가능"(FR30)과 "수정은 어드민 소관"(F섹션)이 <b>공존</b>합니다. 종사자가 직접 고칠 수 있는 범위와 시점을 확정해야 화면이 정해집니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 05 업무 플로우 대조 ════════════════ -->
+<section class="view" id="v-flow">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">05 · Flow Gap Analysis</div>
+      <h2>업무 플로우 — 기능명세서 대조</h2>
+      <p>일반적으로 예상되는 플로우 15개를 실제 명세와 하나씩 대조했습니다. <b>맞은 것보다 어긋난 것이 중요합니다.</b></p>
+    </div>
+    <div class="head-meta"><span class="tag core">명세 확인 13</span><span class="tag new">명세에 없음 4</span><span class="tag warn">명세에만 있음 5</span></div>
+  </div>
+
+  <div class="gloss-note">
+    각 항목을 펼치면 <b>목적 · 필수 정보 · 예상 실수 · 오류 방지 · 완료 전달 · 필요 컴포넌트</b>가 나옵니다.
+    주황색 줄은 <b>NHN에 물어봐야 할 것</b>입니다.
+  </div>
+
+  <div class="section-title"><h3>A. 명세로 확인된 플로우</h3></div>
+
+  <details class="day">
+    <summary><span class="dnum">01</span><span class="dtitle">로그인 및 본인 인증</span><span class="tag core">FR1·2·3·4·6</span><span class="dtime">CG-SIGNUP · CG-LOGIN</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>본인 확인 후 담당 업무에 진입</p>
+      <h3>확인된 흐름</h3><p>앱 권한 요청 → 휴대폰 점유인증(SMS) → 통합ADMIN 이용자 등록 대조(번호→이름 자동) → 회원정보 입력(이름·생년월일·성별) → 가입 완료. 로그인은 점유인증 + 이름·생년월일. 신규 기기/재설치/장기 미접속 시 재인증.</p>
+      <h3>예상 실수</h3><p>미등록자가 가입 시도 → 차단·안내(FR2). 인증번호 만료·SMS 채널 장애.</p>
+      <h3>오류 방지</h3><p>필수 누락 검증(FR3). 정보 불일치 차단(FR4). 인증번호 재발송 및 대체 채널.</p>
+      <h3>필요 컴포넌트</h3><p>권한 고지 카드(필수/선택 구분) · 인증번호 입력(타이머) · 차단 안내 화면 · 필수 입력 검증 메시지</p>
+      <div class="result">확인 질문 — 미등록자 차단 화면에서 <b>종사자가 다음에 무엇을 해야 하는지</b>(기관 문의? 재시도?) 안내 문구가 정의돼 있습니까? 여기서 막히면 앱을 아예 못 씁니다.</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">02</span><span class="dtitle">오늘의 일정 확인</span><span class="tag core">FR11·12·15</span><span class="dtime">CG-HOME</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>오늘 무엇을 몇 건 해야 하는지 즉시 파악</p>
+      <h3>확인된 흐름</h3><p>완료·예정 카드 목록 / 진행률 프로그레스바 + 오늘 총 업무시간·진행 시간 / <b>위험징후 유형 업무 별도 표시</b> / 카드 탭 → 돌봄 정보 확인. 일정 없음 시 빈 상태.</p>
+      <h3>예상 실수</h3><p>위험징후 업무를 일반 업무와 같이 취급해 지나침.</p>
+      <h3>오류 방지</h3><p>위험징후를 목록 상단 고정 또는 시각적으로 분리. 다만 <b>10번 조건(화면이 상대에게 보임)</b> 때문에 "위험"이라는 말이 그대로 노출되는 게 적절한지 검토 필요.</p>
+      <h3>필요 컴포넌트</h3><p>업무 카드(완료/예정/위험징후 3상태) · 진행률 바 · 시간 요약 · 빈 상태</p>
+      <div class="result">확인 질문 — ① "위험징후"의 <b>표기 문구</b>를 그대로 쓰는지, 순화 표현이 있는지. ② <code class="c">CG-HOME-L</code>이 이 화면의 큰 글씨 버전입니까?</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">03</span><span class="dtitle">방문 전 준비사항 확인</span><span class="tag core">FR23</span><span class="dtime">CG-PRE</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>방문 전 필요한 정보를 한 번에 확인하고 출발</p>
+      <h3>확인된 흐름</h3><p>6개 블록이 한 화면에 — (1) 돌봄 정보 (2) 이용자 정보(전화 걸기) (3) AI 업무 가이드 (4) 체크리스트 (5) 사회복지사 지시 (6) 최근 돌봄 이력. 액션은 전화 걸기 · 업무 시작. 데이터 미수신 시 별도 표시.</p>
+      <h3>예상 실수</h3><p>6개 블록이 스크롤로 이어지면 <b>아래쪽 블록(사회복지사 지시·최근 이력)을 못 보고</b> 업무를 시작.</p>
+      <h3>오류 방지</h3><p>확인이 꼭 필요한 블록(사회복지사 지시)에 미확인 표식. AlayaCare의 사전 다운로드 방식을 참고해 <b>"오프라인 준비 완료" 표시</b>를 이 화면에 두는 안 검토.</p>
+      <h3>필요 컴포넌트</h3><p>정보 블록 6종 · 전화 걸기 버튼(반복) · 업무 시작 CTA · 데이터 미수신 상태 · AI 가이드 카드(판정 아님 표시)</p>
+      <div class="result">확인 질문 — ① 6개 블록의 <b>우선순위·기본 펼침 여부</b>가 정의돼 있습니까? ② AI 업무 가이드가 FR49(판정 미산출)와 충돌하지 않도록, 가이드의 <b>성격을 알려주는 문구</b>가 필요합니까?</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">04</span><span class="dtitle">방문 시작 · 진행</span><span class="tag core">FR24·25·40</span><span class="dtime">CG-VISIT</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>업무 시작을 남기고 진행 상태를 유지</p>
+      <h3>확인된 흐름</h3><p>업무 시작 시간 + <b>진행 타이머</b> 표시. 가이드·체크리스트·지시는 조회 전용(입력 요소 없음). 돌봄 중 이상보고는 상시 전송 가능, 작성 중 입력 보존. 종료 시 "기록 없이 종료" 또는 "기록하기".</p>
+      <h3>예상 실수</h3><p>업무 시작 버튼을 누르지 않고 돌봄을 시작 → 시간 기록 누락. <b>위치 기반 자동 체크인이 없으므로(FR48) 순전히 사용자 행동에 의존합니다.</b></p>
+      <h3>오류 방지</h3><p>일정 시각이 지났는데 시작 기록이 없으면 알림. 시작 버튼을 방문 전 화면의 <b>단일 최대 액션</b>으로.</p>
+      <h3>필요 컴포넌트</h3><p>진행 타이머 · 조회 전용 정보 블록 · 상시 이상보고 진입 · 종료 분기 2버튼</p>
+      <div class="result">확인 질문 — 시작 기록을 <b>깜빡한 경우의 구제 경로</b>가 있습니까? 위치 증빙이 없는 구조에서는 이게 신뢰의 핵심입니다.</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">05</span><span class="dtitle">돌봄 기록 — 요양 4단계 / 생활 3단계</span><span class="tag core">FR27·28·29</span><span class="dtime">CG-REC · CG-RECORD</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>수행 내용을 남기고 다음 방문·기관으로 넘김</p>
+      <h3>확인된 흐름 — 요양보호사(4단계)</h3><p>REC-1 지시 수행 여부 → REC-2 장기요양 항목(수행분만 기록) → REC-3 변화상태(신체·식사·인지 호전/유지/악화 + 배변 실수 횟수, <b>기본값 유지</b>) → REC-4 특이사항(STT 구술 + 사진, 3분 제한·경고)</p>
+      <h3>확인된 흐름 — 생활지원사(3단계)</h3><p>REC-1 지시 수행 여부 → REC-2 생활지원 업무 → REC-3 업무 일지(STT 구술 + 사진)</p>
+      <h3>예상 실수</h3><p>단계가 여러 개라 중간에 이탈. STT 3분 초과로 내용 유실. 사용자 유형을 잘못 인지해 엉뚱한 서식을 씀.</p>
+      <h3>오류 방지</h3><p>단계 진행 표시(N/4 · N/3)와 <b>단계별 저장</b>. STT 남은 시간 상시 표시 + 임박 경고 + 중단 후 이어쓰기. 사용자 유형을 화면 상단에 상시 표기.</p>
+      <h3>필요 컴포넌트</h3><p>스텝 인디케이터(4/3 분기) · 3단 토글(호전·유지·악화) · 숫자 스테퍼(배변 횟수) · STT 입력(타이머·경고·이어쓰기) · 사진 첨부 · 체크 목록</p>
+      <div class="result">확인 질문 — ① STT <b>3분 초과 시</b> 자동 종료인지, 저장 후 이어쓰기인지. ② 온맘터치홈 등에서 쓰는 <b>표준 서식 용어를 그대로 쓸지</b>, 순화할지. 학습 비용 관점에서는 그대로 쓰는 쪽을 권합니다.</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">06</span><span class="dtitle">기록 저장 · 전송 · 동기화</span><span class="tag core">FR30·31·32</span><span class="dtime">CG-SENT</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>기록이 확실히 남았고 넘어갔음을 확신</p>
+      <h3>확인된 흐름</h3><p>돌봄 기록 완료 화면에서 이용자·계획/실제 업무 시간·진행 시간·오늘 진행률 표시. 확정 → 전송. <b>오프라인 보존 · 복귀 시 동기화 · 저장 확인.</b> 수정 없이 저장 가능.</p>
+      <h3>예상 실수</h3><p><b>"저장됨"을 "전송됨"으로 오해</b>해 기록이 서버에 없는 채로 다음 업무 진행. 이 프로젝트에서 가장 값비싼 실수입니다.</p>
+      <h3>오류 방지 — 상태 매트릭스 제안</h3>
+      <p>명세는 "보존·동기화"까지만 정의합니다. <b>사용자에게 어떻게 보일지가 비어 있어</b> 우리가 채워야 합니다. 최소 6상태를 서로 <b>다른 형태</b>로 구분할 것을 제안합니다 — 색만 다른 같은 아이콘은 안 됩니다.</p>
+      <p style="font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 13px;margin:8px 0">
+        ① 미작성 &nbsp;&nbsp; ② 임시저장(로컬) &nbsp;&nbsp; ③ 동기화 중<br>
+        ④ 전송 완료 &nbsp;&nbsp; ⑤ 전송 실패 &nbsp;&nbsp; ⑥ 반려 / 보완요청
+      </p>
+      <p>근거 — Google Open Health Stack의 오프라인 UX 가이드는 <b>오프라인 / 동기화중 / 성공 / 실패 4상태 표시 바</b>와 <b>최근 갱신 타임스탬프</b>를 명시합니다. 여기에 이 프로젝트 특유의 ①·⑥을 더한 것이 위 6상태입니다.</p>
+      <p><b>ServiceTitan 패턴 차용 —</b> 홈 화면에 <b>"오늘 아직 안 낸 것"</b> 목록. 하이케어의 <b>"어긋난 건만 골라 보여주는 화면"</b>도 같은 계열입니다.</p>
+      <h3>필요 컴포넌트</h3><p>동기화 상태 배지 6종 · 미전송 목록 뷰 · 재시도 액션 · 동기화 실패 안내 · 최근 갱신 타임스탬프</p>
+      <div class="result">
+        <b>⚠️ 낙관적 UI(Optimistic UI) 금지 —</b> 서버 응답 전에 "전송됨"처럼 보여주는 일반적 기법은 <b>이 도메인에서 위험</b>합니다.
+        돌봄 기록은 급여 청구·실적 보고의 근거가 되므로, "전송된 줄 알았는데 아니었다"는 곧 금전 손실입니다. <b>로컬 저장과 서버 전송은 반드시 다른 시각 언어로 분리</b>합니다.
+        <br><br><b>확인 질문 —</b> ① 동기화가 <b>반복 실패</b>할 때 몇 번 재시도하고 언제 사용자에게 알립니까? ② <b>반려·보완요청</b> 상태가 실제로 존재합니까? 존재하면 상태 수가 6이고, 없으면 5입니다.
+      </div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">07</span><span class="dtitle">업무 취소 — 부재 · 거부</span><span class="tag core">FR19·33</span><span class="dtime">CG-ABSENT · CG-SKIP</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>수행 못 한 사유를 남기고 정산 판단을 기관으로 넘김</p>
+      <h3>확인된 흐름</h3><p>사유(부재·거부·기타) + 시도 시각 입력 → 저장 → 통합ADMIN 전달. <b>급여 인정 판단은 통합 소관.</b></p>
+      <h3>예상 실수</h3><p>종사자가 이 화면에서 "급여가 인정된다/안 된다"를 판단했다고 오해.</p>
+      <h3>오류 방지</h3><p>완료 화면에 <b>"판단은 기관에서 이뤄집니다"</b>를 명시. FR49의 역할 제한이 화면에 드러나야 하는 대표 지점입니다.</p>
+      <h3>필요 컴포넌트</h3><p>사유 선택 · 시각 입력 · 전달 완료 안내(판단 주체 명시)</p>
+      <div class="result">확인 질문 — 부재·거부 시 <b>사진이나 추가 증빙</b>이 필요합니까? 위치 증빙이 없는 구조라 사유 기록의 신뢰도가 쟁점이 될 수 있습니다.</div>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">08</span><span class="dtitle">긴급 상황 — 이상보고 · 긴급 안부</span><span class="tag core">FR40·55·26</span><span class="dtime">CG-REPORT · CG-URGENT</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>목적</h3><p>이상 징후를 즉시 알리고, 재난 시 담당 이용자 안부를 확인</p>
+      <h3>확인된 흐름</h3><p>이상보고 — 상황 입력 → 상시 전송, 작성 중 입력 보존. 여러 화면(방문 중·이용자 상세)에서 진입.<br>긴급 안부 — 기상특보·긴급재난알림 발생 건과 일시, <b>긴급 안부 확인률</b> 표시 → 상세에서 응답·미응답 이용자 목록 → 전화 걸기.</p>
+      <h3>예상 실수</h3><p>긴급 상황에서 이상보고 진입 경로를 못 찾음. 미응답 이용자를 놓침.</p>
+      <h3>오류 방지</h3><p>이상보고를 <b>모든 관련 화면의 같은 위치</b>에 고정. 미응답 목록은 응답 목록보다 위에.</p>
+      <h3>필요 컴포넌트</h3><p>상시 이상보고 진입 · 확인률 표시 · 응답/미응답 목록 · 전화 걸기(반복 컴포넌트)</p>
+      <div class="result">확인 질문 — 긴급 안부 <b>확인률의 목표치나 마감 시각</b>이 있습니까? 있으면 진행 상태 표현이 달라집니다.</div>
+    </div>
+  </details>
+
+  <div class="section-title"><h3>B. 명세에 없는 플로우 — 범위 확인 필요</h3><p>일반적으로 기대되지만 이 명세에는 정의가 없는 것</p></div>
+  <div class="grid g2">
+    <div class="card flat">
+      <div class="k">서명 첨부 <span class="tag new">명세에 없음</span></div>
+      <h3>전자 서명 기능이 없습니다</h3>
+      <p>해외 필드서비스·EVV 앱의 표준인 <b>수령 서명</b>이 명세에 없습니다. 첨부는 사진만(FR29·44).</p>
+      <p class="impact">→ 범위 외인지 확인. 후에 추가되면 컴포넌트·플로우가 늘어납니다.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">보호자 직접 보고 <span class="tag new">명세에 없음</span></div>
+      <h3>보호자에게 보내는 기능이 없습니다</h3>
+      <p>보호자 정보 <b>조회와 전화 걸기</b>만 있습니다(FR35). 스마트장기요양처럼 보호자에게 자동 통보하는 구조는 명세에 없습니다.</p>
+      <p class="impact">→ 국내 관행상 종사자 앱/보호자 앱 분리가 표준이므로 범위 외로 보이나, 명시 확인 필요.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">교육 자료 <span class="tag new">명세에 없음</span></div>
+      <h3>수행기관 소식만 있습니다</h3>
+      <p>PDF·이미지 열람(FR43)이 전부입니다. 교육 콘텐츠·이수 관리는 없습니다.</p>
+      <p class="impact">→ "공지사항 및 교육 자료"를 기대한다면 <b>수행기관 소식으로 갈음하는지</b> 확인.</p>
+    </div>
+    <div class="card flat">
+      <div class="k">사후 기록 수정 <span class="tag warn">정의 충돌</span></div>
+      <h3>수정 권한이 모호합니다</h3>
+      <p>"수정 없이 저장 가능"(FR30)과 "수정은 어드민 소관"(F섹션)이 공존합니다.</p>
+      <p class="impact">→ 종사자가 <b>언제까지 · 무엇을</b> 직접 고칠 수 있는지 확정 전에는 수정 화면을 설계할 수 없습니다.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>C. 명세에만 있는 플로우 — 놓치기 쉬운 것</h3><p>일반적인 돌봄 앱 논의에서 빠지지만 이 앱에는 있는 것</p></div>
+  <div class="table-wrap"><table class="t">
+    <thead><tr><th style="min-width:130px">플로우</th><th>FR</th><th>내용</th><th>설계 포인트</th></tr></thead>
+    <tbody>
+      <tr><td><b>지출결의 (OCR)</b></td><td>FR44·45</td><td>영수증 촬영 → OCR 자동 작성 → 실패 시 수동 입력. 내역·상세 조회</td><td class="yes">돌봄과 전혀 다른 성격의 업무. <b>OCR 실패 시 수동 전환이 매끄러워야</b> 하고, 실패가 잦으면 신뢰가 무너집니다</td></tr>
+      <tr><td><b>근무일지 작성</b></td><td>FR22</td><td>오늘 업무 일지 + 내일 예정 업무. 출퇴근 미발생일은 비활성</td><td class="yes">돌봄 기록과 <b>별개의 기록</b>. 두 기록을 혼동하지 않게 진입 경로·서식을 분리</td></tr>
+      <tr><td><b>출퇴근 설정·기록</b></td><td>FR20·21</td><td>출퇴근 시각 설정, 알림, 기록. 중복 기록 방지</td><td class="yes">위치 없는 구조의 <b>유일한 근무 증빙</b>. 기록 시각과 중복 방지가 화면에서 명확해야 함</td></tr>
+      <tr><td><b>앱 잠금</b></td><td>FR5</td><td>PIN 4자리 또는 생체. 생체 실패 → PIN 폴백. <b>실패 횟수 제한 없음</b></td><td class="yes">현장에서 잠기면 업무가 멈추므로 제한을 두지 않은 설계. 이 의도를 UI에서 깨지 않게</td></tr>
+      <tr><td><b>기초평가</b></td><td class="no">명세 미기재</td><td>IA의 이용자 상세 하위에만 존재</td><td class="yes">범위 포함 여부 확인 필요. 평가 서식이면 화면 분량이 큽니다</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ════════════════ 06 비주얼 톤앤무드 ════════════════ -->
+<section class="view" id="v-tone">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">06 · Visual Direction</div>
+      <h2>비주얼 톤앤무드 3방향</h2>
+      <p>신뢰감 · 따뜻함 · 명료함 · 전문성 — 네 가치의 <b>배합비를 달리한</b> 3안입니다. 어느 것도 파스텔·하트·웃는 얼굴에 기대지 않습니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag warn">제안 — NHN 브랜드 확인 전</span></div>
+  </div>
+
+  <div class="gloss-note risk">
+    <b>전제 —</b> NHN 브랜드 가이드·기존 디자인 시스템이 확인되지 않았습니다. 아래 컬러·타이포는 <b>방향을 보여주기 위한 제안이며 확정이 아닙니다.</b>
+    NHN 시스템이 있다면 3안 모두 그 위에서 다시 조정해야 합니다. 킥오프 전 자료 확보가 필요합니다(11번 탭).
+    <br><br><b>공통 제약 —</b> ① 모든 조합은 명도 대비 4.5:1(KS X 3253)을 통과해야 합니다. ② FR49에 따라 <b>어떤 안도 "AI가 판단해준다"는 인상을 주면 안 됩니다.</b>
+  </div>
+
+  <div class="gloss-note warn">
+    <b>먼저 알아야 할 사실 —</b> "돌봄 업무 앱이 파스텔·하트·웃는 얼굴 클리셰를 의도적으로 회피한 사례"를 <b>출처로 증명할 수 있는 것은 국내외 모두 찾지 못했습니다.</b>
+    이 공백 자체가 결론입니다. 따라서 3안의 톤 기준선은 돌봄 카테고리가 아니라
+    <b>동일 사용 맥락(현장·고령·저숙련·기록 정확도)을 가진 필드서비스 도구</b>에서 가져왔습니다.
+  </div>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="k">A안 · Control</div>
+      <h3>관제<br><span style="font-weight:400;color:var(--muted);font-size:12px">"정상은 조용하고, 어긋난 것만 소리 낸다"</span></h3>
+      <div class="swatch"><i style="background:#111827"></i><i style="background:#1D4ED8"></i><i style="background:#F4F4F5"></i><i style="background:#B91C1C"></i></div>
+      <p style="font-size:9.5px;color:var(--muted);margin:0 0 10px">잉크 · 시그널 블루 · 뉴트럴 · 알럿 레드</p>
+      <p><b>배합</b> 명료함 40 · 전문성 30 · 신뢰감 25 · 따뜻함 5</p>
+      <p><b>씨앗 문장</b> "당신은 지금 400가구를 지키는 시스템의 최전선입니다."</p>
+      <p><b>어디서 왔나</b> 하이케어의 'RFID 오류만 한눈에', ServiceTitan의 Incomplete/Complete, AlayaCare의 오프라인 진입 명시 알림.</p>
+      <p><b>성격</b> 상태가 곧 화면. <b>무채색 베이스 + 색은 의미를 가질 때만</b> 등장. 정상 상태에는 색이 없다.</p>
+      <p><b>타이포</b> 최대 대비. 상태 텍스트를 본문보다 크게 두는 역전 위계.</p>
+      <p><b>아이콘</b> 굵은 선형. 상태 아이콘은 <b>형태 자체를 다르게</b>(색맹 대응).</p>
+      <p><b>이미지</b> 거의 없음. 상태 그래픽만.</p>
+      <p><b>최우선 해결</b> 완료·저장·전송 상태 인지</p>
+      <p style="color:var(--pt-lime-deep)"><b>장점</b> 조명 변화·개인정보 조건에 가장 강하다. 접근성 최상.</p>
+      <p style="color:var(--pt-orange-deep)"><b>위험</b> 60대 이상 종사자에게 <b>"감시받는 느낌"</b>으로 읽히면 수용성이 떨어진다. 보호 vs 감시의 어감 검증 필요.</p>
+      <p style="color:var(--pt-blue)"><b>성립 전제</b> 오프라인·상태 표현이 실제 1순위 통증일 것</p>
+    </div>
+    <div class="card">
+      <div class="k">B안 · Record</div>
+      <h3>증서<br><span style="font-weight:400;color:var(--muted);font-size:12px">"오늘 한 일이 빠짐없이 서류가 된다"</span></h3>
+      <div class="swatch"><i style="background:#1B3A5C"></i><i style="background:#3E6B94"></i><i style="background:#F2F4F7"></i><i style="background:#C2410C"></i></div>
+      <p style="font-size:9.5px;color:var(--muted);margin:0 0 10px">딥 네이비 · 미드 블루 · 페일 그레이 · 시그널 오렌지</p>
+      <p><b>배합</b> 신뢰감 40 · 명료함 30 · 전문성 20 · 따뜻함 10</p>
+      <p><b>씨앗 문장</b> "내가 남긴 것이 인정된다."</p>
+      <p><b>어디서 왔나</b> 케어포의 <b>"출력만 하면 제출 자료 완성"</b>, 케어네이션의 간병일지→활동확인서→보험청구 사슬.</p>
+      <p><b>성격</b> 공문서의 신뢰 문법 — 명확한 필드 경계, 확정된 서식감, <b>완결의 순간을 시각적 사건으로</b>. 종이 서식의 안심감을 디지털로 번역.</p>
+      <p><b>타이포</b> 굵기 대비 크게(400↔700). 숫자는 tabular-nums 고정.</p>
+      <p><b>아이콘</b> 선형, 균일 두께. 은유 없이 직역적.</p>
+      <p><b>이미지</b> 최소. 빈 화면도 아이콘+문장.</p>
+      <p><b>최우선 해결</b> 기록 누락 방지</p>
+      <p style="color:var(--pt-lime-deep)"><b>장점</b> 종사자의 실제 불안("이게 인정될까")에 정면으로 답한다. 오해가 가장 적다.</p>
+      <p style="color:var(--pt-orange-deep)"><b>위험</b> 세련됨을 포기한다. NHN 브랜드 격에 미달한다는 내부 반발, AI 스마트홈의 혁신 이미지와 충돌.</p>
+      <p style="color:var(--pt-blue)"><b>성립 전제</b> 기록이 급여 청구·실적 보고 근거일 것 <b>— 아니면 이 안은 성립하지 않습니다</b></p>
+    </div>
+    <div class="card">
+      <div class="k">C안 · Companion <span class="tag core">권장</span></div>
+      <h3>동행<br><span style="font-weight:400;color:var(--muted);font-size:12px">"옆에서 다음 할 일을 짚어주는 손"</span></h3>
+      <div class="swatch"><i style="background:#20423A"></i><i style="background:#4E7D6E"></i><i style="background:#F6F4EF"></i><i style="background:#B8541F"></i></div>
+      <p style="font-size:9.5px;color:var(--muted);margin:0 0 10px">딥 그린 · 세이지 · 웜 오프화이트 · 테라코타</p>
+      <p><b>배합</b> 명료함 35 · 따뜻함 30 · 신뢰감 20 · 전문성 15</p>
+      <p><b>씨앗 문장</b> "서툴러도 틀리지 않게."</p>
+      <p><b>어디서 왔나</b> Nourish의 <b>개인별 타임라인</b>, カイポケ의 <b>"스마트폰이 서툰 헬퍼도"</b>, 아이돌보미의 급여·연차까지 묶은 '내 일' 관점.</p>
+      <p><b>성격</b> 기능 메뉴가 아니라 <b>'오늘의 흐름'</b>이 화면 뼈대. 큰 활자, 한 번에 하나의 행동, 선택식 탭 우선.</p>
+      <p><b>타이포</b> 본문 여유 있는 행간(1.6~1.7). 라벨은 작게, 값은 크게.</p>
+      <p><b>아이콘</b> 선형 + 채움 혼용. 상태는 채움, 기능은 선형.</p>
+      <p><b>이미지</b> 사람 사진 대신 <b>추상 도형·질감</b>. 대상자를 대상화하지 않는다.</p>
+      <p><b>최우선 해결</b> 다음 행동을 빠르게 이해</p>
+      <p style="color:var(--pt-lime-deep)"><b>장점</b> 고령 종사자 비중이라는 인구통계가 이 안의 근거. 대면 상황에서 가장 무난.</p>
+      <p style="color:var(--pt-orange-deep)"><b>⚠️ 명제 충돌 주의</b> 브리프가 부정한 것은 <b>"따뜻하고 친근한 앱"</b>입니다. 여기서 따뜻함 30은 <b>수혜자를 향한 감성이 아니라 종사자를 향한 배려</b>로 정의해야 합니다. 이 구분을 명시적으로 방어하지 못하면 명제 위반으로 즉시 탈락합니다.</p>
+      <p style="color:var(--pt-blue)"><b>성립 전제</b> 사용자 연령대가 실제로 높을 것</p>
+    </div>
+  </div>
+
+  <div class="gloss-note" style="margin-top:16px">
+    <b>진행 방식 권장 — 3안을 병렬로 그리지 마십시오.</b>
+    3주 일정에서 3안 완주는 각 안의 완성도를 전부 떨어뜨립니다.
+    아래 두 질문의 답으로 <b>먼저 1차 필터링</b>한 뒤 <b>2안만 시안화</b>하는 방식을 제안합니다.
+    <br><br>
+    ① <b>"기록이 급여 청구·실적 보고의 근거 데이터입니까?"</b> → 아니오면 B안 탈락<br>
+    ② <b>"사용자 연령대가 어떻게 됩니까?"</b> → 낮으면 C안 우선순위 하락
+    <br><br>
+    <b>현시점 권장은 C안(동행)을 기본으로 하되, 상태 표시 계열(동기화·긴급·위험징후)에만 A안(관제)의 규칙을 적용</b>하는 혼합입니다.
+    전 화면을 하나의 톤으로 밀면 가장 중요한 상태 정보가 배경에 묻힙니다. <b>톤은 하나, 상태는 예외</b> — 이 원칙 하나만 합의해도 이후 시안 논의가 크게 줄어듭니다.
+  </div>
+
+  <div class="table-wrap" style="margin-top:12px"><table class="t">
+    <thead><tr><th>가치</th><th>A 관제</th><th>B 증서</th><th>C 동행</th></tr></thead>
+    <tbody>
+      <tr><td><b>신뢰감</b></td><td>25</td><td class="yes">40</td><td>20</td></tr>
+      <tr><td><b>따뜻함</b></td><td>5</td><td>10</td><td class="yes">30</td></tr>
+      <tr><td><b>명료함</b></td><td class="yes">40</td><td>30</td><td>35</td></tr>
+      <tr><td><b>전문성</b></td><td class="yes">30</td><td>20</td><td>15</td></tr>
+      <tr><td><b>최대 리스크</b></td><td>감시 어감</td><td>올드함</td><td>명제 위반 오해</td></tr>
+      <tr><td><b>성립 전제</b></td><td>오프라인이 1순위 통증</td><td>기록=정산 근거</td><td>사용자 연령 높음</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title"><h3>NHN 브랜드와 결합할 때 확인할 것</h3></div>
+  <div class="panel"><ol>
+    <li><strong>기존 디자인 시스템 유무</strong> — 컴포넌트 라이브러리가 있으면 3안이 아니라 "시스템 위에서 무엇을 바꿀 수 있나"가 논의 주제가 됩니다.</li>
+    <li><strong>브랜드 컬러의 명도 대비</strong> — NHN 브랜드 컬러가 4.5:1을 통과하지 못하면 본문·상태에는 못 씁니다. 액센트로만 쓸지 결정이 필요합니다.</li>
+    <li><strong>지정 서체</strong> — 브랜드 서체가 있는지, 한글 굵기 단계가 충분한지(최소 400·600·700).</li>
+    <li><strong>공공 성격의 표기 규칙</strong> — 이 앱이 공공 사업 성격이라면 기관 로고·표기 규정이 별도로 있을 수 있습니다.</li>
+    <li><strong>AI 관련 표현 규정</strong> — "AI 생활지원사" 명칭을 쓰므로, AI 기능 표기에 대한 사내 가이드가 있는지. FR49와 직결됩니다.</li>
+  </ol></div>
+</section>
+
+<!-- ════════════════ 07 모션·상태 피드백 ════════════════ -->
+<section class="view" id="v-motion">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">07 · Motion Judgement</div>
+      <h2>모션 · 상태 피드백 판단표</h2>
+      <p>모션은 장식이 아니라 <b>상태 인지와 오류 방지</b>의 수단일 때만 넣습니다. 13개 구간을 필수·선택·불필요로 갈랐습니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag core">필수 4</span><span class="tag easy">선택 6</span><span class="tag skip">불필요 3</span></div>
+  </div>
+
+  <div class="table-wrap"><table class="t" style="min-width:1000px">
+    <thead><tr>
+      <th style="min-width:110px">구간</th><th>필요도</th><th>목적</th><th>권장 표현</th><th>과용 시 문제</th><th>정적 대체</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>기록 저장</b></td><td><span class="tag core">필수</span></td>
+        <td>저장이 됐다는 확신</td><td>짧은 상태 전환(150~200ms). 아이콘 형태 변화</td>
+        <td>화려한 성공 애니메이션은 <b>전송 완료로 오해</b>를 부름</td><td>상태 텍스트 + 시각 표기</td>
+      </tr>
+      <tr>
+        <td><b>서버 동기화</b></td><td><span class="tag core">필수</span></td>
+        <td>대기 중인지 완료인지 구분</td><td>진행 인디케이터 → 완료 상태로 전환. <b>저장과 다른 형태</b></td>
+        <td>무한 스피너만 돌면 실패인지 진행인지 모름</td><td>"전송 대기 N건" 텍스트 배지</td>
+      </tr>
+      <tr>
+        <td><b>오류 · 재시도</b></td><td><span class="tag core">필수</span></td>
+        <td>실패했음을 놓치지 않게</td><td>진입 시 짧은 주의 환기(1회). 반복 금지</td>
+        <td>흔들림·깜빡임 반복은 고령 사용자에게 부담</td><td>고정 배너 + 재시도 버튼</td>
+      </tr>
+      <tr>
+        <td><b>긴급 알림</b></td><td><span class="tag core">필수</span></td>
+        <td>다른 알림과 구분</td><td>등장만 구분되게. 지속 애니메이션 없음</td>
+        <td>계속 움직이면 오히려 무시하게 됨</td><td>색·위치·크기로 구분</td>
+      </tr>
+      <tr>
+        <td><b>업무 시작·종료</b></td><td><span class="tag easy">선택</span></td>
+        <td>모드 전환 인지</td><td>화면 전환 시 방향성 있는 슬라이드</td>
+        <td>전환이 길면 급한 상황에서 답답</td><td>헤더 상태 변화</td>
+      </tr>
+      <tr>
+        <td><b>체크리스트 완료</b></td><td><span class="tag easy">선택</span></td>
+        <td>체크됐다는 즉각 반응</td><td>체크 표시 그리기(100ms 이내)</td>
+        <td>항목이 많으면 누적 피로</td><td>즉시 채움 상태</td>
+      </tr>
+      <tr>
+        <td><b>사진 업로드</b></td><td><span class="tag easy">선택</span></td>
+        <td>진행률 인지</td><td>썸네일 위 진행률 오버레이</td>
+        <td>—</td><td>퍼센트 텍스트</td>
+      </tr>
+      <tr>
+        <td><b>로딩 · 대기</b></td><td><span class="tag easy">선택</span></td>
+        <td>멈춘 게 아님을 알림</td><td>스켈레톤. 1초 이상일 때만</td>
+        <td>짧은 로딩에 스켈레톤은 깜빡임으로 보임</td><td>이전 상태 유지</td>
+      </tr>
+      <tr>
+        <td><b>STT 녹음 중</b></td><td><span class="tag easy">선택</span></td>
+        <td>녹음 중임과 남은 시간</td><td>파형 또는 점 애니메이션 + <b>남은 시간 숫자</b></td>
+        <td>파형만 있고 시간이 없으면 3분 제한을 못 지킴</td><td class="yes">카운트다운 숫자(이게 본체)</td>
+      </tr>
+      <tr>
+        <td><b>화면 전환</b></td><td><span class="tag easy">선택</span></td>
+        <td>계층 관계 인지</td><td>OS 기본 전환 사용</td>
+        <td>커스텀 전환은 구형 기기에서 끊김</td><td>OS 기본</td>
+      </tr>
+      <tr>
+        <td><b>온보딩 · 기능 안내</b></td><td><span class="tag skip">불필요</span></td>
+        <td>—</td><td>—</td>
+        <td>고령 사용자에게 튜토리얼 오버레이는 진입 장벽</td><td class="yes">첫 사용 시 정적 안내 + 언제든 재확인 가능한 도움말</td>
+      </tr>
+      <tr>
+        <td><b>빈 화면</b></td><td><span class="tag skip">불필요</span></td>
+        <td>—</td><td>—</td>
+        <td>일정 없는 날의 애니메이션은 불필요한 주목</td><td class="yes">아이콘 + 한 문장</td>
+      </tr>
+      <tr>
+        <td><b>일정 변경</b></td><td><span class="tag skip">불필요</span></td>
+        <td>—</td><td>—</td>
+        <td>목록 재정렬 애니메이션은 어지러움</td><td class="yes">변경 항목 하이라이트(정적)</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note warn">
+    <b>접근성 필수 —</b> OS의 <b>"동작 줄이기"(Reduce Motion)</b> 설정을 켠 사용자에게는 위 모션이 전부 정적 대체로 바뀌어야 합니다.
+    고령 사용자 비중이 높은 앱이므로 이건 선택이 아닙니다. <b>정적 대체안이 없는 모션은 애초에 넣지 않습니다.</b>
+  </div>
+
+  <div class="section-title"><h3>NHN에 확인할 기술 조건</h3></div>
+  <div class="panel"><ol>
+    <li><strong>앱 개발 방식</strong> — Native / Hybrid / WebView 중 무엇입니까? WebView면 모션 성능과 접근성 검수 범위가 모두 달라집니다.</li>
+    <li><strong>지원 OS와 최소 버전</strong> — Android · iOS 각각의 최소 지원 버전은? 구형 기기 비중은?</li>
+    <li><strong>모션 구현 수단</strong> — Lottie · GIF · 영상 · 코드 모션 중 사용 가능한 것은? 앱 용량 제한이 있습니까?</li>
+    <li><strong>애니메이션 성능 제한</strong> — 저사양 기기에서의 프레임 기준이 있습니까?</li>
+    <li><strong>모션 파일 전달 형식</strong> — Lottie JSON · 스펙 문서 · 영상 레퍼런스 중 어떤 형태로 받길 원합니까?</li>
+    <li><strong>Reduce Motion 대응</strong> — 개발에서 OS 동작 줄이기 설정을 감지해 처리할 계획이 있습니까?</li>
+    <li><strong>모션이 과업 범위인지</strong> — <b>이번 3주 과업에 모션 제작이 포함됩니까?</b> 포함이면 대상 구간을 지금 확정해야 합니다.</li>
+  </ol></div>
+</section>
+
+<!-- ════════════════ 08 아이콘·이미지·컴포넌트 ════════════════ -->
+<section class="view" id="v-scope">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">08 · Scope Questions</div>
+      <h2>아이콘 · 이미지 · 컴포넌트 범위</h2>
+      <p>3주 일정에서 가장 크게 어긋날 수 있는 지점입니다. 킥오프에서 숫자로 닫아야 합니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag new">과업량 직결</span></div>
+  </div>
+
+  <div class="panel">
+    <h4>아이콘</h4>
+    <ol>
+      <li><strong>기존 사용인지 신규 제작인지</strong> — NHN 아이콘 세트가 있습니까? 있으면 부족분만 보강하는 방식으로 갑니다.</li>
+      <li><strong>기능 아이콘과 돌봄 전용 아이콘 구분</strong> — 일반 기능(검색·설정·알림)과 돌봄 업무 전용(체크리스트·이상보고·지출결의·안부확인)을 나눠 산정합니다.</li>
+      <li><strong>전체 예상 수량</strong> — 화면 ID 28개 기준으로 몇 개가 필요합니까? <b>이 숫자가 없으면 견적이 성립하지 않습니다.</b></li>
+      <li><strong>스타일</strong> — 선형(line) / 면형(fill) / 혼용? 상태 아이콘은 형태 자체로 구분되어야 합니다(색맹 대응).</li>
+      <li><strong>상태 변형</strong> — 활성·비활성·경고·완료 4상태를 모든 아이콘에 만듭니까, 필요한 것만입니까?</li>
+      <li><strong>SVG 전달 여부</strong> — 개발용 SVG를 우리가 내보냅니까? 네이밍 규칙은 개발 쪽 컨벤션을 따릅니까?</li>
+      <li><strong>사용 규칙 문서화</strong> — 아이콘 명칭·사용 맥락 문서를 가이드에 포함합니까?</li>
+      <li class="yes"><strong>글자 크기 조정(FR50)과의 관계</strong> — 글자가 커질 때 아이콘도 같이 커집니까? 그렇다면 <b>모든 아이콘이 최소 2~3 크기에서 검증</b>되어야 합니다.</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h4>이미지 · 비주얼</h4>
+    <ol>
+      <li><strong>필요 유형</strong> — 사진 / 일러스트레이션 / 3D 중 무엇이 필요합니까? 우리 권장은 <b>사람 사진 없이 추상 그래픽</b>입니다(대상화 회피).</li>
+      <li><strong>대상자·종사자 표현 기준</strong> — 사람을 그린다면 연령·성별·돌봄 유형의 다양성 기준이 있습니까?</li>
+      <li><strong>스톡 이미지</strong> — 사용 가능합니까? 라이선스 범위(상업·수정·재배포)는?</li>
+      <li><strong>별도 촬영·제작</strong> — 필요합니까? 필요하면 이건 3주 밖입니다.</li>
+      <li class="yes"><strong>개인정보·실제 돌봄 상황 노출</strong> — 실제 이용자·현장 사진은 <b>쓸 수 없다고 보는 게 맞습니까?</b> 확인 필요.</li>
+      <li><strong>필요 화면</strong> — 빈 화면 · 온보딩 · 안내 · 오류 각각 몇 종이 필요합니까?</li>
+      <li><strong>AI 이미지 생성 도구</strong> — 사용 가능합니까? 가능하다면 권리 기준(상업 이용·저작권 귀속)은 어떻게 정리합니까?</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h4>컴포넌트 · 디자인 시스템</h4>
+    <ol>
+      <li class="yes"><strong>기존 NHN 디자인 시스템 사용 여부</strong> — <b>이 답 하나가 과업량의 절반을 결정합니다.</b> 있으면 즉시 공유 요청.</li>
+      <li><strong>신규 컴포넌트 범위</strong> — 명세 기준 최소 필요 목록: 업무 카드(3상태) · 진행률 바 · 스텝 인디케이터(4/3 분기) · 3단 토글(호전·유지·악화) · 숫자 스테퍼 · STT 입력(타이머·경고) · 사진 첨부 · 동기화 상태 배지(3종) · 마스킹 필드(GREEN/ORANGE) · 전화 걸기 · 플로팅 숏컷 · 빈 상태 · 오류 배너 · 캘린더(주/월) · 알림 목록 · OCR 결과 편집.</li>
+      <li><strong>디자인 토큰 정의 여부</strong> — 컬러·타이포·스페이싱·라디우스를 토큰으로 정의합니까? 개발 전달 형식은?</li>
+      <li><strong>상태·변형 정의 수준</strong> — 각 컴포넌트의 상태(기본·눌림·비활성·오류·로딩)를 전부 그립니까?</li>
+      <li class="yes"><strong>글자 크기 대응 수준(FR50)</strong> — <b>몇 단계까지 지원하고, 각 단계에서 컴포넌트를 다 검증합니까?</b> 단계 수 × 컴포넌트 수만큼 검수량이 늘어납니다.</li>
+      <li><strong>접근성 기준</strong> — KS X 3253 준수를 어느 수준까지 검증합니까? 검증 주체는 우리입니까 NHN입니까?</li>
+      <li><strong>Android · iOS</strong> — 공통 설계입니까, 플랫폼별 분리입니까? 분리면 과업이 늘어납니다.</li>
+      <li><strong>개발 환경 연동</strong> — Figma Dev Mode · 코드 연동 · 토큰 자동화 중 어디까지 요구됩니까?</li>
+      <li><strong>문서화 방식</strong> — Figma 내 문서 / 별도 문서 / 웹 가이드 중 무엇으로 전달합니까?</li>
+      <li><strong>디자인 QA·유지보수</strong> — 개발 완료 후 QA가 과업에 포함됩니까? 포함이면 몇 회, 언제입니까?</li>
+      <li class="yes"><strong>다크모드</strong> — 대응합니까? <b>대응하면 컴포넌트 정의 분량이 대략 2배</b>가 됩니다. 3주 안에서는 불가능에 가깝습니다.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ════════════════ 09 디자인 검증 기준 ════════════════ -->
+<section class="view" id="v-verify">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">09 · Validation</div>
+      <h2>디자인 검증 기준</h2>
+      <p>"제 취향에는…"으로 흐르는 피드백을 줄이려면, <b>합의된 기준</b>이 시안보다 먼저 있어야 합니다. 킥오프에서 이 목록을 함께 확정하길 권합니다.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><h3>이 방향이 우리 취향이 아니라는 증거</h3><p>프로젝트 명제 ↔ 서울디지털재단 고령층 친화 디지털 접근성 표준 10대 지침</p></div>
+  <div class="table-wrap"><table class="t">
+    <thead><tr><th style="min-width:200px">이 프로젝트의 명제</th><th style="min-width:220px">서울디지털재단 10대 지침</th><th>의미</th></tr></thead>
+    <tbody>
+      <tr><td><b>"다음 행동을 빠르게 이해"</b></td><td class="yes">⑥ 조작기능 컨트롤은 행동을 유발해야 한다</td><td rowspan="4" style="vertical-align:middle">클라이언트가 제시한 방향이 <b>공공 접근성 표준의 요구와 문장 단위로 대응</b>합니다.<br><br>즉 "따뜻한 앱이 아니라 업무 도구"는 <b>디자이너의 취향 주장이 아니라 표준 준수</b>입니다.<br><br>시안 리뷰에서 감성 톤 요구가 나올 때 이 표가 근거가 됩니다.</td></tr>
+      <tr><td><b>"기록 누락·업무 실수 감소"</b></td><td class="yes">⑨ 사용자 오류를 예방하고 복구할 수 있어야 한다</td></tr>
+      <tr><td><b>"완료·저장·전송 상태 인지"</b></td><td class="yes">⑤ 시스템 상태는 가시적이어야 한다</td></tr>
+      <tr><td>동일</td><td class="yes">⑧ 조작 결과 피드백을 제공해야 한다</td></tr>
+      <tr><td colspan="2" style="color:var(--muted)">나머지 지침 — ① 글자는 크고 선명 ② 필수 요소로만 구성 ③ 정보 구조는 단순·친숙 ④ 용어는 이해하기 쉽게 ⑦ 신속·정확한 조작 ⑩ 심리적 부담 감소</td><td style="color:var(--muted)">6개 모두 04번 현장 조건 분석과 정합. 별도 충돌 없음</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note">
+    운영 방법 — 시안 리뷰 때 <b>아래 9개 기준으로만 코멘트</b>를 받습니다. 기준에 해당하지 않는 의견은 "선호"로 따로 모아 별도 논의합니다.
+    이 규칙 하나로 수정 라운드가 눈에 띄게 줄어듭니다.
+  </div>
+
+  <ul class="checks">
+    <li><span class="box" aria-hidden="true"></span><span><b>다음 행동이 바로 보이는가</b> — 화면을 3초 봤을 때 지금 해야 할 하나가 무엇인지 알 수 있는가</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>적은 단계로 끝나는가</b> — 핵심 업무(방문 전→기록 완료)가 최소 탭 수로 완결되는가</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>저장·전송·완료가 구분되는가</b> — 세 상태가 서로 다른 형태로 표시되는가 (FR31·32)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>실수와 누락을 예방하는가</b> — 미완 기록·미전송 건이 사용자 눈에 띄는가</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>현장 환경에서 읽히는가</b> — 360px 폭, 직사광, 최대 글자 크기 상태에서 레이아웃이 유지되는가 (FR50)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>중요·긴급이 구분되는가</b> — 위험징후·이상보고·긴급 안부가 일반 정보와 시각적으로 분리되는가</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>전문성과 존중이 느껴지는가</b> — 종사자를 보조 인력이 아니라 판단하는 직업인으로 대하는가</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>개인정보가 불필요하게 노출되지 않는가</b> — 마스킹이 기본이고 해제가 의도적 행동인가 (FR46)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>앱이 판단하는 것처럼 보이지 않는가</b> — AI 가이드가 제안이지 결론이 아님이 드러나는가 (FR49)</span></li>
+  </ul>
+
+  <div class="section-title"><h3>측정 가능한 검증 지표</h3><p>사용자 테스트를 한다면 이 숫자를 봅니다</p></div>
+  <div class="table-wrap"><table class="t">
+    <thead><tr><th style="min-width:140px">지표</th><th>측정 대상 플로우</th><th>측정 방법</th><th>의미</th></tr></thead>
+    <tbody>
+      <tr><td><b>태스크 성공률</b></td><td>방문 전 확인 → 기록 완료 → 전송</td><td>도움 없이 완주한 비율</td><td>80% 미만이면 구조 문제. 시안 문제가 아님</td></tr>
+      <tr><td><b>업무 완료 시간</b></td><td>돌봄 기록 4단계 / 3단계</td><td>시작~전송 확인까지 소요 시간</td><td>이동 시간 안에 끝나는지. 현실적 상한을 먼저 정해야 함</td></tr>
+      <tr><td><b>오류 발생률</b></td><td>전 플로우</td><td>잘못된 항목 선택·되돌아간 횟수</td><td>인접 버튼 오조작이 몰리는 지점을 찾음</td></tr>
+      <tr><td><b>도움 요청 횟수</b></td><td>첫 사용 시나리오</td><td>"이거 어떻게 해요?" 발생 횟수</td><td>온보딩 없이 쓸 수 있는지의 지표</td></tr>
+      <tr><td class="yes"><b>상태 인지 정확도</b></td><td>기록 전송 후</td><td>"지금 기록이 서버에 갔습니까?"에 정답률</td><td class="yes">이 앱의 <b>핵심 지표</b>. 저장/전송 혼동이 여기서 잡힘</td></tr>
+      <tr><td class="yes"><b>최대 글자 크기 통과율</b></td><td>전 화면</td><td>최대 글자 크기에서 잘림·겹침 없는 화면 비율</td><td class="yes">FR50 대응 완성도. 100%가 목표</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note warn">
+    <b>범위 확인 —</b> 위 지표는 <b>사용자 테스트를 수행할 때</b>의 기준입니다. 3주 과업에 사용자 테스트가 포함되는지, 포함된다면 대상자 섭외를 누가 하는지 확인이 필요합니다.
+    포함되지 않는다면 이 표는 <b>NHN이 자체 검증할 때 쓰는 기준</b>으로 전달합니다.
+  </div>
+</section>
+
+<!-- ════════════════ 10 킥오프 아젠다 ════════════════ -->
+<section class="view" id="v-agenda">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">10 · Kickoff Agenda</div>
+      <h2>킥오프 미팅 아젠다</h2>
+      <p>기존 안건 3개(커뮤니케이션 · 프로세스 · 과업 범위)를 유지하면서 15개로 재구성했습니다. 각 항목에 <b>결정 사항 · 미결 리스크 · 요청 자료 · 담당 · 회의 후 산출물</b>이 붙어 있습니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag core">기존 안건 포함</span></div>
+  </div>
+
+  <div class="gloss-note">
+    <b>시간 배분 제안 —</b> 총 90분. ①~③ 프로젝트 정의 20분 / ④~⑨ 과업 범위 40분 / ⑩~⑫ 기준·검증 15분 / ⑬~⑮ 운영 15분.
+    <b>범위(④~⑨)에 가장 많은 시간을 씁니다.</b> 여기서 안 닫히면 3주가 성립하지 않습니다.
+  </div>
+
+  <details class="day">
+    <summary><span class="dnum">01</span><span class="dtitle">프로젝트 목표와 성공 기준</span><span class="dtime">10분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>이 앱으로 무엇이 개선되어야 하는가. 현재 종사자 업무에서 가장 큰 불편은 무엇인가.</p>
+      <h3>결정할 것</h3><p>성공을 판단하는 기준 2~3개. (예: 기록 누락률 감소, 기록 소요 시간 단축)</p>
+      <h3>미결 시 리스크</h3><p>시안 평가가 "예쁘다/아니다"로만 흐릅니다. 09번 검증 기준이 무력화됩니다.</p>
+      <h3>요청 자료</h3><p>기존 서비스 불편사항·고객 문의 이력</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획 / 성공 기준 합의문 3줄</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">02</span><span class="dtitle">서비스 유형과 돌봄 운영 구조</span><span class="dtime">5분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>장기요양과 노인맞춤돌봄 <b>두 유형의 비중</b>. 한 종사자가 두 유형을 겸하는가. 수행기관 소속 구조.</p>
+      <h3>결정할 것</h3><p>주 사용자 유형(설계 기준선). 겸직 시 앱 내 전환 방식.</p>
+      <h3>미결 시 리스크</h3><p>4단계/3단계 분기 UI의 기본값을 정할 수 없습니다.</p>
+      <h3>요청 자료</h3><p>사용자 유형 및 권한 구조 문서</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획 / 사용자 유형 정의표</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">03</span><span class="dtitle">실제 사용자와 사용 환경</span><span class="dtime">5분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>연령 분포, 기기(개인/지급), OS 비중, 구형 기기 비중, 디지털 숙련도에 대한 인식.</p>
+      <h3>결정할 것</h3><p>최소 지원 화면 폭·OS 버전.</p>
+      <h3>미결 시 리스크</h3><p>04번 현장 조건 분석이 우리 추론에 머뭅니다. 레이아웃 최소 기준을 못 정합니다.</p>
+      <h3>요청 자료</h3><p>사용자 조사·인터뷰 자료, 앱 분석 데이터(있다면)</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획·개발 / 지원 기기 기준선</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">04</span><span class="dtitle">화면 목록과 디자인 대상 범위</span><span class="dtime">10분</span><span class="tag new">최우선</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>화면 ID 28개 외에 상태·예외·빈 화면을 포함한 <b>총 디자인 대상 화면 수.</b> <code class="c">CG-HOME-L</code>의 정의.</p>
+      <h3>결정할 것</h3><p class="yes">디자인할 화면의 확정 목록. 이 숫자 없이는 3주 산정이 불가능합니다.</p>
+      <h3>미결 시 리스크</h3><p class="yes"><b>가장 큰 리스크.</b> 화면이 예상보다 많으면 일정이 통째로 무너집니다.</p>
+      <h3>요청 자료</h3><p>핵심 플로우 및 화면 목록(시트 형태)</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획 / 화면 목록 확정본 + 우선순위</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">05</span><span class="dtitle">기존 디자인 시스템과 개발 제약</span><span class="dtime">10분</span><span class="tag new">최우선</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>NHN 디자인 시스템·컴포넌트 라이브러리 유무. 개발 방식(Native/Hybrid/WebView). 지원 OS·최소 버전.</p>
+      <h3>결정할 것</h3><p class="yes">시스템을 쓸지 새로 만들지. 이 답이 과업량의 절반을 결정합니다.</p>
+      <h3>미결 시 리스크</h3><p>컴포넌트를 만들었는데 기존 시스템과 충돌하는 최악의 경우가 발생합니다.</p>
+      <h3>요청 자료</h3><p>디자인 시스템 파일, 개발 환경·기술 명세</p>
+      <h3>담당 · 산출물</h3><p>NHN 디자인·개발 / 시스템 사용 여부 결정 + 파일 링크</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">06</span><span class="dtitle">아이콘 · 이미지 범위</span><span class="dtime">8분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>08번 탭의 아이콘·이미지 질문 전체.</p>
+      <h3>결정할 것</h3><p class="yes">아이콘 예상 수량과 제작 범위(신규/기존). 이미지 유형과 제작 여부.</p>
+      <h3>미결 시 리스크</h3><p>3단계(디자인 가이드) 막바지에 "아이콘이 이것뿐이냐"는 마찰이 발생합니다.</p>
+      <h3>요청 자료</h3><p>기존 아이콘 세트(있다면)</p>
+      <h3>담당 · 산출물</h3><p>양측 / 아이콘 수량·범위 합의 메모</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">07</span><span class="dtitle">컴포넌트 · 디자인 토큰 범위</span><span class="dtime">8분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>컴포넌트 목록(08번 탭 참고), 상태·변형 정의 수준, 토큰 정의 여부, 문서화 형식.</p>
+      <h3>결정할 것</h3><p class="yes">컴포넌트 개수와 각 컴포넌트의 상태 수. <b>다크모드 대응 여부.</b></p>
+      <h3>미결 시 리스크</h3><p>다크모드가 뒤늦게 요구되면 컴포넌트 정의 분량이 2배가 됩니다.</p>
+      <h3>요청 자료</h3><p>개발 쪽 컴포넌트 네이밍 컨벤션</p>
+      <h3>담당 · 산출물</h3><p>양측 / 컴포넌트 목록 확정본</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">08</span><span class="dtitle">글자 크기 조정(FR50) 대응 수준</span><span class="dtime">6분</span><span class="tag new">최우선</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>글자 크기 단계 수와 배율. 아이콘·여백도 함께 커지는가. 어느 화면까지 적용되는가.</p>
+      <h3>결정할 것</h3><p class="yes">검증할 크기 단계 수. 전 화면인지 주요 화면만인지.</p>
+      <h3>미결 시 리스크</h3><p class="yes"><b>3주 일정 최대 변수.</b> 단계 수 × 컴포넌트 수만큼 검수량이 늘어납니다. 전 화면 3단계면 사실상 화면 수가 3배입니다.</p>
+      <h3>요청 자료</h3><p>글자 크기 조정 기능 상세 정의</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획·개발 / 대응 범위 합의 (예: "주요 12화면 × 3단계 검증")</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">09</span><span class="dtitle">모션 · 상태 피드백 범위</span><span class="dtime">6분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>07번 탭의 기술 조건 7개. 모션 제작이 이번 과업인지.</p>
+      <h3>결정할 것</h3><p>모션 대상 구간(필수 4개만인지 확장인지). 전달 형식.</p>
+      <h3>미결 시 리스크</h3><p>모션이 범위에 있는지 없는지 모른 채 3단계에 들어가면 마감 직전에 터집니다.</p>
+      <h3>요청 자료</h3><p>기술 명세(애니메이션 라이브러리 포함 여부)</p>
+      <h3>담당 · 산출물</h3><p>양측 / 모션 범위 결정 (포함 / 미포함 / 상태 피드백만)</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">10</span><span class="dtitle">접근성 및 개인정보 기준</span><span class="dtime">6분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>KS X 3253 준수 요구 수준. 검증 주체. FR46 개인정보 등급의 구체 규칙.</p>
+      <h3>결정할 것</h3><p>접근성 검수 범위와 담당. 마스킹 표기 규칙.</p>
+      <h3>미결 시 리스크</h3><p>공공 성격 사업에서 접근성 미달은 <b>납품 후 재작업</b> 사유가 됩니다.</p>
+      <h3>요청 자료</h3><p>개인정보·보안 정책, 접근성 준수 기준 문서</p>
+      <h3>담당 · 산출물</h3><p>NHN 기획·보안 / 접근성 준수 기준 합의</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">11</span><span class="dtitle">비주얼 톤앤무드 확정 방식</span><span class="dtime">8분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>NHN이 이미 생각하는 방향이 있는가. 참고하는 앱, 피하고 싶은 사례.</p>
+      <h3>결정할 것</h3><p class="yes">여러 시안 중 고르는 방식이 아니라 <b>사전 협의로 하나의 방향을 확정</b>하는 방식으로 진행. 확정 시한.</p>
+      <h3>미결 시 리스크</h3><p>1단계가 늘어지면 후속 일정 전체가 순연됩니다.</p>
+      <h3>요청 자료</h3><p>브랜드 가이드, 선호·비선호 사례</p>
+      <h3>담당 · 산출물</h3><p>양측 / 톤앤무드 방향 1개 + 확정일</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">12</span><span class="dtitle">디자인 검증 방식과 피드백 기준</span><span class="dtime">6분</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>09번 탭의 9개 기준을 리뷰 기준으로 채택할 수 있는가. 사용자 테스트 수행 여부.</p>
+      <h3>결정할 것</h3><p>시안 리뷰 시 사용할 평가 기준. 취향 의견의 처리 방식.</p>
+      <h3>미결 시 리스크</h3><p>피드백이 취향 논쟁으로 흐르며 수정 라운드가 무한정 늘어납니다.</p>
+      <h3>요청 자료</h3><p>—</p>
+      <h3>담당 · 산출물</h3><p>양측 / 리뷰 기준 9개 채택 여부</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">13</span><span class="dtitle">협업 채널과 피드백 운영</span><span class="dtime">5분</span><span class="tag core">기존 안건 ①</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>협업 툴, 피드백·수정 요청 방식, 버전 관리 방식.</p>
+      <h3>결정할 것</h3><p class="yes">담당자와 <b>최종 의사결정자</b>. 피드백 취합 주체(단일 창구). 회신 기한.</p>
+      <h3>미결 시 리스크</h3><p>여러 사람의 상충하는 피드백이 정리되지 않은 채 도착합니다. 3주 일정에서 치명적입니다.</p>
+      <h3>요청 자료</h3><p>의사결정자·검수 담당자 명단</p>
+      <h3>담당 · 산출물</h3><p>양측 / 채널·창구·기한 합의 (예: "피드백은 ○○님이 취합, 영업일 2일 내 회신")</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">14</span><span class="dtitle">단계별 일정과 승인 프로세스</span><span class="dtime">6분</span><span class="tag core">기존 안건 ②</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>전체 일정, 톤앤무드 확정 방식, UX/UI 단계별 피드백 일정, 중간 리뷰·최종 승인, 개발 전달·QA 일정.</p>
+      <h3>결정할 것</h3><p class="yes">각 단계의 <b>피드백 마감일</b>. 승인 주체. 지연 시 처리 방식.</p>
+      <h3>미결 시 리스크</h3><p>3주는 버퍼가 거의 없습니다. 어느 한 단계의 지연이 그대로 마감 지연입니다.</p>
+      <h3>요청 자료</h3><p>NHN 측 디자인·개발 일정표</p>
+      <h3>담당 · 산출물</h3><p>양측 / 날짜가 박힌 일정표</p>
+    </div>
+  </details>
+
+  <details class="day">
+    <summary><span class="dnum">15</span><span class="dtitle">최종 산출물과 완료 기준</span><span class="dtime">5분</span><span class="tag core">기존 안건 ③</span><span class="chev"></span></summary>
+    <div class="body">
+      <h3>확인할 것</h3><p>전달물 목록과 형식. 디자인 QA 포함 여부.</p>
+      <h3>결정할 것</h3><p class="yes"><b>"완료"의 정의.</b> 무엇이 전달되면 과업이 끝난 것인가.</p>
+      <h3>미결 시 리스크</h3><p>마감 후에도 "이것도 해달라"가 이어집니다.</p>
+      <h3>요청 자료</h3><p>—</p>
+      <h3>담당 · 산출물</h3><p>양측 / 산출물 목록 + 완료 기준 문서화</p>
+    </div>
+  </details>
+</section>
+
+<!-- ════════════════ 11 사전 요청 자료 ════════════════ -->
+<section class="view" id="v-assets">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">11 · Asset Request</div>
+      <h2>NHN에 사전 요청할 자료</h2>
+      <p>필요도 순으로 정렬했습니다. <b>상위 5개는 미팅 전에 받아야</b> 킥오프가 결정 회의가 됩니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag core">미팅 전 필수 5</span><span class="tag easy">미팅 시 6</span><span class="tag skip">이후 6</span></div>
+  </div>
+
+  <div class="table-wrap"><table class="t" style="min-width:900px">
+    <thead><tr><th style="min-width:150px">자료</th><th>필요도</th><th>왜 필요한가</th><th>없으면</th></tr></thead>
+    <tbody>
+      <tr style="background:var(--pt-pink-soft)"><td><b>「와플랫 공공 — AI 생활지원사」 앱 화면 캡처</b></td><td><span class="tag new">최우선</span></td><td class="yes">이미 운영 중인 앱이 존재. 이번 앱이 그 개편이라면 <b>"UX 구조 변경 없이"의 실제 제약이 여기서 결정</b>됩니다</td><td class="yes">기존 앱과 어긋난 설계를 하게 됨</td></tr>
+      <tr><td><b>화면 목록 / 핵심 플로우</b></td><td><span class="tag core">미팅 전</span></td><td>디자인 대상 화면 수를 확정해야 3주 산정이 성립</td><td class="yes">일정·범위 산정 불가</td></tr>
+      <tr><td><b>NHN 디자인 시스템 · 컴포넌트</b></td><td><span class="tag core">미팅 전</span></td><td>있으면 과업량이 절반으로 줄고, 없으면 신규 정의</td><td class="yes">중복 작업 또는 충돌 발생</td></tr>
+      <tr><td><b>NHN 브랜드 가이드</b></td><td><span class="tag core">미팅 전</span></td><td>톤앤무드 3안을 브랜드 위에서 조정해야 함</td><td class="yes">시안이 브랜드와 어긋나 재작업</td></tr>
+      <tr><td><b>글자 크기 조정 상세 정의</b></td><td><span class="tag core">미팅 전</span></td><td>FR50 대응 범위가 검수량을 좌우</td><td class="yes">3주 일정 최대 변수가 미해소</td></tr>
+      <tr><td><b>개발 환경 · 기술 명세</b></td><td><span class="tag core">미팅 전</span></td><td>Native/Hybrid/WebView에 따라 모션·접근성 범위가 달라짐</td><td class="yes">모션·컴포넌트 정의 불가</td></tr>
+      <tr><td><b>서비스 기획서 / 요구사항 정의서</b></td><td><span class="tag easy">미팅 시</span></td><td>기능명세서 v0.1.0의 상위 문서. 배경 파악</td><td>의도를 추측하게 됨</td></tr>
+      <tr><td><b>사용자 유형 · 권한 구조</b></td><td><span class="tag easy">미팅 시</span></td><td>요양/생활 분기와 권한별 화면 차이</td><td>4단계/3단계 기본값 결정 불가</td></tr>
+      <tr><td><b>현재 업무 프로세스 · 운영 정책</b></td><td><span class="tag easy">미팅 시</span></td><td>RFID 제도와의 이중 입력 여부 등 실제 업무 흐름</td><td>현장과 어긋난 설계 위험</td></tr>
+      <tr><td><b>개인정보 · 보안 정책</b></td><td><span class="tag easy">미팅 시</span></td><td>FR46 GREEN/ORANGE 등급의 구체 규칙</td><td>마스킹 컴포넌트 정의 불가</td></tr>
+      <tr><td><b>접근성 준수 기준</b></td><td><span class="tag easy">미팅 시</span></td><td>KS X 3253 어느 수준까지, 검증 주체는 누구</td><td class="yes">납품 후 재작업 사유</td></tr>
+      <tr><td><b>의사결정자 · 검수 담당자</b></td><td><span class="tag easy">미팅 시</span></td><td>피드백 단일 창구 확립</td><td class="yes">상충 피드백으로 일정 붕괴</td></tr>
+      <tr><td><b>기존 앱 또는 관리자 시스템 화면</b></td><td><span class="tag skip">이후</span></td><td>통합 ADMIN과의 정보 일관성 참고</td><td>용어·구조 불일치 가능</td></tr>
+      <tr><td><b>기존 서비스 불편사항 · 고객 문의</b></td><td><span class="tag skip">이후</span></td><td>성공 기준의 근거</td><td>목표가 추상적으로 남음</td></tr>
+      <tr><td><b>사용자 조사 · 인터뷰 자료</b></td><td><span class="tag skip">이후</span></td><td>04번 현장 조건 분석을 사실로 교체</td><td>우리 추론에 의존</td></tr>
+      <tr><td><b>앱 분석 데이터 · 주요 지표</b></td><td><span class="tag skip">이후</span></td><td>기기·OS 분포, 이탈 지점</td><td>지원 기기 기준을 보수적으로 잡게 됨</td></tr>
+      <tr><td><b>참고하는 앱 · 선호 비주얼</b></td><td><span class="tag skip">이후</span></td><td>톤앤무드 협의 시간 단축</td><td>1단계가 길어짐</td></tr>
+      <tr><td><b>피하고 싶은 비주얼 사례</b></td><td><span class="tag skip">이후</span></td><td class="yes">선호보다 <b>비선호가 방향을 더 빨리 좁힙니다</b></td><td>불필요한 시안 라운드 발생</td></tr>
+      <tr><td><b>KRDS 준수 의무 여부</b></td><td><span class="tag easy">미팅 시</span></td><td>복지부 사업이므로 범정부 디자인 시스템 적용 요구가 있을 수 있음</td><td class="yes">뒤늦게 요구되면 컴포넌트 전면 재작업</td></tr>
+      <tr><td><b>단일 승인권자 지정</b></td><td><span class="tag core">미팅 전</span></td><td class="yes">컨소시엄 다자 구조로 보임. 승인 라인이 복잡하면 3주는 즉시 붕괴</td><td class="yes">승인 지연이 그대로 마감 지연</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note risk">
+    <b>요청 메일에 넣을 문장 —</b> "아래 6개 자료를 <b>미팅 전에</b> 받을 수 있으면, 킥오프를 '확인 회의'가 아니라 '결정 회의'로 운영할 수 있습니다.
+    특히 <b>와플랫 앱 화면 캡처</b>와 <b>디자인 대상 화면 목록</b> 두 가지는, 없을 경우 3주 일정 확약이 어렵습니다."
+  </div>
+</section>
+
+<!-- ════════════════ 12 질문 A/B/C ════════════════ -->
+<section class="view" id="v-quest">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">12 · Questions</div>
+      <h2>질문 목록 — A · B · C</h2>
+      <p>언제 답이 필요한지로 나눴습니다. <b>A는 미팅 전, B는 미팅에서, C는 설계하며</b> 답해도 됩니다.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h4>A. 미팅 전에 확인해야 하는 질문 <span class="tag core">11</span></h4>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 10px">이 답이 없으면 미팅이 "확인 회의"가 되고 결정이 안 납니다. <b>1·2번은 하나만 고른다면 이것</b>입니다.</p>
+    <ol>
+      <li class="yes"><strong>「와플랫 공공 — AI 생활지원사 플랫폼」과 이번 앱은 같은 앱의 개편입니까, 별도 신규입니까?</strong> 같은 앱이라면 현재 화면 캡처 일체를 요청드립니다. "UX 구조 변경 없이"의 실제 제약 범위가 여기서 결정됩니다.</li>
+      <li class="yes"><strong>이 앱의 기록이 급여 청구·바우처 결제·사업 실적 보고의 근거 데이터가 됩니까?</strong> 그렇다면 기록 화면의 최우선 위계는 '케어 품질'이 아니라 <b>'누락 없는 필수 항목 완결'</b>이 됩니다. 이 한 문장이 톤앤무드 3안 중 하나의 생사를 가릅니다.</li>
+      <li class="yes"><strong><code class="c">CG-HOME-L</code>의 <code class="c">-L</code>은 무엇입니까?</strong> 유저 플로우의 <code class="c">1.1. 역할 별 화면</code>을 보면 역할 구분(요양보호사/생활지원사)으로 보입니다. 맞다면 <b>역할별 분기가 홈에만 적용됩니까, 다른 화면에도 적용됩니까?</b> 이게 화면 수를 42개에서 60개 가까이로 늘릴 수 있습니다.</li>
+      <li class="yes"><strong>유저 플로우 문서가 2벌 있는데 어느 쪽이 최신입니까?</strong> 한쪽에만 <code class="c">2.6. 긴급 안부 확인</code>이 있고, 다른 쪽에만 <code class="c">2.3.2. 돌봄 기록(전화)</code>·<code class="c">1.1. 역할 별 화면</code>이 있습니다.</li>
+      <li><strong>기능명세서의 <code class="c">CG-*</code> ID와 유저 플로우의 시나리오 번호를 잇는 매핑표가 있습니까?</strong> 없으면 저희가 작성해 승인받겠습니다.</li>
+      <li><strong>유저 플로우의 <code class="c">2.3.2. 돌봄 기록(전화)</code>이 이번 범위입니까?</strong> 기능명세서와 IA에는 이 변형이 없습니다.</li>
+      <li><strong>디자인 대상 화면의 총 개수는 몇 개입니까?</strong> 화면 ID 28개 외에 상태·예외·빈 화면을 포함한 목록이 필요합니다.</li>
+      <li><strong>NHN 디자인 시스템·컴포넌트 라이브러리가 있습니까?</strong> 있다면 파일을 공유해 주십시오.</li>
+      <li><strong>글자 크기 조정(FR50)은 몇 단계이고 배율은 얼마입니까?</strong> 아이콘·여백도 함께 커집니까?</li>
+      <li><strong>개발 방식은 Native / Hybrid / WebView 중 무엇입니까?</strong> 지원 OS 최소 버전은?</li>
+      <li><strong>다크모드를 대응합니까?</strong> 대응 시 컴포넌트 정의 분량이 대략 2배가 됩니다.</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h4>B. 킥오프 미팅에서 반드시 결정할 질문 <span class="tag easy">9</span></h4>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 10px">회의를 나오기 전에 답이 정해져야 하는 것들입니다.</p>
+    <ol>
+      <li><strong>아이콘은 신규 제작입니까, 기존 세트 보강입니까?</strong> 예상 수량은 몇 개입니까?</li>
+      <li><strong>이미지는 어떤 유형이 필요합니까?</strong> 사람 사진을 쓸 수 있습니까, 추상 그래픽으로 갑니까?</li>
+      <li><strong>컴포넌트의 상태·변형을 어느 수준까지 정의합니까?</strong> (기본·눌림·비활성·오류·로딩 전부입니까?)</li>
+      <li><strong>모션 제작이 이번 과업에 포함됩니까?</strong> 포함이면 대상 구간과 전달 형식은?</li>
+      <li><strong>접근성(KS X 3253) 검수는 어느 수준까지 하고 누가 합니까?</strong></li>
+      <li><strong>Android·iOS를 공통 설계합니까, 분리합니까?</strong></li>
+      <li><strong>피드백 취합 주체와 최종 의사결정자는 누구입니까?</strong> 회신 기한은 며칠입니까?</li>
+      <li><strong>톤앤무드를 사전 협의로 하나의 방향으로 확정하는 방식에 동의하십니까?</strong> 확정 시한은 언제입니까?</li>
+      <li><strong>"완료"의 정의는 무엇입니까?</strong> 무엇을 전달하면 과업이 끝난 것입니까? 디자인 QA는 포함됩니까?</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h4>C. UX/UI 설계 단계에서 결정해도 되는 질문 <span class="tag skip">11</span></h4>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 10px">지금 몰라도 진행에 지장은 없지만, 놓치면 나중에 되돌아옵니다.</p>
+    <ol>
+      <li><strong>STT 3분 초과 시</strong> 자동 종료입니까, 저장 후 이어쓰기입니까?</li>
+      <li><strong>동기화가 반복 실패할 때</strong> 몇 번 재시도하고 사용자에게 언제 알립니까?</li>
+      <li><strong>업무 시작 기록을 깜빡한 경우</strong>의 구제 경로가 있습니까?</li>
+      <li><strong>"위험징후"라는 표기</strong>를 그대로 씁니까, 순화 표현이 있습니까? (화면이 이용자에게 보일 수 있음)</li>
+      <li><strong>종사자가 직접 기록을 수정할 수 있는 범위와 시점</strong>은 어디까지입니까?</li>
+      <li><strong>방문 전 6개 정보 블록</strong>의 우선순위와 기본 펼침 여부는?</li>
+      <li><strong>AI 업무 가이드의 성격</strong>을 사용자에게 알리는 문구가 필요합니까? (FR49 판정 미산출)</li>
+      <li><strong>부재·거부 시 사진 등 추가 증빙</strong>이 필요합니까?</li>
+      <li><strong>종사자가 복수 수행기관에 소속</strong>될 수 있습니까? 그렇다면 기관 구분 표기가 필요합니다.</li>
+      <li><strong>기초평가 화면</strong>이 이번 범위에 포함됩니까? (IA에만 있고 기능명세서에 없음)</li>
+      <li><strong>서명 · 보호자 직접 보고 · 교육 자료</strong>는 범위 외로 확정해도 됩니까?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ════════════════ 13 리스크 ════════════════ -->
+<section class="view" id="v-risk">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">13 · Risk</div>
+      <h2>프로젝트 리스크와 대응</h2>
+      <p>3주 일정에서 실제로 터질 수 있는 것만 골랐습니다. 영향도 순입니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag new">높음 5</span><span class="tag warn">중간 3</span><span class="tag skip">낮음 2</span></div>
+  </div>
+
+  <div class="table-wrap"><table class="t" style="min-width:900px">
+    <thead><tr><th style="min-width:130px">리스크</th><th>영향도</th><th>왜 발생하는가</th><th>대응</th><th>언제까지</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>기존 와플랫 앱과의 관계 불명</b></td><td><span class="tag new">높음</span></td>
+        <td>「와플랫 공공 — AI 생활지원사」 앱이 이미 운영 중. 이번 앱이 그 개편이면 기존 화면이 사실상의 제약이 됨</td>
+        <td class="yes">미팅 전 화면 캡처 확보. 개편이면 기존 컴포넌트 인벤토리부터 작성</td><td>킥오프 전</td>
+      </tr>
+      <tr>
+        <td><b>컨소시엄 다자 구조 · 승인권자 불명</b></td><td><span class="tag new">높음</span></td>
+        <td>보도마다 파트너사 표기가 다름(카카오헬스케어/아이클로/헬스맥스). 의사결정 라인이 복잡하다는 신호</td>
+        <td class="yes"><b>단일 승인권자 1인 지정을 킥오프에서 요구.</b> 피드백 취합 창구도 1인으로</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>역할별 분기가 화면 전반으로 번짐</b></td><td><span class="tag new">높음</span></td>
+        <td class="yes">유저 플로우 기준 42~43개. 그런데 기록은 요양/생활/전화 3종, 홈도 역할별 2벌 정황. 분기가 번지면 실질 60개 가까이</td>
+        <td class="yes">역할별 분기 범위를 킥오프에서 화면 단위로 확정. 확정 전 3주 미확약</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>글자 크기 대응(FR50) 검수량 폭증</b></td><td><span class="tag new">높음</span></td>
+        <td>단계 수 × 컴포넌트 수만큼 검증이 늘어남. 전 화면 3단계면 사실상 3배</td>
+        <td class="yes">대응 범위를 <b>주요 N화면 × M단계</b>로 숫자 합의. 나머지는 규칙 문서로 대체</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>1단계 방향 확정 지연</b></td><td><span class="tag new">높음</span></td>
+        <td>3주에 버퍼가 없어 1단계 지연이 그대로 마감 지연</td>
+        <td class="yes">여러 시안 제시 대신 <b>사전 톤앤무드 협의 → 1개 방향</b>으로 진행. 확정 시한을 일정표에 명시</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>다크모드 뒤늦은 요구</b></td><td><span class="tag warn">중간</span></td>
+        <td>명세·IA에 언급이 없어 논의 자체가 안 된 상태</td>
+        <td>킥오프에서 명시적으로 <b>범위 외 확인</b>. 요구 시 별도 산정</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>NHN 디자인 시스템과 충돌</b></td><td><span class="tag warn">중간</span></td>
+        <td>시스템 존재 여부를 모른 채 컴포넌트를 새로 만들면 전부 재작업</td>
+        <td class="yes">미팅 전 확인. 있으면 그 위에서 시작</td><td>킥오프 전</td>
+      </tr>
+      <tr>
+        <td><b>피드백 창구 분산</b></td><td><span class="tag warn">중간</span></td>
+        <td>여러 담당자의 상충하는 피드백이 정리 없이 도착</td>
+        <td>피드백 취합 주체 1인 지정 + 회신 기한 합의</td><td>킥오프</td>
+      </tr>
+      <tr>
+        <td><b>접근성 미달로 인한 재작업</b></td><td><span class="tag skip">낮음</span></td>
+        <td>공공 성격 사업에서 KS X 3253 미준수는 납품 후 지적 대상</td>
+        <td>모든 컬러 조합을 4.5:1 기준으로 사전 검증. 검수 주체 합의</td><td>2단계 중</td>
+      </tr>
+      <tr>
+        <td><b>비주얼이 "AI 판정"처럼 읽힘</b></td><td><span class="tag skip">낮음</span></td>
+        <td>"AI 생활지원사"라는 명칭과 AI 업무 가이드가 있어 오해 소지</td>
+        <td>FR49를 톤앤무드 3안 공통 제약으로 명시. 카피 검수 시 확인</td><td>1단계</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="gloss-note risk">
+    <b>종합 —</b> 높음 5건 중 <b>3건(와플랫 앱 관계, 화면 수, 디자인 시스템)은 미팅 전에 자료만 받으면 해소</b>됩니다.
+    나머지 2건(승인권자, 글자 크기 대응)은 킥오프에서 합의해야 합니다.
+    <b>이 5건이 닫히기 전에는 3주라는 숫자를 확약하지 않는 것이 안전합니다.</b>
+  </div>
+</section>
+
+<!-- ════════════════ 14 의사결정 체크리스트 ════════════════ -->
+<section class="view" id="v-check">
+  <div class="page-head">
+    <div class="page-title">
+      <div class="eyebrow">14 · Decision Checklist</div>
+      <h2>회의에서 반드시 확정할 것</h2>
+      <p>인쇄해서 미팅 중에 체크하세요. <b>전부 체크되면 3주 일정이 성립</b>합니다.</p>
+    </div>
+    <div class="head-meta"><span class="tag core">17항목</span></div>
+  </div>
+
+  <div class="section-title"><h3>범위 — 이게 안 닫히면 일정이 없습니다</h3></div>
+  <ul class="checks">
+    <li><span class="box" aria-hidden="true"></span><span><b>기존 와플랫 앱과의 관계</b>가 확인됐다 (개편 / 신규) — 개편이면 화면 캡처를 받았다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>기록이 정산·보고 근거 데이터인지</b> 확인됐다 (톤앤무드 방향 필터링 기준)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>디자인 대상 화면 목록</b>을 받았고 총 개수가 확정됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><code class="c">CG-HOME-L</code>의 정의가 확인됐다 (홈 2벌 여부)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>NHN 디자인 시스템</b> 사용 여부가 결정됐고, 있다면 파일을 받았다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>글자 크기 대응 범위</b>가 숫자로 합의됐다 (주요 N화면 × M단계)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>다크모드</b> 대응 여부가 결정됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>아이콘 수량과 제작 범위</b>가 합의됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>컴포넌트 목록과 상태 정의 수준</b>이 합의됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>모션 제작</b>의 과업 포함 여부가 결정됐다</span></li>
+  </ul>
+
+  <div class="section-title"><h3>운영 — 이게 안 닫히면 3주 안에 못 끝납니다</h3></div>
+  <ul class="checks">
+    <li><span class="box" aria-hidden="true"></span><span><b>단일 승인권자 1인</b>이 지정됐다 (컨소시엄 다자 구조 대응)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>피드백 취합 주체 1인</b>과 최종 의사결정자가 지정됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>피드백 회신 기한</b>이 합의됐다 (예: 영업일 2일 내)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>톤앤무드 확정 방식과 시한</b>이 정해졌다 (사전 협의 → 1개 방향)</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>날짜가 박힌 일정표</b>가 만들어졌다 (단계별 피드백 마감일 포함)</span></li>
+  </ul>
+
+  <div class="section-title"><h3>기준 — 이게 안 닫히면 논쟁이 반복됩니다</h3></div>
+  <ul class="checks">
+    <li><span class="box" aria-hidden="true"></span><span><b>시안 리뷰 기준 9개</b>(09번 탭) 채택 여부가 결정됐다</span></li>
+    <li><span class="box" aria-hidden="true"></span><span><b>"완료"의 정의</b>와 최종 산출물 목록이 문서화됐다</span></li>
+  </ul>
+
+  <div class="gloss-note" style="margin-top:18px">
+    <b>미팅 후 30분 안에 —</b> 위 14항목의 결정 사항을 <b>한 장으로 정리해 회신</b>하십시오.
+    3주 프로젝트에서 구두 합의는 남지 않습니다. 문서로 남긴 것만 합의입니다.
+  </div>
+
+  <p class="footnote">
+    <b>이 문서에 대하여</b><br>
+    작성일 2026-08-10 · 돌봄종사자 APP UX/UI 디자인 프로젝트 사전 리서치 및 킥오프 준비 자료.<br><br>
+    <b>확정 사실의 출처</b> — <a href="https://www.figma.com/design/mlbVOnLJQUULWK80c3Fo1B/?node-id=67-13668" target="_blank" rel="noopener">Figma 기능명세서 v0.1.0 (node 67:13668)</a> · <a href="https://www.figma.com/design/mlbVOnLJQUULWK80c3Fo1B/?node-id=0-1" target="_blank" rel="noopener">IA v0.1.0 (page 0:1)</a><br>
+    <b>외부 사례의 출처</b> — 각 항목에 URL과 확인일(2026-08-10)을 표기. <b>공개 자료 기반 데스크 리서치</b>이며 실기기 설치·스크린샷 검증은 미실시. 따라서 03번 비교표의 홈 화면 정보구조·버튼 배치·비주얼 톤 항목은 대부분 <b>확인 필요</b>로 남아 있습니다.<br><br>
+    <b>이 문서를 외부로 내보낼 때의 주의</b><br>
+    · 비주얼 톤앤무드 3안의 컬러·타이포는 <b>제안이며 확정이 아님</b> — NHN 브랜드 가이드 확보 후 재조정 필요<br>
+    · 04번 현장 사용 환경 분석은 실사용자 인터뷰가 아닌 <b>일반적 돌봄 현장 조건에 기반한 추론</b><br>
+    · 요양보호사 연령 통계(60세 이상 63.4% 등)는 <b>매체 보도 인용</b>이며 공단·복지부 원자료 미대조<br>
+    · 컨소시엄 구성은 보도마다 표기가 달라 <b>정확한 구성은 미확인</b><br>
+    · 음성 입력의 "문서화 시간 30~50% 감소" 류 수치는 <b>벤더 마케팅 주장</b>이므로 이 문서에 싣지 않았고, 인용해서도 안 됩니다<br>
+    · KS X 3253의 컨트롤 크기 구체 수치는 <b>PDF 원문 미확인</b> — "44×44px"를 KS X 3253 기준으로 인용하지 마십시오(그 수치는 WCAG AAA·Apple HIG 기준입니다)
+  </p>
+</section>
+
+</main>
+</div>
+
+<script>
+var navItems = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+function goView(id){
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
+  var el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  navItems.forEach(function(n){n.classList.toggle('active', n.dataset.view === id)});
+  window.scrollTo({top:0, behavior:'smooth'});
+  try{history.replaceState(null,'','#'+id)}catch(e){}
+}
+navItems.forEach(function(n){n.addEventListener('click', function(){goView(n.dataset.view)})});
+function fromHash(){
+  var h = location.hash.replace('#','');
+  if(h && document.getElementById(h)) goView(h);
+}
+window.addEventListener('load', fromHash);
+window.addEventListener('hashchange', fromHash);
+</script>
+</body>
+</html>
