@@ -1,0 +1,1787 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NETMARBLE GAME CREATIVE INTELLIGENCE</title>
+<style>
+:root{
+  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
+  --accent:#1a1a17;--shadow:0 12px 30px rgba(24,24,24,.06);
+  --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
+  --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
+  --red:#d93025;--red2:#fde7e5;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,
+         "Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;background:#f2f1ee}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);letter-spacing:-.015em;font-size:14px}
+button,input,select{font:inherit}
+
+.topbar{height:72px;background:#151817;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(0,0,0,.18);gap:16px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.bm{width:34px;height:34px;border:1px solid rgba(255,255,255,.24);border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:9px;background:linear-gradient(145deg,#2b2a26,#0f0f0e);flex:none}
+.brand h1{font-size:14px;margin:0 0 3px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{font-size:10px;color:rgba(255,255,255,.5);margin:0;letter-spacing:.04em}
+.tsearch{flex:none;display:flex;align-items:center;gap:8px}
+.tsearch input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:8px;padding:8px 12px;font-size:12px;width:230px;outline:none}
+.tsearch input::placeholder{color:rgba(255,255,255,.4)}
+.tsearch input:focus{border-color:rgba(255,255,255,.4)}
+.pill{font-size:10px;padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.72);white-space:nowrap}
+
+.layout{display:grid;grid-template-columns:238px minmax(0,1fr);min-height:calc(100vh - 72px)}
+.sidebar{background:#f9f8f4;border-right:1px solid var(--line);padding:18px 13px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.pmini{padding:12px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:14px}
+.eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.pmini h2{font-size:12.5px;margin:6px 0 4px;line-height:1.4}
+.pmini p{font-size:10px;color:var(--muted);margin:0}
+.navlabel{font-size:9px;font-weight:800;color:#97948c;letter-spacing:.13em;margin:15px 9px 6px}
+.nav-item{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;padding:8px 9px;border-radius:7px;color:#68665f;text-align:left;cursor:pointer;font-size:11px;margin:1px 0}
+.nav-item:hover{background:#efede7;color:#222}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:700}
+.nav-item.hide{display:none}
+.nnum{font-family:var(--mono);font-size:9px;opacity:.7;width:16px;flex:none}
+.nbadge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 5px;flex:none;font-weight:800}
+.nbadge.HIGH{background:var(--lime);color:#1c2b06}
+.nbadge.MEDIUM{background:var(--blue2);color:var(--blue)}
+.nbadge.LOW{background:var(--orange2);color:#a04a10}
+.nav-item.active .nbadge{opacity:.9}
+
+.main{padding:26px 30px 70px;max-width:1620px;width:100%}
+.view{display:none}.view.active{display:block}
+
+/* quick jump */
+.qjump{position:sticky;top:72px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);margin:0 -30px 20px;padding:9px 30px;display:flex;gap:5px;overflow-x:auto}
+.qjump button{border:1px solid var(--line);background:#fff;color:#66645e;border-radius:99px;padding:5px 11px;font-size:10px;cursor:pointer;white-space:nowrap;font-weight:700}
+.qjump button:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.phead{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.ptitle h2{font-size:25px;line-height:1.15;margin:3px 0 7px;letter-spacing:-.04em}
+.ptitle p{font-size:12px;color:var(--muted);margin:0}
+.hmeta{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:9px;font-weight:700;border-radius:999px;padding:5px 9px;background:#fff;border:1px solid var(--line);color:#555;white-space:nowrap}
+.tag.blue{color:var(--blue);background:var(--blue2);border-color:#c7d3fb}
+.tag.pink{color:#a63c9a;background:var(--pink2);border-color:#ffc7f8}
+.tag.lime{color:#4f6e1c;background:var(--lime2);border-color:#c8f0a0}
+.tag.orange{color:#a04a10;background:var(--orange2);border-color:#ffc6a0}
+
+.grid{display:grid;gap:12px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.card h3{font-size:13px;margin:0 0 9px}
+.card p{font-size:11px;color:#4f4d47;line-height:1.65;margin:0}
+.sect{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 10px;gap:14px;scroll-margin-top:130px}
+.sect h3{font-size:15px;margin:0}
+.sect .sn{font-family:var(--mono);font-size:9px;color:var(--muted);font-weight:800;margin-right:7px}
+.sect p{font-size:10px;color:var(--muted);margin:0;text-align:right}
+
+/* HOME cards */
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filters select{border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 9px;font-size:10.5px;color:#555;outline:none}
+.fcount{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--mono)}
+.gcards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gcard{position:relative;background:#fff;border:1px solid var(--line);border-radius:11px;padding:0;display:flex;flex-direction:column;
+  min-height:230px;cursor:pointer;text-align:left;box-shadow:var(--shadow);overflow:hidden}
+.gcard:hover{border-color:#b3b0a8;transform:translateY(-2px);transition:.15s}
+.gcard.hide{display:none}
+.gsw{display:flex;height:7px}.gsw span{flex:1}
+.gin{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.gtop{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+.gnm{font-weight:800;font-size:13px;line-height:1.3;flex:1}
+.gip{font-size:7.5px;font-weight:800;padding:2px 5px;border-radius:4px;white-space:nowrap;flex:none}
+.gip.blue{background:var(--blue2);color:var(--blue)}
+.gip.pink{background:var(--pink2);color:#a63c9a}
+.gip.lime{background:var(--lime2);color:#4f6e1c}
+.gmeta{font-size:9.5px;color:var(--muted);line-height:1.5}
+.gfan{font-size:10px;font-weight:800;color:var(--accent);background:#f4f3ef;border-radius:5px;padding:5px 8px;letter-spacing:.02em}
+.gchar{font-size:10px;color:#4f4d47;line-height:1.5}
+.gchar b{color:var(--ink)}
+.gbot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px solid var(--line);gap:6px}
+.gmat{font-size:8px;font-weight:800;padding:3px 6px;border-radius:4px}
+.gmat.HIGH{background:var(--lime);color:#1c2b06}
+.gmat.MEDIUM{background:var(--blue2);color:var(--blue)}
+.gmat.LOW{background:var(--orange2);color:#a04a10}
+.gasset{font-family:var(--mono);font-size:8.5px;color:var(--muted);font-weight:700}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a1a17,#2c2b26);color:#fff;border-radius:14px;padding:24px 26px;
+  display:grid;grid-template-columns:1.5fr .9fr;gap:22px;box-shadow:0 16px 36px rgba(20,20,18,.16)}
+.hero .eyebrow{color:rgba(255,255,255,.55)}
+.hero h3{font-size:22px;line-height:1.35;letter-spacing:-.04em;margin:8px 0 10px}
+.hero p{font-size:11.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0}
+.hside{border-left:1px solid rgba(255,255,255,.16);padding-left:18px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.kv2{font-size:10px;color:rgba(255,255,255,.55);display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:5px}
+.kv2 b{color:#fff;font-weight:700;text-align:right}
+.hsw{display:flex;height:9px;border-radius:4px;overflow:hidden;margin-top:3px}.hsw span{flex:1}
+
+/* CORE FANTASY */
+.cf{background:#fff;border:2px solid var(--accent);border-radius:12px;padding:18px 20px}
+.cfcode{font-family:var(--mono);font-size:17px;font-weight:900;letter-spacing:.04em;margin-bottom:10px}
+.cfflow{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:11px}
+.cfflow span{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px}
+.cfflow i{color:var(--muted);font-style:normal;font-size:10px}
+.cf p{font-size:11.5px;line-height:1.7;color:#4f4d47;margin:0}
+
+/* ICONIC 5 */
+.ic5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.icn{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px}
+.icnum{font-family:var(--mono);font-size:9px;color:var(--blue);font-weight:800}
+.ictype{font-size:7.5px;font-weight:800;background:#f4f3ef;color:#77756e;padding:2px 5px;border-radius:3px;margin-left:5px}
+.icn strong{display:block;font-size:11.5px;margin:7px 0 4px;line-height:1.35}
+.icn span{font-size:9.5px;color:var(--muted);line-height:1.5;display:block}
+.icstar{font-size:9px;color:var(--orange);margin-top:6px;display:block}
+
+/* CHARACTER HEAT */
+.chs{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.chc{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px}
+.chn{font-weight:800;font-size:14px}
+.chr{font-size:9.5px;color:var(--muted);font-weight:700;margin-top:2px}
+.chbars{display:grid;grid-template-columns:auto 1fr;gap:3px 9px;margin:11px 0;font-size:9px;align-items:center}
+.chbars .bk{color:var(--muted);font-weight:700;font-family:var(--mono);font-size:8.5px}
+.chbars .bv{font-size:10px;color:var(--orange);letter-spacing:1px}
+.chbars .bv.nd{color:var(--muted);letter-spacing:0;font-size:8.5px;font-family:var(--mono)}
+.chrow{font-size:10px;line-height:1.55;color:#4f4d47;padding:4px 0;border-top:1px solid var(--line)}
+.chrow b{color:var(--muted);font-weight:700;font-size:8.5px;font-family:var(--mono);display:inline-block;min-width:52px}
+.chbasis{margin-top:8px;font-size:8.5px;color:var(--muted);background:#f7f6f2;padding:6px 8px;border-radius:5px;line-height:1.5}
+
+/* VISUAL DNA */
+.vd{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.vdh,.vdr{display:grid;grid-template-columns:1.1fr 1.1fr .8fr 1.6fr;gap:14px;padding:11px 15px;background:#fff}
+.vdh{background:#f6f4ee;font-size:8.5px;font-weight:800;letter-spacing:.06em;color:#77756e;text-transform:uppercase}
+.vdr{font-size:10.5px;line-height:1.55}
+.vdr .e{font-weight:800;font-size:11.5px}
+.vdr .m{color:#4f4d47}
+.vdr .em{color:var(--blue);font-weight:700}
+.vdr .u{color:#5b5952}
+
+/* FAN LANGUAGE */
+.fl{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.flc{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px;display:flex;flex-direction:column;gap:8px}
+.flh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.flt{font-weight:800;font-size:14px}
+.fllbl{font-size:7.5px;font-weight:900;padding:3px 7px;border-radius:5px;white-space:nowrap;letter-spacing:.05em}
+.fllbl.safe{background:var(--lime);color:#1c2b06}
+.fllbl.caution{background:var(--pink);color:#3a0a34}
+.fllbl.no{background:var(--orange);color:#fff}
+.flrow{font-size:10px;line-height:1.55;color:#4f4d47}
+.flrow b{color:var(--muted);font-weight:700;font-size:8.5px;font-family:var(--mono);display:inline-block;min-width:74px}
+.fluse{background:var(--blue2);color:#243a8a;font-size:10px;line-height:1.55;padding:8px 10px;border-radius:6px;margin-top:auto}
+
+/* LANDMINE */
+.lm{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.lmr{display:grid;grid-template-columns:auto 1.2fr 1.3fr 1.4fr;gap:14px;padding:12px 15px;background:#fff;align-items:start}
+.lmlv{font-size:8px;font-weight:900;padding:4px 8px;border-radius:5px;white-space:nowrap;letter-spacing:.04em}
+.lmlv.CRITICAL{background:var(--red);color:#fff}
+.lmlv.HIGH{background:var(--orange);color:#fff}
+.lmlv.MEDIUM{background:var(--pink2);color:#a63c9a}
+.lmlv.LOW{background:#efede7;color:#666}
+.lmr .t{font-weight:800;font-size:11.5px;line-height:1.4}
+.lmr .d{font-size:10px;color:var(--muted);line-height:1.55}
+.lmr .w{font-size:10px;color:#4f4d47;line-height:1.55}
+.lmr .w::before{content:"WHY ";font-family:var(--mono);font-size:8px;color:var(--blue);font-weight:800}
+
+/* source badge */
+.sb{font-size:7.5px;font-weight:800;padding:2px 5px;border-radius:3px;white-space:nowrap;letter-spacing:.03em}
+.sb.OFFICIAL{background:var(--blue);color:#fff}
+.sb.MEDIA{background:var(--blue2);color:var(--blue)}
+.sb["COMMUNITY SIGNAL"],.sb.COMMUNITY{background:var(--pink2);color:#a63c9a}
+.sb.UNVERIFIED{background:var(--orange2);color:#a04a10}
+
+/* ORIGINAL IP */
+.oip{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.oipc{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px}
+.oipc.gap{border-color:#ffc6a0;background:var(--orange2)}
+.oipc.rights{border-color:var(--red);background:var(--red2)}
+.oipc h4{font-size:11px;margin:0 0 8px;font-family:var(--mono);letter-spacing:.05em;font-weight:800}
+.oipc.gap h4,.oipc.rights h4{color:#a04a10}
+.oipc.rights h4{color:var(--red)}
+.oipc p{font-size:10.5px;line-height:1.7;color:#4f4d47;margin:0}
+.oipc.gap p,.oipc.rights p{color:#8a5636}
+
+/* TIMELINE */
+.tl{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tlr{display:grid;grid-template-columns:90px 1.1fr 1.2fr 1.5fr;gap:14px;padding:12px 15px;background:#fff;align-items:start}
+.tlr.hot{background:#f4f3f0;border-left:3px solid var(--accent)}
+.tlr .d{font-family:var(--mono);font-size:9.5px;color:var(--muted);font-weight:700}
+.tlr .e{font-weight:800;font-size:11.5px;line-height:1.4}
+.tlr .f{font-size:10px;color:#4f4d47;line-height:1.55}
+.tlr .f::before{content:"FAN ";font-family:var(--mono);font-size:8px;color:#c23bb3;font-weight:800}
+.tlr .m{font-size:10px;color:#4f4d47;line-height:1.55}
+.tlr .m::before{content:"MKT ";font-family:var(--mono);font-size:8px;color:var(--blue);font-weight:800}
+
+/* CREATIVE STARTER */
+.cs{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.csc{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px}
+.csc h4{font-family:var(--mono);font-size:10px;font-weight:900;letter-spacing:.08em;color:var(--blue);margin:0 0 10px}
+.csrow{font-size:10.5px;line-height:1.6;color:#4f4d47;padding:5px 0;border-top:1px solid var(--line)}
+.csrow:first-of-type{border-top:0}
+.csrow b{color:var(--muted);font-weight:700;font-size:8.5px;font-family:var(--mono);display:inline-block;min-width:70px}
+.csrow.avoid{background:var(--orange2);color:#8a5636;padding:8px 10px;border-radius:6px;margin-top:8px;border:0}
+.csrow.avoid b{color:#a04a10}
+
+/* sources / gaps */
+.srcs{display:flex;flex-direction:column;gap:6px}
+.srcr{display:flex;gap:9px;align-items:center;font-size:10.5px;padding:7px 11px;background:#fff;border:1px solid var(--line);border-radius:7px}
+.gapbox{background:var(--orange2);border:1px solid #ffc6a0;border-radius:10px;padding:14px 16px}
+.gapbox strong{font-size:11px;color:#a04a10;display:block;margin-bottom:6px}
+.gapbox p{font-size:10px;color:#8a5636;line-height:1.7;margin:0}
+.note{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px 16px;font-size:10px;color:var(--muted);line-height:1.65}
+.note b{color:var(--ink)}
+.nodata{background:#f7f6f2;border:1px dashed var(--line);border-radius:8px;padding:14px;font-size:10.5px;color:var(--muted);text-align:center;font-family:var(--mono)}
+.footer-note{margin-top:22px;font-size:9px;color:#9a978f;text-align:center}
+
+@media(max-width:1400px){.gcards{grid-template-columns:repeat(3,1fr)}.ic5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1150px){
+  .layout{grid-template-columns:200px minmax(0,1fr)}.main{padding:22px 18px 60px}
+  .g4{grid-template-columns:repeat(2,1fr)}.g3,.g2,.g5{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr}.hside{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:14px 0 0}
+  .gcards{grid-template-columns:repeat(2,1fr)}.chs,.fl,.oip,.cs{grid-template-columns:1fr}
+  .vdh,.vdr,.lmr,.tlr{grid-template-columns:1fr;gap:5px}
+  .vdh{display:none}
+  .qjump{margin:0 -18px 18px;padding:9px 18px}
+}
+@media(max-width:760px){
+  .topbar{height:auto;padding:12px 14px;flex-wrap:wrap}.tsearch input{width:100%}.pill{display:none}
+  .layout{display:block}
+  .sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px;display:flex;overflow:auto;gap:4px}
+  .pmini,.navlabel{display:none}.nav-item{width:auto;white-space:nowrap}.nnum{display:none}
+  .main{padding:18px 14px 50px}.gcards,.ic5{grid-template-columns:1fr}.g4{grid-template-columns:1fr}
+}
+@media print{.topbar,.sidebar,.qjump,.filters{display:none!important}.layout{display:block}
+  .main{padding:0;max-width:none}.view{display:block!important;page-break-before:always}
+  .card,.hero,.cf{box-shadow:none;break-inside:avoid}body{background:#fff}}
+</style>
+
+<header class="topbar">
+  <div class="brand"><div class="bm">GCI</div>
+    <div><h1>NETMARBLE GAME CREATIVE INTELLIGENCE</h1>
+    <p>게임을 모르는 디자이너가 광고를 만들기 전에 알아야 하는 것</p></div></div>
+  <div class="tsearch">
+    <input type="search" id="q" placeholder="게임·캐릭터·키워드 검색" autocomplete="off" />
+    <span class="pill" id="pill">14 TITLES</span>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="pmini"><div class="eyebrow">INTELLIGENCE DB</div><h2>넷마블 14개 타이틀</h2>
+    <p>2026.08 기준 · 서비스 12 / 미출시 2</p></div>
+  <div class="navlabel">HOME</div>
+  <button class="nav-item active" data-v="home"><span class="nnum">00</span>전체 인덱스</button>
+  <div id="navList"></div>
+</aside>
+<main class="main" id="main"></main>
+</div>
+<script>
+/* ============================================================
+   NETMARBLE GAME CREATIVE INTELLIGENCE — DATA LAYER
+   14 titles · 2026.08 기준
+   ipClass  OWN | LEGACY | ACQUIRED | LICENSED | LICENSED_EXP | EXT_PUB
+   maturity HIGH | MEDIUM | LOW
+   asset    가장 강력한 마케팅 자산 (CHARACTER/WORLD/SYSTEM/FANDOM/COMPETITION/POWER)
+   ============================================================ */
+
+const IPCLASS = {
+  OWN:          {label:"OWN IP",              desc:"넷마블 자체 신규 IP",                    tone:"blue"},
+  LEGACY:       {label:"LEGACY IP",           desc:"자사 구작 기반 후속작·리메이크",          tone:"blue"},
+  ACQUIRED:     {label:"ACQUIRED IP",         desc:"외부 IP를 인수해 보유",                  tone:"blue"},
+  LICENSED:     {label:"LICENSED IP",         desc:"외부 원작 라이선스",                    tone:"pink"},
+  LICENSED_EXP: {label:"LICENSED + ORIGINAL", desc:"라이선스 원작 + 게임 오리지널 확장",      tone:"pink"},
+  EXT_PUB:      {label:"EXTERNAL / PUBLISHING",desc:"외부 개발사 · 넷마블 퍼블리싱",          tone:"lime"}
+};
+
+const G = [
+{
+ id:"slva", no:"01", name:"나 혼자만 레벨업: 어라이즈", short:"나혼렙 ARISE",
+ ipClass:"LICENSED", genre:"액션 RPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블", release:"2024.05.08", plat:"모바일 · PC · 콘솔", region:"글로벌",
+ sw:["#0E1420","#2A2140","#7B4FD9","#4A7FE8"],
+ asset:"POWER", assetNote:"캐릭터와 성장 판타지가 동시에 자산. 그림자 군단이 둘을 잇는다",
+ one:"최약체였던 성진우가 되어, 쓰러뜨린 적을 그림자 군단으로 거느리며 최강이 되는 액션 RPG.",
+ coreFantasy:{code:"POWER FANTASY", flow:["약함","각성","성장","압도","군단"],
+   desc:"이 IP의 중독성은 격차가 뒤집히는 데 있다. 성장의 증거가 수치가 아니라 <b>눈에 보이는 군세</b>로 쌓인다는 점이 광고 소재로서의 최대 자산."},
+ iconic5:[
+  ["\"일어나라\" 그림자 소환","SCENE","IP 전체를 대표하는 단 하나의 장면","★★★★★"],
+  ["그림자 군단","OBJECT","성장을 시각화하는 군집. 실루엣만으로 성립","★★★★★"],
+  ["게이트 (푸른 균열)","SYMBOL","세계관을 한 컷에 설명하는 장치","★★★★☆"],
+  ["성진우","CHARACTER","검은 코트·날카로운 인상. 원작 인지도 최상","★★★★★"],
+  ["현대 도시 ↔ 이세계 던전","WORLD","이 IP의 시그니처 대비. 중세만으로 구성 시 정체성 소실","★★★★☆"]],
+ heat:[
+  {n:"성진우", role:"주인공·플레이어", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"원작 주인공. 각성 전후의 격차가 팬 반응의 핵심", scene:"\"일어나라\" 그림자 소환",
+   rel:"그림자 군단의 주인", line:"일어나라", nick:"—", now:"2026.07 '그림자 군주 성진우' 계승자 추가로 화제 재점화",
+   basis:"OFFICIAL — 공식 채널 노출 빈도 최상, 2026.07 업데이트 전면 배치"},
+  {n:"차해인", role:"플레이어블 헌터", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★☆☆", sns:"★★★★☆",
+   why:"원작 주요 히로인. 명속성 딜러로 구현", scene:"NOT ENOUGH PUBLIC DATA",
+   rel:"성진우와의 관계 — 각색 금지 영역", line:"NOT ENOUGH PUBLIC DATA", nick:"NOT ENOUGH PUBLIC DATA", now:"상시 라인업",
+   basis:"MEDIA — 매체 DB 기준 역할 확인. 인기 순위 근거 없음"},
+  {n:"고건희", role:"플레이어블 헌터", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★☆☆", ua:"★★☆☆☆", sns:"★★☆☆☆",
+   why:"명속성 탱커·브레이크 특화", scene:"—", rel:"—", line:"—", nick:"—", now:"상시 라인업",
+   basis:"MEDIA — 성능 정보만 확인"},
+  {n:"그림자 군주 성진우", role:"계승자(암속성)", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★★",
+   why:"원작 최종 형태가 플레이어블로 구현된 시점", scene:"그림자들과의 합동 공격",
+   rel:"성진우의 최종 형태", line:"—", nick:"—", now:"2026.07 신규 — 현 시점 화제성 최고",
+   basis:"OFFICIAL — 2026.07 업데이트 헤드라인"}],
+ vdna:[
+  ["그림자 군단","쓰러뜨린 적이 내 군세가 된다","압도 · 고독하지 않음","개별 얼굴 없는 실루엣 군집으로 AI 생성 가능. 수를 늘려 성장 표현"],
+  ["게이트 (푸른 균열)","현실에 이세계가 열린다","불안 · 일상의 붕괴","도심 야경 + 푸른 균열. 신규 유저에게 세계관을 3초에 전달"],
+  ["보랏빛 검은 안개","그림자가 일어나는 순간의 물질","경외 · 지배","소환 이펙트. 아래에서 위로 솟는 방향성 고정"],
+  ["현대 복식 + 던전","헌터는 직업이다","현실감","전술복·코트. 판타지 갑옷 금지"],
+  ["줌아웃 리빌","1인 클로즈업 → 군단이 드러남","반전 · 규모","이 IP의 카메라 문법. 컷 순서를 뒤집지 않는다"]],
+ fanLang:[
+  {t:"일어나라 / Arise / 아리세", risk:"safe", origin:"원작 웹소설·웹툰. 성진우가 그림자를 일으키는 명령어",
+   when:"원작 연재기부터", why:"IP를 대표하는 단 하나의 대사. 애니메이션화로 글로벌 확산",
+   now:"현재도 IP의 시그니처", use:"광고 카피 1순위 자산. ⚠ 성진우 외 인물이 사용하면 IP 시그니처 훼손",
+   src:"OFFICIAL"},
+  {t:"나혼렙", risk:"safe", origin:"국내 유저 약칭", when:"원작 웹툰 연재기",
+   why:"제목이 길어 자연 발생", now:"국내 표준 약칭", use:"국내 채널 자유 사용", src:"COMMUNITY SIGNAL"},
+  {t:"군주", risk:"safe", origin:"원작 설정 — 세계관 최상위 존재", when:"원작",
+   why:"작품 내 최상위 계급 지칭", now:"게임에서도 계승자 명칭에 사용", use:"세계관 어휘로 사용 가능", src:"OFFICIAL"},
+  {t:"억까", risk:"no", origin:"게임이 부당하게 진행을 막는다고 느낄 때 쓰는 표현",
+   when:"출시 이후 성장 정체 구간·고난도 보스 관련", why:"레벨 제한과 저스트 회피 연속 요구 보스에 대한 반응",
+   now:"2026.04 에볼루션 업데이트로 완화됐으나 표현은 잔존",
+   use:"공식 사용 금지. 난이도를 세일즈 포인트로 쓰면 이 비판과 직결", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"원작 캐릭터 성격·관계 각색", lv:"CRITICAL",
+   d:"원작자 검수 IP이며 글로벌 팬덤이 크다. 특히 성진우와 차해인의 관계 묘사",
+   why:"이 IP 최대 지뢰. 불확실하면 성진우 단독 연출로 간다", src:"OFFICIAL"},
+  {t:"\"일어나라\"를 성진우 외 인물이 사용", lv:"HIGH",
+   d:"IP 시그니처 대사의 소유자가 흐려진다", why:"팬이 즉시 식별하며, 카피 자산의 가치를 스스로 깎는다", src:"OFFICIAL"},
+  {t:"성진우를 처음부터 강자로만 묘사", lv:"HIGH",
+   d:"E급 최약체라는 전제가 사라지면 역전 서사가 무너진다", why:"이 IP가 팔리는 이유가 격차다. 강함만 보여주면 흔한 액션 RPG가 된다", src:"OFFICIAL"},
+  {t:"난이도를 세일즈 포인트로 사용", lv:"MEDIUM",
+   d:"성장 정체 구간에 대한 '억까' 반응이 존재", why:"2주년 에볼루션이 진입 장벽을 낮춘 방향과 메시지가 충돌", src:"COMMUNITY SIGNAL"},
+  {t:"「어라이즈 오버드라이브」 에셋 혼용", lv:"HIGH",
+   d:"오버드라이브는 콘솔 싱글 패키지로 완전히 별개 제품", why:"유저 혼동 + IP 리스크. 소재 출처를 제품별로 분리 관리해야 한다", src:"OFFICIAL"}],
+ origIP:{
+  memory:"추공 웹소설 → 웹툰 → 애니메이션. 글로벌 누적 143억 조회. 대표 장면은 '일어나라' 그림자 소환, 대표 대사도 동일. 헌터 등급(E~S)이 신분인 세계관.",
+  game:"원작 스토리 재현 + 게임 오리지널 헌터 스토리 병행. 저스트 회피·QTE 기반 액션. 2026.07 그림자 군주 성진우 계승자 구현.",
+  gap:"원작 팬은 명장면 재현을 기대하고 게임은 오리지널 확장을 병행한다. 광고에서 어느 쪽을 말하는지 명확해야 한다.",
+  sens:"캐릭터 성격·관계 각색 금지. '일어나라'는 성진우 전용. 오버드라이브와 에셋 분리.",
+  rights:"원작사 IP 가이드 미확보 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"원작", e:"웹소설 → 웹툰 → 애니", fan:"글로벌 누적 143억 조회", mkt:"게임 설명보다 IP 인지를 먼저 써도 되는 드문 조건", hot:false},
+  {d:"2024.05.08", e:"글로벌 출시", fan:"원작 팬 대거 유입", mkt:"약 1개월 누적 매출 7천만 달러 · 한국 액션 1위, 미국·일본 2위", hot:true},
+  {d:"2025 하반기", e:"Steam·콘솔 확장", fan:"NOT ENOUGH PUBLIC DATA", mkt:"플랫폼별 소재 분리 필요성 발생", hot:false},
+  {d:"2026.04", e:"2주년 '에볼루션'", fan:"성장 정체 비판에 대한 대응으로 인식", mkt:"SSR 헌터 15명 지급 — 신규 유입 캠페인의 실질 근거", hot:true},
+  {d:"2026.07", e:"그림자 군주 성진우 추가", fan:"원작 최종 형태 구현에 화제 집중", mkt:"현 시점 팬덤 화제성 최고 소재", hot:true}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 과거 UA·브랜드 필름·캠페인 사례 미조사",
+ starter:{
+  ua:{char:"성진우 / 그림자 군주 성진우", hook:"군단 점호 — 그림자가 하나씩 일어서며 수가 불어나는 카운트업",
+   sit:"던전에서 보스를 쓰러뜨린 직후", world:"게이트가 열린 현대 도시", fantasy:"POWER FANTASY",
+   sec3:"1인 클로즈업 → 줌아웃하며 등 뒤 수백의 실루엣", avoid:"난이도 강조 / 처음부터 강한 성진우"},
+  banner:{hero:"성진우", sym:"그림자 군단 실루엣", copy:"일어나라 · 각성 · 최약체 · 군주",
+   bg:"어두운 던전 + 보랏빛 안개", trigger:"게이트의 푸른 균열"},
+  sns:{meme:"\"일어나라\" 구조 활용 (성진우 화자 고정)", rel:"성진우 ↔ 그림자 병사",
+   lang:"나혼렙 · 군주 · 각성", idea:"내 그림자 군단 만들기 참여형"},
+  promo:{hero:"게이트가 열린 도심 야경", world:"헌터 등급 E~S 서열", motif:"균열이 벌어지는 인터랙션",
+   scroll:"E급 → S급으로 내려가는 스크롤", motion:"아래에서 솟는 검은 안개"},
+  ai:{keep:"게이트 푸른빛 · 그림자 보라/검정 · 현대 도시 · 줌아웃 리빌", char:"⛔ 캐릭터 생성 비권장 — 원작자 검수 IP",
+   world:"현대 + 이세계 던전 병존. 중세만으로 구성 금지", avoid:"중세 판타지 갑옷 · 밝은 톤 · 마법 지팡이류 generic fantasy"}},
+ sources:[["공식 사이트 sololeveling.netmarble.com","OFFICIAL"],["Sensor Tower 매출 자료","MEDIA"],
+  ["한국경제 — 챔피언십 2026·에볼루션 업데이트","MEDIA"],["베타뉴스 — 그림자 군주 성진우 업데이트","MEDIA"],
+  ["국민트리 — 헌터 차해인·고건희 상세","MEDIA"],["나무위키 — 평가·비판","COMMUNITY SIGNAL"]],
+ gaps:["ICONIC LINES — \"일어나라\" 외 미조사","MARKETING HISTORY — 미조사","원작사 IP 가이드 (RIGHTS CHECK REQUIRED)","캐릭터 인기투표 등 CHARACTER HEAT 근거 자료"]
+},
+
+{
+ id:"raven2", no:"02", name:"레이븐2", short:"레이븐2",
+ ipClass:"LEGACY", genre:"다크판타지 MMORPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블", release:"2024.05.29", plat:"모바일 · PC", region:"한국 · 일본 · 대만/홍콩/마카오",
+ sw:["#14161A","#2B3038","#4A5262","#C8862A"],
+ asset:"WORLD", assetNote:"고정 주인공이 없다. 세계관 오브젝트(헤븐스톤)가 캐릭터보다 강한 자산",
+ one:"거신들의 유해가 재앙의 씨앗으로 흩어진 세계에서, 그 힘을 다루는 '레이븐'이 되어 싸우는 다크 판타지 MMORPG.",
+ coreFantasy:{code:"CURSED POWER", flow:["재앙","유해","계승","강해짐","대가"],
+   desc:"세계관 설정과 핵심 성장 시스템이 <b>같은 물건</b>을 가리킨다. 강해지는 행위가 곧 재앙의 원인을 몸에 지니는 행위다. 경쟁작과 구분되는 유일한 지점."},
+ iconic5:[
+  ["헤븐스톤","OBJECT","거신의 유해 조각. 이 IP의 단 하나뿐인 시그니처","★★★★★"],
+  ["거신의 잔해 지형","WORLD","산맥인 줄 알았던 것이 뼈였음이 드러나는 스케일","★★★★☆"],
+  ["저광량 단일 광원","COLOR","어둠 속 발광체가 인물을 아래에서 비추는 구도","★★★★☆"],
+  ["클래스 7종 무기 실루엣","OBJECT","검+방패 / 대검 / 활 / 지팡이 / 창","★★★☆☆"],
+  ["ZERO 서버","SYMBOL","2주년 리셋. 현 시점 신규 유입의 상징어","★★★★☆"]],
+ heat:[
+  {n:"플레이어 = 레이븐", role:"주인공(커스터마이징)", heat:"—", vis:"★★★☆☆", ua:"★★★☆☆", sns:"★★☆☆☆",
+   why:"고정 주인공이 없는 MMORPG. 클래스가 캐릭터 정체성을 대신한다", scene:"헤븐스톤을 집어 드는 손",
+   rel:"—", line:"—", nick:"—", now:"상시", basis:"OFFICIAL — 게임 구조상 고정 캐릭터 부재"},
+  {n:"워로드", role:"신규 클래스(창)", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"2026.05 2주년 신규 클래스", scene:"NOT ENOUGH PUBLIC DATA", rel:"—", line:"—", nick:"—",
+   now:"최신 클래스 — UA 신규 소재 1순위", basis:"OFFICIAL — 2주년 업데이트 헤드라인"},
+  {n:"도미니온", role:"레이븐의 스승", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★☆☆☆", ua:"★★☆☆☆", sns:"★☆☆☆☆",
+   why:"영원한 갈증에 사로잡혀 새로운 악을 찾아 헤맴. 전작 연계점", scene:"—", rel:"레이븐의 스승",
+   line:"—", nick:"—", now:"서사 자산", basis:"COMMUNITY SIGNAL — 위키 기반"},
+  {n:"기간테스", role:"고대의 백룡", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★☆☆", ua:"★★☆☆☆", sns:"★☆☆☆☆",
+   why:"시간을 거슬러 고대 악마를 막으려 함. 현 스토리 타임 패러독스의 기원", scene:"—",
+   rel:"전작 연계점", line:"—", nick:"—", now:"서사 자산", basis:"COMMUNITY SIGNAL — 위키 기반"}],
+ vdna:[
+  ["헤븐스톤","거신의 유해 = 재앙의 씨앗 = 성장 장비","경외 · 불길함","발광 오브젝트 클로즈업. 강화석처럼 그리면 세계관 붕괴"],
+  ["저채도 다크 + 단일 발광","빛이 귀한 세계","절망 · 집념","배경은 강철회색, 발광색만 채도 유지. AI 배경 생성 시 팔레트 고정"],
+  ["스케일 대비","거대한 것 아래 선 인간","무력감 → 도전","로우앵글 와이드. '블록버스터' 포지셔닝의 시각적 근거"],
+  ["거친 질감","마모된 금속·돌·먼지","생존감","매끈한 렌더링 금지. 손상과 때가 있어야 한다"],
+  ["클래스 무기 실루엣","선택은 되돌릴 수 없다","각오","무기만으로 클래스 구분. 변경 불가 설정이 선택의 무게를 만든다"]],
+ fanLang:[
+  {t:"헤븐스톤 세팅", risk:"safe", origin:"유저 공략 문화 — 사냥용·보스용 조합을 논하는 용어",
+   when:"출시 이후", why:"성장이 단순 수치가 아니라 조합 설계라서 연구 문화가 자생",
+   now:"공략 게시판에서 상시 사용", use:"이 단어를 정확히 쓰면 '아는 사람이 만들었다'는 신호", src:"COMMUNITY SIGNAL"},
+  {t:"제로 / ZERO 서버", risk:"safe", origin:"2026.05.27 2주년 특화 서버 공식 명칭", when:"2026.05",
+   why:"고착화된 경쟁 구도를 리셋한 서버", now:"신규·복귀 담론의 중심어",
+   use:"현 시점 신규 유입 캠페인 핵심 키워드", src:"OFFICIAL"},
+  {t:"말뚝딜", risk:"caution", origin:"제자리에 서서 자동으로 때리는 전투 모션을 비꼬는 표현",
+   when:"출시 직후", why:"구세대적이라는 지적", now:"전투 관련 비판에 상시 등장",
+   use:"공식 채널 사용 금지. 자동전투 화면을 길게 노출하지 않는 방식으로 회피", src:"COMMUNITY SIGNAL"},
+  {t:"리니지라이크", risk:"no", origin:"국내 하드코어 MMORPG를 묶어 부르는 장르 규정어",
+   when:"출시 직후", why:"차별성이 없다는 비판과 함께 사용", now:"상시",
+   use:"공식이 먼저 꺼내면 안 되는 단어", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"과금 구조 노골화", lv:"HIGH", d:"가장 크고 반복적인 불만 지점",
+   why:"광고에서 결제를 직접 자극하면 역효과. 성장의 감각만 보여주고 결제 경로는 노출하지 않는다", src:"COMMUNITY SIGNAL"},
+  {t:"헤븐스톤을 일반 강화석처럼 표현", lv:"HIGH", d:"거신의 유해라는 맥락이 사라진다",
+   why:"세계관 근간이자 유일한 차별점. 격하하면 여느 MMORPG가 된다", src:"OFFICIAL"},
+  {t:"자동전투 화면 장시간 노출", lv:"MEDIUM", d:"'말뚝딜' 비판을 스스로 부각",
+   why:"컷을 짧게, 카메라·이펙트로 밀도를 만든다", src:"COMMUNITY SIGNAL"},
+  {t:"전작 캐릭터 임의 등장", lv:"HIGH", d:"전작 주인공(엘프·휴먼·반고)은 실제로 등장하지 않는다",
+   why:"허위 정보. 연계는 헤븐스톤·도미니온·기간테스로 한정", src:"COMMUNITY SIGNAL"},
+  {t:"경쟁작과 구분 안 되는 연출", lv:"MEDIUM", d:"성·공성·전투력 숫자만으로 구성",
+   why:"'리니지라이크' 비판을 강화. 헤븐스톤 같은 고유 자산으로 차별화", src:"COMMUNITY SIGNAL"}],
+ origIP:null,
+ timeline:[
+  {d:"2015", e:"전작 「레이븐」", fan:"대한민국 게임대상 6관왕 · 출시 40일 DAU 100만", mkt:"'레이븐'이라는 이름 자체가 신뢰 자산", hot:false},
+  {d:"2024.05.29", e:"레이븐2 출시", fan:"구글플레이 매출 최상위권 진입", mkt:"초기 흥행 성공", hot:true},
+  {d:"출시 이후", e:"과금·모션 비판", fan:"리니지라이크 규정 + '말뚝딜' 지적 동시 발생", mkt:"광고에서 자동전투·과금 노출을 피해야 하는 근거", hot:false},
+  {d:"2026.05.27", e:"2주년 특화 서버 ZERO", fan:"신규·복귀에 실질적 기회로 수용", mkt:"경쟁 구도 고착화 타개가 도입 사유 — 현 UA 최우선 맥락", hot:true}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 과거 UA·캠페인 사례 미조사",
+ starter:{
+  ua:{char:"클래스 7종 실루엣 / 워로드(신규)", hook:"신의 유해를 걸친 자 — 헤븐스톤이 갑옷에 박히며 발광이 번진다",
+   sit:"거신의 잔해 앞", world:"거신의 무덤이 된 폐허", fantasy:"CURSED POWER",
+   sec3:"손바닥을 태우는 조각을 놓지 않는 클로즈업", avoid:"자동전투 화면 / 과금 유도 / 밝은 톤"},
+  banner:{hero:"클래스 실루엣", sym:"헤븐스톤 발광", copy:"유해 · 파편 · 거신 · 환란 · 계승",
+   bg:"저채도 폐허 성채", trigger:"헤븐스톤의 빛"},
+  sns:{meme:"헤븐스톤 세팅 공략 문화 활용", rel:"—", lang:"헤븐스톤 세팅 · 제로 서버",
+   idea:"내 세팅 공유 참여형"},
+  promo:{hero:"산맥인 줄 알았던 거신의 갈비뼈", world:"세 여신 → 거신 → 유해의 창세 구조",
+   motif:"조각을 집어 드는 인터랙션", scroll:"유해가 흩어진 지도", motion:"발광이 번지는 확산"},
+  ai:{keep:"저채도 다크 + 발광 단일 광원 · 중세 고딕 시대성 · 헤븐스톤 형태", char:"실루엣·후면·원경 한정",
+   world:"거신 잔해가 솟은 폐허 지형", avoid:"밝은 목가적 판타지 · 코믹 표현 · SF/현대 요소"}},
+ sources:[["공식 사이트 raven2.netmarble.com","OFFICIAL"],["넷마블 보도자료 — 출시일 확정","OFFICIAL"],
+  ["넷마블 채널 — 블록버스터 다크 판타지","OFFICIAL"],["다음뉴스·인벤 — 2주년 ZERO 서버","MEDIA"],
+  ["게임메카 — 제로 월드 인터뷰","MEDIA"],["나무위키 — 스토리·전작 연계","COMMUNITY SIGNAL"]],
+ gaps:["ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","헤븐스톤 공식 아트·컬러값 (내부 자료 필요)","NPC(그웬·시너림·쿠엔틴) 역할 — 공식 확인 필요"]
+},
+
+{
+ id:"vampir", no:"03", name:"뱀피르", short:"뱀피르",
+ ipClass:"OWN", genre:"고딕 다크판타지 MMORPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블네오", release:"2025.08.26", plat:"모바일 · PC", region:"한국 · 대만/홍콩/마카오 · 일본",
+ sw:["#0D0B0C","#4A1219","#8B0F1D","#E8E2D9"],
+ asset:"SYSTEM", assetNote:"흡혈=회복이라는 구조가 캐릭터보다 강한 자산. 힐러 부재가 장르 문법을 깬다",
+ one:"모든 플레이어가 뱀파이어인 세계에서, 적의 피를 빨아 스스로 회복하며 싸우는 고딕 MMORPG.",
+ coreFantasy:{code:"PREDATOR", flow:["갈증","포식","회복","가속","군림"],
+   desc:"힐러가 없다. 회복은 오직 흡혈로만 이뤄지므로 <b>공격이 곧 생존</b>이다. 탱–딜–힐 문법이 통하지 않는 것이 이 게임의 전부."},
+ iconic5:[
+  ["흡혈 모션","SCENE","HP 바닥에서 목을 물어 되살아나는 순간","★★★★★"],
+  ["3색 팔레트","COLOR","검정 · 심홍 · 창백한 흰색. 이 대비가 정체성","★★★★★"],
+  ["낫 (그림리퍼)","OBJECT","실루엣이 가장 강한 클래스 무기","★★★★☆"],
+  ["고딕 성채 야경","WORLD","달빛·촛불·스테인드글라스 투과광","★★★★☆"],
+  ["카인","SYMBOL","최초의 살해자이자 뱀파이어의 시조","★★★☆☆"]],
+ heat:[
+  {n:"플레이어 = 뱀파이어", role:"주인공(커스터마이징)", heat:"—", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"고정 주인공 없음. 카인의 피를 이어받은 존재", scene:"흡혈로 되살아나는 순간",
+   rel:"—", line:"—", nick:"—", now:"상시", basis:"OFFICIAL — 게임 구조"},
+  {n:"그림리퍼", role:"클래스 — 낫 은신 암살자", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★★★", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"낫 = 죽음의 상징. 실루엣 인지도가 가장 높다", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"비주얼 자산", basis:"OFFICIAL — 클래스 페이지. 인기 순위 근거 없음"},
+  {n:"블러드스테인", role:"클래스 — 광전사형 탱딜", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★★☆", ua:"★★★★☆", sns:"★★☆☆☆",
+   why:"피를 뒤집어쓴 이미지가 가장 잘 어울린다", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"비주얼 자산", basis:"OFFICIAL — 클래스 페이지"},
+  {n:"카니지", role:"클래스 — 총기", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★☆☆", ua:"★★☆☆☆", sns:"★★☆☆☆",
+   why:"중세 고딕 세계관에 총기. 톤 통일 필요", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 고딕 총기 톤으로 통일 필요 — 실제 디자인 내부 자료 필요", basis:"OFFICIAL — 클래스 페이지"}],
+ vdna:[
+  ["피 (血)","생존 수단이자 저주의 증거","갈증 · 관능","심홍은 '양'이 아니라 '질감'으로. 유혈 과다는 심의 리스크"],
+  ["3색 대비","검정(어둠)·심홍(피)·창백(죽음)","우아함 속 잔혹","이 3색 외 색을 넣지 않는 것이 톤 유지의 핵심"],
+  ["달빛 단일 광원","밤이 그들의 시간","고립 · 위압","저광량. 스테인드글라스 투과광이 고딕 시그니처"],
+  ["송곳니·낫·성물","포식자의 도구","공포 · 성스러움의 전복","오브젝트 정물화 스타일이 AI 생성에 적합"],
+  ["느린 예비동작 → 순간 포식","포식자의 리듬","긴장 → 해소","액션 편집 리듬. 빠르게만 자르면 이 IP가 아니다"]],
+ fanLang:[
+  {t:"학살", risk:"safe", origin:"몬스터 대상 흡혈 기술 공식 명칭", when:"출시 시점",
+   why:"추가 경험치·골드 + HP/MP 회복 + 35초 아드레날린 버프를 한 번에 주는 핵심 기술",
+   now:"전투 리듬의 중심", use:"게임 고유 용어. 정확히 쓰면 신뢰 신호", src:"OFFICIAL"},
+  {t:"아드레날린", risk:"safe", origin:"흡혈 성공 시 35초간 붙는 강화 상태", when:"출시 시점",
+   why:"끊기지 않게 사냥을 이어가는 것이 플레이 리듬", now:"상시",
+   use:"'물어뜯을수록 강해진다' 메시지로 직결", src:"OFFICIAL"},
+  {t:"글로벌2", risk:"safe", origin:"일본 이용자가 합류한 서버 공식 명칭", when:"2026",
+   why:"기존 한국·대만·홍콩·마카오 유저와 함께 경쟁하는 구조", now:"일본 공략의 중심",
+   use:"일본 캠페인 핵심 키워드. '신규 서버'가 아니라 '전장 합류' 프레임", src:"OFFICIAL"},
+  {t:"리니지라이크", risk:"no", origin:"국내 하드코어 MMORPG 장르 규정어", when:"출시 이후",
+   why:"소재는 새롭지만 구조는 익숙하다는 비판", now:"상시", use:"공식 사용 금지", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"흡혈 장면 생략", lv:"CRITICAL", d:"유일한 구조적 차별점이 화면에서 사라진다",
+   why:"흡혈이 빠지면 여느 다크 판타지 MMORPG와 구분 불가. 이 게임 최대 리스크", src:"OFFICIAL"},
+  {t:"레이븐2와 같은 톤으로 제작", lv:"HIGH", d:"레이븐2=거칠고 절망적 / 뱀피르=우아하고 관능적",
+   why:"둘 다 어둡지만 질감이 다르다. 섞이면 사내 두 타이틀이 서로를 대체한다", src:"OFFICIAL"},
+  {t:"과금 구조", lv:"HIGH", d:"국내 MMORPG 공통 최대 민감 지점",
+   why:"결제 직접 자극은 역효과. 성장 감각으로 우회", src:"COMMUNITY SIGNAL"},
+  {t:"흔한 뱀파이어 클리셰", lv:"MEDIUM", d:"박쥐·관·마늘",
+   why:"소재의 격이 떨어진다. 카인 신화 기반의 무게 있는 접근이 이 게임의 자산", src:"OFFICIAL"},
+  {t:"종교 표현 수위", lv:"MEDIUM", d:"아담·릴리스·카인·아벨 등 성서 모티프",
+   why:"글로벌 캠페인 시 국가별 종교 표현 기준 검토 필요", src:"OFFICIAL"},
+  {t:"일본을 '신규 서버'로 표현", lv:"MEDIUM", d:"실제로는 기존 유저와 함께 경쟁하는 서버",
+   why:"일본 신규 유저가 진입 후 격차를 체감하면 신뢰가 깨진다", src:"OFFICIAL"}],
+ origIP:null,
+ timeline:[
+  {d:"2025.08.26", e:"정식 출시", fan:"PC·모바일 동시, 10개 월드 30개 서버", mkt:"「리니지2 레볼루션」 주요 개발진 참여가 코어 유저 신뢰 신호", hot:false},
+  {d:"출시 +1개월", e:"매출 1위", fan:"누적 다운로드 40만+", mkt:"누적 매출 4천만 달러+ — 뱀파이어 소재가 국내 시장에서 통했다는 실증", hot:true},
+  {d:"2026", e:"일본 권역 확대", fan:"'글로벌2' 서버에 일본 이용자 합류", mkt:"일본은 고딕·뱀파이어 소비 기반이 두터워 소재 적합도 높음", hot:true},
+  {d:"2026.07", e:"도쿄게임쇼 출격", fan:"NOT ENOUGH PUBLIC DATA", mkt:"일본 공략 본격화 — 현 시점 일본 캠페인 맥락", hot:true}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 과거 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"그림리퍼(낫) / 블러드스테인", hook:"힐러는 없다 — 일반 MMORPG 파티에서 힐러 자리를 지운다",
+   sit:"HP가 바닥난 순간", world:"달빛 드는 고딕 성당", fantasy:"PREDATOR",
+   sec3:"목덜미에 이를 박고 창백한 피부에 혈색이 도는 클로즈업", avoid:"밝은 톤 / 박쥐·관 클리셰 / 과다 유혈"},
+  banner:{hero:"클래스 실루엣(낫 우선)", sym:"핏빛 입자", copy:"피 · 갈증 · 혈통 · 밤 · 포식",
+   bg:"고딕 성채 야경", trigger:"3색 대비(검정·심홍·창백)"},
+  sns:{meme:"NOT ENOUGH PUBLIC DATA — 고딕 톤은 밈 상성이 낮음", rel:"—",
+   lang:"학살 · 아드레날린", idea:"클래스 선택 참여형"},
+  promo:{hero:"달빛 고딕 성당", world:"아담·릴리스 → 카인·아벨의 기원", motif:"흡혈로 화면이 붉어지는 인터랙션",
+   scroll:"태초 → 현재로 내려오는 혈통", motion:"붉은 입자의 응결"},
+  ai:{keep:"3색 팔레트 · 저광량 단일 광원 · 고딕 중세 시대성", char:"실루엣·후면·원경 한정. 얼굴 클로즈업 비권장",
+   world:"고딕 성채·첨탑·납골당 — AI 생성 적합도 최상위", avoid:"현대·SF 요소 · 밝고 따뜻한 톤 · 로맨스 판타지풍 미화"}},
+ sources:[["공식 사이트 vampir.netmarble.com — 클래스","OFFICIAL"],["넷마블 보도자료 — 8/26 정식출시","OFFICIAL"],
+  ["넷마블 뉴스룸 — 글로벌2 일본 권역 확대","OFFICIAL"],["Sensor Tower — 출시 한 달 4천만 달러","MEDIA"],
+  ["게임메카 — 정식 출시 리뷰","MEDIA"],["ZDNet — TGS 출격","MEDIA"],["나무위키 — 세계관·흡혈 시스템","COMMUNITY SIGNAL"]],
+ gaps:["ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","부제 「피의 계승자」 공식 여부","카니지 총기 디자인 (내부 자료 필요)","국가별 유혈·종교 심의 기준"]
+}
+];
+/* ===== GCI DATA · PART 2 — MMORPG 계열 + 수집형 ===== */
+
+const G2 = [
+{
+ id:"rf", no:"04", name:"RF 온라인 넥스트", short:"RF ONLINE NEXT",
+ ipClass:"ACQUIRED", genre:"SF 스페이스오페라 MMORPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"넷마블", release:"2025.03.20", plat:"모바일 · PC", region:"글로벌",
+ sw:["#2E3A48","#6B7684","#A8B2BD","#48C4E0"],
+ asset:"COMPETITION", assetNote:"캐릭터도 세계관도 아닌 '진영 대립 구조'가 자산. 개인은 군대의 일부다",
+ one:"세 국가가 우주에서 자원을 놓고 전쟁하는, 진영 소속이 곧 정체성인 SF MMORPG.",
+ coreFantasy:{code:"BELONGING", flow:["소속","전선","자원","승리","우리"],
+   desc:"다른 사내 MMORPG가 \"나는 얼마나 강한가\"를 판다면 RF는 <b>\"우리는 이길 수 있는가\"</b>를 판다. 사내 유일하게 협력이 경쟁보다 앞서는 타이틀."},
+ iconic5:[
+  ["삼각 구도 전장","SCENE","세 방향에서 밀려오는 군세. 이 IP만의 구성","★★★★★"],
+  ["신기 (거대 병기)","OBJECT","MAU · 런처 · 애니머스. 캐릭터 없이 강렬한 화면","★★★★★"],
+  ["3종족 엠블럼","SYMBOL","아크레시아 · 벨라토 · 코라","★★★★☆"],
+  ["크래그 광산","WORLD","전쟁의 명분. 실리가 걸린 공간","★★★☆☆"],
+  ["바이오 슈트","OBJECT","클래스를 갈아입는 강화복","★★★☆☆"]],
+ heat:[
+  {n:"아크레시아 제국", role:"종족", heat:"★★★★☆", vis:"★★★★★", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"신체를 기계로 대체한 강인한 자들. 사이보그 이미지가 시각적으로 가장 강하다",
+   scene:"기계화 병사 부대의 진군", rel:"3파전의 한 축", line:"—", nick:"—",
+   now:"최종병기 런처", basis:"MEDIA — 매체 기획기사 기준 설정 확인. 인기 순위 근거 없음"},
+  {n:"벨라토 연방", role:"종족", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"아수 대륙 중부 벨라토시티 중심. 다양한 외계 종족의 연방 체제",
+   scene:"다종족 혼성 부대", rel:"3파전의 한 축", line:"—", nick:"—",
+   now:"최종병기 MAU", basis:"MEDIA — 매체 기획기사"},
+  {n:"신성동맹 코라", role:"종족", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★☆☆", ua:"★★★☆☆", sns:"★★☆☆☆",
+   why:"신성 기반의 동맹", scene:"—", rel:"3파전의 한 축", line:"—", nick:"—",
+   now:"최종병기 애니머스 · ⚠ 3종족 중 유일하게 설정 정보 공백",
+   basis:"MEDIA — 명칭만 확인. 설정 상세 공식 확인 필요"},
+  {n:"아비터", role:"신규 바이오 슈트", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★★", sns:"★★★☆☆",
+   why:"최초의 신규 클래스. 근·중거리 딜러, 주력 무기 검", scene:"검을 활용한 화려한 액션",
+   rel:"—", line:"—", nick:"—", now:"현 시점 UA 신규 소재 1순위", basis:"OFFICIAL — 대형 업데이트 헤드라인"}],
+ vdna:[
+  ["신기 (거대 병기)","국가의 핵심 전략 자산","압도 · 경외","전장 강하 순간이 스케일 소재 1순위. 근접 디테일은 인게임 에셋"],
+  ["삼각 구도","양자 대립이 아니라 3파전","긴장 · 동맹과 배신","부감 와이드로 세 방향을 한 화면에. 이 IP만의 구성"],
+  ["금속과 인공광","SF 스페이스 오페라","건조 · 웅장","중세·마법 요소 절대 금지. 사내 유일 SF"],
+  ["부감 군세","개인이 아니라 군대","소속 · 비장","개인 클로즈업 위주 연출은 이 게임 문법이 아니다"],
+  ["종족별 아트 디렉션","기계 / 연합 / 신성","선택의 무게","한 게임에 세 개의 미술이 공존 — 종족별 캠페인 분리 가능"]],
+ fanLang:[
+  {t:"당신은 어느 종족?", risk:"safe", origin:"진영 선택 게임의 첫 질문 구조", when:"원작기부터",
+   why:"소속이 정체성인 게임이라 자연 발생", now:"상시", use:"진영 선택 소구의 정형 포맷", src:"COMMUNITY SIGNAL"},
+  {t:"광산", risk:"safe", origin:"핵심 콘텐츠 '광산 전쟁'의 약칭", when:"원작기부터",
+   why:"크래그 광산 채굴권이 진영전의 목적", now:"핵심 콘텐츠 지칭어",
+   use:"원작 세대가 즉시 반응하는 단어", src:"OFFICIAL"},
+  {t:"신기", risk:"safe", origin:"각 국가의 최종병기 공식 명칭", when:"원작기부터",
+   why:"전쟁의 판도를 가르는 전략 자산", now:"상시", use:"스케일 소재의 이름값", src:"OFFICIAL"},
+  {t:"우주 삼국지", risk:"caution", origin:"매체가 붙인 포지셔닝 표현", when:"출시 쇼케이스 시점",
+   why:"3파전 구조를 직관적으로 설명", now:"매체 기사에 등장",
+   use:"공식 사용 시 IP 톤과의 정합성 확인 필요", src:"MEDIA"}],
+ landmine:[
+  {t:"3종족 전쟁을 빼고 개인 성장만 강조", lv:"CRITICAL",
+   d:"원작이 남긴 것은 캐릭터가 아니라 진영 대립 구조다",
+   why:"20년 IP의 핵심을 놓친 것. 원작 팬 즉시 이탈", src:"OFFICIAL"},
+  {t:"특정 종족만 강하게 묘사", lv:"HIGH", d:"진영 균형 인식이 무너진다",
+   why:"RvR 게임 최대 리스크. 한 종족이 압도하면 나머지 두 종족 유저가 이탈", src:"OFFICIAL"},
+  {t:"중세 판타지 요소 혼입", lv:"HIGH", d:"사내 유일 SF 타이틀의 정체성",
+   why:"마법·용사·검 판타지 어휘가 들어가면 다른 사내 타이틀과 구분이 사라진다", src:"OFFICIAL"},
+  {t:"광산 전쟁을 상위 유저 전용처럼 묘사", lv:"MEDIUM", d:"시간·전력을 갖춘 길드만의 콘텐츠로 보일 때",
+   why:"신규 유저가 참여를 포기한다. 누구나 전선의 일부가 될 수 있음을 보여야 한다", src:"COMMUNITY SIGNAL"},
+  {t:"구작 팬과 현재 게임의 차이", lv:"MEDIUM", d:"2004년 원작 20년 팬덤이 존재",
+   why:"⚠ 구작 팬의 실제 반응은 미조사. COMMUNITY SIGNAL 확보 후 판단 필요", src:"UNVERIFIED"}],
+ origIP:{
+  memory:"「RF 온라인」(2004~). 54개국 2천만 명. SF와 판타지가 결합된 세계관, 3종족 대규모 전쟁이 상징. 국내 온라인 게임사에서 독자적 위치.",
+  game:"넷마블이 2020.09 IP 인수. 3종족 전쟁 구조 계승 + 바이오 슈트(클래스 자유 전환)·비행 액션·신기로 확장.",
+  gap:"NOT ENOUGH PUBLIC DATA — 구작 팬이 종족·광산전·메카닉·SF 세계관에 부여하는 의미, 그리고 현재 게임과의 차이에 대한 반응 미조사",
+  sens:"3종족 균형. 신기 3종의 형태. 광산전의 위상.",
+  rights:"자사 인수 IP — 외부 라이선스 제약 없음"},
+ timeline:[
+  {d:"2004", e:"원작 RF 온라인 서비스", fan:"20여 년간 54개국 2천만 명", mkt:"국내에서 가장 오래된 SF MMORPG 팬덤을 상속", hot:false},
+  {d:"2020.09", e:"넷마블 IP 인수", fan:"NOT ENOUGH PUBLIC DATA", mkt:"자사 보유 IP로 전환 — 라이선스 제약 없음", hot:false},
+  {d:"2023", e:"G-STAR 최초 공개", fan:"NOT ENOUGH PUBLIC DATA", mkt:"—", hot:false},
+  {d:"2025.03.20", e:"넥스트 정식 출시", fan:"NOT ENOUGH PUBLIC DATA", mkt:"⚠ 출시 연도 공식 확인 필요", hot:true},
+  {d:"—", e:"신규 바이오슈트 '아비터'", fan:"최초의 신규 클래스", mkt:"현 시점 UA 신규 소재", hot:true}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 과거 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"3종족 대표 / 아비터(신규)", hook:"당신의 국가는 — 세 종족의 영토·문화·병기를 제시하고 선택을 요구",
+   sit:"광산 지대 대치", world:"크래그 광산을 둘러싼 3국 구도", fantasy:"BELONGING",
+   sec3:"세 방향에서 동시에 밀려오는 부감 컷", avoid:"개인 성장만 강조 / 중세 판타지 요소 / 특정 종족 편중"},
+  banner:{hero:"신기(거대 병기)", sym:"종족 엠블럼", copy:"국가 · 전선 · 자원 · 병기 · 소집",
+   bg:"황량한 행성 지표", trigger:"삼각 구도"},
+  sns:{meme:"\"당신의 종족은?\" 진영 선택 밈", rel:"3종족 상호 대립",
+   lang:"광산 · 신기 · 종족명", idea:"종족 투표 참여형 — 단 균형 관리 필요"},
+  promo:{hero:"광산 지대 부감", world:"3국의 건축·복식·병기 차이", motif:"종족 선택 인터랙션",
+   scroll:"행성 지표를 가로지르는 종주", motion:"신기의 강하"},
+  ai:{keep:"SF 시대성 · 종족별 아트 디렉션 · 금속과 인공광", char:"실루엣·원경 한정. 슈트 7종 디자인 대조 필요",
+   world:"행성 지표·광산 시설·미래도시 — AI 배경 적합", avoid:"중세·마법 요소 · 신기 근접 디테일 생성"}},
+ sources:[["공식 사이트 rfonlinenext.netmarble.com — 신기","OFFICIAL"],["넷마블 게임 페이지 — 바이오 슈트","OFFICIAL"],
+  ["게임인사이트 — 세 종족의 경쟁 기획기사","MEDIA"],["PNN — 3개 국가 기획기사","MEDIA"],
+  ["게임뷰·STN — 아비터 업데이트","MEDIA"],["나무위키 — 바이오슈트·신기","COMMUNITY SIGNAL"]],
+ gaps:["출시 연도 확정 (최우선)","신성동맹 코라 설정 상세 — 3종족 중 유일한 공백","구작 팬 반응 — COMMUNITY SIGNAL 미확보","종족별 시그니처 컬러 (내부 자료 필요)","진영별 유저 분포 — 균형 리스크 판단용"]
+},
+
+{
+ id:"sol", no:"05", name:"SOL: enchant", short:"SOL: enchant",
+ ipClass:"EXT_PUB", genre:"MMORPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"신생 스튜디오 (리니지M 핵심 개발진)", release:"2026.06.18", plat:"모바일", region:"글로벌",
+ sw:["#241E2E","#6E5B3E","#D4A82E","#F0EAD8"],
+ asset:"SYSTEM", assetNote:"⭐ 캐릭터가 자산이 아니다. 신권·경제·권력 구조 자체가 마케팅 자산인 유일한 타이틀",
+ one:"신들이 떠난 세계에서 신좌를 차지하면 실제로 서버를 운영할 권한을 갖는 MMORPG.",
+ coreFantasy:{code:"DOMINION", flow:["공백","계승","경쟁","즉위","통치"],
+   desc:"보통 MMORPG의 1등은 <b>강한 사람</b>이다. 이 게임의 1등은 <b>규칙을 만드는 사람</b>이다. 개발사가 쥐고 있던 운영 권한을 유저에게 넘긴다."},
+ iconic5:[
+  ["빈 신좌","SYMBOL","아무도 앉지 않은 옥좌. 세계관을 한 컷에 설명","★★★★★"],
+  ["신권 4종 이펙트","SYSTEM","징벌·창조·축복·통제. 하늘이 반응하는 규모","★★★★★"],
+  ["위계 구도","SCENE","계단·군중·옥좌. 누가 위이고 누가 아래인지","★★★★☆"],
+  ["금빛 + 침식의 어둠","COLOR","신성한 광이 위에서 내려온다","★★★★☆"],
+  ["신갑","OBJECT","신의 갑주. 핵심 유료 외형 아이템","★★★☆☆"]],
+ heat:[
+  {n:"절대신", role:"신위 최상위 계급", heat:"★★★★★", vis:"★★★★☆", ua:"★★★★★", sns:"★★★★☆",
+   why:"캐릭터가 아니라 '지위'가 이 게임의 스타. 도달점이 단순하고 강렬",
+   scene:"옥좌에 앉는 순간 세계의 규칙이 바뀐다", rel:"신 → 상위신 → 절대신 3단계",
+   line:"—", nick:"—", now:"이 게임을 상징하는 단어", basis:"OFFICIAL — 매체 프리뷰 헤드라인이 '절대신'으로 통일"},
+  {n:"신권 — 통제", role:"권능 4종 중 하나", heat:"★★★★★", vis:"★★★☆☆", ua:"★★★★★", sns:"★★★★★",
+   why:"⭐ 다른 유저의 채팅을 막을 수 있다. 가장 이질적이고 화제성 높은 권한",
+   scene:"활발하던 채팅창이 한순간 정지", rel:"—", line:"—", nick:"—",
+   now:"소구 효율 최고 소재", basis:"MEDIA — 프리뷰 기사에 4종 권능 명시"},
+  {n:"신권 — 창조", role:"권능 4종 중 하나", heat:"★★★★☆", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"보스·몬스터·장비를 유저가 생성한다", scene:"평범한 사냥터에 유저가 부른 거대 보스가 강림",
+   rel:"—", line:"—", nick:"—", now:"신권을 3초에 설명하는 최적 소재", basis:"MEDIA — 프리뷰 기사"},
+  {n:"나이트 / 레인저 / 메이지", role:"클래스 3종", heat:"★★☆☆☆", vis:"★★★☆☆", ua:"★★☆☆☆", sns:"★☆☆☆☆",
+   why:"의도적으로 단순하게 설계. 차별점은 클래스가 아니라 신권에 있다",
+   scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 클래스를 앞세우면 평범한 MMORPG로 보인다", basis:"OFFICIAL — 공식 클래스 페이지"}],
+ vdna:[
+  ["빈 옥좌","자리는 비어 있고 하나뿐이다","경쟁 · 갈망","캐릭터 없이 세계관과 목표를 동시에 전달하는 단일 오브젝트"],
+  ["위계 구도 (앙각·부감)","누가 위에 있는가","경외 · 위압","수평 구도는 이 게임과 맞지 않는다. 상하 관계가 모든 화면에 드러나야"],
+  ["신성한 금빛 + 침식의 어둠","떠난 신과 남은 균열","장엄 · 불안","종교화 스타일이 AI 생성과 상성이 좋다"],
+  ["위에서 내려오는 광","신은 위에 있다","숭배","조명 방향 고정. 아래에서 비추면 뱀피르 톤이 된다"],
+  ["느린 리듬","권력은 서두르지 않는다","무게","빠른 편집은 이 IP가 아니다. 여백을 둔다"]],
+ fanLang:[
+  {t:"절대신", risk:"safe", origin:"신위 3단계 중 최상위 공식 명칭", when:"출시 전 프리뷰 시점",
+   why:"도달점이 단순하고 강렬해 매체·유저 모두 이 단어로 게임을 지칭", now:"이 게임의 대표어",
+   use:"캠페인 핵심 키워드", src:"OFFICIAL"},
+  {t:"신권", risk:"safe", origin:"시스템 공식 명칭 (징벌·창조·축복·통제)", when:"출시 전",
+   why:"국내 MMORPG에서 전례를 찾기 어려운 설계", now:"상시",
+   use:"⚠ 은유가 아니라 실제 권한임을 명확히 해야 한다", src:"OFFICIAL"},
+  {t:"계승자", risk:"safe", origin:"플레이어 호칭", when:"출시 시점", why:"신의 힘을 감지한 자",
+   now:"상시", use:"자유 사용", src:"OFFICIAL"},
+  {t:"신갑 / 영체", risk:"caution", origin:"핵심 유료 아이템. 소환권 전환 후 거래소 자유 거래",
+   when:"출시 시점", why:"골드를 없앤 자유 경제의 중심", now:"경제 구조의 핵심",
+   use:"⚠ 현금성 가치 직접 소구는 사행성 논란 위험 — 법무 검토 필수", src:"MEDIA"}],
+ landmine:[
+  {t:"신권을 은유·연출로만 표현", lv:"CRITICAL", d:"유일한 차별점이 사라진다",
+   why:"실제 시스템 권한임을 명확히 하지 않으면 여느 MMORPG의 '왕' 콘셉트와 구분 불가", src:"OFFICIAL"},
+  {t:"\"당신이 신이 된다\"만 반복", lv:"HIGH", d:"신권은 소수에게만 주어진다. 다수는 그 권한의 대상이 된다",
+   why:"신이 되지 못한 다수가 배신감을 느낀다. '신이 지배하는 세계에서 산다'는 경험도 병기해야", src:"OFFICIAL"},
+  {t:"현금성 가치 직접 소구", lv:"CRITICAL", d:"유료 아이템을 유저 간 거래 가능한 형태로 전환하는 구조",
+   why:"사행성 논란·국가별 심의 리스크. 법무 검토 전 관련 문구 사용 금지", src:"MEDIA"},
+  {t:"신권 남용 사례 소재화", lv:"HIGH", d:"통제 권한을 가진 유저의 악용은 게임 내 실제 리스크",
+   why:"공식이 부각하면 잠재 유저가 '피해자가 될 수 있다'고 인식한다", src:"UNVERIFIED"},
+  {t:"클래스를 앞세운 구성", lv:"MEDIUM", d:"클래스 3종은 의도적으로 단순",
+   why:"평범해 보인다. 신권을 앞세워야 한다", src:"OFFICIAL"}],
+ origIP:null,
+ timeline:[
+  {d:"출시 전", e:"'유저가 BM까지 결정한다' 공개", fan:"파격 설계로 주목", mkt:"출시 전부터 화제를 만든 것이 신권이라는 시스템", hot:false},
+  {d:"2026.06.18", e:"정식 출시", fan:"NOT ENOUGH PUBLIC DATA", mkt:"구글 플레이·애플 앱스토어 매출 1위", hot:true},
+  {d:"출시 후", e:"작업장 대응·편의성 개선", fan:"NOT ENOUGH PUBLIC DATA", mkt:"운영 이슈 대응 진행", hot:false},
+  {d:"현재", e:"장기 검증 단계", fan:"NOT ENOUGH PUBLIC DATA", mkt:"⚠ 출시 2개월차. 신권 남용·상위권 고착화가 관전 포인트", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 출시 2개월차, 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"절대신(지위) / 신권 4종", hook:"누군가 보스를 불렀다 — 그것을 부른 것은 개발사가 아니라 한 유저다",
+   sit:"평범한 사냥터에 거대 보스 강림", world:"신들이 떠난 세계의 빈 신좌", fantasy:"DOMINION",
+   sec3:"아무도 앉지 않은 옥좌를 오래 비추다 누군가 앉는다", avoid:"신권의 은유화 / 캐주얼 톤 / 클래스 앞세우기"},
+  banner:{hero:"빈 옥좌", sym:"신권 문장", copy:"신 · 계승 · 신좌 · 권능 · 군림",
+   bg:"신전 계단과 군중", trigger:"금빛 + 침식의 어둠 대비"},
+  sns:{meme:"NOT ENOUGH PUBLIC DATA — 장엄 톤은 밈 상성 낮음", rel:"신 ↔ 신 아래 유저",
+   lang:"절대신 · 신권", idea:"⚠ 권한 남용 미화로 읽히지 않게 톤 관리 필요"},
+  promo:{hero:"빈 옥좌", world:"나인 → 신들의 전쟁 → 초월자 소멸 → 침식", motif:"옥좌에 앉는 인터랙션",
+   scroll:"계단을 오르는 스크롤", motion:"위에서 내려오는 광"},
+  ai:{keep:"신화적 장엄 톤 · 위계 구도 · 금빛/어둠 대비", char:"실루엣·원경 한정",
+   world:"신전·유적·균열 — 종교화 스타일 AI 적합도 상", avoid:"캐주얼화 · 수평 구도 · 밝고 경쾌한 톤. ⚠ 국가별 종교 표현 기준 확인"}},
+ sources:[["공식 사이트 sol.netmarble.com — 클래스","OFFICIAL"],["ZDNet — 절대신 되어 서버 통치","MEDIA"],
+  ["이포커스 — 신권 4종 프리뷰","MEDIA"],["플레이포럼 — 자유 시장 경제 인터뷰","MEDIA"],
+  ["나무위키 — 출시일·세계관","COMMUNITY SIGNAL"]],
+ gaps:["정확한 개발사명 (출처 간 표기 불일치)","세계관 원문 — '나인'·초월자·침식의 정의","신권 획득 조건·신좌 경쟁 운영 방식","자유 경제 표현의 법무 검토 기준 (필수)","국가별 종교 표현 심의 기준","신권 남용 방지 장치"]
+},
+
+{
+ id:"snr", no:"06", name:"세븐나이츠 리버스", short:"세나 리버스",
+ ipClass:"LEGACY", genre:"턴제 수집형 RPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블 넥서스", release:"2025.05.15", plat:"모바일", region:"글로벌",
+ sw:["#F2C14E","#4A9BE0","#E85D75","#8B7BD8"],
+ asset:"CHARACTER", assetNote:"영웅의 이름과 얼굴이 자산의 전부. 배경보다 얼굴이 앞선다",
+ one:"10년 넘게 사랑받은 「세븐나이츠」를 다시 만들어, 그때 못 들려준 이야기를 회수하는 턴제 RPG.",
+ coreFantasy:{code:"REUNION", flow:["기억","재회","회수","해소","계속"],
+   desc:"동력은 신선함이 아니라 <b>회수(回收)</b>다. 원작에서 툴팁 한 줄로만 존재하던 설정을 실제 서사로 풀어내는 것이 설계 의도다."},
+ iconic5:[
+  ["원작 영웅의 이름","CHARACTER","이름만으로 타깃이 반응한다","★★★★★"],
+  ["스킬 컷인","SCENE","캐릭터 매력을 전달하는 가장 효율적인 화면","★★★★☆"],
+  ["실베스타의 목걸이","OBJECT","툴팁 한 줄이 서사로 열린 상징 사례","★★★★☆"],
+  ["영웅별 상징색","COLOR","캐릭터마다 실루엣과 색이 다르다","★★★☆☆"],
+  ["오프라인 자동 진행","SYSTEM","게임을 꺼도 도는 화면. 타깃의 최대 장벽 해소","★★★★☆"]],
+ heat:[
+  {n:"레이첼", role:"간판 캐릭터", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"게임의 대표 얼굴. 브랜드 페이스", scene:"NOT ENOUGH PUBLIC DATA",
+   rel:"—", line:"NOT ENOUGH PUBLIC DATA", nick:"NOT ENOUGH PUBLIC DATA", now:"대표 비주얼 1순위",
+   basis:"MEDIA — 매체·커뮤니티에서 '간판 캐릭터'로 일관 지칭"},
+  {n:"에반 · 카린", role:"스토리 시작 인물 · 안내자", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★☆☆", sns:"★★★☆☆",
+   why:"이야기가 이들의 첫 모험에서 시작. 세계관·캐릭터를 설명하는 역할",
+   scene:"에반 원정대의 첫 모험", rel:"플레이어('모험가')를 안내", line:"—", nick:"—",
+   now:"신규 유저 온보딩 내레이터로 적합", basis:"MEDIA — 개발진 인터뷰에서 스토리 시작점으로 명시"},
+  {n:"실베스타", role:"서사 회수의 상징", heat:"★★★★★", vis:"★★★★☆", ua:"★★★★★", sns:"★★★★☆",
+   why:"⭐ 원작에서 툴팁으로만 언급되던 목걸이 사연의 주인. 10년 묵은 궁금증이 풀린 사례",
+   scene:"목걸이의 내력이 밝혀지는 서사", rel:"—", line:"—", nick:"—",
+   now:"2026.05 영웅 추가 — 리메이크의 존재 이유를 증명하는 캐릭터",
+   basis:"MEDIA — 개발진 인터뷰 + 2026.05 업데이트"},
+  {n:"연희", role:"원작 인물", heat:"★★★★☆", vis:"★★★☆☆", ua:"★★★☆☆", sns:"★★★☆☆",
+   why:"우마왕과의 대립 서사가 리버스에서 구현", scene:"연희 vs 우마왕",
+   rel:"우마왕과 대립", line:"—", nick:"—", now:"원작 팬이 기다린 서사",
+   basis:"MEDIA — 개발진 인터뷰에서 회수 사례로 언급"},
+  {n:"[천검] 선란", role:"오리지널 영웅", heat:"★★★☆☆", vis:"★★★★☆", ua:"★★★☆☆", sns:"★★☆☆☆",
+   why:"원작에 없던 게임 오리지널", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"2026.07 신규 — 리메이크를 넘어 확장 단계 진입의 상징", basis:"MEDIA — 2026.07 업데이트"}],
+ vdna:[
+  ["영웅 일러스트","캐릭터가 곧 상품","애착 · 반가움","정면 바스트샷 중심. 배경은 보조. 이 게임은 얼굴로 기억된다"],
+  ["스킬 컷인","가장 화려한 순간","쾌감","턴제라 전투 자체는 정적. 컷인이 액션을 대신한다"],
+  ["영웅별 상징색","캐릭터마다 다른 실루엣","식별 · 수집","팔레트가 캐릭터에서 나온다. 통일 배경색을 강요하지 않는다"],
+  ["밝은 채도 판타지","원작의 톤","따뜻함 · 그리움","다크화 금지. 회고의 정서는 밝은 톤 위에서 성립"],
+  ["서사가 붙은 소품","목걸이 하나가 이야기를 연다","해소","캐릭터 없이 캐릭터를 이야기하는 장치. AI 생성 최적 영역"]],
+ fanLang:[
+  {t:"쫄작", risk:"safe", origin:"1레벨 영웅을 30레벨까지 반복 육성해 루비를 얻는 활동. 원작에서 유래한 유저 문화",
+   when:"원작 「세븐나이츠」(2014~) 시기", why:"유저가 만들어낸 편법적 성장 방식이 문화로 굳음",
+   now:"⭐ 리버스가 공식 시스템으로 흡수하고 튜토리얼에서 직접 안내",
+   use:"원작 유저만 아는 암호이자 최고의 타깃팅 도구. 자조 유머도 팬덤이 환영", src:"OFFICIAL"},
+  {t:"세나 / 세나 리버스", risk:"safe", origin:"국내 약칭", when:"원작기부터",
+   why:"원작과 리메이크를 구분하는 호칭", now:"표준 약칭", use:"자유 사용", src:"COMMUNITY SIGNAL"},
+  {t:"모험가", risk:"safe", origin:"플레이어 캐릭터 호칭", when:"리버스 출시 시점",
+   why:"원작과 달리 별도 플레이어 캐릭터를 둔 설계", now:"상시", use:"온보딩 내레이션에 활용", src:"OFFICIAL"},
+  {t:"노가다 강요", risk:"caution", origin:"쫄작이 편의가 아니라 의무로 느껴질 때 나오는 비판",
+   when:"출시 이후", why:"게임 내내 반복 콘텐츠를 요구한다는 지적", now:"전투·성장 관련 비판에 등장",
+   use:"⚠ '반복 플레이의 재미'를 소구하면 이 비판과 직결. 오프라인 자동 진행으로 바꿔 말한다", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"\"반복 플레이의 재미\" 소구", lv:"HIGH", d:"쫄작이 노가다 강요로 읽히는 지점",
+   why:"편의성(오프라인 자동 진행)으로 프레임을 바꿔야 한다", src:"COMMUNITY SIGNAL"},
+  {t:"액션 RPG처럼 보이는 연출", lv:"HIGH", d:"실제로는 편성 후 관전하는 턴제",
+   why:"장르 오인 → 설치 후 즉시 이탈. 편성 화면·턴 진행을 반드시 노출", src:"OFFICIAL"},
+  {t:"원작 캐릭터 설정·외형 변경", lv:"HIGH", d:"리메이크 IP 공통 지뢰",
+   why:"10년 팬덤이 원작 자산을 기억한다", src:"OFFICIAL"},
+  {t:"과도한 추억팔이 톤", lv:"MEDIUM", d:"'우려먹기'라는 반감",
+   why:"추억 + 새 이야기를 반드시 병기. 회수라는 설계 의도가 답이다", src:"COMMUNITY SIGNAL"},
+  {t:"전투 시스템을 혁신처럼 표현", lv:"MEDIUM", d:"'개선된 게 없다'는 평가가 실재",
+   why:"전투가 아니라 캐릭터·서사·편의성을 판다", src:"COMMUNITY SIGNAL"}],
+ origIP:null,
+ timeline:[
+  {d:"2014", e:"원작 「세븐나이츠」", fan:"10년+ 서비스. 방대한 영웅 라인업과 '쫄작' 문화", mkt:"이름만으로 사람을 모을 수 있는 자산 형성", hot:false},
+  {d:"2025.05.15", e:"리버스 출시", fan:"원작 세대 대거 복귀", mkt:"출시 당일 앱스토어 매출 1위 · 5일 만에 양대 마켓 1위", hot:true},
+  {d:"출시 ~50일", e:"누적 매출 8천만 달러", fan:"—", mkt:"해당 연도 신작 중 최고 매출 — 원작 팬덤 잠재력 실증", hot:true},
+  {d:"2026.05", e:"1주년 · 각성/전용 장비 · 실베스타", fan:"툴팁 사연의 주인공이 영웅으로 구현", mkt:"'밀린 이야기 회수'가 실제로 작동한 사례", hot:true},
+  {d:"2026.07", e:"오리지널 영웅 선란", fan:"원작에 없던 캐릭터 추가", mkt:"리메이크 → 독자 확장 단계 진입", hot:true}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 과거 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"레이첼 / 실베스타", hook:"그 목걸이의 주인 — 아이템 설명 한 줄이던 것이 실제 서사로 열린다",
+   sit:"원작 영웅의 재등장", world:"검과 마법의 판타지 대륙", fantasy:"REUNION",
+   sec3:"낡은 툴팁 텍스트 → 실제 인물의 회상", avoid:"반복 플레이 소구 / 액션 RPG 오인 / 과도한 추억팔이"},
+  banner:{hero:"레이첼", sym:"실베스타의 목걸이", copy:"기억 · 다시 · 그때 · 영웅 · 이야기",
+   bg:"밝은 판타지 대륙", trigger:"원작 영웅의 얼굴"},
+  sns:{meme:"'쫄작' 자조 유머 — 팬덤이 환영하는 영역", rel:"에반 ↔ 카린 ↔ 모험가",
+   lang:"쫄작 · 세나 · 모험가", idea:"내 컬렉션 공유 / 최애 영웅 투표"},
+  promo:{hero:"영웅 집결 일러스트", world:"에반과 카린의 첫 모험", motif:"툴팁이 서사로 펼쳐지는 인터랙션",
+   scroll:"원작 → 리버스로 이어지는 타임라인", motion:"스킬 컷인 전환"},
+  ai:{keep:"밝은 채도 판타지 일러스트 톤 · 중세 판타지 시대성", char:"⛔ 영웅 얼굴 생성 비권장 — 팬 인지도 높음",
+   world:"판타지 대륙·영지 배경", avoid:"다크 판타지 톤 · 사실주의 렌더링"}},
+ sources:[["구글플레이·앱스토어 페이지","OFFICIAL"],["인벤 — 개발진 프리뷰 인터뷰","MEDIA"],
+  ["Sensor Tower — 누적 매출 8천만 달러","MEDIA"],["게임메카 — 쫄작 감성 리뷰","MEDIA"],
+  ["플레이포럼 — 원작 안 해도 되는가 리뷰","MEDIA"],["경향게임스·청년일보 — 각성·실베스타","MEDIA"],
+  ["베타뉴스 — 오리지널 영웅 선란","MEDIA"],["나무위키 — 등장인물·평가","COMMUNITY SIGNAL"]],
+ gaps:["ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","세계관 지리·정치 설정","영웅별 공식 일러스트 (내부 자료 필요)","원작 에셋 사용 가능 범위","원작 세대 복귀 유저 비중"]
+}
+];
+/* ===== GCI DATA · PART 3 — 수집형 + 방치형 ===== */
+
+const G3 = [
+{
+ id:"mongil", no:"07", name:"몬길: STAR DIVE", short:"몬길",
+ ipClass:"LEGACY", genre:"캐릭터수집 액션 RPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"넷마블몬스터", release:"2026.04.15", plat:"모바일 · PC", region:"글로벌",
+ sw:["#FF9A3C","#4ECDC4","#7B6FE8","#F5D547"],
+ asset:"CHARACTER", assetNote:"캐릭터와 몬스터, 수집 대상이 두 겹. 단 세계관 서사는 공백",
+ one:"몬스터를 모으고 세 캐릭터를 실시간으로 바꿔가며 싸우는, 13년 만의 「몬스터길들이기」 후속작.",
+ coreFantasy:{code:"COLLECT & TAG", flow:["발견","길들임","도감","교체","연계"],
+   desc:"수집 대상이 두 겹(캐릭터+몬스터)이고, 전투에서는 <b>교체하는 순간이 곧 공격</b>이 된다. 이 태그 리듬이 경쟁작과 구분되는 유일한 지점."},
+ iconic5:[
+  ["3인 태그 전환","SYSTEM","캐릭터를 바꾸는 순간이 공격이 된다","★★★★★"],
+  ["몬스터 도감","OBJECT","전작에서 계승한 정체성. 빈칸이 채워지는 화면","★★★★★"],
+  ["야옹이","CHARACTER","말하는 고양이 마스코트. 밈·굿즈 활용도 최상","★★★★☆"],
+  ["두 대륙 팔레트","WORLD","서양풍 중앙 대륙 ↔ 동양풍 극동 대륙","★★★☆☆"],
+  ["'몬길'이라는 이름","SYMBOL","팬 애칭이 공식 타이틀이 됐다","★★★☆☆"]],
+ heat:[
+  {n:"클라우드 · 베르나", role:"주인공 2인", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"플레이어 감정 이입의 축", scene:"NOT ENOUGH PUBLIC DATA", rel:"2인 주인공 체제",
+   line:"NOT ENOUGH PUBLIC DATA", nick:"—", now:"상시", basis:"COMMUNITY SIGNAL — 위키 기반. 인기 근거 없음"},
+  {n:"야옹이", role:"동행자 · 마스코트", heat:"★★★★☆", vis:"★★★★★", ua:"★★★☆☆", sns:"★★★★★",
+   why:"말하는 고양이. 마스코트는 밈·숏폼·굿즈에서 활용도가 가장 높다",
+   scene:"—", rel:"주인공 2인과 동행", line:"—", nick:"—", now:"SNS 최우선 소재",
+   basis:"COMMUNITY SIGNAL — 마스코트 포지션 기준 판단. 실측 인기 근거 없음"},
+  {n:"몬스터", role:"실질적 주인공", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"⭐ 전작에서 계승한 핵심 자산. 도감을 채우는 것이 플레이의 축",
+   scene:"도감의 빈칸이 채워지는 순간", rel:"—", line:"—", nick:"—",
+   now:"⛔ AI 생성 금지 — IP 핵심 자산", basis:"OFFICIAL — 공식 소개가 몬스터 컬렉팅을 전면 배치"},
+  {n:"미나·프란시스·오필리아·에스데", role:"주요 인물", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★☆☆", ua:"★★☆☆☆", sns:"★★☆☆☆",
+   why:"'인연 퀘스트'로 개별 서사 보유", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"캐릭터 애착 = 결제 동기", basis:"COMMUNITY SIGNAL — 위키 기반"}],
+ vdna:[
+  ["몬스터","길들여 함께 싸운다","애착 · 수집욕","이 게임의 진짜 주인공. 배경 요소로 처리하면 정체성 훼손"],
+  ["태그 전환 스위치 컷","교체가 곧 공격","쾌감 · 리듬","화면 전환 자체가 액션. 이 컷이 빠지면 경쟁작과 구분 불가"],
+  ["고채도 다색","밝고 활기찬 모험","동료애 · 활기","다크 톤 금지. 사내 MMORPG 문법 이식 시 IP 붕괴"],
+  ["두 대륙 대비","서양풍 ↔ 동양풍","다양성 · 볼륨","지역별 팔레트가 갈린다 — 지역 단위 캠페인 가능"],
+  ["언리얼 엔진 5 렌더링","고품질 3D 애니","'보는 재미'","셀 애니 톤 유지. 사실주의 렌더링 금지"]],
+ fanLang:[
+  {t:"몬길", risk:"safe", origin:"전작 「몬스터길들이기」의 유저 약칭", when:"2013년 전작 서비스기",
+   why:"제목이 길어 자연 발생", now:"⭐ 팬 애칭이 정식 타이틀이자 세계관 내 고유명사로 승격",
+   use:"이 이름 자체가 전작 세대 타깃팅의 신호", src:"OFFICIAL"},
+  {t:"야옹이", risk:"safe", origin:"마스코트 캐릭터 호칭", when:"출시 시점", why:"—",
+   now:"밈·숏폼 최우선 소재", use:"자유 사용", src:"OFFICIAL"},
+  {t:"태그", risk:"safe", origin:"3인 실시간 교체 전투 시스템 지칭", when:"출시 시점",
+   why:"프로레슬링 태그 매치에서 온 장르 용어", now:"전투 설명의 표준어", use:"자유 사용", src:"OFFICIAL"},
+  {t:"인연", risk:"safe", origin:"캐릭터별 개별 서사 콘텐츠 명칭", when:"출시 시점",
+   why:"캐릭터 애착 장치", now:"상시", use:"자유 사용", src:"OFFICIAL"}],
+ landmine:[
+  {t:"태그 전투를 생략한 연출", lv:"CRITICAL", d:"유일한 조작 차별점이 사라진다",
+   why:"수집형 액션 RPG 시장에서 구분이 불가능해진다. 이 게임 최대 리스크", src:"OFFICIAL"},
+  {t:"몬스터를 배경 요소로 처리", lv:"HIGH", d:"몬스터가 이 게임의 주인공이다",
+   why:"전작에서 계승한 유일한 자산을 스스로 지우는 것", src:"OFFICIAL"},
+  {t:"세계관 서사를 임의로 서술", lv:"HIGH", d:"⚠ 중심 갈등·적대 세력이 공개 자료에 없다",
+   why:"지역·인물·시스템은 확인되나 '무엇과 왜 싸우는가'가 공백. 내부 확인 전 스토리 콘티 금지", src:"UNVERIFIED"},
+  {t:"전작 세대와 신규를 한 소재로 묶기", lv:"MEDIUM", d:"전작은 2023년 종료 — 이미 떠난 사람이다",
+   why:"리텐션이 아니라 리콜. 도달 채널부터 다르다", src:"OFFICIAL"},
+  {t:"다크 판타지 톤", lv:"MEDIUM", d:"IP 톤 정반대",
+   why:"사내 MMORPG 문법을 그대로 가져오면 실패", src:"OFFICIAL"}],
+ origIP:null,
+ timeline:[
+  {d:"2013", e:"전작 「몬스터길들이기」 출시", fan:"몬스터 수집이 핵심 재미. 유저가 '몬길'로 줄여 부름", mkt:"넷마블 초기 대표 모바일 RPG", hot:false},
+  {d:"2023", e:"전작 서비스 종료", fan:"유저 이탈", mkt:"⚠ 현역 유저를 물려받는 게 아니라 떠난 유저를 다시 부르는 구조가 됨", hot:true},
+  {d:"2026.04.15", e:"몬길: STAR DIVE 글로벌 출시", fan:"NOT ENOUGH PUBLIC DATA", mkt:"넷마블 해당 연도 첫 자체 IP 신작 · 언리얼 엔진 5", hot:true},
+  {d:"출시 후", e:"1.1 업데이트", fan:"나래·나기 신규 캐릭터 추가", mkt:"—", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 출시 4개월차, 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"클라우드·베르나 + 제3 캐릭터", hook:"교체가 공격이다 — 태그 전환 순간만 반복",
+   sit:"3인 연계 전투", world:"몬스터·인간·아인종이 공존하는 세계", fantasy:"COLLECT & TAG",
+   sec3:"셋이 한 동작을 이어받아 완성", avoid:"태그 생략 / 몬스터 배경화 / 다크 톤 / 확인 안 된 세계관 서술"},
+  banner:{hero:"야옹이 또는 몬스터", sym:"도감 빈칸", copy:"몬스터 · 도감 · 태그 · 인연 · 길들이다",
+   bg:"두 대륙 중 하나", trigger:"고채도 다색 팔레트"},
+  sns:{meme:"야옹이 활용 밈 — 마스코트는 밈 친화적", rel:"클라우드 ↔ 베르나 ↔ 야옹이",
+   lang:"몬길 · 야옹이 · 도감", idea:"내 도감 공유 / 최애 몬스터 투표"},
+  promo:{hero:"언덕 위 주인공 3인 + 뒤따르는 몬스터 무리", world:"중앙 대륙 ↔ 극동 대륙",
+   motif:"도감이 채워지는 인터랙션", scroll:"여덟 지역 종주", motion:"태그 전환 스위치"},
+  ai:{keep:"밝은 채도 애니 톤 · 지역별 팔레트 구분 · 야옹이 디자인", char:"⛔ 캐릭터·몬스터 생성 금지 — 핵심 자산",
+   world:"두 대륙 배경 — AI 생성 적합도 상", avoid:"다크 판타지 · 사실주의 렌더링 · 현대/SF 요소"}},
+ sources:[["넷마블 공식 게임 페이지","OFFICIAL"],["공식 포럼 — 1.1 업데이트","OFFICIAL"],
+  ["허프포스트 — 13년 만의 귀환, 글로벌 출시","MEDIA"],["베타뉴스 — 몬스터 컬렉팅·수동 전투 리뷰","MEDIA"],
+  ["나무위키 — 세계관·지역·등장인물","COMMUNITY SIGNAL"]],
+ gaps:["⚠ 세계관 중심 갈등·적대 세력 (최우선 — 서사 크리에이티브 불가 상태)","ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","몬스터 도감 전체 구성 (내부 자료 필요)","전작 에셋 사용 가능 범위","전작 세대 리콜 채널"]
+},
+
+{
+ id:"stone", no:"08", name:"스톤에이지 키우기", short:"스톤에이지 키우기",
+ ipClass:"LEGACY", genre:"방치형 RPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"넷마블", release:"2026.03.03", plat:"모바일", region:"글로벌 (중국·베트남 등 제외)",
+ sw:["#7CB342","#A67B4A","#8FD4E8","#F0B84E"],
+ asset:"SYSTEM", assetNote:"방치형이라는 구조가 1순위 자산. 펫은 그 위에 얹힌 IP 향수",
+ one:"공룡을 잡아 키우고 팀을 짜두면 접속하지 않아도 알아서 싸우는 방치형 RPG.",
+ coreFantasy:{code:"EFFORTLESS GROWTH", flow:["포획","편성","방치","누적","성취"],
+   desc:"원작 IP의 상징 행위(펫 포획·펫 탑승)를 <b>최소 노력 구조</b>로 옮겼다. 팔아야 할 것은 \"그 추억을 이제 편하게\"라는 교환 조건이다."},
+ iconic5:[
+  ["펫 탑승","SCENE","원작 고유 행위. 경쟁 방치형 광고에 없는 화면","★★★★★"],
+  ["공룡 펫","CHARACTER","수백 종. 이 게임의 실질적 주인공","★★★★★"],
+  ["누적 보상 화면","SYSTEM","접속하니 쌓여 있는 보상","★★★★☆"],
+  ["24칸 덱","SYSTEM","조련사 6 + 펫 18. 방치형치고 전략 폭이 넓다","★★★☆☆"],
+  ["초록·흙색 자연 팔레트","COLOR","선사시대 캐주얼 톤","★★★☆☆"]],
+ heat:[
+  {n:"펫 (공룡·고대 동물)", role:"실질적 주인공", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"수백 종. 애착과 수집의 대상이자 IP 상징", scene:"조련사가 등에 올라타는 순간",
+   rel:"조련사와 파트너", line:"—", nick:"근본 펫", now:"⛔ AI 생성 금지 — 원작 세대가 즉시 식별",
+   basis:"OFFICIAL — 공식 소개가 펫을 전면 배치"},
+  {n:"베르가 · 오가로스", role:"'근본 펫'", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"⭐ 원작 시절부터 상징적이던 펫. 추가 자체가 팬덤 이벤트가 된다",
+   scene:"—", rel:"—", line:"—", nick:"근본 펫", now:"'○○가 온다' 캠페인 반복 가능",
+   basis:"MEDIA — 매체가 '근본 펫' 명명으로 보도"},
+  {n:"조련사", role:"플레이어 측", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★☆☆☆", ua:"★★☆☆☆", sns:"★★☆☆☆",
+   why:"최대 6명을 덱에 편성", scene:"—", rel:"펫의 파트너", line:"—", nick:"—",
+   now:"⚠ 개별 설정 공식 확인 필요", basis:"OFFICIAL — 편성 구조만 확인"}],
+ vdna:[
+  ["펫 탑승","공룡 등에 올라탄다","경이 · 향수","원작 상징 행위. 방치형 광고에 없는 화면이라 차별화 효율 최고"],
+  ["조련사와 펫의 크기 대비","작은 사람, 거대한 파트너","친근 · 든든함","핵심 구도. 공룡을 위협적으로 그리면 IP 톤이 무너진다"],
+  ["초록·흙색·하늘색","선사시대 자연","여유 · 평온","고채도 자연색. 사실적·공포스러운 공룡 묘사 금지"],
+  ["느긋한 리듬","긴박함을 만들지 않는다","편안함","⭐ 장르 정체성. 빠른 편집은 방치형 타깃과 충돌"],
+  ["누적 보상 연출","안 했는데 쌓여 있다","득템감 · 안도","방치형 핵심 가치를 한 컷에 전달하는 화면"]],
+ fanLang:[
+  {t:"근본 펫", risk:"safe", origin:"원작 시절부터의 상징적 펫을 부르는 팬덤 표현",
+   when:"원작 서비스기", why:"세대 공통 기억의 펫들이 별도 위상을 가짐",
+   now:"신규 펫 추가 시 매체·커뮤니티가 이 표현으로 보도",
+   use:"원작 세대만 아는 신호어. '○○가 온다' 캠페인 템플릿 가능", src:"MEDIA"},
+  {t:"키우기", risk:"safe", origin:"넷마블 방치형 라인의 공통 접미 (세븐나이츠 키우기 → 스톤에이지 키우기)",
+   when:"「세븐나이츠 키우기」 시기", why:"장르를 즉시 전달하는 네이밍",
+   now:"사내 방치형 라인 식별자", use:"장르 오인 방지에 유효", src:"OFFICIAL"},
+  {t:"조련사", risk:"safe", origin:"플레이어 캐릭터 호칭", when:"원작기부터", why:"—",
+   now:"상시", use:"자유 사용", src:"OFFICIAL"},
+  {t:"IP 남용", risk:"no", origin:"\"스톤에이지 이름만 붙인 것 아니냐\"는 비판",
+   when:"출시 직후", why:"향수 소구와 실제 게임 사이의 간극에 대한 반응",
+   now:"⚠ 실제로 확인된 비판", use:"향수를 전면에 내세울수록 이 비판이 부각된다", src:"COMMUNITY SIGNAL"},
+  {t:"캐릭터 디자인 이질감", risk:"caution", origin:"전작 대비 디자인 방향이 다르다는 반응",
+   when:"출시 직후", why:"원작 팬이 기대한 비주얼과의 차이", now:"⚠ 실제로 확인된 반응",
+   use:"원작 비주얼을 그대로 재현한 듯한 표현은 이 간극을 키운다. 현재 게임 에셋 기준으로 제작", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"IP 향수만 앞세운 구성", lv:"HIGH", d:"'IP 남용' 비판이 이미 존재",
+   why:"⭐ 향수는 진입 훅까지만. 본론은 현재 게임의 강점(24칸 덱·펫 볼륨)으로 넘겨야", src:"COMMUNITY SIGNAL"},
+  {t:"하드코어 액션처럼 보이는 연출", lv:"HIGH", d:"실제로는 조작이 거의 없는 방치형",
+   why:"장르 오인 → 설치 후 즉시 이탈", src:"OFFICIAL"},
+  {t:"원작 비주얼을 그대로 재현한 듯한 표현", lv:"MEDIUM", d:"'디자인 이질적'이라는 반응이 존재",
+   why:"실제 게임 디자인과의 간극을 광고가 키운다", src:"COMMUNITY SIGNAL"},
+  {t:"사실적·공포스러운 공룡 묘사", lv:"MEDIUM", d:"IP 톤 정반대",
+   why:"친근하고 귀여운 공룡이 이 IP의 원형", src:"OFFICIAL"},
+  {t:"경쟁·서열 소구", lv:"MEDIUM", d:"방치형 타깃(시간 없는 층)과 충돌",
+   why:"편의성·여유로 소구해야 한다", src:"OFFICIAL"},
+  {t:"몬길과 혼동되는 연출", lv:"MEDIUM", d:"둘 다 '생물 수집'이지만 조작량이 정반대",
+   why:"자동 진행을 반드시 노출해야 갈린다", src:"OFFICIAL"}],
+ origIP:null,
+ timeline:[
+  {d:"원작", e:"「스톤에이지」", fan:"글로벌 누적 2억 명 규모. 펫 포획·펫 탑승이 상징", mkt:"세대 기억을 형성한 IP", hot:false},
+  {d:"선행", e:"「세븐나이츠 키우기」 성공", fan:"—", mkt:"넷마블 '키우기' 라인 확립", hot:false},
+  {d:"2026.03.03", e:"글로벌 출시", fan:"IP 인지도가 초기 다운로드로 직결", mkt:"이틀 만에 양대 마켓 인기 1위 · 출시일 대만 앱스토어 1위", hot:true},
+  {d:"출시 후", e:"IP 활용 논쟁", fan:"'향수는 성공, 정체성은 과제' 평가 · 디자인 이질감 반응", mkt:"⚠ 향수 소구 강도를 조절해야 하는 근거", hot:true},
+  {d:"—", e:"'근본 펫' 베르가·오가로스 추가", fan:"원작 상징 펫 등장에 반응", mkt:"팬덤 이벤트로 작동", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"펫(공룡) / 근본 펫", hook:"자는 동안 — 잠든 유저 / 계속 사냥하는 펫 / 아침에 쌓인 보상",
+   sit:"출퇴근·취침 등 일상 사이", world:"니스 대륙", fantasy:"EFFORTLESS GROWTH",
+   sec3:"조련사가 공룡 등에 올라타는 순간", avoid:"하드코어 연출 / 향수만 앞세우기 / 사실적 공룡 / 경쟁 소구"},
+  banner:{hero:"펫 + 조련사 크기 대비", sym:"펫 탑승 실루엣", copy:"키우기 · 펫 · 포획 · 공룡 · 알아서",
+   bg:"초원·정글", trigger:"공룡 실루엣"},
+  sns:{meme:"⭐ \"나: 아무것도 안 함 / 내 펫: ...\" 구조 — AI 밈 효율 최상",
+   rel:"조련사 ↔ 펫", lang:"근본 펫 · 키우기", idea:"최애 펫 투표 / 내 24칸 덱 공유"},
+  promo:{hero:"공룡 등에 올라탄 조련사", world:"니스 대륙 지역별 서식 펫", motif:"포획 인터랙션",
+   scroll:"대륙 탐험", motion:"느긋한 이동"},
+  ai:{keep:"밝고 캐주얼한 톤 · 초록/흙색/하늘색 · 선사시대 시대성 · 크기 대비", char:"⛔ 펫 생성 금지 — 근본 펫을 아는 세대가 식별",
+   world:"초원·정글·화산·부족 마을 — AI 배경 적합", avoid:"사실적 공룡 · 다크 톤 · 현대/SF 요소"}},
+ sources:[["넷마블 공식 게임 페이지","OFFICIAL"],["앱스토어 스토리 — 니스 대륙·방치형 구조","OFFICIAL"],
+  ["데일리안·베타뉴스 — 3월 3일 글로벌 출시","MEDIA"],["인벤·게임메카 — 양대 마켓 인기 1위","MEDIA"],
+  ["한국금융경제신문 — 향수는 성공, 정체성은 과제","MEDIA"],["게임메카 — 근본 펫 베르가·오가로스","MEDIA"],
+  ["나무위키 — 가챠 구조·비판","COMMUNITY SIGNAL"]],
+ gaps:["원작 '기계 문명 멸망' 설정의 게임 반영 여부 (확인 시 강력한 차별 소재)","세계관 서사 구조","ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","펫 공식 아트 및 전체 도감 (내부 자료 필요)","권역별 유저 데이터 — 대만·중화권 초기 성과 두드러짐"]
+},
+
+{
+ id:"kof", no:"09", name:"KOF AFK", short:"KOF AFK",
+ ipClass:"LICENSED", genre:"캐릭터수집 방치형 RPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"넷마블네오", release:"2025.09.04", plat:"모바일", region:"글로벌",
+ sw:["#1A2340","#E03C31","#F5A623","#4FC3E8"],
+ asset:"CHARACTER", assetNote:"⭐ 캐릭터가 IP 자산의 전부. 배경 비중이 낮아 AI 활용 여지가 좁다",
+ one:"30년 넘은 격투게임 「킹 오브 파이터」의 파이터들을 도트로 모아, 5명씩 팀을 짜두면 알아서 싸우는 방치형 RPG.",
+ coreFantasy:{code:"NOSTALGIA", flow:["기억","재회","수집","방치","성취"],
+   desc:"이 게임은 원작의 <b>조작을 없앴다</b>. 격투게임의 핵심인 커맨드 입력을 빼고 방치형으로 만든 것이 정체성이자 논쟁거리다. 팔아야 할 것은 손맛이 아니라 그 시절 캐릭터를 다시 만나는 일이다."},
+ iconic5:[
+  ["도트 스프라이트","OBJECT","네오지오 포켓 「KOF R-2」 계열. 이 게임의 전부","★★★★★"],
+  ["도트 필살기 모션","SCENE","원작 기술이 픽셀로 재현된다","★★★★★"],
+  ["이중 그림체","COLOR","고해상도 일러스트 + 픽셀 도트가 한 화면에","★★★★☆"],
+  ["파이터 이름","CHARACTER","30년 인지도. 설명이 필요 없다","★★★★★"],
+  ["아케이드 팔레트","COLOR","고채도 원색 대비","★★★☆☆"]],
+ heat:[
+  {n:"파이터 라인업", role:"수집 대상 전체", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"⭐ 30년간 쌓인 인지도. 게임이 캐릭터를 설명할 필요가 없다",
+   scene:"파이터 획득 연출", rel:"5인 1팀", line:"NOT ENOUGH PUBLIC DATA", nick:"—",
+   now:"⛔ AI 생성 금지 — 도트 한 칸도 팬이 식별", basis:"OFFICIAL — 공식 소개가 캐릭터를 전면 배치"},
+  {n:"오로치 셸미", role:"신규 파이터", heat:"★★★☆☆", vis:"★★★★☆", ua:"★★★☆☆", sns:"★★★☆☆",
+   why:"업데이트로 추가", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"신규 파이터 추가가 화제 유발 장치", basis:"MEDIA — 업데이트 보도"},
+  {n:"쿠사나기 쿄 · 야가미 이오리", role:"시리즈 간판", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★★★", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"원작 시리즈의 대표 파이터. 원작 인지도는 최상위",
+   scene:"—", rel:"시리즈 대표 라이벌 관계", line:"—", nick:"—",
+   now:"⚠ 게임 내 구현 여부·등급 미확인. 이름을 광고에 쓰기 전 확인 필수",
+   basis:"UNVERIFIED — 게임 내 존재 확인 못 함"}],
+ vdna:[
+  ["도트 스프라이트","1990년대 오락실의 그림","향수 · 반가움","⭐ 이 게임의 전부. 사실적 3D 렌더링은 IP 정체성 훼손"],
+  ["이중 그림체","같은 캐릭터, 다른 시대","새로움 + 추억","고해상도 일러스트와 픽셀이 한 화면에 공존하는 구조가 시그니처"],
+  ["고채도 아케이드 팔레트","CRT 화면의 원색","경쾌 · 강렬","어둡게 보정하면 아케이드 감각이 사라진다"],
+  ["정측면 고정 카메라","격투게임의 화면 구성","익숙함","자유 카메라는 이 IP 문법이 아니다"],
+  ["필살기 원색 이펙트","화면 전체를 덮는 연출","쾌감","도트 프레임감 유지. 부드러운 3D 이펙트 금지"]],
+ fanLang:[
+  {t:"킹오파", risk:"safe", origin:"국내 오락실 세대의 약칭", when:"1990년대 오락실기",
+   why:"'KOF'보다 이 표현이 세대에게 더 즉각적", now:"국내 표준 약칭",
+   use:"⭐ 국내 오락실 세대 타깃팅에 'KOF'보다 효과적", src:"COMMUNITY SIGNAL"},
+  {t:"98", risk:"safe", origin:"KOF '98 — 시리즈 중 가장 사랑받는 작품으로 통함",
+   when:"1998년~", why:"밸런스와 캐릭터 구성으로 시리즈 정점 평가",
+   now:"⭐ 이 게임의 도트 기반이기도 하다", use:"원작 세대 신호어", src:"OFFICIAL"},
+  {t:"도트", risk:"safe", origin:"이 게임의 비주얼을 부르는 단어", when:"출시 시점",
+   why:"레트로 그래픽이 최대 강점", now:"상시", use:"자유 사용", src:"OFFICIAL"},
+  {t:"IP만 믿고 만들었다", risk:"no", origin:"게임성이 부족하다는 비판",
+   when:"출시 이후", why:"방치형 구조와 콘텐츠 깊이에 대한 불만",
+   now:"⚠ 실제로 다수 의견으로 관찰됨", use:"광고에서 게임성·깊이를 과장하면 정면 충돌", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"격투게임처럼 보이게 연출", lv:"CRITICAL", d:"실제로는 조작이 없다",
+   why:"⭐ 장르 오인 → 설치 후 즉시 이탈. 원작을 아는 사람일수록 배신감이 크다", src:"OFFICIAL"},
+  {t:"게임성·깊이를 과장", lv:"HIGH", d:"'IP만 믿고 만들었다'는 비판이 다수",
+   why:"소구점을 캐릭터 수집과 레트로 비주얼에 둬야 한다", src:"COMMUNITY SIGNAL"},
+  {t:"캐릭터 디자인·색상 임의 변경", lv:"CRITICAL", d:"SNK 원작 자산",
+   why:"30년 팬은 도트 한 칸도 알아본다", src:"OFFICIAL"},
+  {t:"사실적 3D 렌더링", lv:"HIGH", d:"도트가 이 게임의 전부",
+   why:"IP 정체성 훼손", src:"OFFICIAL"},
+  {t:"확인 안 된 캐릭터 이름 사용", lv:"HIGH", d:"간판 파이터의 게임 내 구현 여부 미확인",
+   why:"없는 캐릭터를 광고에 쓰면 과장 광고가 된다", src:"UNVERIFIED"},
+  {t:"과거 KOF 모바일 타이틀과의 관계", lv:"MEDIUM", d:"⚠ 「KOF ALLSTAR」 등 이전 타이틀 경험이 현재 해석에 영향을 주는지 미조사",
+   why:"서비스 종료 경험이 있다면 기존 팬 감정에 영향. COMMUNITY SIGNAL 확보 필요", src:"UNVERIFIED"},
+  {t:"스톤에이지 키우기와 같은 소재 구성", lv:"MEDIUM", d:"둘 다 사내 방치형 + IP 향수 구조",
+   why:"KOF는 도트, 스톤에이지는 펫 탑승으로 갈라야 한다", src:"OFFICIAL"}],
+ origIP:{
+  memory:"SNK 「THE KING OF FIGHTERS」. 1990년대 오락실 문화의 중심. 한국·중화권·일본·중남미에 강한 팬덤. 세계 각지 격투가가 3인 1팀으로 대회에 출전하는 구조. 대표 캐릭터·필살기·기술명이 세대 공통 기억.",
+  game:"KOF '98 기반 네오지오 포켓판 「KOF R-2」의 도트 그래픽을 재해석. 원작 3인 1팀 → 5대5 팀 전투로 확장. 조작이 없는 방치형. 메인 스테이지 12,600개 이상.",
+  gap:"⭐ 원작은 조작하는 격투게임, 이 게임은 조작이 없다. 같은 IP지만 경험이 완전히 다르다. 이 차이를 감추면 장르 오인 후 즉시 이탈한다.",
+  sens:"캐릭터 디자인·기술명·색상은 SNK 원작 자산. 간판 캐릭터의 게임 내 구현 여부 확인 필요.",
+  rights:"SNK IP 가이드 미확보 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"1990년대", e:"원작 오락실 전성기", fan:"한국·중화권·일본·중남미 팬덤 형성", mkt:"세대 공통 기억 = 설명 없이 통하는 자산", hot:false},
+  {d:"2024.10", e:"글로벌 사전 등록", fan:"—", mkt:"네오지오 포켓 「KOF R-2」 도트 재해석 공개", hot:false},
+  {d:"2025.09.04", e:"글로벌 정식 출시", fan:"NOT ENOUGH PUBLIC DATA", mkt:"—", hot:false},
+  {d:"출시 +10일", e:"한국 구글플레이 인기 1위", fan:"레트로 도트·일러스트·수집은 호평 / '급조'라는 혹평도 다수 — ⚠ 평가 양분", mkt:"광고에서 게임성 과장을 피해야 하는 근거", hot:true},
+  {d:"—", e:"신규 파이터 오로치 셸미", fan:"—", mkt:"신규 파이터 추가가 정기 화제 장치", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"파이터 라인업 (구현 확인된 캐릭터만)", hook:"손을 뗀다 — 커맨드를 입력하던 손이 물러나고 파이터들이 알아서 싸운다",
+   sit:"오락실 → 현재", world:"KOF 대회", fantasy:"NOSTALGIA",
+   sec3:"도트 필살기 모션 한 컷", avoid:"격투게임처럼 연출 / 게임성 과장 / 확인 안 된 캐릭터 이름"},
+  banner:{hero:"도트 스프라이트", sym:"필살기 이펙트", copy:"파이터 · 도트 · 필살기 · 그 시절 · 오락실",
+   bg:"아케이드 캐비닛·CRT", trigger:"픽셀 그래픽"},
+  sns:{meme:"⭐ \"나: 커맨드 못 외움 / 이 게임: 괜찮음\" — AI 밈 효율 상",
+   rel:"5인 팀 조합", lang:"킹오파 · 98 · 도트", idea:"최애 파이터 투표 / 내 5인 덱 공유"},
+  promo:{hero:"오락실 CRT 화면의 주사선", world:"KOF 대회 구조", motif:"동전 투입 인터랙션",
+   scroll:"도트 → 일러스트 전환", motion:"필살기 프레임 애니메이션"},
+  ai:{keep:"고채도 아케이드 팔레트 · 1990년대 시대성 · 이중 그림체 구조", char:"⛔ 캐릭터·도트 생성 금지 — IP 자산의 전부",
+   world:"오락실 풍경·아케이드 캐비닛·CRT — AI 배경 적합", avoid:"사실적 3D · 다크 톤 · 실사화"}},
+ sources:[["넷마블 공식 게임 페이지","OFFICIAL"],["넷마블 보도자료 — 사전 등록·도트 재해석","OFFICIAL"],
+  ["인벤 — 9월 4일 글로벌 출시","MEDIA"],["게임뷰 — 리뷰(이중 그림체·콘텐츠 규모)","MEDIA"],
+  ["루리웹 — 구글플레이 인기 1위","MEDIA"],["나무위키 — 평가 양분","COMMUNITY SIGNAL"]],
+ gaps:["SNK IP 가이드 (최우선 · RIGHTS CHECK REQUIRED)","게임 내 구현 파이터 전체 목록 — 광고 사용 가능 이름 범위","「KOF ALLSTAR」 등 과거 타이틀과의 팬덤 연결 (미조사)","ICONIC LINES — 원작 명대사 미조사","MARKETING HISTORY — 미조사","권역별 유저 데이터 — 중화권·중남미 비중"]
+}
+];
+/* ===== GCI DATA · PART 4 — 라이선스 IP + 미공개 ===== */
+
+const G4 = [
+{
+ id:"gc", no:"10", name:"일곱 개의 대죄: GRAND CROSS", short:"7DS GRAND CROSS",
+ ipClass:"LICENSED", genre:"수집형 카드배틀 RPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블F&C", release:"2019.06.04 (한·일) / 2020.03.03 (글로벌)", plat:"모바일", region:"글로벌",
+ sw:["#FFD84D","#E8503A","#3FA9E8","#5FBF6A"],
+ asset:"CHARACTER", assetNote:"캐릭터 + 콜라보. 7년차 라이브에서 화제를 만드는 것은 콜라보 참전",
+ one:"원작 스토리를 애니메이션 컷신으로 다시 보며 스킬 카드를 조합해 싸우는 7년차 수집형 RPG.",
+ coreFantasy:{code:"REUNION WITH THE STORY", flow:["원작","재현","수집","조합","참전"],
+   desc:"7년을 지탱한 힘은 액션이 아니라 <b>재현도</b>다. 애니메이션 품질 컷신과 원작자 검수를 거친 캐릭터 구현이 팬을 붙잡았다. 크리에이티브도 \"원작이 여기 있다\"로 간다."},
+ iconic5:[
+  ["애니메이션 컷신","SCENE","이 게임 최대 강점이자 최고의 광고 소재","★★★★★"],
+  ["일곱 대죄의 문장","SYMBOL","짐승 문양. 캐릭터 식별의 핵심","★★★★★"],
+  ["카드 랭크업 → 필살","SYSTEM","장르를 3초에 설명하는 화면","★★★★☆"],
+  ["밝은 소년만화 톤","COLOR","고채도 셀 애니. 다크화가 최대 사고","★★★★☆"],
+  ["콜라보 참전","SYMBOL","Re:제로·가치아쿠타 등 정기적 축제","★★★★☆"]],
+ heat:[
+  {n:"멜리오다스", role:"기사단장 · 분노의 죄", heat:"★★★★★", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"원작 주인공. 소년 외형이나 최소 3,000살 이상. 가벼운 태도와 진심일 때의 격차가 팬 반응 지점",
+   scene:"부러진 검을 어깨에 걸친 모습", rel:"엘리자베스와 영겁의 윤회",
+   line:"NOT ENOUGH PUBLIC DATA", nick:"NOT ENOUGH PUBLIC DATA", now:"뽑기 연출에 등장하는 대표 캐릭터",
+   basis:"OFFICIAL — 원작 주인공, 공식 연출 전면 배치"},
+  {n:"엘리자베스", role:"리오네스 제3왕녀", heat:"★★★★★", vis:"★★★★★", ua:"★★★★☆", sns:"★★★★☆",
+   why:"영겁의 윤회로 환생을 반복하는 존재. IP의 정서적 심장",
+   scene:"멜리오다스와의 재회", rel:"⚠ 멜리오다스와의 관계 — 각색 절대 금지",
+   line:"NOT ENOUGH PUBLIC DATA", nick:"—", now:"—", basis:"OFFICIAL — 원작 히로인"},
+  {n:"일곱 대죄 멤버 6인", role:"기사단", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★☆", sns:"★★★☆☆",
+   why:"각자 다른 죄와 종족. 체구·능력이 모두 달라 실루엣 다양성이 크다",
+   scene:"전원 집결", rel:"죄인으로 낙인찍혀 흩어졌다가 재집결", line:"—", nick:"—",
+   now:"⚠ 개별 설정 공식 확인 필요", basis:"OFFICIAL — 원작 구성. 개별 상세 미확보"},
+  {n:"콜라보 캐릭터", role:"기간 한정", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★★", sns:"★★★★★",
+   why:"⭐ 타 IP 팬 유입의 최대 창구. 2026년만 Re:제로(4월)·가치아쿠타(6월)",
+   scene:"참전 발표", rel:"—", line:"—", nick:"—",
+   now:"현 시점 신규 유입 1순위 · ⚠ 콜라보사별 IP 가이드 별도",
+   basis:"OFFICIAL — 2026 콜라보 보도자료 다수"}],
+ vdna:[
+  ["애니메이션 컷신","원작이 여기 있다","몰입 · 만족","⭐ 이 게임은 컷신 자체가 광고 소재. 별도 제작보다 컷신 활용이 효율적"],
+  ["일곱 대죄 문장","각자의 죄를 짊어진 표식","소속 · 식별","캐릭터 없이 캐릭터를 이야기하는 오브젝트. 형태 오류 빈발 영역"],
+  ["고채도 원색 + 셀 애니","밝은 소년만화","유쾌 · 동료애","⭐ 사내 MMORPG 문법을 가져오면 IP가 붕괴한다"],
+  ["카드 3장 → 필살","전략이 맞아떨어지는 순간","쾌감","장르 오인 방지 장치. 액션처럼 보이면 설치 후 이탈"],
+  ["캐릭터별 상징색","종족·체구가 모두 다르다","다양성","실루엣만으로 구분되는 라인업이 이 IP의 자산"]],
+ fanLang:[
+  {t:"7DS", risk:"safe", origin:"국제 통용 약칭", when:"원작 애니메이션 확산기",
+   why:"Seven Deadly Sins의 축약", now:"글로벌 표준 약칭", use:"글로벌 채널 자유 사용", src:"COMMUNITY SIGNAL"},
+  {t:"필살", risk:"safe", origin:"카드 조합의 최종 기술 공식 명칭", when:"출시 시점",
+   why:"게임 고유 전투 문법", now:"상시", use:"장르를 설명하는 단어", src:"OFFICIAL"},
+  {t:"섬멸전", risk:"safe", origin:"실시간 협력 콘텐츠 공식 명칭", when:"—", why:"—",
+   now:"대표 협력 콘텐츠", use:"자유 사용", src:"OFFICIAL"},
+  {t:"○○가 참전한다", risk:"safe", origin:"콜라보 발표의 정형 포맷", when:"콜라보 운영 축적기",
+   why:"타 IP 팬에게 즉시 이해되는 구조", now:"⭐ 매 콜라보마다 재사용 가능한 캠페인 템플릿",
+   use:"콜라보사 IP 가이드 준수 조건", src:"OFFICIAL"},
+  {t:"777", risk:"safe", origin:"7,777만 다운로드 · 777 릴레이 캠페인", when:"2026.01~06 캠페인",
+   why:"숫자 7이 타이틀 고유 상징으로 정착", now:"브랜딩 자산", use:"자유 사용", src:"OFFICIAL"}],
+ landmine:[
+  {t:"다크 판타지 톤", lv:"CRITICAL", d:"IP 정체성 정반대",
+   why:"⭐ 사내 MMORPG 문법을 그대로 가져오면 실패한다. 원작 팬 즉시 이탈", src:"OFFICIAL"},
+  {t:"멜리오다스–엘리자베스 관계 각색", lv:"CRITICAL", d:"영겁의 윤회 설정 위에 선 관계",
+   why:"원작자 검수 IP. 이 IP 최대 지뢰", src:"OFFICIAL"},
+  {t:"액션 RPG처럼 보이게 연출", lv:"HIGH", d:"실제로는 카드 전략 게임",
+   why:"장르 오인 → 설치 후 즉시 이탈. 카드·턴제 요소를 반드시 노출", src:"OFFICIAL"},
+  {t:"신규 혜택만 강조", lv:"MEDIUM", d:"7년차 잔류 유저의 상대적 박탈감",
+   why:"신규·기존 소구를 채널별로 분리해야 한다", src:"COMMUNITY SIGNAL"},
+  {t:"자매작 Origin과 소재 혼용", lv:"HIGH", d:"같은 IP·같은 개발사·비슷한 이름",
+   why:"⭐ 제작 단계에서 소재를 물리적으로 분리. GC는 카드 UI를 반드시 넣는다", src:"OFFICIAL"},
+  {t:"콜라보 캐릭터를 본편처럼 표기", lv:"HIGH", d:"콜라보사 IP 권리 영역",
+   why:"기간 한정임을 명시하지 않으면 권리 문제", src:"OFFICIAL"}],
+ origIP:{
+  memory:"스즈키 나카바 만화 「일곱 개의 대죄」. 브리타니아 대륙, 다섯 종족(인간·여신족·마신족·요정족·거인족). 성기사가 왕국을 장악하자 리오네스 제3왕녀 엘리자베스가 죄인으로 몰린 전설의 기사단을 찾아 나선다. <b>죄인이라 불린 자들이 실제로는 왕국을 지킨다</b>는 낙인의 역전 구조.",
+  game:"원작 스토리를 애니메이션 품질 컷신으로 재현. 스킬 카드 랭크업 전투. 원작에 전투 묘사가 없던 캐릭터는 게임이 스킬을 새로 설계. 섬멸전·마수전·마신왕전 등 콘텐츠.",
+  gap:"원작자와 교류가 활발하며 검수를 받는다. 팬의 기준이 높다.",
+  sens:"멜리오다스–엘리자베스의 영겁의 윤회 관계. 각 대죄 멤버의 문장과 상징색.",
+  rights:"원작사 IP 가이드 + 콜라보사별 가이드 미확보 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"2019.06.04", e:"한국·일본 출시", fan:"—", mkt:"—", hot:false},
+  {d:"2020.03.03", e:"글로벌 출시", fan:"—", mkt:"—", hot:false},
+  {d:"누적", e:"매출 10억 달러 돌파", fan:"다운로드 7,777만+", mkt:"넷마블을 글로벌 퍼블리셔 매출 10위권에 올린 타이틀", hot:true},
+  {d:"2026.01~06", e:"777 릴레이 캠페인", fan:"7개월 장기 캠페인", mkt:"'7'을 브랜딩 자산으로 활용한 사례", hot:false},
+  {d:"2026.04", e:"Re:제로 콜라보", fan:"SSR 스바루&베아트리스·에밀리아·프리실라", mkt:"타 IP 팬 유입", hot:true},
+  {d:"2026.06", e:"가치아쿠타 콜라보", fan:"SSR 팀 아쿠타 4종", mkt:"⭐ 콜라보가 7년차 라이브의 정기 화제 장치", hot:true}],
+ mktHistory:"777 릴레이 캠페인(2026.01~06, 7개월) 확인. 그 외 UA·브랜드 필름 사례는 NOT ENOUGH PUBLIC DATA",
+ starter:{
+  ua:{char:"멜리오다스 / 콜라보 캐릭터", hook:"○○가 참전한다 — 콜라보 발표 정형 포맷",
+   sit:"콜라보 캐릭터 등장", world:"브리타니아", fantasy:"REUNION WITH THE STORY",
+   sec3:"카드 3장이 합쳐지며 필살기로 이어지는 리듬", avoid:"다크 톤 / 액션 RPG 오인 / 관계 각색"},
+  banner:{hero:"멜리오다스 또는 콜라보 캐릭터", sym:"일곱 대죄 문장", copy:"동료 · 죄 · 문장 · 필살 · 참전",
+   bg:"브리타니아 초원·왕국", trigger:"고채도 셀 애니 톤"},
+  sns:{meme:"원작 유머 톤 기반 캐릭터 대사 밈", rel:"대죄 7인의 동료 관계",
+   lang:"7DS · 필살 · 참전 · 777", idea:"최애 대죄 투표 / 콜라보 예측"},
+  promo:{hero:"대죄 전원 집결", world:"다섯 종족과 브리타니아", motif:"문장이 하나씩 켜지는 인터랙션",
+   scroll:"수배서 → 진실의 역전", motion:"카드 합성"},
+  ai:{keep:"밝은 채도 애니 톤 · 중세 판타지 시대성 · 문장 형태", char:"⛔ 원작 캐릭터 생성 비권장 — 원작자 검수 IP",
+   world:"브리타니아 풍경·왕국·요정왕의 숲 — AI 배경 적합", avoid:"사실주의 렌더링 · 다크 톤 · 현대/SF 요소"}},
+ sources:[["공식 사이트 7ds.netmarble.com","OFFICIAL"],["공식 유튜브","OFFICIAL"],
+  ["Sensor Tower — 누적 매출 10억 달러","MEDIA"],["경향게임스 — 가치아쿠타 콜라보","MEDIA"],
+  ["경기신문·시사뉴스 — Re:제로 콜라보","MEDIA"],["루리웹 — 777 릴레이 캠페인","MEDIA"],
+  ["나무위키 — 시스템·원작자 검수","COMMUNITY SIGNAL"]],
+ gaps:["일곱 대죄 멤버 6인의 개별 설정 (죄·종족·상징색·무기)","ICONIC LINES — 원작 명대사 미조사","콜라보사별 IP 표현 제약","원작 애니메이션 영상 사용권","7년차 유저 구성·신규 유입 경로"]
+},
+
+{
+ id:"origin", no:"11", name:"일곱 개의 대죄: Origin", short:"7DS Origin",
+ ipClass:"LICENSED_EXP", genre:"오픈월드 액션 RPG", status:"LIVE", maturity:"MEDIUM",
+ dev:"넷마블F&C", release:"2026.03.17 (PS5·Steam) / 03.24 (모바일)", plat:"PS5 · Steam · 모바일", region:"글로벌",
+ sw:["#5BA84F","#6FC3E8","#E8C04A","#C97B4A"],
+ asset:"WORLD", assetNote:"⭐ 캐릭터가 아니라 공간이 자산. 광고는 '이동'을 팔아야 한다",
+ one:"멜리오다스의 아들 트리스탄이 되어 뒤틀린 브리타니아 대륙을 직접 걷는 오픈월드 액션 RPG.",
+ coreFantasy:{code:"EXPLORATION", flow:["계승","출발","탐험","발견","회복"],
+   desc:"유일한 차별점은 <b>브리타니아를 직접 이동한다</b>는 것이다. GRAND CROSS가 <i>보는 게임</i>이라면 Origin은 <i>걷는 게임</i>이다. 콘솔·PC까지 나온 이유가 여기에 있다."},
+ iconic5:[
+  ["대륙 원경 리빌","SCENE","언덕을 넘자 펼쳐지는 전경","★★★★★"],
+  ["찢어진 하늘","SYMBOL","별의 서 폭주로 왜곡된 시공간","★★★★☆"],
+  ["모닥불 요리","SCENE","경쟁작 광고에 없는 소재","★★★★☆"],
+  ["트리스탄","CHARACTER","멜리오다스와 엘리자베스의 아들. 네피림","★★★★☆"],
+  ["초원 녹색 · 하늘 청색","COLOR","시간대 변화를 적극 활용","★★★☆☆"]],
+ heat:[
+  {n:"트리스탄 리오네스", role:"주인공 · 플레이어", heat:"★★★★☆", vis:"★★★★★", ua:"★★★★★", sns:"★★★★☆",
+   why:"마신족 아버지와 인간으로 환생한 여신족 어머니 사이의 네피림. 전설의 자식이라는 위치",
+   scene:"언덕 위에서 대륙을 내려다보는 순간", rel:"멜리오다스·엘리자베스의 아들",
+   line:"NOT ENOUGH PUBLIC DATA", nick:"—",
+   now:"⚠ 완성형 강자로 묘사하면 성장 서사 소실. 멜리오다스 복제로 보이면 안 된다",
+   basis:"OFFICIAL — 공식 소개가 주인공으로 명시"},
+  {n:"멜리오다스 · 엘리자베스", role:"부모 세대", heat:"★★★★★", vis:"★★★★★", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"원작 주인공. 인지도는 최상위", scene:"—", rel:"트리스탄의 부모", line:"—", nick:"—",
+   now:"⚠ 게임 내 등장 범위 미확인 — 확인 전 크리에이티브 사용 금지",
+   basis:"UNVERIFIED — 게임 내 비중 확인 못 함"},
+  {n:"동료들", role:"파티", heat:"NOT ENOUGH PUBLIC DATA", vis:"NOT ENOUGH PUBLIC DATA", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"트리스탄과 함께 대륙을 탐험", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 구성 공식 확인 필요", basis:"UNVERIFIED"},
+  {n:"고서", role:"신규 영웅", heat:"NOT ENOUGH PUBLIC DATA", vis:"NOT ENOUGH PUBLIC DATA", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"업데이트로 추가", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 설정 미확인", basis:"MEDIA — 이름만 확인"}],
+ vdna:[
+  ["원경 와이드","대륙이 눈앞에 펼쳐진다","해방 · 기대","⭐ 이 게임의 카메라 문법. 폐쇄 던전 위주 화면은 정체성 상실"],
+  ["찢어진 하늘","별의 서가 폭주했다","불안 · 사명","지역마다 다른 형태의 왜곡. 사건의 규모를 시각화"],
+  ["시간대 변화","오픈월드의 호흡","여유 · 몰입","일출·석양 활용. AI 배경 변주에 최적"],
+  ["생활 콘텐츠","싸움만 하지 않는다","여유 · 생활감","⭐ 모닥불 요리·낚시. 액션 RPG 광고에 없는 소재라 기억에 남는다"],
+  ["밝은 자연색","원작 톤 계승","모험 · 활기","다크 톤 금지. GRAND CROSS와 같은 IP 톤"]],
+ fanLang:[
+  {t:"Origin / 오리진", risk:"safe", origin:"GRAND CROSS와 구분하는 호칭", when:"출시 시점",
+   why:"같은 IP의 두 게임을 구분할 필요", now:"⚠ 자매작과 혼동되지 않도록 표기 통일 필요",
+   use:"타이틀 표기 시 항상 풀네임 권장", src:"OFFICIAL"},
+  {t:"트리스탄", risk:"safe", origin:"주인공 이름", when:"원작 「묵시록의 4기사」 계보",
+   why:"—", now:"상시", use:"자유 사용", src:"OFFICIAL"},
+  {t:"별의 서", risk:"safe", origin:"사건의 원인이 된 물건", when:"출시 시점",
+   why:"게임 오리지널 스토리의 발단", now:"상시", use:"세계관 어휘로 사용 가능", src:"OFFICIAL"}],
+ landmine:[
+  {t:"GRAND CROSS와 혼동되는 연출", lv:"CRITICAL", d:"같은 IP·같은 개발사·비슷한 이름",
+   why:"⭐ 카드 UI 절대 금지. 오픈월드 이동을 반드시 노출해야 갈린다", src:"OFFICIAL"},
+  {t:"다크 판타지 톤", lv:"HIGH", d:"IP 정체성 정반대", why:"원작 팬 즉시 이탈", src:"OFFICIAL"},
+  {t:"트리스탄을 멜리오다스처럼 묘사", lv:"HIGH", d:"캐릭터 독립성 훼손",
+   why:"성장기 인물로. 부모와의 차이를 살려야 한다", src:"OFFICIAL"},
+  {t:"부모 세대 등장 범위 임의 확대", lv:"HIGH", d:"게임 내 실제 비중 미확인",
+   why:"확인 전까지 트리스탄 중심으로 구성", src:"UNVERIFIED"},
+  {t:"폐쇄 던전 위주 화면", lv:"MEDIUM", d:"오픈월드 정체성 상실",
+   why:"원경·하늘·이동을 반드시 포함", src:"OFFICIAL"},
+  {t:"모바일 게임처럼만 보이는 연출", lv:"MEDIUM", d:"PS5·Steam 유저 이탈",
+   why:"플랫폼별 소재 분리 필요. 콘솔용은 그래픽·스케일 강조", src:"OFFICIAL"}],
+ origIP:{
+  memory:"「일곱 개의 대죄」 + 공식 후속작 「묵시록의 4기사」(동일 작가 스즈키 나카바). 브리타니아 대륙, 다섯 종족, 멜리오다스와 엘리자베스의 서사.",
+  game:"시점은 「7대죄」 완결 이후 ~ 「묵시록의 4기사」 이전. <b>스토리는 게임 오리지널</b>이며 멀티버스 세계관으로 전개. 별의 서 폭주로 시공간이 뒤틀린 대륙을 되돌린다. 오픈월드 탐험 + 낚시·요리 생활 콘텐츠.",
+  gap:"⭐ 넷마블 공식 포지셔닝은 \"원작을 몰라도 자연스럽게 녹아들 만큼 강한 몰입감\" — 신규 유저 진입을 명시적으로 겨냥한 설계. 원작 팬 소구와 신규 소구를 분리할 근거.",
+  sens:"트리스탄의 네피림 정체성. 부모 세대의 등장 범위. 브리타니아 지명·지리.",
+  rights:"원작사 IP 가이드 미확보 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"원작", e:"「7대죄」 → 「묵시록의 4기사」", fan:"동일 작가의 공식 후속작 계보", mkt:"Origin은 두 작품 사이를 메운다", hot:false},
+  {d:"2025", e:"TGS 빌드 공개", fan:"—", mkt:"출시 전 소개", hot:false},
+  {d:"2026.03.17", e:"PS5·Steam 선공개", fan:"—", mkt:"콘솔·PC 우선 전략", hot:true},
+  {d:"2026.03.24", e:"모바일 정식 출시", fan:"—", mkt:"⭐ 크로스플랫폼 서비스 본격화 — 플랫폼별 소재 분리 필요", hot:true},
+  {d:"—", e:"신규 영웅 '고서' 추가", fan:"—", mkt:"운영 진행 확인", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA — 출시 5개월차, 캠페인 사례 미조사",
+ starter:{
+  ua:{char:"트리스탄", hook:"언덕을 넘으면 — 오르는 동안 화면을 막았다가 정상에서 대륙 전경을 여는 단 한 번의 리빌",
+   sit:"미개척 지역 진입", world:"뒤틀린 브리타니아", fantasy:"EXPLORATION",
+   sec3:"시야를 막던 언덕이 사라지고 대륙이 펼쳐짐", avoid:"카드 UI / 다크 톤 / 폐쇄 던전 위주"},
+  banner:{hero:"트리스탄", sym:"찢어진 하늘", copy:"대륙 · 탐험 · 계승 · 여정 · 별의 서",
+   bg:"초원과 하늘", trigger:"원경 와이드"},
+  sns:{meme:"⭐ \"낚시하는 계승자\" — 세계를 구하러 가는 인물이 강가에 앉아 낚시만 한다",
+   rel:"트리스탄 ↔ 동료", lang:"오리진 · 트리스탄 · 별의 서", idea:"오늘의 요리 공유"},
+  promo:{hero:"언덕 위에서 본 대륙 전경", world:"브리타니아 지역별 랜드마크", motif:"스크롤에 따라 대륙이 열림",
+   scroll:"서쪽 끝 → 동쪽 끝 종주", motion:"시간대 전환(일출→석양)"},
+  ai:{keep:"밝은 채도 애니 톤 · 중세 판타지 시대성 · 원경 구도", char:"⛔ 트리스탄 등 원작 캐릭터 생성 비권장",
+   world:"⭐ 대륙 풍경·초원·호수·산맥 — AI 효율 최상. 시간대 변주에 최적", avoid:"사실주의 렌더링 · 다크 톤 · 폐쇄 공간 위주"}},
+ sources:[["공식 사이트 origin.netmarble.com","OFFICIAL"],["Steam 스토어 페이지","OFFICIAL"],
+  ["공식 유튜브 @7ds_origin_kr","OFFICIAL"],["서울와이어·주간한국 — 출시 정보","MEDIA"],
+  ["뉴데일리 — 원작에 대한 헌사 리뷰","MEDIA"],["나무위키 — 시점·게임 오리지널 스토리","COMMUNITY SIGNAL"],
+  ["나무위키 — 트리스탄 리오네스(네피림)","COMMUNITY SIGNAL"]],
+ gaps:["동료 캐릭터 구성","부모 세대 게임 내 등장 범위 (크리에이티브 사용 범위 결정에 필수)","게임 내 실제 지역 구성","크로스플랫폼 계정 연동 사양","ICONIC LINES — 미조사","MARKETING HISTORY — 미조사","출시 후 유저 반응 데이터"]
+},
+
+{
+ id:"got", no:"12", name:"왕좌의 게임: 킹스로드", short:"GoT 킹스로드",
+ ipClass:"LICENSED_EXP", genre:"오픈월드 스토리 액션 RPG", status:"LIVE", maturity:"HIGH",
+ dev:"넷마블네오", release:"2026.05.14 (PC) / 05.21 (모바일)", plat:"PC(Steam) · 모바일", region:"글로벌",
+ sw:["#3A3F44","#6B6259","#A89B84","#E8E4DC"],
+ asset:"WORLD", assetNote:"드라마가 만든 공간이 자산. 단 인물은 배우 초상권으로 막혀 있다",
+ one:"드라마 시즌4 시점의 웨스테로스에서 몰락한 기사 가문의 서자가 되어 대륙을 직접 걷는 액션 RPG.",
+ coreFantasy:{code:"BELONGING TO THE WORLD", flow:["몰락","서자","맹세","재건","명예"],
+   desc:"원작 명장면을 다시 보여주지 않는다. 존 스노우가 장벽 너머 위협을 발견했을 때 <b>누가 그것을 먼저 알렸는지</b> — 드라마가 다루지 않은 이면을 오리지널 스토리로 채웠다. 플레이어는 관객이 아니라 빈칸을 메우는 인물이다."},
+ iconic5:[
+  ["웨스테로스 지형","WORLD","북부의 눈, 남부의 성채. 드라마 팬이 알아보는 공간","★★★★★"],
+  ["자동 전투 버튼이 없는 화면","SYSTEM","사내 유일. 그 자체가 차별 소재","★★★★★"],
+  ["저채도 실사 톤","COLOR","드라마 색보정 계승. 저판타지","★★★★☆"],
+  ["티레 가문 문장","SYMBOL","게임 오리지널이라 IP 저촉 위험이 낮다","★★★★☆"],
+  ["피의 결혼식","SYMBOL","서사의 출발점. 단어 하나로 상황이 설명된다","★★★★☆"]],
+ heat:[
+  {n:"플레이어 (티레 가문 서자)", role:"주인공", heat:"★★★★☆", vis:"★★★★☆", ua:"★★★★★", sns:"★★★☆☆",
+   why:"⭐ 게임 오리지널 캐릭터. 원작에 없는 인물이라 표현 자유도가 상대적으로 높다",
+   scene:"눈 덮인 폐허 영지에서 무너진 가문 깃발 앞에 홀로 선 모습",
+   rel:"스타크 가문에 충성했던 북부 기사 가문의 서자", line:"—", nick:"—",
+   now:"⭐ 크리에이티브 무게중심을 여기에 둔다", basis:"OFFICIAL — 공식 설정"},
+  {n:"존 스노우", role:"드라마 인물", heat:"★★★★★", vis:"★★★★★", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"드라마 최고 인지도 인물 중 하나. 서자라는 신분이 플레이어와 겹친다",
+   scene:"장벽 너머 위협을 발견", rel:"플레이어 서사와 연결", line:"—", nick:"—",
+   now:"⚠ 게임 내 등장 범위·비중 공식 확인 필요. 배우 초상권 영역",
+   basis:"MEDIA — 서사 연결만 확인"},
+  {n:"그 외 드라마 등장인물", role:"—", heat:"NOT ENOUGH PUBLIC DATA", vis:"★★★★☆", ua:"NOT ENOUGH PUBLIC DATA", sns:"NOT ENOUGH PUBLIC DATA",
+   why:"시즌 4 시점의 인물들", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 등장 여부·표현 범위 내부 자료 필요", basis:"UNVERIFIED"}],
+ vdna:[
+  ["저판타지","마법은 희귀하고 갈등은 인간의 정치에서 나온다","무게 · 현실감","⭐ 사내 판타지 타이틀과 결정적으로 다른 지점. 화려한 이펙트는 IP 훼손"],
+  ["저채도 실사 톤","드라마 색보정","차가움 · 명예","회색·갈색·눈의 흰색. 애니 렌더링 금지"],
+  ["웨스테로스 지형","드라마가 만든 공간","소속 · 몰입","북부의 눈, 장벽, 성채. 드라마 팬의 진입 동기"],
+  ["가문 문장","혈통과 소속의 표식","정체성","오리지널 가문(티레)은 원작 저촉 위험이 낮아 AI 활용 가능"],
+  ["자동 전투 부재","직접 조작한다","몰입 · 신뢰","사내 유일. 다른 모바일 RPG와 나란히 놓았을 때 차별점이 드러난다"]],
+ fanLang:[
+  {t:"웨스테로스", risk:"safe", origin:"드라마 대륙 이름", when:"드라마 방영기",
+   why:"드라마 팬의 공통 어휘", now:"상시", use:"자유 사용", src:"OFFICIAL"},
+  {t:"피의 결혼식", risk:"safe", origin:"드라마에서 스타크 가문이 몰살당한 사건",
+   when:"드라마 방영기", why:"시리즈 최대 충격 장면 중 하나",
+   now:"⭐ 이 단어 하나로 플레이어의 상황이 설명된다", use:"서사 출발점 소구에 활용", src:"OFFICIAL"},
+  {t:"서자", risk:"safe", origin:"정식 혼인 밖에서 태어난 자식. 상속권도 명예도 없는 신분",
+   when:"드라마 방영기 (존 스노우가 대표)", why:"밑바닥에서 시작한다는 전제",
+   now:"플레이어의 신분", use:"원작 팬은 이 단어에서 존 스노우를 떠올린다", src:"OFFICIAL"},
+  {t:"뽑기 없음 / 풀 수동", risk:"safe", origin:"개발진이 공식 인터뷰에서 밝힌 설계",
+   when:"2026.05 출시 전", why:"모바일 RPG 관행을 벗어난 결정",
+   now:"⭐ 사내에서 이 카드를 쓸 수 있는 유일한 타이틀",
+   use:"⚠ 현행 상품 구성 확인 후 문구 확정. 사실과 어긋나면 불신을 키운다", src:"OFFICIAL"},
+  {t:"과금 논란", risk:"caution", origin:"출시 직후 Steam 부정 평가 26%의 주된 사유",
+   when:"2026.05 출시 직후", why:"EXP팩 등 상품 구성에 대한 비판",
+   now:"개발사가 5.21부터 EXP팩 무료 전환, 유사 상품 미판매 발표",
+   use:"대응 이력은 커뮤니케이션 자산으로 쓸 수 있으나 과장 금지", src:"COMMUNITY SIGNAL"}],
+ landmine:[
+  {t:"드라마 인물 임의 등장 / 배우 초상", lv:"CRITICAL", d:"HBO IP 가이드 + 배우 초상권",
+   why:"⭐ 사내 12개 중 IP 제약이 가장 강하다. AI 인물 생성·실사화 모두 금지", src:"OFFICIAL"},
+  {t:"화려한 판타지 이펙트·마법 남발", lv:"CRITICAL", d:"저판타지 IP와 정면 충돌",
+   why:"레이븐2·뱀피르 같은 하이 판타지 문법을 가져오면 원작 팬이 즉시 이질감을 느낀다", src:"OFFICIAL"},
+  {t:"드라마 영상을 게임 화면처럼 편집", lv:"HIGH", d:"과장 광고 + IP 권리 문제",
+   why:"인게임 화면과 명확히 구분해야 한다", src:"OFFICIAL"},
+  {t:"과금 구조를 애매하게 표현", lv:"HIGH", d:"이미 논란이 있었다",
+   why:"애매하면 불신을 키운다. '유료 뽑기 없음'을 사실 그대로 명확히", src:"COMMUNITY SIGNAL"},
+  {t:"애니 스타일 렌더링", lv:"MEDIUM", d:"드라마 IP의 톤이 아니다",
+   why:"사실적 렌더링 유지", src:"OFFICIAL"},
+  {t:"원작 대사 인용", lv:"HIGH", d:"\"겨울은 오고 있다\" 등",
+   why:"⚠ IP 승인 필요. 확인 전 사용 금지", src:"UNVERIFIED"}],
+ origIP:{
+  memory:"HBO 드라마 「왕좌의 게임」. 조지 R. R. 마틴 소설 기반. 웨스테로스, 가문 정치, 피의 결혼식, 존 스노우, 장벽. <b>저(低)판타지</b> — 마법과 용이 있지만 희귀하고 대부분의 갈등은 인간의 정치와 폭력에서 나온다.",
+  game:"드라마 시즌 4 후반부 배경. 플레이어는 스타크 가문에 충성한 북부 기사 가문 <b>티레(Tyre)의 서자</b> — 게임 오리지널 가문. 피의 결혼식에서 형제를 모두 잃은 유일한 후계자. 오리지널 스토리로 드라마의 이면을 다룬다. 유료 뽑기 없음, 100% 수동 전투.",
+  gap:"⭐ 오리지널 가문을 만든 이유 — 대가문에 묶이면 여러 세력과 자유롭게 교류할 수 없다. 어느 편에도 설 수 있는 위치를 확보하기 위한 설계다.",
+  sens:"드라마 인물 표현, 배우 초상, 원작 대사 인용, 가문 문장.",
+  rights:"HBO IP 가이드 미확보 — RIGHTS CHECK REQUIRED (사내 최우선)"},
+ timeline:[
+  {d:"2026.05.14", e:"Steam 선출시", fan:"—", mkt:"출시 첫날 동시 접속 1.7만 명", hot:true},
+  {d:"출시 직후", e:"과금 논란", fan:"Steam 평가 '대체로 긍정적'(71%), 부정 26%가 과금 구조 지적", mkt:"⚠ 과금 커뮤니케이션의 민감도를 보여준 사건", hot:true},
+  {d:"2026.05.21", e:"모바일 출시 + 즉각 대응", fan:"EXP팩 무료 전환 발표에 반응", mkt:"⭐ 유저 반응에 빠르게 움직인 사례 — 커뮤니케이션 자산", hot:true},
+  {d:"이후", e:"평가 상승", fan:"Steam 유저 평가 '매우 긍정적'으로 전환", mkt:"그래픽·스토리 몰입감이 호평의 중심", hot:true}],
+ mktHistory:"과금 논란 → EXP팩 무료 전환(2026.05.21) 대응 사례 확인. UA·브랜드 필름 등은 NOT ENOUGH PUBLIC DATA",
+ starter:{
+  ua:{char:"플레이어(티레 가문 서자)", hook:"드라마가 비추지 않은 자리 — 유명 장면 구도를 보여주다 카메라를 옆으로 돌리면 거기 플레이어가 있다",
+   sit:"눈 덮인 북부의 폐허 영지", world:"시즌 4 시점의 웨스테로스", fantasy:"BELONGING TO THE WORLD",
+   sec3:"무너진 가문 깃발 앞에 홀로 선 서자",
+   avoid:"화려한 마법 / 드라마 영상 오용 / 드라마 인물 임의 등장 / 과금 애매 표현"},
+  banner:{hero:"플레이어 실루엣", sym:"티레 가문 문장", copy:"가문 · 명예 · 서자 · 겨울 · 맹세",
+   bg:"북부의 눈·성채", trigger:"저채도 실사 톤"},
+  sns:{meme:"NOT ENOUGH PUBLIC DATA — 원작 톤이 무거워 밈 상성 낮음",
+   rel:"플레이어 ↔ 여러 가문", lang:"웨스테로스 · 피의 결혼식 · 서자",
+   idea:"⚠ 원작 대사·밈 활용은 IP 승인 필요"},
+  promo:{hero:"눈 덮인 북부 원경", world:"웨스테로스 가문 지도", motif:"가문 문장이 새겨지는 인터랙션",
+   scroll:"북부 → 남부 종주", motion:"눈보라"},
+  ai:{keep:"저판타지 · 저채도 자연광 · 중세 사실주의", char:"⛔ 인물 생성 절대 금지 — 배우 초상권. 실사화도 금지",
+   world:"⚠ 북부 날씨·지형 무드 (인물 미포함 조건). 드라마 촬영지와 유사해지지 않도록",
+   avoid:"화려한 마법 이펙트 · 애니 렌더링 · 밝고 경쾌한 톤 · generic fantasy 갑옷"}},
+ sources:[["공식 사이트 gameofthrones.netmarble.com","OFFICIAL"],["ZDNet — 문준기 인터뷰(확률형 제외·100% 수동)","OFFICIAL"],
+  ["게임뷰 — 오리지널 스토리 질의응답","MEDIA"],["인벤 — 5월 14일 정식 론칭","MEDIA"],
+  ["ZDNet — Steam 첫날 동접 1.7만","MEDIA"],["경향게임스 — Steam 평가·과금 비판","MEDIA"],
+  ["디시인사이드 — EXP팩 무료 전환","COMMUNITY SIGNAL"],["나무위키 — 티레 가문 서자 설정","COMMUNITY SIGNAL"]],
+ gaps:["HBO IP 가이드 (사내 최우선 · RIGHTS CHECK REQUIRED)","드라마 인물 게임 내 등장 범위","드라마 영상·대사 사용권 · 배우 초상 제약","현행 상품 구성 (과금 문구 확정에 필요)","게임 내 개방 지역 구성","유저 데이터"]
+},
+
+{
+ id:"shangri", no:"13", name:"샹그릴라 프론티어: 일곱 최강종", short:"샹그릴라 프론티어",
+ ipClass:"LICENSED", genre:"RPG", status:"UNRELEASED", maturity:"LOW",
+ dev:"넷마블 넥서스", release:"2026 예정", plat:"모바일", region:"일본 티저 공개",
+ sw:["#2E4A6B","#4A8FA8","#7BC4B0","#E8D9A0"],
+ asset:"UNKNOWN", assetNote:"NOT ENOUGH PUBLIC DATA — 게임 고유 정보가 거의 없다",
+ one:"「샹그릴라 프론티어」 IP 기반 RPG. 게임 고유 정보는 일본 티저 수준으로만 공개됨.",
+ coreFantasy:{code:"MASTERY (추정)", flow:["망겜 경험","공략 지식","강적","도전","돌파"],
+   desc:"⚠ 원작 구조 기반 <b>추정</b>이다. 원작은 '망겜 헌터'가 갓겜에 도전하는 구조로, <b>게임을 누구보다 잘 이해하는 플레이어가 압도적인 강적을 공략한다</b>는 플레이어 판타지를 갖는다. 게임 버전이 이를 어떻게 구현했는지는 미확인."},
+ iconic5:[["NOT ENOUGH PUBLIC DATA","—","게임 고유 시각 자산 미공개 — 티저 단계","—"]],
+ heat:[{n:"NOT ENOUGH PUBLIC DATA", role:"—", heat:"—", vis:"—", ua:"—", sns:"—",
+   why:"게임 내 플레이어블 캐릭터 구성 미공개", scene:"—", rel:"—", line:"—", nick:"—",
+   now:"⚠ 원작 캐릭터(산라쿠·에무르 등)의 게임 내 구현 여부 미확인", basis:"UNVERIFIED"}],
+ vdna:[["NOT ENOUGH PUBLIC DATA","—","—","게임 비주얼 가이드 미공개. 원작 애니 톤 참조는 가능하나 게임 적용 여부 미확인"]],
+ fanLang:[{t:"NOT ENOUGH PUBLIC DATA", risk:"caution", origin:"—", when:"—",
+   why:"원작 팬덤 언어는 존재하나 게임 맥락에서의 사용 가부 미확인", now:"—",
+   use:"⚠ 원작 팬덤 조사 필요", src:"UNVERIFIED"}],
+ landmine:[
+  {t:"원작 정보로 게임 팩트북을 채우는 것", lv:"CRITICAL",
+   d:"원작 만화·애니 정보는 풍부하나 게임 고유 정보가 거의 없다",
+   why:"⭐ 원작 정보를 게임 정보처럼 쓰면 실제 게임과 다른 기대를 만든다. 출시 후 광고와 실물의 괴리로 이어진다", src:"OFFICIAL"},
+  {t:"원작 명장면·명대사 임의 사용", lv:"HIGH", d:"고단샤 라이선스 IP",
+   why:"게임에 구현되지 않은 요소를 광고에 쓰면 과장 광고", src:"UNVERIFIED"}],
+ origIP:{
+  memory:"⚠ 원작 「샹그릴라 프론티어 ~망겜 헌터, 갓겜에 도전하다~」. 소설가가 되자 연재(2017.05~) → 고단샤 「주간 소년 매거진」 만화 연재(2020.07~) → 애니메이션화. 일본 웹소설 누적 9억 조회, 만화 누적 1,300만 부 이상. 상세 캐릭터·장면·밈은 미조사.",
+  game:"「샹그릴라 프론티어: 일곱 최강종」. 넷마블 넥서스 개발. 2026년 출시 예정. 일본 공식 티저 사이트 오픈 및 PV 공개. <b>그 외 게임 고유 정보 미공개.</b>",
+  gap:"NOT ENOUGH PUBLIC DATA — 원작 팬 기대와 게임 표현의 차이를 판단할 자료 없음",
+  sens:"NOT ENOUGH PUBLIC DATA",
+  rights:"고단샤 IP 가이드 미확보 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"2017.05", e:"원작 웹소설 연재 시작", fan:"일본 누적 9억 조회", mkt:"IP 규모의 근거", hot:false},
+  {d:"2020.07", e:"주간 소년 매거진 만화 연재", fan:"누적 1,300만 부 이상", mkt:"—", hot:false},
+  {d:"—", e:"애니메이션화", fan:"—", mkt:"—", hot:false},
+  {d:"2026 예정", e:"넷마블 게임 출시 예정", fan:"—", mkt:"⚠ 일본 티저 사이트·PV 공개 단계", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA",
+ starter:{
+  ua:{char:"NOT ENOUGH PUBLIC DATA", hook:"—", sit:"—", world:"—", fantasy:"MASTERY (추정)",
+   sec3:"—", avoid:"⚠ 원작 정보를 게임 정보처럼 사용하는 것"},
+  banner:{hero:"NOT ENOUGH PUBLIC DATA", sym:"—", copy:"—", bg:"—", trigger:"—"},
+  sns:{meme:"NOT ENOUGH PUBLIC DATA", rel:"—", lang:"—", idea:"—"},
+  promo:{hero:"NOT ENOUGH PUBLIC DATA", world:"—", motif:"—", scroll:"—", motion:"—"},
+  ai:{keep:"NOT ENOUGH PUBLIC DATA — 게임 비주얼 가이드 미공개", char:"⛔ 생성 금지",
+   world:"—", avoid:"원작 애니 스틸을 게임 화면처럼 사용"}},
+ sources:[["루리웹 — 일본 티저 사이트 오픈·PV 공개","MEDIA"],["위키백과 — 원작 연재 정보","MEDIA"],
+  ["Wikipedia — Shangri-La Frontier","MEDIA"]],
+ gaps:["게임 고유 정보 전반 (플레이 방식·캐릭터·시스템)","한국/글로벌 출시 계획","원작 캐릭터의 게임 내 구현 범위","고단샤 IP 가이드 (RIGHTS CHECK REQUIRED)","원작 팬덤 언어·밈 조사","정식 타이틀명 최종 확인"]
+},
+
+{
+ id:"octopus", no:"14", name:"프로젝트 옥토퍼스", short:"프로젝트 옥토퍼스",
+ ipClass:"EXT_PUB", genre:"캐주얼 액션 로그라이크 RPG", status:"UNRELEASED", maturity:"LOW",
+ dev:"콩스튜디오 (넷마블 퍼블리싱)", release:"2026 예정", plat:"미공개", region:"글로벌 판권 확보",
+ sw:["#3A4A5C","#5C7A8A","#8AA8B0","#D4C4A8"],
+ asset:"UNKNOWN", assetNote:"NOT ENOUGH PUBLIC DATA — 개발 코드명 단계",
+ one:"콩스튜디오가 개발하고 넷마블이 글로벌 퍼블리싱하는 도트 그래픽 기반 캐주얼 액션 로그라이크 RPG.",
+ coreFantasy:{code:"NOT ENOUGH PUBLIC DATA", flow:[],
+   desc:"⚠ 개발 코드명 단계로, Core Fantasy를 정의할 근거가 없다. <b>추측하지 않는다.</b>"},
+ iconic5:[["NOT ENOUGH PUBLIC DATA","—","시각 자산 미공개","—"]],
+ heat:[{n:"NOT ENOUGH PUBLIC DATA", role:"—", heat:"—", vis:"—", ua:"—", sns:"—",
+   why:"캐릭터 구성 미공개", scene:"—", rel:"—", line:"—", nick:"—", now:"—", basis:"UNVERIFIED"}],
+ vdna:[["도트 그래픽 (확인)","—","—","⚠ 도트 기반이라는 것만 확인. 구체적 아트 디렉션 미공개"]],
+ fanLang:[{t:"NOT ENOUGH PUBLIC DATA", risk:"caution", origin:"—", when:"—",
+   why:"미출시로 팬덤 형성 전", now:"—", use:"—", src:"UNVERIFIED"}],
+ landmine:[
+  {t:"미공개 프로젝트를 기존 IP와 연결짓는 것", lv:"HIGH",
+   d:"⚠ 「가디언 테일즈」 IP 활용 여부는 매체 언급만 있고 공식 확인되지 않았다",
+   why:"확인되지 않은 IP 연결을 광고에 쓰면 권리 문제와 기대 불일치가 동시에 발생", src:"UNVERIFIED"}],
+ origIP:{
+  memory:"NOT ENOUGH PUBLIC DATA — 개발사 콩스튜디오는 「던전링크」·「가디언 테일즈」로 알려져 있으나, 본 프로젝트와의 IP 관계는 공식 확인되지 않음",
+  game:"넷마블이 2025.11 글로벌 퍼블리싱 계약 체결. 도트 그래픽 기반 캐주얼 액션 로그라이크 RPG. '광산'을 배경으로 다양한 콘텐츠 예정. 간편한 조작으로 다양한 전투 빌드 구성.",
+  gap:"NOT ENOUGH PUBLIC DATA",
+  sens:"NOT ENOUGH PUBLIC DATA",
+  rights:"개발사·IP 권리 관계 미확인 — RIGHTS CHECK REQUIRED"},
+ timeline:[
+  {d:"2025.11", e:"넷마블 글로벌 퍼블리싱 계약 체결", fan:"—", mkt:"국내외 서비스 판권 확보", hot:false},
+  {d:"2026 예정", e:"출시 예정", fan:"—", mkt:"⚠ 정식 명칭·출시일 미정", hot:false}],
+ mktHistory:"NOT ENOUGH PUBLIC DATA",
+ starter:{
+  ua:{char:"NOT ENOUGH PUBLIC DATA", hook:"—", sit:"—", world:"—", fantasy:"—",
+   sec3:"—", avoid:"⚠ 확인되지 않은 IP 연결"},
+  banner:{hero:"NOT ENOUGH PUBLIC DATA", sym:"—", copy:"—", bg:"—", trigger:"—"},
+  sns:{meme:"NOT ENOUGH PUBLIC DATA", rel:"—", lang:"—", idea:"—"},
+  promo:{hero:"NOT ENOUGH PUBLIC DATA", world:"—", motif:"—", scroll:"—", motion:"—"},
+  ai:{keep:"NOT ENOUGH PUBLIC DATA", char:"⛔ 생성 금지", world:"—", avoid:"—"}},
+ sources:[["ZDNet·전자신문 — 글로벌 퍼블리싱 계약 체결","MEDIA"],
+  ["글로벌이코노믹 — 옥토퍼스 미리보기","MEDIA"]],
+ gaps:["정식 타이틀명","출시일·플랫폼","게임플레이 상세","IP 권리 관계 (가디언 테일즈 연관 여부)","캐릭터·세계관 전반","⚠ 내부 자료 없이는 팩트북 작성 불가"]
+}
+];
+/* ===== GCI RENDER LAYER ===== */
+const ALL = [].concat(G, G2, G3, G4).sort((a,b)=>a.no.localeCompare(b.no));
+const esc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const ND = "NOT ENOUGH PUBLIC DATA";
+const isND = v => !v || String(v).indexOf("NOT ENOUGH") === 0 || v === "—";
+const sbCls = s => s === "COMMUNITY SIGNAL" ? "COMMUNITY" : s;
+const sb = s => `<span class="sb ${sbCls(s)}">${esc(s)}</span>`;
+const stars = v => isND(v)
+  ? `<span class="bv nd">${esc(v||ND)}</span>`
+  : `<span class="bv">${esc(v)}</span>`;
+
+/* ---------- HOME ---------- */
+function homeView(){
+  const cards = ALL.map(g=>{
+    const ip = IPCLASS[g.ipClass];
+    const lead = g.heat && g.heat[0] ? g.heat[0].n : ND;
+    const icon = g.iconic5 && g.iconic5[0] ? g.iconic5[0][0] : ND;
+    return `<button class="gcard" data-go="${g.id}"
+        data-name="${esc(g.name+' '+g.short+' '+g.genre+' '+lead+' '+icon+' '+(g.coreFantasy.code||''))}"
+        data-ip="${g.ipClass}" data-genre="${esc(g.genre)}" data-status="${g.status}" data-mat="${g.maturity}">
+      <div class="gsw">${g.sw.map(c=>`<span style="background:${c}"></span>`).join("")}</div>
+      <div class="gin">
+        <div class="gtop"><span class="gnm">${esc(g.name)}</span>
+          <span class="gip ${ip.tone}">${esc(ip.label)}</span></div>
+        <div class="gmeta">${esc(g.genre)}<br>${esc(g.release)}</div>
+        <div class="gfan">◆ ${esc(g.coreFantasy.code)}</div>
+        <div class="gchar"><b>대표</b> ${esc(lead)}<br><b>상징</b> ${esc(icon)}</div>
+        <div class="gbot"><span class="gmat ${g.maturity}">MATURITY ${g.maturity}</span>
+          <span class="gasset">${esc(g.asset)}</span></div>
+      </div></button>`;
+  }).join("");
+
+  const genres = [...new Set(ALL.map(g=>g.genre))].sort();
+  return `
+  <div class="phead"><div class="ptitle"><div class="eyebrow">CREATIVE DECISION TOOL</div>
+    <h2>14개 타이틀 인덱스</h2>
+    <p>카드를 누르면 상세로 이동합니다. 상단 색띠는 화면 톤, ◆는 Core Fantasy입니다.</p></div>
+    <div class="hmeta"><span class="tag lime">서비스 12</span><span class="tag orange">미출시 2</span>
+    <span class="tag blue">자체·인수 7</span><span class="tag pink">라이선스 5</span></div></div>
+
+  <div class="filters">
+    <select id="fIp"><option value="">IP TYPE · 전체</option>
+      ${Object.keys(IPCLASS).map(k=>`<option value="${k}">${esc(IPCLASS[k].label)}</option>`).join("")}</select>
+    <select id="fGenre"><option value="">GENRE · 전체</option>
+      ${genres.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>
+    <select id="fStatus"><option value="">STATUS · 전체</option>
+      <option value="LIVE">서비스 중</option><option value="UNRELEASED">미출시</option></select>
+    <select id="fMat"><option value="">MATURITY · 전체</option>
+      <option value="HIGH">HIGH</option><option value="MEDIUM">MEDIUM</option><option value="LOW">LOW</option></select>
+    <span class="fcount" id="fCount"></span>
+  </div>
+
+  <div class="gcards" id="gcards">${cards}</div>
+
+  <div class="sect"><h3><span class="sn">A</span>IP 분류 체계</h3><p>2분법 대신 실제 권리·개발 관계 기준</p></div>
+  <div class="grid g3">${Object.keys(IPCLASS).map(k=>{
+    const c = IPCLASS[k], list = ALL.filter(g=>g.ipClass===k);
+    return `<div class="card"><h3><span class="gip ${c.tone}">${esc(c.label)}</span></h3>
+      <p><b>${esc(c.desc)}</b><br><br>${list.map(g=>esc(g.short)).join(" · ")||"—"}</p></div>`;}).join("")}</div>
+
+  <div class="sect"><h3><span class="sn">B</span>가장 강력한 자산이 무엇인가</h3><p>캐릭터가 항상 1순위라는 전제를 버린다</p></div>
+  <div class="grid g4">${["CHARACTER","WORLD","SYSTEM","COMPETITION","POWER","UNKNOWN"].map(a=>{
+    const list = ALL.filter(g=>g.asset===a); if(!list.length) return "";
+    return `<div class="card flat"><h3>${a}</h3><p>${list.map(g=>
+      `<b>${esc(g.short)}</b><br><span style="font-size:10px;color:#77756e">${esc(g.assetNote)}</span>`).join("<br><br>")}</p></div>`;
+  }).join("")}</div>
+
+  <div class="sect"><h3><span class="sn">C</span>혼동 방지</h3><p>소재를 섞으면 양쪽 광고가 모두 손해</p></div>
+  <div class="grid g2">
+    <div class="card"><h3>7DS GRAND CROSS ↔ Origin</h3>
+      <p>같은 원작·같은 개발사(넷마블F&amp;C). <b>GC는 카드배틀(보는 게임), Origin은 오픈월드(걷는 게임).</b><br><br>
+      가르는 법 — GC는 카드 UI를 반드시 넣고, Origin은 원경·이동을 반드시 넣는다.</p></div>
+    <div class="card"><h3>몬길 ↔ 스톤에이지 키우기</h3>
+      <p>둘 다 생물 수집이지만 <b>조작량이 정반대.</b> 몬길은 실시간 태그, 스톤에이지는 방치형.<br><br>
+      가르는 법 — 몬길은 태그 전환, 스톤에이지는 자동 진행·누적 보상.</p></div>
+    <div class="card"><h3>스톤에이지 ↔ KOF AFK</h3>
+      <p>같은 방치형 + IP 향수 구조.<br><br>가르는 법 — KOF는 도트 그래픽, 스톤에이지는 펫 탑승. 비주얼이 완전히 달라 이것만 지키면 갈린다.</p></div>
+    <div class="card"><h3>MMORPG 4종</h3>
+      <p>레이븐2=헤븐스톤(CURSED POWER) / 뱀피르=흡혈(PREDATOR) / RF=3종족(BELONGING) / SOL=신권(DOMINION).<br><br>
+      각 타이틀의 시그니처 오브젝트를 반드시 넣는다.</p></div>
+  </div>
+
+  <div class="sect"><h3><span class="sn">D</span>14개 전부에서 반복된 AI 원칙</h3><p>장르가 달라도 예외가 없었던 판단</p></div>
+  <div class="grid g2">
+    <div class="card"><h3 style="color:#4f6e1c">● 배경 · 세계관 확장 — 적합</h3>
+      <p>캐릭터가 없으니 정확도 부담이 없고 세계관 톤만 맞추면 된다. 성채·행성·대륙·던전·신전·오락실 — <b>AI 이미지 작업은 여기서 시작한다.</b></p></div>
+    <div class="card"><h3 style="color:var(--orange)">● 캐릭터 · 몬스터 · 시그니처 병기 — 비권장/금지</h3>
+      <p>얼굴·무기·의상·문양이 조금만 틀려도 팬이 즉시 알아본다. 라이선스 IP 5종은 원작자 검수 대상이고,
+      <b>왕좌의 게임은 배우 초상권까지 얽혀 실사화도 금지</b>다.</p></div>
+  </div>
+
+  <div class="note" style="margin-top:18px"><b>이 DB의 원칙</b> — 확인되지 않은 정보는 사실처럼 쓰지 않는다.
+  출처는 <span class="sb OFFICIAL">OFFICIAL</span> <span class="sb MEDIA">MEDIA</span>
+  <span class="sb COMMUNITY">COMMUNITY SIGNAL</span> <span class="sb UNVERIFIED">UNVERIFIED</span> 4단계로 구분했고,
+  커뮤니티 반응은 팬덤 전체 의견처럼 서술하지 않았다. 채울 근거가 없는 칸은 <b>${ND}</b>로 남겼다.</div>`;
+}
+
+/* ---------- GAME DETAIL ---------- */
+const SECTS = [["ov","OVERVIEW"],["ic","ICONIC 5"],["ch","CHARACTER"],["vd","VISUAL DNA"],
+  ["fl","FAN LANGUAGE"],["lm","LANDMINE"],["oip","ORIGINAL IP"],["tl","HISTORY"],["cs","CREATIVE"],["src","SOURCE"]];
+
+function gameView(g){
+  const ip = IPCLASS[g.ipClass];
+  const jump = `<div class="qjump">${SECTS.map(s=>
+    `<button data-j="${g.id}-${s[0]}">${s[1]}</button>`).join("")}</div>`;
+
+  const cf = `<div class="cf"><div class="eyebrow">CORE FANTASY</div>
+    <div class="cfcode">◆ ${esc(g.coreFantasy.code)}</div>
+    ${g.coreFantasy.flow.length?`<div class="cfflow">${g.coreFantasy.flow.map((f,i)=>
+      (i?'<i>→</i>':'')+`<span>${esc(f)}</span>`).join("")}</div>`:""}
+    <p>${g.coreFantasy.desc}</p></div>`;
+
+  const ic5 = g.iconic5[0][0]===ND || isND(g.iconic5[0][0])
+    ? `<div class="nodata">${ND} — 게임 고유 시각 자산 미공개</div>`
+    : `<div class="ic5">${g.iconic5.map((x,i)=>`<div class="icn">
+        <span class="icnum">0${i+1}</span><span class="ictype">${esc(x[1])}</span>
+        <strong>${esc(x[0])}</strong><span>${esc(x[2])}</span>
+        ${x[3]&&x[3]!=="—"?`<span class="icstar">${esc(x[3])}</span>`:""}</div>`).join("")}</div>`;
+
+  const heat = isND(g.heat[0].n)
+    ? `<div class="nodata">${ND} — 캐릭터 구성 미공개</div>`
+    : `<div class="chs">${g.heat.map(c=>`<div class="chc">
+        <div class="chn">${esc(c.n)}</div><div class="chr">${esc(c.role)}</div>
+        <div class="chbars">
+          <span class="bk">FANDOM</span>${stars(c.heat)}
+          <span class="bk">VISUAL</span>${stars(c.vis)}
+          <span class="bk">UA</span>${stars(c.ua)}
+          <span class="bk">SNS</span>${stars(c.sns)}</div>
+        <div class="chrow"><b>WHY</b>${esc(c.why)}</div>
+        ${c.scene&&c.scene!=="—"?`<div class="chrow"><b>SCENE</b>${esc(c.scene)}</div>`:""}
+        ${c.rel&&c.rel!=="—"?`<div class="chrow"><b>REL</b>${esc(c.rel)}</div>`:""}
+        ${c.line&&c.line!=="—"?`<div class="chrow"><b>LINE</b>${esc(c.line)}</div>`:""}
+        ${c.nick&&c.nick!=="—"?`<div class="chrow"><b>NICK</b>${esc(c.nick)}</div>`:""}
+        <div class="chrow"><b>NOW</b>${esc(c.now)}</div>
+        <div class="chbasis">BASIS · ${esc(c.basis)}</div></div>`).join("")}</div>`;
+
+  const vd = isND(g.vdna[0][0])
+    ? `<div class="nodata">${ND} — 게임 비주얼 가이드 미공개</div>`
+    : `<div class="vd"><div class="vdh"><span>VISUAL ELEMENT</span><span>MEANING</span><span>EMOTION</span><span>MARKETING USE</span></div>
+       ${g.vdna.map(v=>`<div class="vdr"><span class="e">${esc(v[0])}</span><span class="m">${esc(v[1])}</span>
+         <span class="em">${esc(v[2])}</span><span class="u">${esc(v[3])}</span></div>`).join("")}</div>`;
+
+  const fl = isND(g.fanLang[0].t)
+    ? `<div class="nodata">${ND} — 팬덤 언어 미조사</div>`
+    : `<div class="fl">${g.fanLang.map(f=>`<div class="flc">
+        <div class="flh"><span class="flt">${esc(f.t)}</span>
+          <span class="fllbl ${f.risk}">${f.risk==='safe'?'SAFE':f.risk==='caution'?'CAUTION':'DO NOT USE'}</span></div>
+        <div class="flrow"><b>ORIGIN</b>${esc(f.origin)}</div>
+        <div class="flrow"><b>WHEN</b>${esc(f.when)}</div>
+        <div class="flrow"><b>WHY POPULAR</b>${esc(f.why)}</div>
+        <div class="flrow"><b>CURRENT</b>${esc(f.now)}</div>
+        <div class="flrow" style="margin-top:2px">${sb(f.src)}</div>
+        <div class="fluse"><b>USABILITY</b> ${esc(f.use)}</div></div>`).join("")}</div>`;
+
+  const lm = `<div class="lm">${g.landmine.map(m=>`<div class="lmr">
+      <span class="lmlv ${m.lv}">${m.lv}</span><span class="t">${esc(m.t)}</span>
+      <span class="d">${esc(m.d)}</span><span class="w">${esc(m.why)} ${sb(m.src)}</span></div>`).join("")}</div>`;
+
+  const oip = g.origIP ? `<div class="oip">
+      <div class="oipc"><h4>ORIGINAL IP MEMORY</h4><p>${g.origIP.memory}</p></div>
+      <div class="oipc"><h4>GAME VERSION</h4><p>${g.origIP.game}</p></div>
+      <div class="oipc gap"><h4>IP GAP</h4><p>${g.origIP.gap}</p></div>
+      <div class="oipc rights"><h4>IP SENSITIVITY / RIGHTS</h4><p>${esc(g.origIP.sens)}<br><br><b>${esc(g.origIP.rights)}</b></p></div>
+    </div>` : `<div class="note">자체·인수 IP — 원작 분리 대상 아님. 외부 라이선스 제약 없음.</div>`;
+
+  const tl = `<div class="tl">${g.timeline.map(t=>`<div class="tlr ${t.hot?'hot':''}">
+      <span class="d">${esc(t.d)}</span><span class="e">${esc(t.e)}</span>
+      <span class="f">${esc(t.fan)}</span><span class="m">${esc(t.mkt)}</span></div>`).join("")}</div>`;
+
+  const s = g.starter;
+  const cs = `<div class="cs">
+    <div class="csc"><h4>UA VIDEO</h4>
+      <div class="csrow"><b>CHARACTER</b>${esc(s.ua.char)}</div>
+      <div class="csrow"><b>HOOK</b>${esc(s.ua.hook)}</div>
+      <div class="csrow"><b>SITUATION</b>${esc(s.ua.sit)}</div>
+      <div class="csrow"><b>WORLD</b>${esc(s.ua.world)}</div>
+      <div class="csrow"><b>FANTASY</b>${esc(s.ua.fantasy)}</div>
+      <div class="csrow"><b>FIRST 3S</b>${esc(s.ua.sec3)}</div>
+      <div class="csrow avoid"><b>AVOID</b>${esc(s.ua.avoid)}</div></div>
+    <div class="csc"><h4>DISPLAY / BANNER</h4>
+      <div class="csrow"><b>HERO</b>${esc(s.banner.hero)}</div>
+      <div class="csrow"><b>SYMBOL</b>${esc(s.banner.sym)}</div>
+      <div class="csrow"><b>COPY</b>${esc(s.banner.copy)}</div>
+      <div class="csrow"><b>BACKGROUND</b>${esc(s.banner.bg)}</div>
+      <div class="csrow"><b>TRIGGER</b>${esc(s.banner.trigger)}</div></div>
+    <div class="csc"><h4>SNS</h4>
+      <div class="csrow"><b>MEME</b>${esc(s.sns.meme)}</div>
+      <div class="csrow"><b>RELATION</b>${esc(s.sns.rel)}</div>
+      <div class="csrow"><b>FAN LANG</b>${esc(s.sns.lang)}</div>
+      <div class="csrow"><b>IDEA</b>${esc(s.sns.idea)}</div></div>
+    <div class="csc"><h4>PROMOTION SITE</h4>
+      <div class="csrow"><b>HERO</b>${esc(s.promo.hero)}</div>
+      <div class="csrow"><b>WORLD</b>${esc(s.promo.world)}</div>
+      <div class="csrow"><b>INTERACTION</b>${esc(s.promo.motif)}</div>
+      <div class="csrow"><b>SCROLL</b>${esc(s.promo.scroll)}</div>
+      <div class="csrow"><b>MOTION</b>${esc(s.promo.motion)}</div></div>
+    <div class="csc" style="grid-column:1/-1"><h4>AI IMAGE / VIDEO</h4>
+      <div class="csrow"><b>KEEP</b>${esc(s.ai.keep)}</div>
+      <div class="csrow"><b>CHARACTER</b>${esc(s.ai.char)}</div>
+      <div class="csrow"><b>WORLD</b>${esc(s.ai.world)}</div>
+      <div class="csrow avoid"><b>AVOID</b>${esc(s.ai.avoid)}</div></div></div>`;
+
+  return `${jump}
+  <div class="phead" id="${g.id}-ov"><div class="ptitle"><div class="eyebrow">${g.no} · ${esc(ip.label)}</div>
+    <h2>${esc(g.name)}</h2><p>${esc(g.genre)} · ${esc(g.dev)} · ${esc(g.release)}</p></div>
+    <div class="hmeta"><span class="tag ${ip.tone}">${esc(ip.label)}</span>
+      <span class="tag ${g.maturity==='HIGH'?'lime':g.maturity==='MEDIUM'?'blue':'orange'}">MATURITY ${g.maturity}</span>
+      <span class="tag">ASSET · ${esc(g.asset)}</span></div></div>
+
+  <div class="hero">
+    <div><div class="eyebrow">01 · THIS GAME IS</div><h3>${esc(g.one)}</h3>
+      <p><b>가장 강한 자산</b> — ${esc(g.assetNote)}</p></div>
+    <div class="hside">
+      <div class="kv2"><span>플랫폼</span><b>${esc(g.plat)}</b></div>
+      <div class="kv2"><span>서비스 지역</span><b>${esc(g.region)}</b></div>
+      <div class="kv2"><span>개발</span><b>${esc(g.dev)}</b></div>
+      <div class="kv2" style="border-bottom:0"><span>상태</span><b>${g.status==='LIVE'?'서비스 중':'미출시'}</b></div>
+      <div class="hsw">${g.sw.map(c=>`<span style="background:${c}"></span>`).join("")}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4)">화면 톤 — 비주얼 DNA 기반 (공식 컬러 아님)</div>
+    </div></div>
+
+  <div class="sect"><h3><span class="sn">01</span>CORE FANTASY</h3><p>이 게임이 파는 욕망 구조</p></div>
+  ${cf}
+
+  <div class="sect" id="${g.id}-ic"><h3><span class="sn">02</span>ICONIC 5</h3><p>무엇을 보여주면 팬이 바로 알아보는가</p></div>
+  ${ic5}
+
+  <div class="sect" id="${g.id}-ch"><h3><span class="sn">03</span>CHARACTER HEAT</h3><p>등장 순서가 아니라 인지도·활용도 기준 · 근거 없는 점수는 표기하지 않음</p></div>
+  ${heat}
+
+  <div class="sect" id="${g.id}-vd"><h3><span class="sn">04</span>VISUAL DNA</h3><p>Element → Meaning → Emotion → Marketing Use</p></div>
+  ${vd}
+
+  <div class="sect" id="${g.id}-fl"><h3><span class="sn">05</span>FAN LANGUAGE</h3><p>팬이 실제로 쓰는 말 · SAFE / CAUTION / DO NOT USE</p></div>
+  ${fl}
+
+  <div class="sect" id="${g.id}-lm"><h3><span class="sn">06</span>COMMUNITY LANDMINE</h3><p>Risk Level + 디자이너가 알아야 하는 이유</p></div>
+  ${lm}
+
+  <div class="sect" id="${g.id}-oip"><h3><span class="sn">07</span>ORIGINAL IP vs GAME</h3><p>"원작에서 유명하다"와 "지금 사용 가능하다"는 다르다</p></div>
+  ${oip}
+
+  <div class="sect" id="${g.id}-tl"><h3><span class="sn">08</span>HISTORY &amp; MEME TIMELINE</h3><p>업데이트 연혁이 아니라 인식이 바뀐 사건</p></div>
+  ${tl}
+  <div class="note" style="margin-top:11px"><b>MARKETING HISTORY</b> — ${esc(g.mktHistory)}</div>
+
+  <div class="sect" id="${g.id}-cs"><h3><span class="sn">09</span>CREATIVE STARTER</h3><p>채널별 착수 지점</p></div>
+  ${cs}
+
+  <div class="sect" id="${g.id}-src"><h3><span class="sn">10</span>SOURCE &amp; DATA GAP</h3><p>출처 신뢰도 4단계 · 미확인 항목 명시</p></div>
+  <div class="grid g2">
+    <div><div class="srcs">${g.sources.map(x=>`<div class="srcr">${sb(x[1])}<span>${esc(x[0])}</span></div>`).join("")}</div></div>
+    <div class="gapbox"><strong>DATA GAP — 추측으로 채우지 않은 항목</strong>
+      <p>${g.gaps.map(x=>"· "+esc(x)).join("<br>")}</p></div>
+  </div>
+
+  <div class="footer-note">${esc(g.name)} · Observed 2026.08 · RESEARCH MATURITY ${g.maturity}</div>`;
+}
+
+/* ---------- ROUTER ---------- */
+const main = document.getElementById("main");
+const navList = document.getElementById("navList");
+const groups = [["서비스 중 · 자체·인수 IP", g=>g.status==="LIVE" && ["OWN","LEGACY","ACQUIRED","EXT_PUB"].includes(g.ipClass)],
+                ["서비스 중 · 라이선스 IP", g=>g.status==="LIVE" && ["LICENSED","LICENSED_EXP"].includes(g.ipClass)],
+                ["미출시", g=>g.status==="UNRELEASED"]];
+navList.innerHTML = groups.map(([label,fn])=>{
+  const list = ALL.filter(fn); if(!list.length) return "";
+  return `<div class="navlabel">${label}</div>` + list.map(g=>
+    `<button class="nav-item" data-v="${g.id}" data-search="${esc(g.name+' '+g.short)}">
+      <span class="nnum">${g.no}</span>${esc(g.short)}<span class="nbadge ${g.maturity}">${g.maturity[0]}</span></button>`).join("");
+}).join("");
+
+function show(id){
+  const g = ALL.find(x=>x.id===id);
+  main.innerHTML = `<section class="view active">${g?gameView(g):homeView()}</section>`;
+  document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active", b.dataset.v===(g?id:"home")));
+  document.getElementById("pill").textContent = g ? `${g.no} · ${g.short}` : "14 TITLES";
+  window.scrollTo({top:0,behavior:"instant"});
+  if(!g) bindFilters();
+}
+
+function bindFilters(){
+  const ids = ["fIp","fGenre","fStatus","fMat"].map(x=>document.getElementById(x));
+  const cards = [...document.querySelectorAll(".gcard")];
+  const cnt = document.getElementById("fCount");
+  const apply = ()=>{
+    const [ip,gn,st,mt] = ids.map(s=>s.value);
+    const q = (document.getElementById("q").value||"").trim().toLowerCase();
+    let n=0;
+    cards.forEach(c=>{
+      const ok = (!ip||c.dataset.ip===ip) && (!gn||c.dataset.genre===gn) &&
+                 (!st||c.dataset.status===st) && (!mt||c.dataset.mat===mt) &&
+                 (!q||c.dataset.name.toLowerCase().includes(q));
+      c.classList.toggle("hide",!ok); if(ok) n++;
+    });
+    cnt.textContent = `${n} / ${cards.length} TITLES`;
+  };
+  ids.forEach(s=>s.addEventListener("change",apply));
+  apply();
+}
+
+document.addEventListener("click",e=>{
+  const nav = e.target.closest(".nav-item"); if(nav) return show(nav.dataset.v);
+  const go = e.target.closest("[data-go]"); if(go) return show(go.dataset.go);
+  const j = e.target.closest("[data-j]");
+  if(j){ const el = document.getElementById(j.dataset.j); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); }
+});
+
+document.getElementById("q").addEventListener("input",e=>{
+  const q = e.target.value.trim().toLowerCase();
+  const navBtns = [...document.querySelectorAll(".nav-item[data-search]")];
+  navBtns.forEach(b=>b.classList.toggle("hide", q && !b.dataset.search.toLowerCase().includes(q)));
+  if(document.querySelector(".gcards")) bindFilters();
+});
+
+show("home");
+</script>
