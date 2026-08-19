@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>MAX실 AI 시대 직무 체계</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  color-scheme:light;
+  /* 사내 공통 토큰 (intel/research-deck-design 동일) */
+  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
+  --accent:#1a1a17;--accent2:#e6e4dd;--shadow:0 12px 30px rgba(24,24,24,.06);
+  --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
+  --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
+  /* 배정: blue=확정 사항 / orange=미정·공백 / lime=흡수된 업무 / pink=폐기된 안 */
+  --sans:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,48px) clamp(16px,3vw,48px) 80px}
+.top-rule{height:2px;background:var(--accent);margin-bottom:clamp(20px,2.4vw,34px)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+h1{font-size:clamp(28px,3.4vw,44px);font-weight:700;letter-spacing:-.022em;line-height:1.15;margin-top:8px}
+.sub{font-size:clamp(14px,1.3vw,17px);margin-top:12px;max-width:66ch;color:#3f3d38}
+
+.sec{margin-top:clamp(30px,3.6vw,52px)}
+.sec-h{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.sec-h b{font-size:15px;font-weight:700}
+.sec-h span{font-size:11px;color:var(--muted)}
+
+/* 결론 */
+.verdict{background:var(--accent);color:#fff;border-radius:16px;padding:26px 30px;margin-top:24px}
+.verdict p{font-size:clamp(16px,1.7vw,21px);font-weight:600;line-height:1.5;max-width:60ch}
+.verdict .sml{font-size:13px;font-weight:400;color:#b8b6ae;margin-top:12px;max-width:74ch;line-height:1.65}
+
+/* 직무 카드 */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.role{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+  display:flex;flex-direction:column;gap:14px}
+.role .en{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.role .ko{font-size:11px;color:var(--muted);margin-top:3px}
+.role dl{display:flex;flex-direction:column;gap:11px}
+.role dt{font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.role dd{font-size:12.5px;line-height:1.65}
+.role .ai dt{color:var(--blue)}
+.wf{margin-top:auto;padding-top:13px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:6px;
+  background:var(--blue2);color:var(--blue);border:1px solid #c7d3fb}
+.chip.own{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* 원칙 */
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.rule .r{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:15px 24px;border-top:1px solid var(--line)}
+.rule .r:first-child{border-top:0}
+@media(max-width:620px){.rule .r{grid-template-columns:1fr;gap:5px}}
+.rule dt{font-size:12px;font-weight:700}
+.rule dd{font-size:12.5px;line-height:1.7}
+
+/* 표 */
+.scroll{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;font-size:12.5px;min-width:660px}
+.tbl th,.tbl td{text-align:left;padding:12px 16px;border-top:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:11px;font-weight:600;color:var(--muted);background:var(--panel2);border-top:0;white-space:nowrap}
+.tbl td:first-child{font-weight:700;white-space:nowrap}
+.tbl .owner{font-weight:600}
+.gap{color:var(--orange);font-weight:700}
+
+/* 미정 */
+.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 20px;
+  box-shadow:inset 3px 0 0 var(--orange)}
+.item.hole{box-shadow:inset 3px 0 0 var(--orange);border-color:#f0cfbb;background:#fffaf7}
+.item h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.item p{font-size:12px;color:#3f3d38;line-height:1.65}
+.item .who{display:inline-block;margin-top:9px;font-size:10.5px;font-weight:600;
+  padding:3px 9px;border-radius:6px;background:var(--orange2);color:#a8420c}
+.item .who.data{background:var(--accent2);color:#3f3d38}
+
+/* 개정 이력 */
+.hist{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:20px 24px}
+.hist ol{list-style:none;counter-reset:h;display:flex;flex-direction:column;gap:13px}
+.hist li{counter-increment:h;position:relative;padding-left:30px;font-size:12.5px;line-height:1.65}
+.hist li::before{content:counter(h);position:absolute;left:0;top:1px;width:19px;height:19px;
+  border-radius:50%;background:var(--accent2);color:#3f3d38;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.hist li.live::before{background:var(--accent);color:#fff}
+.hist .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;
+  margin-right:7px;background:var(--pink2);color:#c23bb3}
+.hist .tag.live{background:var(--lime2);color:#5a7d1a}
+.hist b{font-weight:700}
+.note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.7}
+
+@media print{body{background:#fff}.role,.item,.tbl{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top-rule"></div>
+  <p class="eyebrow">MAX실 · 직무 체계 정의</p>
+  <h1>AI 시대 직무 체계</h1>
+  <p class="sub">세 번의 안이 겹쳐 있던 문서를 최종 확정안 기준으로 다시 세웠다. 폐기된 두 안은 맨 아래 개정 이력으로 내렸다.</p>
+
+  <div class="verdict">
+    <p>직무는 세 개다. Brand &amp; Visual Designer, Product Designer, Motion Designer.<br>AI는 이 세 직무가 쓰는 툴이 하나 늘어난 것으로 본다.</p>
+    <p class="sml">신규 직군을 만들지 않는다. 배치 생성이나 태깅 같은 실무도, 기획과 스토리보드도 전부 세 타이틀 안의 R&amp;R로 흡수한다. Motion Designer가 영상 기획을 스스로 하고, Brand &amp; Visual Designer가 캐스팅 기획을 스스로 한다.</p>
+  </div>
+
+  <section class="sec">
+    <div class="sec-h"><b>확정 직무 3종</b><span>영문 타이틀 · 괄호는 구 명칭</span></div>
+    <div class="roles">
+
+      <article class="role">
+        <div>
+          <p class="en">Brand &amp; Visual Designer</p>
+          <p class="ko">구 비주얼 디자이너</p>
+        </div>
+        <dl>
+          <div><dt>기본 R&amp;R</dt><dd>이미지 제작. 캐스팅 기획부터 아카이브, 파생까지 WF01 전 구간을 직접 만든다.</dd></div>
+          <div class="ai"><dt>AI로 늘어난 일</dt><dd>페르소나 정의, 시드 고정, 연령·성별 매트릭스 배치 생성, 포즈 파생, 일관성 체크와 태깅. Higgsfield 같은 생성 도구를 본인이 직접 다룬다.</dd></div>
+        </dl>
+        <div class="wf"><span class="chip own">WF01 오너</span><span class="chip">WF02 일부</span></div>
+      </article>
+
+      <article class="role">
+        <div>
+          <p class="en">Product Designer</p>
+          <p class="ko">구 프로덕트 디자이너</p>
+        </div>
+        <dl>
+          <div><dt>기본 R&amp;R</dt><dd>GUI 기획, UI와 상세페이지 설계. 적용과 검수까지 직접 한다.</dd></div>
+          <div class="ai"><dt>AI로 늘어난 일</dt><dd>AI로 만든 비주얼을 실제 상세페이지 그리드에 앉히고, 브랜드 시스템을 지켰는지 확인한 뒤 최종 검수한다.</dd></div>
+        </dl>
+        <div class="wf"><span class="chip own">WF01 적용·검수</span><span class="chip">WF02 일부</span></div>
+      </article>
+
+      <article class="role">
+        <div>
+          <p class="en">Motion Designer</p>
+          <p class="ko">구 영상 디자이너</p>
+        </div>
+        <dl>
+          <div><dt>기본 R&amp;R</dt><dd>편집과 모션 제작. 연출기획에서 스토리보드, 제작까지 WF03 전 구간을 직접 리드한다.</dd></div>
+          <div class="ai"><dt>AI로 늘어난 일</dt><dd>연출기획, 스토리보드 덱 정리, AI 소스 생성, 편집 합성까지 이어서 끌고 간다. 모션 번역 프레임워크 L1~L4를 기준으로 프롬프트를 쓴다.</dd></div>
+        </dl>
+        <div class="wf"><span class="chip own">WF03 오너</span><span class="chip">게임영상 · 브랜드필름 · 시네마틱</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><b>AI를 어떻게 두는가</b><span>이 문서의 전제</span></div>
+    <dl class="rule">
+      <div class="r"><dt>툴로 본다</dt><dd>AI는 직군을 새로 만들 이유가 되지 않는다. 각 직무의 R&amp;R 안에 툴 활용 항목으로 붙는다.</dd></div>
+      <div class="r"><dt>타이틀은 유지</dt><dd>Visual, Product, Motion이라는 축 자체는 그대로 둔다. 영문 표기로만 정리했다.</dd></div>
+      <div class="r"><dt>오퍼레이터를 두지 않는다</dt><dd>배치 생성, 태깅 같은 반복 실무를 담당할 별도 인력을 만들지 않는다. 생성한 사람이 정리까지 한다.</dd></div>
+      <div class="r"><dt>기획을 분리하지 않는다</dt><dd>제작자가 자기 기획을 한다. 원본 MAX실 OS 템플릿에 있던 Strategist 스윔레인은 살리지 않는다.</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><b>워크플로우별 오너</b><span>직무 확정에 따른 재배치</span></div>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>WF</th><th>내용</th><th>오너</th><th>바뀐 점</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>WF01</td><td>인물 AI 에셋 구축</td>
+            <td class="owner">Brand &amp; Visual Designer<br><span style="color:var(--muted);font-weight:400">+ Product Designer (적용·검수)</span></td>
+            <td>4개 레인을 캐스팅 → 아카이브 → 파생 3단계로 묶었다. 신규 직군명 없이 같은 타이틀이 단계별로 이어진다.</td>
+          </tr>
+          <tr>
+            <td>WF02</td><td>라이브러리 카테고리별</td>
+            <td class="owner">카드별로 다름</td>
+            <td>카드 담당 필드의 "AI 비주얼 디렉터" 표기를 지우고 <code>Brand &amp; Visual Designer (AI 툴 활용)</code> 형태로 되돌렸다.</td>
+          </tr>
+          <tr>
+            <td>WF03</td><td>영상 내재화</td>
+            <td class="owner">Motion Designer</td>
+            <td>게임영상, 브랜드필름, 시네마틱 세 카테고리의 공통 오너다. 초기기획과 연출기획도 여기서 한다.</td>
+          </tr>
+          <tr>
+            <td>WF04</td><td>씬 선정</td>
+            <td class="owner gap">공석</td>
+            <td>기획자가 리드하기로 했던 자리다. 기획자 직무를 없애면서 오너가 비었다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><b>아직 안 정한 것</b><span>6건 · 위 두 개는 기획자를 빼면서 생긴 빈자리다</span></div>
+    <div class="open">
+
+      <div class="item hole">
+        <h4>WF04 씬 선정 오너</h4>
+        <p>기획자 직무를 없애면서 담당이 사라졌다. Motion Designer가 가져가는 게 흐름상 자연스럽지만 확정된 적은 없다.</p>
+        <span class="who">오너 공백</span>
+      </div>
+
+      <div class="item hole">
+        <h4>클라이언트 커뮤니케이션 · 제안서 브리프</h4>
+        <p>기획자 R&amp;R에 있던 항목이다. 세 직무 중 누가 맡는지, 아니면 실장이 직접 쥐는지 정하지 않았다.</p>
+        <span class="who">오너 공백</span>
+      </div>
+
+      <div class="item">
+        <h4>WF01을 1인이 다 하는가</h4>
+        <p>Brand &amp; Visual Designer 한 명이 캐스팅부터 파생까지 전 단계를 맡는지, 8명 중 여럿이 단계별로 나눠 맡는지.</p>
+        <span class="who">인력 배치</span>
+      </div>
+
+      <div class="item">
+        <h4>WF02 4개 카드 담당</h4>
+        <p>배경·공간, 제품·목업, 무드·텍스처, 타이포·카피비주얼. 네 카드 모두 Brand &amp; Visual과 Product 중 누구인지 열려 있다.</p>
+        <span class="who">직무 경계</span>
+      </div>
+
+      <div class="item">
+        <h4>VX / VM 팀 소속 배분</h4>
+        <p>직무 체계와는 다른 축이다. 이 문서에서 다루지 않는다.</p>
+        <span class="who">별개 축</span>
+      </div>
+
+      <div class="item">
+        <h4>해외 타이틀 트렌드 근거</h4>
+        <p>"해외 빅테크는 AI 때문에 Product Designer 같은 기존 타이틀을 바꾸지 않았다"는 판단이 이 개정의 출발점이다. 웹서치로 확인한 적이 없다. 확정 근거로 쓰려면 검증이 먼저다.</p>
+        <span class="who data">DATA GAP</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><b>개정 이력</b><span>세 안 중 마지막이 살아 있다</span></div>
+    <div class="hist">
+      <ol>
+        <li><span class="tag">폐기</span><b>신규 타이틀안.</b> 비주얼·프로덕트·영상 디자이너를 AI 비주얼 디렉터 같은 새 이름으로 교체하려 했다. 해외에서 이런 식으로 타이틀이 바뀌지 않는다는 판단으로 접었다.</li>
+        <li><span class="tag">폐기</span><b>한글 타이틀 유지 + 기획자 추가.</b> 세 타이틀을 한글 그대로 두고 기획자를 네 번째 직무로 넣었다. 기획을 제작자에게서 떼어내지 않기로 하면서 접었다.</li>
+        <li class="live"><span class="tag live">확정</span><b>영문 3직무 + 기획 흡수.</b> Brand &amp; Visual Designer, Product Designer, Motion Designer. 기획자는 두지 않고 기획을 각 직무 안으로 넣었다. 지금 문서 위쪽이 이 안이다.</li>
+      </ol>
+      <p class="note">앞 두 안에서만 쓰던 표현("AI 비주얼 디렉터", "AI 오퍼레이터", "기획자")이 워크플로우 파일에 남아 있으면 지워야 한다. WF02 카드 담당 필드가 특히 그렇다.</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
