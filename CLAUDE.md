@@ -63,6 +63,7 @@
 ├── CLAUDE.md (이 파일 — 핵심만)
 ├── agents/README.md           # 에이전트 상세 설명
 ├── skills/                    # 커스텀 스킬
+│   ├── design-reference-moodboard/
 │   ├── intel-deck-design/
 │   ├── list-deck-design/
 │   ├── mx-deck-design/
@@ -94,7 +95,7 @@
 
 **② 디자인 인텔리전스**
 - `design-trend-radar` (트렌드 레이더) — 최근 3개월 글로벌 트렌드, 출처 필수
-- `reference-curator` (레퍼런스 큐레이터) — 카테고리별 레퍼런스 큐레이션, 출처 필수
+- `reference-curator` (레퍼런스 큐레이터) — 카테고리별 레퍼런스 큐레이션, 출처 필수. **사이트·UI 레퍼런스는 `design-reference-moodboard` 스킬이 맡는다** — 이쪽은 영상·패키지·인쇄·브랜딩 톤 담당
 - `design-system-guardian` (시스템 가디언) — 사내 디자인 시스템 준수 점검
 - `design-critique` (디자인 비평가) — 시안 6영역 검수 🟢🟡🔴
 
@@ -117,7 +118,7 @@
 - `legal-compliance` (법무) — 계약·NDA 쟁점 플래그(자문 대체 아님)
 
 **⑥ 역할·파이프라인 오케스트레이터**
-- `marketer` (마케터) — RFP부터 발산까지 **4챕터 자동 체이닝**. `0 RFP 분석 → CH1 현황 조사(팩트) → CH2 진단(포지셔닝·빈자리) → CH3 문제 정의(한 문장) → CH4 발산(방향 후보)`. 각 챕터가 끝나면 자동으로 다음 챕터로 넘어간다. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer (CH2·CH3은 marketer 자체 수행). **산출 포맷은 `mx-research-dashboard-design`(좌측 탭 12뷰 대시보드)이 표준** — `mx-deck-design`은 발표용 제안서에만. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"브랜드 진단"/"문제 정의"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"/"마케터 돌려". **v8.1 품질 규칙**: CH1은 조사 6스텝(S1 카테고리 정의·S2 시장규모·S3 공급측·S4 수요측·S5 이종업계·S6 트렌드) 고정 — "빠르게"여도 S1·S2·S3·S6은 필수, "제대로"면 S4·S5까지. 출처는 T1~T4 티어를 달고 T4는 본문 금지, 핵심 수치는 교차 확인 2건, 못 찾으면 DATA GAP. 글은 초등 5학년 기준 `용어(쉬운 풀이)` 형식.
+- `marketer` (마케터) — RFP부터 발산까지 **4챕터 자동 체이닝**. `0 RFP 분석 → CH1 현황 조사(팩트) → CH2 진단(포지셔닝·빈자리) → CH3 문제 정의(한 문장) → CH4 발산(방향 후보)`. 각 챕터가 끝나면 자동으로 다음 챕터로 넘어간다. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer (CH2·CH3은 marketer 자체 수행). **산출 포맷은 `mx-research-dashboard-design`(좌측 탭 12뷰 대시보드)이 표준** — `mx-deck-design`은 발표용 제안서에만. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"브랜드 진단"/"문제 정의"/"트렌드 봐줘"/"레퍼런스 찾아줘"(사이트·UI 대상이면 `design-reference-moodboard` 스킬로)/"브레인스토밍"/"리서치 쭉 돌려줘"/"마케터 돌려". **v8.1 품질 규칙**: CH1은 조사 6스텝(S1 카테고리 정의·S2 시장규모·S3 공급측·S4 수요측·S5 이종업계·S6 트렌드) 고정 — "빠르게"여도 S1·S2·S3·S6은 필수, "제대로"면 S4·S5까지. 출처는 T1~T4 티어를 달고 T4는 본문 금지, 핵심 수치는 교차 확인 2건, 못 찾으면 DATA GAP. 글은 초등 5학년 기준 `용어(쉬운 풀이)` 형식.
 - `brand-pipeline` (브랜드 파이프라인) — 브랜드 제안 풀프로세스 오케스트레이션(manus-1 → manus-2 → runable-3, 단계 게이트 필수)
 - `manus-1` (마누스 1차) — 경쟁 리서치·포지셔닝·BX 비주얼 프롬프트(슬라이드 생성 금지)
 - `manus-2` (마누스 2차) — 비주얼 아이덴티티 추출·컨셉/무드보드 발산(슬라이드 생성 금지)
@@ -132,8 +133,9 @@
 - `storyboard-deck-design` — 영상·시네마틱 스토리보드(콘티) HTML. 포맷 프리셋(15초 5~8컷 / 30초 10~14컷 / 60초 16~22컷 / 90초 이상 24~40컷 3막)으로 컷 수를 먼저 확정하고, 컷마다 화면·앵글/샷사이즈·모션과 전환·대사(화자 표기)·사운드(SFX/BGM/AMB)·리소스를 채운다. 컷 그리드 위에 레퍼런스 링크 + 연출 방향 5항목(카메라·컬러·편집·사운드·타이포) 고정. template.html 동반. 트리거 "스토리보드 만들어줘"/"콘티 짜줘"/"영상 SB"/"30초 광고 콘티"/"시네마틱 스토리보드"
 - `intel-deck-design` — 항목 N개를 같은 구조로 반복하는 인텔리전스 DB (좌측 번호 네비 + 항목별 탭, 모노톤+포인트 4색, SAFE/CAUTION/DO NOT USE 라벨, DATA GAP 박스, 검색·필터, template.html 동반). 트리거 "인텔 대시보드"/"항목별 상세 보게"/"팩트북 만들어줘"/"타이틀별로 정리"
 - `mx-research-dashboard-design` — **마케터 에이전트 산출 표준 포맷**. 좌측 사이드바 + 12뷰 탭 전환(00 요약 → 01 브리프·문제정의 → 02 팩트북 → 03 경쟁리서치 → 04 포지셔닝맵 → 05 화이트스페이스 → 06 이종업계 → 07 인사이트 → 08 밸류키워드 → 09 전략대안 → 10 추천전략 → 11 출처추적). 모노톤+포인트 4색(출처 티어 T1~T4 고정). **"마케터 돌려" 라우팅이 문서·HTML 산출로 이어지면 자동으로 이 레이아웃**. 트리거 "리서치 대시보드로 정리"/"마케터 산출물 만들어줘"/"좌측 탭으로 정리"
+- `design-reference-moodboard` — **UI·웹사이트 디자인 레퍼런스 무드보드**. 리서치·관점이 끝난 뒤 시안 착수 직전 단계에서 쓴다. Awwwards / CSS Design Awards / GDWEB 세 곳만 쓰고, 커뮤니티 평점·심사점수·WINNER 여부로 반응도를 확인해 고른다. Tier 1(평범한 레이아웃) / Tier 2(트렌디하지만 정돈) / Tier 3(과감한 인터랙션) 각 6개, 총 18개. 업종에 가두지 않고 스타일이 맞으면 다른 업종 사이트도 쓴다. 결과는 `moodboard_*.html` + `moodboard_data_*.json`(빼면 `status:excluded`로 남김)로 프로젝트 폴더에 저장·커밋. 3열 그리드 고정 template.html 동반. **티어 3색(#FF00D4/#790BE0/#0B2BE0)은 사내 4색 규칙의 유일한 예외.** 트리거 "레퍼런스 찾아줘"(사이트 대상)/"무드보드 만들어줘"/"벤치마킹 해줘"/"N번 빼고 다시 찾아줘"
 
-### HTML 산출물 스킬 6종 선택 기준
+### HTML 산출물 스킬 7종 선택 기준
 | 상황 | 스킬 |
 |---|---|
 | 클라이언트 제안서·컨셉덱 (슬라이드 나열) | `mx-deck-design` |
@@ -142,9 +144,42 @@
 | **하나의 주제**를 12개 관점으로 (경쟁·포지셔닝·전략대안…) | `research-deck-design` |
 | **N개 항목**을 같은 구조로 반복 (팩트북·경쟁사 DB) | `intel-deck-design` |
 | **영상 컷**을 시간 순서로 (광고 콘티·브랜드 필름 SB) | `storyboard-deck-design` |
+| **사이트 레퍼런스**를 리스크 3단계로 (UI 시안 착수 전) | `design-reference-moodboard` |
 
 > `research-deck-design`과 `intel-deck-design`은 골격이 비슷하다(좌측 네비 + 뷰 전환, 동일 4색).
 > 갈림길은 **축**이다 — 주제 하나를 여러 관점으로 쪼개면 research, 항목 여럿에 같은 틀을 반복하면 intel.
+
+> `design-reference-moodboard`만 다른 계열이다 — 나머지 6종은 **우리가 만든 내용**을 조판하고,
+> 이쪽은 **바깥에서 찾아온 사이트**를 카드로 늘어놓는다. 그래서 색 규칙도 따로 간다.
+
+## UI·웹사이트 구축 단계 (레퍼런스가 들어가는 자리)
+
+```
+1 리서치        marketer (0 RFP → CH1 현황 → CH2 진단 → CH3 문제 → CH4 발산)
+                └ 산출: mx-research-dashboard-design 대시보드
+       ↓
+2 관점 확정     concept-director → 관점 한 문장
+       ↓
+3 디자인 레퍼런스  design-reference-moodboard → Tier 1·2·3 각 6개 = 18개 무드보드
+       ↓
+4 시안          디자이너 / visual-generator · figma-bridge
+       ↓
+5 검수          design-critique · design-system-guardian
+```
+
+3단계는 2단계 관점 문장을 검색 기준으로 물려받는다. 리서치·관점을 건너뛰고 바로 요청이 들어와도
+스킬은 그대로 돌아가고, 앞 단계가 비었다는 사실만 보고에 한 줄 남긴다.
+
+### "레퍼런스 찾아줘"가 들어왔을 때 라우팅
+| 대상 | 담당 | 결과물 |
+|---|---|---|
+| 사이트·UI·웹 화면 | `design-reference-moodboard` 스킬 | 18개 카드 무드보드 HTML |
+| 영상·패키지·인쇄·브랜딩 톤 | `reference-curator` | 카테고리·무드 그룹핑 |
+| 최근 3개월 트렌드 흐름 | `design-trend-radar` | 트렌드 항목 + 출처 |
+| 생성 이미지를 섞은 컨셉 톤 보드 | `moodboard-builder` | 무드 키워드 + 컬러/타입 방향 |
+| 리서치(CH1) 안에서의 사례 수집 | `marketer` → `reference-curator` | 대시보드 06 이종업계 뷰 |
+
+대상이 애매하면 "사이트 레퍼런스인가요, 영상·비주얼 톤 레퍼런스인가요?" 한 번 되묻는다.
 
 ## 프로젝트 관리
 - 신규 프로젝트: `.claude/projects/YYYYMM_프로젝트명.md` 형식
