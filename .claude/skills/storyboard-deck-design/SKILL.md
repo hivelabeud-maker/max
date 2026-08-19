@@ -127,27 +127,40 @@ description: 영상·시네마틱 스토리보드(콘티)를 컷 카드 그리�
 
 ---
 
-## 4. 디자인 토큰 — Figma 실측
+## 4. 디자인 토큰 — 사내 표준 고정
+
+`intel-deck-design` · `research-deck-design`과 **같은 토큰**을 쓴다. 여기서 새 색을 만들지 않는다.
 
 ```css
-:root {
-  --bg:      #F4F6F8;  /* 문서 배경 */
-  --card:    #FFFFFF;  /* 컷 카드 */
-  --ink:     #14171A;
-  --muted:   #8A9199;  /* 라벨·출처 */
-  --line:    #E3E7EB;
-  --accent:  #2D7FF9;  /* CUT 배지 · 상단 룰 · 메타 밑줄 */
-  --voice:   #1B4DE4;  /* 대사 · NA */
-  --sfx:     #E2571F;  /* 사운드 */
-  --sans: "Pretendard Variable", Pretendard, -apple-system,
-          "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  --r-card: 14px;
-  --r-badge: 6px;
+:root{
+  /* 기본 = 모노톤 */
+  --bg:#f2f1ee; --panel:#fff; --panel2:#faf9f6;
+  --ink:#161616; --muted:#77756e; --line:#e3e1da;
+  --accent:#1a1a17;          /* 강조는 검정이다. 파랑이 아니다 */
+  --accent2:#e6e4dd; --ph:#ece9e2;
+  /* 포인트 4색 (고정) */
+  --pink:#ff86f6; --blue:#2e53f9; --lime:#c5ff79; --orange:#ff6e23;
+  --pink2:#ffeafd; --blue2:#e7ecfe; --lime2:#eeffd9; --orange2:#ffe4d3;
 }
 ```
 
-색은 이 셋만 쓴다 — 액센트 블루 1색, 대사 블루, 사운드 주황. 나머지 무채색.
-**대사와 사운드에 다른 색을 배정하는 게 이 문서의 정체성이다.** 훑을 때 소리가 어디 붙는지 바로 보여야 한다.
+### 이 덱에서의 배정
+
+| 색 | 쓰는 자리 |
+|---|---|
+| `--accent` 검정 | 상단 룰, CUT 배지, 메타박스 밑줄, 시퀀스 구분선, 타임라인 막대 |
+| `--blue` | 대사·NA, LONG TAKE 배지, 링크 hover |
+| `--orange` | 사운드 (SFX/BGM/AMB) |
+| `--lime` `--pink` | 이 덱에서는 쓰지 않는다 |
+
+**대사는 파랑, 소리는 주황.** 훑을 때 어디에 소리가 붙는지 바로 보이게 하려는 배정이다.
+그 둘 말고는 전부 무채색이다.
+
+### 색 쓰는 법 (사내 공통 규칙)
+
+- `--blue` `--orange` : 글자색으로 바로 써도 된다
+- `--lime` `--pink` : 배경으로만. 글자로 쓸 땐 어둡게 바꾼다 (lime → `#5a7d1a`, pink → `#c23bb3`)
+- soft 계열(`--blue2` 등)은 배경, deep은 그 위 글자. 항상 쌍으로
 
 ## 5. 타이포 스케일
 
@@ -219,5 +232,5 @@ cp .claude/skills/storyboard-deck-design/template.html ./<프로젝트명>-sb.ht
 - 레퍼런스 출처 URL 누락 → 모르면 `출처 미확인`이라고 명시. 링크를 지어내지 않는다.
 - 앵글을 "멋있게" 같은 감상으로 씀 → `MS · 로우앵글 · 달리 인` 형식으로 쓴다.
 - 화면 설명에 감정 해석을 씀("쓸쓸함이 느껴진다") → 보이는 상태만("창밖을 3초간 본다").
-- 액센트 색을 늘림 → 블루·대사블루·사운드주황 셋 고정.
+- 표준 밖의 색을 새로 만듦 → 4색 고정. 이 덱은 검정 + 파랑(대사) + 주황(소리)만 쓴다.
 - 엔드카드를 컷에서 뺌 → 로고·일정 고지도 컷 번호를 받는다.

@@ -9,8 +9,14 @@
 <style>
 :root{
   color-scheme:light;
-  --bg:#F4F6F8; --card:#FFFFFF; --ink:#14171A; --muted:#8A9199; --line:#E3E7EB;
-  --accent:#2D7FF9; --voice:#1B4DE4; --sfx:#E2571F; --ph:#E9ECEF;
+  /* 기본 = 모노톤. 아래 4색 외에는 새 색을 만들지 않는다 (intel/research-deck-design 공통 토큰) */
+  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
+  --accent:#1a1a17;--accent2:#e6e4dd;--shadow:0 12px 30px rgba(24,24,24,.06);
+  /* 포인트 4색(고정) */
+  --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
+  --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
+  /* 이 문서 배정: blue=내가 말하는 예시·핵심정보 / lime=손에 남는 결과 / orange=막히는 지점 */
+  --ph:#ece9e2;
   --sans:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   --lane-w:96px; --col-w:208px;
 }
@@ -20,15 +26,15 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13p
 
 /* 헤더 */
 .top-rule{height:2px;background:var(--accent);margin-bottom:clamp(20px,2.4vw,34px)}
-.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
 h1{font-size:clamp(26px,3.2vw,42px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:8px}
-.sub{font-size:clamp(14px,1.3vw,17px);margin-top:12px;max-width:64ch;color:#3D444B}
-.lead{background:var(--card);border:1px solid var(--line);border-radius:14px;
+.sub{font-size:clamp(14px,1.3vw,17px);margin-top:12px;max-width:64ch;color:#3f3d38}
+.lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;
   padding:20px 24px;margin-top:22px;max-width:none}
 .lead p{font-size:14px;line-height:1.75;max-width:78ch}
 .lead p + p{margin-top:10px}
 .lead b{font-weight:700}
-.lead .keypt{color:var(--voice);font-weight:600}
+.lead .keypt{color:var(--blue);font-weight:600}
 
 /* 섹션 헤더 */
 .sec{margin-top:clamp(28px,3.4vw,50px)}
@@ -37,61 +43,62 @@ h1{font-size:clamp(26px,3.2vw,42px);font-weight:700;letter-spacing:-.02em;line-h
 .sec-h span{font-size:11px;color:var(--muted)}
 
 /* ===== 가로 타임라인 · 스윔레인 ===== */
-.board{overflow-x:auto;padding-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.board{overflow-x:auto;padding-bottom:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
 .grid{min-width:calc(var(--lane-w) + var(--col-w)*6);display:grid;
   grid-template-columns:var(--lane-w) repeat(6,minmax(var(--col-w),1fr))}
 
 /* 시간 눈금 */
 .ruler{grid-column:2 / -1;display:grid;grid-template-columns:subgrid;
-  border-bottom:1px dashed var(--line);background:#FAFBFC}
+  border-bottom:1px dashed var(--line);background:var(--panel2)}
 .ruler .tick{padding:8px 14px;font-size:10px;color:var(--muted);
   font-variant-numeric:tabular-nums;border-left:1px solid var(--line)}
-.ruler-pad{background:#FAFBFC;border-bottom:1px dashed var(--line)}
+.ruler-pad{background:var(--panel2);border-bottom:1px dashed var(--line)}
 
 /* 페이즈 헤더 */
-.ph-head{position:sticky;top:0;z-index:3;background:var(--card);
-  border-bottom:2px solid var(--ink);padding:12px 14px;border-left:1px solid var(--line)}
+.ph-head{position:sticky;top:0;z-index:3;background:var(--panel);
+  border-bottom:2px solid var(--accent);padding:12px 14px;border-left:1px solid var(--line)}
 .ph-head .no{display:inline-block;min-width:22px;text-align:center;background:var(--accent);color:#fff;font-size:10px;font-weight:700;
   letter-spacing:.06em;padding:2px 7px;border-radius:6px;font-variant-numeric:tabular-nums}
 .ph-head .nm{display:block;font-size:14px;font-weight:700;margin-top:7px;line-height:1.3}
 .ph-head .dur{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
-.corner{position:sticky;left:0;top:0;z-index:5;background:var(--card);
-  border-bottom:2px solid var(--ink);border-right:1px solid var(--line)}
+.corner{position:sticky;left:0;top:0;z-index:5;background:var(--panel);
+  border-bottom:2px solid var(--accent);border-right:1px solid var(--line)}
 
 /* 레인 라벨 */
-.lane{position:sticky;left:0;z-index:2;background:var(--card);border-right:1px solid var(--line);
+.lane{position:sticky;left:0;z-index:2;background:var(--panel);border-right:1px solid var(--line);
   border-top:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:4px}
 .lane b{font-size:12px;font-weight:700;line-height:1.3}
 .lane i{font-style:normal;font-size:10px;color:var(--muted)}
-.lane.l-me{box-shadow:inset 3px 0 0 var(--ink)}
-.lane.l-sk{box-shadow:inset 3px 0 0 var(--accent)}
-.lane.l-out{box-shadow:inset 3px 0 0 var(--voice)}
-.lane.l-gate{box-shadow:inset 3px 0 0 var(--sfx)}
+.lane.l-me{box-shadow:inset 3px 0 0 var(--accent)}
+.lane.l-sk{box-shadow:inset 3px 0 0 var(--blue)}
+.lane.l-out{box-shadow:inset 3px 0 0 var(--lime)}
+.lane.l-gate{box-shadow:inset 3px 0 0 var(--orange)}
 
 /* 셀 */
 .cell{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:13px 12px;font-size:12px}
-.cell.me{background:#fff}
-.cell.sk{background:#F8FAFD}
-.cell.out{background:#fff}
-.cell.gate{background:#FFFCFA}
+.cell.me{background:var(--panel)}
+.cell.sk{background:var(--panel2)}
+.cell.out{background:var(--panel)}
+.cell.gate{background:var(--panel)}
 .cell ul{list-style:none;display:flex;flex-direction:column;gap:6px}
 .cell li{position:relative;padding-left:11px;line-height:1.62}
 .cell li::before{content:"";position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--muted)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
   background:var(--ph);padding:1px 5px;border-radius:4px;word-break:break-all}
-.say{color:var(--voice);font-weight:600}
-.gate .q{color:var(--sfx);font-weight:600}
+.say{color:var(--blue);font-weight:600}
+.gate .q{color:var(--orange);font-weight:600}
 .none{color:var(--muted)}
-.stop{display:inline-block;margin-top:6px;font-size:10.5px;color:var(--sfx);font-weight:600}
+.stop{display:inline-block;margin-top:6px;font-size:10.5px;color:var(--orange);font-weight:600}
 
 .hint{font-size:11px;color:var(--muted);margin-top:10px}
 
 /* 분기 · 막힐 때 */
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .box h3{font-size:14px;font-weight:700;margin-bottom:10px}
 .box dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:12px}
-.box dt{color:var(--sfx);font-weight:600;white-space:nowrap}
+.box dt{color:var(--blue);font-weight:600;white-space:nowrap}
+.box.warn dt{color:var(--orange)}
 
 @media print{
   body{background:#fff}
@@ -250,7 +257,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
         </dl>
       </div>
 
-      <div class="box">
+      <div class="box warn">
         <h3>이럴 땐 뒤로 돌아간다</h3>
         <dl>
           <dt>컷이 늘어진다</dt><dd>3번으로. 컷 수를 줄이거나, 카메라만 움직이는 컷을 앞 컷에 붙인다.</dd>
