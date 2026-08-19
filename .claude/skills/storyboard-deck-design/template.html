@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>{프로젝트명} — Video Storyboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F4F6F8; --card:#FFFFFF; --ink:#14171A; --muted:#8A9199; --line:#E3E7EB;
+  --accent:#2D7FF9;   /* CUT 배지 · 상단 룰 · 메타 밑줄 */
+  --voice:#1B4DE4;    /* 대사 · NA */
+  --sfx:#E2571F;      /* 사운드 */
+  --ph:#E9ECEF;       /* 스틸 플레이스홀더 */
+  --sans:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  --r-card:14px; --r-badge:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1680px;margin:0 auto;padding:clamp(20px,3vw,48px) clamp(16px,3vw,48px) 80px}
+
+/* ===== ① 헤더 ===== */
+.top-rule{height:2px;background:var(--accent);margin-bottom:clamp(20px,2.4vw,34px)}
+.head{display:grid;grid-template-columns:minmax(280px,1fr) auto;gap:24px;align-items:start}
+@media(max-width:820px){.head{grid-template-columns:1fr}}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.deck-title{font-size:clamp(28px,3.4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:8px}
+.concept{font-size:clamp(15px,1.4vw,18px);margin-top:14px;max-width:62ch}
+
+/* 메타박스 4필드 */
+.metabox{display:grid;grid-template-columns:repeat(4,minmax(96px,1fr));gap:22px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:18px 24px}
+@media(max-width:520px){.metabox{grid-template-columns:repeat(2,1fr)}}
+.metabox dt{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--muted);
+  padding-bottom:6px;border-bottom:2px solid var(--accent)}
+.metabox dd{font-size:14px;font-weight:600;margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* ===== 공통 섹션 ===== */
+.sec{margin-top:clamp(30px,3.6vw,54px)}
+.sec-h{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.sec-h b{font-size:15px;font-weight:700}
+.sec-h span{font-size:11px;color:var(--muted)}
+
+/* ===== ③ 레퍼런스 카드 ===== */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.ref{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.ref .thumb{aspect-ratio:16/9;background:var(--ph);display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--muted);text-align:center;padding:10px}
+.ref .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ref .body{padding:12px 14px 14px}
+.ref .t{font-size:14px;font-weight:600}
+.ref .by{font-size:11px;color:var(--muted);margin-top:2px}
+.ref .steal{margin-top:8px}
+.ref .src{display:inline-block;margin-top:10px;font-size:11px;color:var(--muted);text-decoration:none;word-break:break-all}
+.ref .src:hover{color:var(--accent)}
+
+/* ===== ④ 연출 방향 5항목 ===== */
+.dir{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.dir .row{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:13px 20px;border-top:1px solid var(--line)}
+.dir .row:first-child{border-top:0}
+.dir dt{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em;padding-top:1px}
+
+/* ===== ⑤ 타임라인 바 ===== */
+.tl{display:flex;gap:2px;height:34px;border-radius:8px;overflow:hidden;background:var(--card);border:1px solid var(--line)}
+.tl i{display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:600;font-style:normal;font-variant-numeric:tabular-nums;min-width:0;overflow:hidden}
+.tl i.end{background:var(--muted)}
+.tl-scale{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);
+  margin-top:6px;font-variant-numeric:tabular-nums}
+
+/* ===== 시퀀스 헤더 (60초 이상) ===== */
+.seq{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin:30px 0 14px;
+  padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.seq b{font-size:20px;font-weight:700}
+.seq .tc{font-size:12px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.seq .intent{font-size:12px;color:var(--muted)}
+
+/* ===== ⑥ 컷 그리드 ===== */
+.cuts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.cut{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  overflow:hidden;display:flex;flex-direction:column}
+.cut .still{position:relative;aspect-ratio:16/9;background:var(--ph)}
+.cut .still img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  padding:12px;font-size:11px;color:var(--muted);text-align:center;line-height:1.45}
+.badge{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:var(--r-badge)}
+.badge.long{background:var(--ink)}
+.tag{position:absolute;top:8px;right:8px;background:rgba(20,23,26,.78);color:#fff;
+  font-size:10px;font-weight:600;padding:3px 7px;border-radius:var(--r-badge);font-variant-numeric:tabular-nums}
+.cut .in{padding:11px 13px 13px;display:flex;flex-direction:column;gap:7px;flex:1}
+.cut-title{font-size:14px;font-weight:600;line-height:1.35}
+.f{display:grid;grid-template-columns:52px 1fr;gap:8px}
+.f dt{font-size:11px;color:var(--muted);font-weight:500}
+.f dd{font-size:12px}
+.line-voice{color:var(--voice);font-weight:600;font-size:12.5px;padding-top:4px;border-top:1px solid var(--line)}
+.line-sfx{color:var(--sfx);font-weight:600;font-size:12px}
+.res{margin-top:auto;padding-top:8px;font-size:10.5px;color:var(--muted);border-top:1px dashed var(--line)}
+
+/* ===== ⑦ 부록 ===== */
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-card);overflow:hidden;font-size:12px}
+.tbl th,.tbl td{text-align:left;padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:11px;font-weight:500;color:var(--muted);background:#FAFBFC;border-top:0;white-space:nowrap}
+.tbl td:first-child{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.scroll{overflow-x:auto}
+.note{font-size:11px;color:var(--muted);margin-top:10px}
+
+@media print{
+  body{background:#fff}
+  .cut,.ref,.dir{break-inside:avoid}
+  .wrap{padding:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ① 헤더 -->
+  <div class="top-rule"></div>
+  <header class="head">
+    <div>
+      <p class="eyebrow">Video SB / 30SEC · 12 CUT</p>
+      <h1 class="deck-title">{프로젝트명} — 영상 본편(30초) A안</h1>
+      <p class="concept">{톤 한 줄. 형용사 나열 대신 상태 변화를 쓴다 — 예: 무채색 일상에서 붉은 전장으로. 색이 바뀌는 순간이 클라이맥스.}</p>
+    </div>
+    <dl class="metabox">
+      <div><dt>PROJECT</dt><dd>{프로젝트}</dd></div>
+      <div><dt>DURATION</dt><dd>30초</dd></div>
+      <div><dt>CUTS</dt><dd>12 cuts</dd></div>
+      <div><dt>FRAME</dt><dd>16:9</dd></div>
+    </dl>
+  </header>
+
+  <!-- ③ 레퍼런스 -->
+  <section class="sec">
+    <div class="sec-h"><b>레퍼런스</b><span>2~4편. 출처 URL 필수 — 모르면 "출처 미확인"이라고 쓴다</span></div>
+    <div class="ref-grid">
+      <article class="ref">
+        <div class="thumb">{썸네일 없으면 한 줄 설명}</div>
+        <div class="body">
+          <p class="t">{레퍼런스 제목}</p>
+          <p class="by">{브랜드 / 제작사 · 연도}</p>
+          <p class="steal">훔칠 포인트 : {정확히 무엇을 가져오는가 한 줄}</p>
+          <a class="src" href="{URL}" target="_blank" rel="noopener">{youtu.be/xxxx} ↗</a>
+        </div>
+      </article>
+      <article class="ref">
+        <div class="thumb">{썸네일}</div>
+        <div class="body">
+          <p class="t">{레퍼런스 제목}</p>
+          <p class="by">{브랜드 / 제작사 · 연도}</p>
+          <p class="steal">훔칠 포인트 : {한 줄}</p>
+          <a class="src" href="{URL}" target="_blank" rel="noopener">{vimeo.com/xxxx} ↗</a>
+        </div>
+      </article>
+      <article class="ref">
+        <div class="thumb">{썸네일}</div>
+        <div class="body">
+          <p class="t">{레퍼런스 제목}</p>
+          <p class="by">{브랜드 / 제작사}</p>
+          <p class="steal">훔칠 포인트 : {한 줄}</p>
+          <span class="src">출처 미확인 — 제목만 전달받음</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ④ 연출 방향 -->
+  <section class="sec">
+    <div class="sec-h"><b>연출 방향</b><span>5항목 고정. 없으면 "해당 없음"</span></div>
+    <dl class="dir">
+      <div class="row"><dt>카메라</dt><dd>{주 렌즈감 · 무브 성향(핸드헬드/고정/크레인) · 시점}</dd></div>
+      <div class="row"><dt>컬러</dt><dd>{베이스 톤 → 클라이맥스 톤. HEX 또는 색 이름}</dd></div>
+      <div class="row"><dt>편집</dt><dd>{평균 컷 길이 · 전환 방식 · 비트 맞추는 지점}</dd></div>
+      <div class="row"><dt>사운드</dt><dd>{BGM 장르·템포 · SFX 밀도 · 무음 구간 위치}</dd></div>
+      <div class="row"><dt>타이포</dt><dd>{자막 등장 방식 · 폰트 방향 · 엔드카드 처리}</dd></div>
+    </dl>
+  </section>
+
+  <!-- ⑤ 타임라인 — flex 비율 = 컷 초수 -->
+  <section class="sec">
+    <div class="sec-h"><b>타임라인</b><span>막대 폭 = 컷 초수. 회색은 엔드카드</span></div>
+    <div class="tl">
+      <i style="flex:2">01</i><i style="flex:2">02</i><i style="flex:2">03</i><i style="flex:3">04</i>
+      <i style="flex:2">05</i><i style="flex:3">06</i><i style="flex:3">07</i><i style="flex:3">08</i>
+      <i style="flex:3">09</i><i style="flex:3">10</i><i class="end" style="flex:2">11</i><i class="end" style="flex:2">12</i>
+    </div>
+    <div class="tl-scale"><span>00:00</span><span>00:10</span><span>00:20</span><span>00:30</span></div>
+  </section>
+
+  <!-- ⑥ 컷 그리드 -->
+  <section class="sec">
+    <div class="sec-h"><b>컷 구성</b><span>12컷 / 컷당 평균 2.5초</span></div>
+
+    <!-- 60초 이상이면 시퀀스 헤더로 분절. 30초 이하면 이 줄을 지운다.
+    <div class="seq"><b>SEQ A. 발단</b><span class="tc">00:00–00:32</span><span class="intent">{막의 의도 한 줄}</span></div>
+    -->
+
+    <div class="cuts">
+
+      <!-- ▼ 컷 카드 원본 — 이 블록을 복제해 컷 수만큼 늘린다 -->
+      <article class="cut">
+        <div class="still">
+          <div class="ph">{스틸이 없으면 프롬프트 요약을 쓴다 — 예: 새벽 침실, 침대에 앉은 남자, 역광, 무채색}</div>
+          <!-- <img src="cut01.jpg" alt="CUT 01"> -->
+          <span class="badge">CUT 01</span>
+          <span class="tag">00:00–00:02</span>
+        </div>
+        <div class="in">
+          <p class="cut-title">{컷 제목 한 줄}</p>
+          <dl class="f"><dt>화면</dt><dd>{보이는 상태만 쓴다. 감정 해석은 뺀다}</dd></dl>
+          <dl class="f"><dt>앵글</dt><dd>MS · 로우앵글</dd></dl>
+          <dl class="f"><dt>모션</dt><dd>고정 → 다음 컷 매치컷</dd></dl>
+          <p class="line-voice">NA : {대사. 화자 접두어 필수}</p>
+          <p class="line-sfx">SFX : {효과음. 무음이면 "무음 (0.4초)"}</p>
+          <p class="res">AI 생성</p>
+        </div>
+      </article>
+      <!-- ▲ 여기까지 복제 -->
+
+      <article class="cut">
+        <div class="still">
+          <div class="ph">{프롬프트 요약}</div>
+          <span class="badge">CUT 02</span>
+          <span class="tag">00:02–00:04</span>
+        </div>
+        <div class="in">
+          <p class="cut-title">{컷 제목}</p>
+          <dl class="f"><dt>화면</dt><dd>{화면 설명}</dd></dl>
+          <dl class="f"><dt>앵글</dt><dd>CU · 아이레벨</dd></dl>
+          <dl class="f"><dt>모션</dt><dd>달리 인 → 컷</dd></dl>
+          <p class="line-voice">주인공 : {대사}</p>
+          <p class="line-sfx">AMB : {배경음}</p>
+          <p class="res">실사 촬영</p>
+        </div>
+      </article>
+
+      <article class="cut">
+        <div class="still">
+          <div class="ph">{프롬프트 요약}</div>
+          <span class="badge long">CUT 03</span>
+          <span class="tag">00:04–00:12</span>
+        </div>
+        <div class="in">
+          <p class="cut-title">{롱테이크 컷 — 배지가 검정}</p>
+          <dl class="f"><dt>화면</dt><dd>{화면 설명}</dd></dl>
+          <dl class="f"><dt>앵글</dt><dd>WS · 하이앵글</dd></dl>
+          <dl class="f"><dt>모션</dt><dd>트래킹 8초 · LONG TAKE → 디졸브</dd></dl>
+          <p class="line-voice">자막 : {소리 없이 자막만 뜰 때}</p>
+          <p class="line-sfx">BGM : {인 지점 명시 — 예: 00:05 인, 저음 드론}</p>
+          <p class="res">인게임 캡처</p>
+        </div>
+      </article>
+
+      <article class="cut">
+        <div class="still">
+          <div class="ph">{엔드카드 — 로고·일정 고지도 컷 번호를 받는다}</div>
+          <span class="badge">CUT 12</span>
+          <span class="tag">00:28–00:30</span>
+        </div>
+        <div class="in">
+          <p class="cut-title">엔드카드</p>
+          <dl class="f"><dt>화면</dt><dd>{로고 + 슬로건 + 일정 고지}</dd></dl>
+          <dl class="f"><dt>앵글</dt><dd>해당 없음 (그래픽)</dd></dl>
+          <dl class="f"><dt>모션</dt><dd>페이드 인 → 암전</dd></dl>
+          <p class="line-voice">메인 카피 : {카피}</p>
+          <p class="line-sfx">SFX : {로고 사운드}</p>
+          <p class="res">그래픽 제작</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ⑦ 부록 — 필요할 때만 -->
+  <section class="sec">
+    <div class="sec-h"><b>사운드 큐시트</b><span>필요할 때만. 안 쓰면 섹션째 지운다</span></div>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>타임</th><th>구분</th><th>내용</th><th>소스</th></tr></thead>
+        <tbody>
+          <tr><td>00:00</td><td>AMB</td><td>{배경음}</td><td>{라이브러리 / 녹음}</td></tr>
+          <tr><td>00:05</td><td>BGM</td><td>{음악 인}</td><td>{트랙명 · 라이선스}</td></tr>
+          <tr><td>00:18</td><td>SFX</td><td>{효과음}</td><td>{소스}</td></tr>
+          <tr><td>00:22</td><td>SFX</td><td>무음 (0.4초)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">음원·효과음은 라이선스 확인 후 기재한다. 미확인이면 "라이선스 확인 필요"라고 남긴다.</p>
+  </section>
+
+</div>
+</body>
+</html>

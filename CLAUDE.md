@@ -66,7 +66,8 @@
 │   ├── intel-deck-design/
 │   ├── list-deck-design/
 │   ├── mx-deck-design/
-│   └── research-deck-design/
+│   ├── research-deck-design/
+│   └── storyboard-deck-design/
 ├── projects/                   # 프로젝트별 노트
 └── library/
     ├── core-directives.md     # 5가지 핵심 원칙
@@ -127,15 +128,17 @@
 - `list-deck-design` — 한국어 에디토리얼 리포트 HTML 생성 (stateofaidesign.com 스타일)
 - `mx-deck-design` — MX실 표준 제안서/덱 HTML 생성 (Figma 데일리 미션 덱 실측 규격, 무채색+포인트 1색, template.html 동반). 트리거 "덱 만들어줘"/"제안서 정리"/"MX 덱"/"슬라이드로 정리"
 - `research-deck-design` — 좌측 네비 + 뷰 전환형 리서치·전략 대시보드 덱 (Research & Strategy OS, 모노톤+포인트 4색, 00~11 12개 뷰, template.html 동반). 마케터/리서치 산출을 근거 추적까지 되는 대시보드로 조판. 트리거 "리서치 덱"/"리서치·전략 deck"/"마케터 결과 덱으로"/"포지셔닝 맵 덱"
+- `storyboard-deck-design` — 영상·시네마틱 스토리보드(콘티) HTML. 포맷 프리셋(15초 5~8컷 / 30초 10~14컷 / 60초 16~22컷 / 90초 이상 24~40컷 3막)으로 컷 수를 먼저 확정하고, 컷마다 화면·앵글/샷사이즈·모션과 전환·대사(화자 표기)·사운드(SFX/BGM/AMB)·리소스를 채운다. 컷 그리드 위에 레퍼런스 링크 + 연출 방향 5항목(카메라·컬러·편집·사운드·타이포) 고정. template.html 동반. 트리거 "스토리보드 만들어줘"/"콘티 짜줘"/"영상 SB"/"30초 광고 콘티"/"시네마틱 스토리보드"
 - `intel-deck-design` — 항목 N개를 같은 구조로 반복하는 인텔리전스 DB (좌측 번호 네비 + 항목별 탭, 모노톤+포인트 4색, SAFE/CAUTION/DO NOT USE 라벨, DATA GAP 박스, 검색·필터, template.html 동반). 트리거 "인텔 대시보드"/"항목별 상세 보게"/"팩트북 만들어줘"/"타이틀별로 정리"
 
-### HTML 산출물 스킬 4종 선택 기준
+### HTML 산출물 스킬 5종 선택 기준
 | 상황 | 스킬 |
 |---|---|
 | 클라이언트 제안서·컨셉덱 (슬라이드 나열) | `mx-deck-design` |
 | 수치 중심 리포트 (세로 스크롤 한 장) | `list-deck-design` |
 | **하나의 주제**를 12개 관점으로 (경쟁·포지셔닝·전략대안…) | `research-deck-design` |
 | **N개 항목**을 같은 구조로 반복 (팩트북·경쟁사 DB) | `intel-deck-design` |
+| **영상 컷**을 시간 순서로 (광고 콘티·브랜드 필름 SB) | `storyboard-deck-design` |
 
 > `research-deck-design`과 `intel-deck-design`은 골격이 비슷하다(좌측 네비 + 뷰 전환, 동일 4색).
 > 갈림길은 **축**이다 — 주제 하나를 여러 관점으로 쪼개면 research, 항목 여럿에 같은 틀을 반복하면 intel.
