@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AION2 2027 입찰 전략</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+/* Research & Strategy OS — 좌측 번호 네비게이터 + 뷰 전환형 대시보드 (팀 채택 구조) */
+:root{
+  /* 기본 = 모노톤. 아래 4색 외에는 절대 새 색을 만들지 않는다 */
+  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
+  --accent:#1a1a17;--accent2:#e6e4dd;--shadow:0 12px 30px rgba(24,24,24,.06);
+  /* 포인트 4색(고정) — 분류·강조가 꼭 필요한 곳에만 */
+  --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
+  --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
+  /* 의미 배정: blue=T1·핵심정보  lime=T2·긍정/기회  pink=T3·보류/중간위험  orange=T4·위험/회피 */
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",Arial,sans-serif;letter-spacing:-.015em}
+button,input{font:inherit}.app{min-height:100vh}
+.topbar{height:72px;background:#151817;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:30;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:13px}.brand-mark{width:34px;height:34px;border:1px solid rgba(255,255,255,.24);border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:12px;background:linear-gradient(145deg,#2b2a26,#0f0f0e)}
+.brand h1{font-size:15px;margin:0 0 3px;font-weight:800}.brand p{font-size:10px;color:rgba(255,255,255,.5);margin:0;letter-spacing:.04em}.top-actions{display:flex;gap:8px;align-items:center}.pill{font-size:10px;padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.72)}
+.top-btn{border:1px solid rgba(255,255,255,.18);color:#fff;background:rgba(255,255,255,.06);padding:8px 11px;border-radius:7px;cursor:pointer;font-size:11px}.top-btn:hover{background:rgba(255,255,255,.12)}
+.layout{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:calc(100vh - 72px)}.sidebar{background:#f9f8f4;border-right:1px solid var(--line);padding:21px 15px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.project-mini{padding:13px 13px 15px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:16px}.eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}.project-mini h2{font-size:13px;margin:6px 0 4px;line-height:1.4}.project-mini p{font-size:10px;color:var(--muted);margin:0}.progress{height:4px;background:#ece9e1;border-radius:5px;margin-top:11px;overflow:hidden}.progress span{display:block;width:100%;height:100%;background:var(--accent)}
+.nav-label{font-size:9px;font-weight:800;color:#97948c;letter-spacing:.13em;margin:17px 10px 7px}.nav-item{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:7px;color:#68665f;text-align:left;cursor:pointer;font-size:11px;margin:2px 0}.nav-item:hover{background:#efede7;color:#222}.nav-item.active{background:var(--accent);color:#fff;font-weight:700}.nav-num{font-family:ui-monospace,monospace;font-size:9px;opacity:.7;width:17px}.nav-badge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 6px;background:rgba(0,0,0,.08)}.nav-item.active .nav-badge{background:rgba(255,255,255,.16)}
+.main{padding:30px 34px 70px;max-width:1600px;width:100%}.view{display:none}.view.active{display:block}.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:21px}.page-title h2{font-size:25px;line-height:1.15;margin:3px 0 7px;letter-spacing:-.04em}.page-title p{font-size:12px;color:var(--muted);margin:0}.head-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.tag{font-size:9px;font-weight:700;border-radius:999px;padding:5px 9px;background:#fff;border:1px solid var(--line);color:#555}.tag.green{color:#4f6e1c;background:var(--lime2);border-color:#c8f0a0}.tag.amber{color:#a04a10;background:var(--orange2);border-color:#ffc6a0}.tag.blue{color:var(--blue);background:var(--blue2);border-color:#c7d3fb}.tag.red{color:#a63c9a;background:var(--pink2);border-color:#ffc7f8}
+.grid{display:grid;gap:13px}.grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}.card.flat{box-shadow:none}.card h3{font-size:13px;margin:0 0 10px}.card p{font-size:11px;color:#4f4d47;line-height:1.65}.metric .label{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}.metric .value{font-size:27px;font-weight:900;margin:6px 0 2px;letter-spacing:-.045em}.metric .sub{font-size:9px;color:var(--muted)}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:26px 0 11px}.section-title h3{font-size:15px;margin:0}.section-title p{font-size:10px;color:var(--muted);margin:0}.divider{height:1px;background:var(--line);margin:22px 0}
+.flow{display:grid;grid-template-columns:repeat(8,minmax(80px,1fr));gap:7px}.flow-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 9px;min-height:90px}.flow-step.done{border-color:#d9d7cf;background:#fbfbf9}.flow-step.active{border:2px solid var(--accent);background:#f4f3f0}.flow-step .num{font-family:ui-monospace,monospace;font-size:9px;color:var(--muted)}.flow-step strong{display:block;font-size:10.5px;margin:8px 0 3px}.flow-step span{font-size:9px;color:var(--muted);line-height:1.35}.flow-step .check{position:absolute;right:8px;top:8px;font-size:9px;color:var(--accent)}
+.decision{background:linear-gradient(135deg,#1a1a17,#2c2b26);color:#fff;border-radius:14px;padding:24px;display:grid;grid-template-columns:1.4fr .8fr;gap:22px;box-shadow:0 16px 36px rgba(20,20,18,.16)}.decision .eyebrow{color:rgba(255,255,255,.55)}.decision h3{font-size:22px;line-height:1.38;letter-spacing:-.04em;margin:8px 0 11px}.decision p{font-size:11px;line-height:1.7;color:rgba(255,255,255,.7);margin:0}.decision-side{border-left:1px solid rgba(255,255,255,.16);padding-left:20px;display:flex;flex-direction:column;justify-content:center}.decision-side .score{font-size:37px;font-weight:900;color:var(--lime)}.decision-side .score small{font-size:12px;color:rgba(255,255,255,.55)}.decision-side .why{font-size:10px;color:rgba(255,255,255,.63);line-height:1.6;margin-top:6px}
+.kv{display:grid;grid-template-columns:135px 1fr;border-top:1px solid var(--line)}.kv:first-child{border-top:0}.kv dt,.kv dd{margin:0;padding:13px 0;font-size:11px}.kv dt{color:var(--muted);font-weight:700}.kv dd{line-height:1.65}.request-vs{display:grid;grid-template-columns:1fr 54px 1fr;align-items:stretch;gap:8px}.request-box{border:1px solid var(--line);border-radius:11px;padding:18px;background:#fff}.request-box.real{border-color:var(--blue);background:var(--blue2)}.request-box .label{font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.1em}.request-box h3{font-size:16px;line-height:1.5;margin:8px 0}.arrow{display:grid;place-items:center;color:var(--accent);font-size:22px}
+.question-list{counter-reset:q}.question{display:grid;grid-template-columns:31px 1fr auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid var(--line)}.question:last-child{border-bottom:0}.question:before{counter-increment:q;content:counter(q);width:25px;height:25px;border-radius:7px;background:#f0eee8;display:grid;place-items:center;font-size:9px;font-weight:900;color:#777}.question strong{font-size:11px;display:block;margin:2px 0 3px}.question span{font-size:9.5px;color:var(--muted)}
+.streams{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stream{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px}.stream.active{border:2px solid var(--accent);background:#f7fbfa}.stream .count{font-size:21px;font-weight:900}.stream strong{font-size:10px;display:block;margin-top:5px}.stream p{font-size:9px;color:var(--muted);margin:3px 0 0}
+.filters{display:flex;gap:7px;align-items:center;margin-bottom:11px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;padding:6px 9px;border-radius:7px;font-size:9px;color:#666;cursor:pointer}.filter.active{background:var(--accent);color:#fff;border-color:var(--accent)}.search{margin-left:auto;min-width:210px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;font-size:10px;outline:none}.search:focus{border-color:#b3b0a8}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;background:#fff}.table{border-collapse:collapse;width:100%;min-width:1020px}.table th{position:sticky;top:0;background:#f6f4ee;color:#777;font-size:8.5px;text-align:left;letter-spacing:.06em;text-transform:uppercase;padding:11px;border-bottom:1px solid var(--line)}.table td{font-size:9.5px;line-height:1.5;padding:12px 11px;border-bottom:1px solid #eeece6;vertical-align:top}.table tr:last-child td{border-bottom:0}.eid{font-family:ui-monospace,monospace;font-size:9px;font-weight:800;color:var(--blue);background:var(--blue2);padding:3px 5px;border-radius:4px;white-space:nowrap}.confidence{display:inline-flex;gap:3px}.confidence i{display:block;width:7px;height:7px;border-radius:2px;background:#ddd}.confidence i.on{background:var(--ink)}.source-type{font-size:8px;padding:2px 5px;border-radius:4px;background:#efede7;color:#666;white-space:nowrap;font-weight:800}.source-type.t1{background:var(--blue);color:#fff}.source-type.t2{background:var(--lime);color:#1c2b06}.source-type.t3{background:var(--pink);color:#3a0a34}.source-type.t4{background:var(--orange);color:#fff}.claim-link{color:var(--accent);text-decoration:none;font-weight:700}.claim-link:hover{text-decoration:underline}
+.insight-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;padding:19px 18px 17px;min-height:220px}.insight-card .index{font-family:ui-monospace,monospace;color:#9b978e;font-size:9px}.insight-card h3{font-size:15px;line-height:1.45;margin:10px 0 8px}.insight-card p{font-size:10.5px;color:#5b5952;line-height:1.65;margin:0}.so-what{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.so-what .label{font-size:8px;color:var(--accent);font-weight:900;letter-spacing:.12em}.so-what strong{font-size:10.5px;line-height:1.55;display:block;margin-top:5px}.evidence-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:13px}.evidence-chips span{font-family:ui-monospace,monospace;font-size:8px;background:var(--blue2);color:var(--blue);padding:3px 5px;border-radius:4px}
+.strategy-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:19px;display:flex;flex-direction:column;min-height:420px}.strategy-card.recommended{border:2px solid var(--accent);box-shadow:0 15px 32px rgba(20,20,18,.12);position:relative}.recommended-ribbon{position:absolute;right:14px;top:14px;font-size:8px;background:var(--accent);color:#fff;padding:4px 7px;border-radius:999px;font-weight:800}.strategy-no{font-family:ui-monospace,monospace;font-size:9px;color:#999}.strategy-card h3{font-size:18px;margin:9px 0 5px}.strategy-card .one-line{font-size:10px;color:var(--muted);line-height:1.55;min-height:47px}.score-bars{margin:15px 0}.score-row{display:grid;grid-template-columns:64px 1fr 24px;align-items:center;gap:7px;margin:7px 0;font-size:8.5px;color:#777}.bar{height:5px;background:#ece9e2;border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}.score-row b{font-size:8px;text-align:right}.strategy-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.strategy-list li{font-size:9.5px;line-height:1.5;padding:9px 0;border-bottom:1px solid #efede8;display:grid;grid-template-columns:58px 1fr;gap:7px}.strategy-list li strong{font-size:8.5px;color:var(--muted)}.strategy-total{margin-top:auto;padding-top:15px;display:flex;justify-content:space-between;align-items:end}.strategy-total span{font-size:9px;color:var(--muted)}.strategy-total b{font-size:25px}
+.reco-hero{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}.reco-head{background:#1a1a17;color:#fff;padding:26px 28px;display:grid;grid-template-columns:1fr 210px;gap:25px}.reco-head h3{font-size:25px;margin:7px 0 10px;letter-spacing:-.04em}.reco-head p{font-size:11px;color:rgba(255,255,255,.69);line-height:1.7}.reco-score{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.18)}.reco-score b{font-size:42px;color:var(--lime)}.reco-score span{font-size:9px;color:rgba(255,255,255,.55)}.reco-body{padding:24px 28px}.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.principle{background:#f7f6f2;border:1px solid #ebe8e0;border-radius:10px;padding:15px}.principle .n{font-family:ui-monospace,monospace;color:#8b877e;font-size:9px}.principle h4{font-size:12px;margin:8px 0 5px}.principle p{font-size:9.5px;color:var(--muted);line-height:1.55;margin:0}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:11px;overflow:hidden}.phase{background:#fff;padding:19px}.phase .time{font-size:9px;font-weight:800;color:var(--accent);letter-spacing:.07em}.phase h4{font-size:12px;margin:7px 0}.phase ul{margin:0;padding-left:16px}.phase li{font-size:9.5px;line-height:1.6;color:#555;margin:3px 0}.not-doing{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.no-card{background:var(--orange2);border:1px solid #ffc6a0;border-radius:10px;padding:13px}.no-card strong{font-size:10px;color:#a04a10}.no-card p{font-size:9px;color:#8a5636;line-height:1.5;margin:5px 0 0}
+.risk{display:grid;grid-template-columns:1.2fr .5fr .5fr 1.4fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}.risk:last-child{border-bottom:0}.risk strong{font-size:10px}.risk span{font-size:9px;color:var(--muted)}.risk-level{font-size:8px;padding:3px 6px;border-radius:5px;width:max-content;font-weight:800}.risk-level.high{background:var(--orange);color:#fff}.risk-level.medium{background:var(--pink2);color:#a63c9a}
+/* 브랜드 전용: 포지셔닝 맵 · 화이트스페이스 · 축 · 카테고리 · BTA */
+.pmap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px;position:relative;height:460px;box-shadow:var(--shadow)}.pm-title{font-weight:800;font-size:13px;margin-bottom:14px}.pm-field{position:absolute;top:46px;left:70px;right:52px;bottom:56px;border-left:1px solid #ddd;border-bottom:1px solid #ddd}.pm-field:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed #eee}.pm-field:after{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1px dashed #eee}.pm-axis{position:absolute;font-size:9px;color:var(--muted);font-weight:700}.pm-axis.top{top:-18px;left:calc(50% - 30px)}.pm-axis.bottom{bottom:-22px;left:calc(50% - 30px)}.pm-axis.left{top:calc(50% - 8px);left:-58px;writing-mode:vertical-rl;transform:rotate(180deg)}.pm-axis.right{top:calc(50% - 8px);right:-46px;writing-mode:vertical-rl}.pm-node{position:absolute;font-size:9.5px;font-weight:700;transform:translate(-50%,-50%);cursor:help;background:rgba(255,255,255,.7);padding:1px 4px;border-radius:4px}.pm-node.goal{background:var(--accent);color:#fff;padding:8px 10px;border-radius:50%;font-size:9px;text-align:center;line-height:1.2}
+.axis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.axis-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px}.axis-card.on{border-color:var(--blue);background:var(--blue2)}.axis-card .pick{font-size:8px;font-weight:800;border-radius:99px;padding:3px 7px;color:#fff}.axis-card .pick.y{background:var(--blue)}.axis-card .pick.n{background:#b3b0a8}.axis-card .ax{font-weight:800;font-size:12px;margin:9px 0 5px}.axis-card p{font-size:9.5px;color:var(--muted);line-height:1.55;margin:0}
+.ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ws-card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:17px}.ws-card.opp{border-color:#a9e06e}.ws-card.trap{border-color:#ffb98a}.ws-type{font-size:8px;font-weight:800;letter-spacing:.05em;padding:3px 7px;border-radius:5px}.ws-card.opp .ws-type{background:var(--lime);color:#1c2b06}.ws-card.trap .ws-type{background:var(--orange);color:#fff}.ws-card h4{font-size:13px;margin:9px 0 7px}.ws-card p{font-size:9.5px;color:#5b5952;line-height:1.6;margin:0 0 5px}.ws-card .crit{font-size:9px;color:var(--muted);margin-top:8px}
+.cat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.cat-card2{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px}.cat-card2 .cid{font-family:ui-monospace,monospace;font-size:9px;color:var(--accent);font-weight:800}.cat-card2 h4{font-size:13px;margin:6px 0 6px}.cat-card2 .brands{font-size:9px;color:var(--muted);line-height:1.5;margin-bottom:8px}.cat-card2 .sw{font-size:9.5px;line-height:1.55}.cat-card2 .sw b{color:var(--accent)}
+.bta{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.bta-card{border-radius:11px;padding:16px;border:1px solid var(--line)}.bta-card.b{background:var(--lime2);border-color:#c8f0a0}.bta-card.t{background:var(--blue2);border-color:#c7d3fb}.bta-card.a{background:var(--orange2);border-color:#ffc6a0}.bta-card h4{font-size:11px;margin:0 0 8px;letter-spacing:.03em}.bta-card.b h4{color:#4f6e1c}.bta-card.t h4{color:var(--blue)}.bta-card.a h4{color:#a04a10}.bta-card ul{margin:0;padding-left:15px}.bta-card li{font-size:9.5px;line-height:1.6;margin:4px 0}
+.source-card{display:grid;grid-template-columns:96px 1fr auto;gap:15px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:8px}.source-card .domain{font-size:9px;font-weight:800;color:#555}.source-card h4{font-size:10.5px;margin:0 0 4px}.source-card p{font-size:9px;color:var(--muted);margin:0;line-height:1.5}.source-card a{color:var(--blue);text-decoration:none}.source-card .used{font-size:8px;color:var(--blue);background:var(--blue2);padding:4px 6px;border-radius:5px;white-space:nowrap}
+.footer-note{margin-top:24px;font-size:9px;color:#9a978f;text-align:center}
+/* 표 → 카드 그리드 (경쟁·이종업계 리스트, 탭/필터는 유지) */
+.group-block{margin-bottom:26px}.group-head{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}.group-head .gname{font-size:13px;font-weight:800}.group-head .gcount{font-size:10px;color:var(--muted)}
+.brand-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.brand-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:5px;min-height:150px}
+.brand-card .tb{position:absolute;top:12px;right:12px;font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px}
+.brand-card .nm{font-weight:800;font-size:12px;padding-right:30px}
+.brand-card .meta{font-size:9.5px;color:var(--muted);line-height:1.5}
+.brand-card .desc{font-size:10px;color:#4f4d47;line-height:1.5;flex:1}
+.brand-card .src{font-size:9px;margin-top:auto;padding-top:4px}.brand-card .src a{color:var(--blue);text-decoration:none}.brand-card .src .ev{color:var(--muted);margin-left:4px}
+@media(max-width:1300px){.brand-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:1000px){.brand-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:740px){.brand-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.brand-grid{grid-template-columns:1fr}}
+/* 브랜드 밸류 키워드 */
+.bvk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.bvk-col{border-top:3px solid var(--line);padding-top:16px;display:flex;flex-direction:column;min-height:280px}
+.bvk-col.c-blue{border-top-color:var(--blue)}.bvk-col.c-lime{border-top-color:var(--lime)}.bvk-col.c-pink{border-top-color:var(--pink)}.bvk-col.c-orange{border-top-color:var(--orange)}
+.bvk-id{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.bvk-title{font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+.bvk-col.c-blue .bvk-title{color:var(--blue)}.bvk-col.c-lime .bvk-title{color:#5a7d1a}.bvk-col.c-pink .bvk-title{color:#c23bb3}.bvk-col.c-orange .bvk-title{color:var(--orange)}
+.bvk-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.bvk-tags span{font-size:10px;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2)}
+.bvk-desc{font-size:12px;color:#4f4d47;line-height:1.7;flex:1}
+.bvk-sensory{font-size:9.5px;color:var(--muted);margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.bvk-sensory b{display:block;font-size:8.5px;color:#9a978f;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+@media(max-width:900px){.bvk-grid{grid-template-columns:1fr}}
+@media(max-width:1100px){.layout{grid-template-columns:205px minmax(0,1fr)}.main{padding:25px 22px 60px}.grid.cols-4{grid-template-columns:repeat(2,1fr)}.grid.cols-3{grid-template-columns:1fr}.flow{grid-template-columns:repeat(4,1fr)}.decision,.reco-head{grid-template-columns:1fr}.decision-side,.reco-score{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:15px 0 0;align-items:flex-start}.streams{grid-template-columns:repeat(2,1fr)}.principles,.roadmap,.not-doing,.axis-grid,.cat-cards,.bta{grid-template-columns:1fr}.risk{grid-template-columns:1fr 1fr}.request-vs,.ws-grid{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+@media(max-width:740px){.topbar{padding:0 16px}.top-actions .pill,.top-btn.print{display:none}.layout{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;overflow:auto;gap:4px}.project-mini,.nav-label{display:none}.nav-item{width:auto;white-space:nowrap}.nav-item .nav-num,.nav-item .nav-badge{display:none}.main{padding:20px 14px 50px}.grid.cols-4,.grid.cols-2{grid-template-columns:1fr}.page-head{display:block}.head-meta{justify-content:flex-start;margin-top:12px}.flow{grid-template-columns:repeat(2,1fr)}.streams{grid-template-columns:1fr}.search{margin-left:0;width:100%}.risk{grid-template-columns:1fr}.source-card{grid-template-columns:1fr}}
+@media print{.topbar,.sidebar,.filters,.top-actions{display:none!important}.layout{display:block}.main{padding:0;max-width:none}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:auto}.card,.strategy-card,.reco-hero,.decision,.pmap{box-shadow:none;break-inside:avoid}.page-head{margin-top:24px}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand"><div class="brand-mark">A2</div>
+    <div><h1>AION2 2027 연간 광고대행사 입찰 <span style="font-weight:400;color:#849c95">/ Bid Strategy</span></h1>
+    <p>㈜엔씨 · 66억+@ · 제출 2026-08-31 14:00 · PT 09-01</p></div></div>
+  <div class="top-actions"><span class="pill">D-12</span>
+    <button class="top-btn" onclick="toggleAll()">전체 펼침</button>
+    <button class="top-btn print" onclick="window.print()">PDF 출력</button></div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="project-mini"><div class="eyebrow">CURRENT PROJECT</div><h2>AION2 2027 연간 광고대행사</h2><p>㈜엔씨 · 경쟁 PT · v1.0</p><div class="progress"><span></span></div></div>
+  <div class="nav-label">DECISION FLOW</div>
+  <button class="nav-item active" data-view="overview"><span class="nav-num">00</span>요약 대시보드<span class="nav-badge">LIVE</span></button>
+  <button class="nav-item" data-view="brief"><span class="nav-num">01</span>RFP 해부·문제 정의</button>
+  <button class="nav-item" data-view="factbook"><span class="nav-num">02</span>IP·광고주 팩트북</button>
+  <button class="nav-item" data-view="competitors"><span class="nav-num">03</span>경쟁 리서치<span class="nav-badge">9</span></button>
+  <button class="nav-item" data-view="positioning"><span class="nav-num">04</span>포지셔닝 맵</button>
+  <button class="nav-item" data-view="whitespace"><span class="nav-num">05</span>화이트스페이스</button>
+  <button class="nav-item" data-view="cross"><span class="nav-num">06</span>이종업계 레퍼런스<span class="nav-badge">6</span></button>
+  <button class="nav-item" data-view="insights"><span class="nav-num">07</span>핵심 인사이트<span class="nav-badge">4</span></button>
+  <button class="nav-item" data-view="keywords"><span class="nav-num">08</span>캠페인 키메시지</button>
+  <button class="nav-item" data-view="options"><span class="nav-num">09</span>전략 대안<span class="nav-badge">3</span></button>
+  <button class="nav-item" data-view="recommendation"><span class="nav-num">10</span>추천 전략·연간 로드맵</button>
+  <div class="nav-label">EXECUTION</div>
+  <button class="nav-item" data-view="media"><span class="nav-num">11</span>미디어 믹스·KPI</button>
+  <button class="nav-item" data-view="ops"><span class="nav-num">12</span>실행 체계·리스크</button>
+  <button class="nav-item" data-view="toc"><span class="nav-num">13</span>제안서 목차·PT 전략</button>
+  <div class="nav-label">AUDIT &amp; TRACE</div>
+  <button class="nav-item" data-view="sources"><span class="nav-num">14</span>출처·근거 추적<span class="nav-badge">18</span></button>
+</aside>
+
+<main class="main">
+
+<!-- ══════════ 00 요약 ══════════ -->
+<section class="view active" id="overview">
+<div class="page-head"><div class="page-title"><div class="eyebrow">PROJECT OVERVIEW</div><h2>결론부터 — 이 건은 론칭 캠페인이 아니다</h2><p>1년차 라이브 게임의 2년차 운영 대행이고, 축은 4개월 주기 챕터 업데이트입니다.</p></div><div class="head-meta"><span class="tag amber">컨소시엄 결정 대기</span><span class="tag blue">RFP 원문 확보</span></div></div>
+
+<div class="card" style="border-left:4px solid var(--orange)">
+<h3>이번 분석에서 빠진 것 — 추정으로 채우지 않았습니다</h3>
+<p>아래 4가지는 확인 전까지 제안서 본문에 숫자로 쓰지 않습니다. OT(현장설명회)와 메일 질의로 채웁니다.</p>
+<div class="grid cols-4" style="margin-top:12px">
+<div class="card"><div class="label">수요측 원문 조사</div><p>인벤·루리웹·아이온2 갤러리 유저 원문을 직접 수집하지 않았습니다. 04 포지셔닝 맵의 Y축은 언론 보도 기반이라 검증이 필요합니다.</p></div>
+<div class="card"><div class="label">2026년 8월 최신 지표</div><p>공개된 최신 수치는 2026년 1분기까지입니다. 8월 기준 DAU·매출 순위는 확보하지 못했습니다.</p></div>
+<div class="card"><div class="label">NC 내부 KPI 정의</div><p>1주년 캠페인의 1순위 지표가 복귀 유저인지 신규 설치인지 매출인지 RFP에 없습니다.</p></div>
+<div class="card"><div class="label">AOR 대행사 정체</div><p>디지털 매체 집행을 맡는 AOR(광고주 지정 대행사) 사명과 수수료 구조를 모릅니다. 견적 구조 전체가 여기 걸립니다.</p></div>
+</div>
+</div>
+
+<div class="decision" style="margin-top:18px">
+<div><div class="eyebrow">CAMPAIGN POINT OF VIEW</div><h3>1년 동안 유저 말을 듣고 바뀐 MMORPG</h3><p>AION2의 2년차는 그 변화를 광고로 주장하지 않고 기록으로 증명한다. 「두 번째 비행」이 대외 캠페인 축, 「1년의 기록」이 상시 신뢰 축.</p></div>
+<div class="decision-side"><div class="eyebrow">전략 적합도</div><div class="score">82<small>/100</small></div><div class="why">RFP 사업목표 3개(락인·유입·글로벌 확장성)를 모두 받는 유일한 축</div></div>
+</div>
+
+<div class="grid cols-4" style="margin-top:18px">
+<div class="card metric"><div class="label">사업 예산</div><div class="value">66억</div><div class="sub">+ @ · VAT 별도 · 마일리지 산출은 150억 가정</div></div>
+<div class="card metric"><div class="label">제안 준비 기간</div><div class="value">12일</div><div class="sub">8/19 16시 수령 → 8/31 14시 제출</div></div>
+<div class="card metric"><div class="label">필수 크리에이티브</div><div class="value">9종</div><div class="sub">키메시지 2 · 영상 2 · 배너 7 (1주년 2 + 챕터 5)</div></div>
+<div class="card metric"><div class="label">업데이트 사이클</div><div class="value">4개월</div><div class="sub">계약 1년 = 챕터 3회 + 1주년 1회</div></div>
+</div>
+
+<div class="section-title"><h3>진행 파이프라인</h3><p>지금은 3단계까지 왔습니다</p></div>
+<div class="flow">
+<div class="flow-step done"><span class="check">✓</span><div class="num">01</div><strong>RFP 해부</strong><span>명시·숨은·미정의·위험</span></div>
+<div class="flow-step done"><span class="check">✓</span><div class="num">02</div><strong>IP·시장 진단</strong><span>원작 자산 · 경쟁 구도</span></div>
+<div class="flow-step done"><span class="check">✓</span><div class="num">03</div><strong>문제 정의</strong><span>2년차의 진짜 과제</span></div>
+<div class="flow-step"><div class="num">04</div><strong>크리에이티브</strong><span>필수 산출물 9종</span></div>
+<div class="flow-step"><div class="num">05</div><strong>미디어·견적</strong><span>66억 배분 · 수수료 구조</span></div>
+<div class="flow-step"><div class="num">06</div><strong>PT 리허설</strong><span>담당 팀 직접 발표</span></div>
+</div>
+
+<div class="section-title"><h3>지금 결정해야 하는 것 3건</h3><p>이게 안 정해지면 제안서 작성이 시작되지 않습니다</p></div>
+<div class="risk"><strong>컨소시엄을 구성할 것인가</strong><span><b class="risk-level high">8/21까지</b></span><span>참여 가부 직결</span><span>RFP는 오프라인·디지털 미디어 전문 인력 보유를 필수로 요구하고, 컨소시엄 구성 시 제안 준비 단계에서 NC에 사전 고지해야 합니다. 현재 MX실 가용 인력(1팀 3명·2팀 4명)으로 66억 규모 매체 기획과 500명 오프라인 쇼케이스를 단독 수행하는 것은 불가능합니다.</span></div>
+<div class="risk"><strong>확인질문 메일을 언제 보낼 것인가</strong><span><b class="risk-level high">8/20 오전</b></span><span>회신 대기 시간 필요</span><span>NC는 유선 문의를 받지 않고 이메일로 일괄 회신합니다. 회신이 늦으면 크리에이티브 방향이 흔들립니다. 11개 질문을 한 번에 보냅니다.</span></div>
+<div class="risk"><strong>크리에이티브 착수 기준을 무엇으로 할 것인가</strong><span><b class="risk-level medium">8/22</b></span><span>제작 리드타임</span><span>영상 2종·배너 7종을 8/31까지 내려면 8/26에는 시안이 확정돼야 합니다. 던전명 확인 회신을 기다리다 늦으면, 확인 전 가정을 명시하고 먼저 착수합니다.</span></div>
+</section>
+
+<!-- ══════════ 01 RFP 해부 ══════════ -->
+<section class="view" id="brief">
+<div class="page-head"><div class="page-title"><div class="eyebrow">RFP TEARDOWN</div><h2>요청받은 일과 실제로 풀어야 할 문제</h2><p>제안서 1페이지에서 심사위원이 확인하는 지점입니다.</p></div><div class="head-meta"><span class="tag blue">원문 기준</span></div></div>
+
+<div class="request-vs">
+<div class="request-box"><div class="label">CLIENT REQUEST</div><h3>AION2 1주년 업데이트 마케팅 대행</h3><p>기존 고객 락인 + 신규·이탈 유저 유입을 위한 대규모 프로모션. 국내 온·오프라인 마케팅 전략 수립 및 실행 전반.</p></div>
+<div class="arrow">→</div>
+<div class="request-box real"><div class="label">REFRAMED PROBLEM</div><h3>지갑을 다시 열 이유를 유저 스스로 말하게 만드는 일</h3><p>AION2는 출시 46일 만에 1,000억을 벌었고, 같은 기간 과금 논란을 두 번 겪었습니다. 2년차 광고비 66억이 풀리는 순간 유저는 "또 돈 쓰라는 거냐"로 읽습니다. 도달을 늘리는 문제가 아니라 <b>메시지의 발신자를 바꾸는 문제</b>입니다.</p></div>
+</div>
+
+<div class="section-title"><h3>명시 요구 — 평가 항목과 1:1로 붙입니다</h3><p>RFP 평가 항목 7개는 배점이 비공개입니다. 항목 수만큼 균등 배분됐다고 가정하고 대응 분량을 짭니다.</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:150px">평가 항목</th><th>RFP가 요구한 것</th><th style="width:190px">우리 대응</th></tr></thead>
+<tbody>
+<tr><td><b>투입 인력의 전문성</b></td><td>기획·미디어 전담 인력 셋팅 등 운영 상세 계획. 오프라인/디지털 미디어 전문 인력 보유 <b>필수</b>. 인력 구성 제출 필수. 컨소시엄 가능</td><td>12뷰 참조 — 코어 12명 + 컨소시엄 R&amp;R 표. 이름·경력·투입률까지 기재</td></tr>
+<tr><td><b>전략 기획의 적절성</b></td><td>11월 1주년 업데이트 마케팅 전략, 국내 MMORPG 시장 인사이트 반영, 게임 외 브랜딩 전략, 유효 타겟 설정, 브랜딩+퍼포먼스</td><td>07·09·10뷰 — 문제 정의 한 문장 → 컨셉 → 연간 로드맵</td></tr>
+<tr><td><b>창의적 크리에이티브</b></td><td>1주년 키메시지·영상 1종·배너 2종 / 챕터 전체 키메시지 1종·영상 1종 / 던전별 배너 5종</td><td>08·10뷰 — 실물 시안 9종. 여기가 실질 승부처</td></tr>
+<tr><td><b>유사분야 사업수행실적</b></td><td>회사 소개서 + 게임 론칭 마케팅 캠페인 레퍼런스</td><td>별책. MMORPG·게임 타이틀 실적을 앞에 배치</td></tr>
+<tr><td><b>효과적인 매체 구성·운용</b></td><td>매체 운영 트렌드와 유저 성향 반영한 미디어 구성 및 근거, 예산 구성과 운영 방안(UA 포함), 예산별 KPI, 미디어 믹스</td><td>11뷰 — 매체 6군 배분 + 3층 KPI 모델</td></tr>
+<tr><td><b>단계별·목적별 콘텐츠 기획</b></td><td>숏폼 포함 영상 콘텐츠, 콜라보, 기존 라이브 방송 포맷을 벗어난 새 포맷, 500명 규모 쇼케이스</td><td>10뷰 — 챕터 사이클별 콘텐츠 그리드 + 쇼케이스 연출안</td></tr>
+<tr><td><b>견적 타당성</b></td><td>66억 이내 전체 견적, 활동별 대행 fee·수수료 명시, DA 소재 제작·베리에이션 단가, 마크업/비마크업/렙사 수수료 구분, 150억 가정 마일리지</td><td>11뷰 — 별도 XLS. 수수료 3종 분리 기재</td></tr>
+</tbody></table></div>
+
+<div class="section-title"><h3>숨은 니즈 — RFP가 말하지 않은 채점 기준</h3><p>문장 뒤에 있는 의도를 읽습니다</p></div>
+<div class="grid cols-2">
+<div class="card"><div class="label">01</div><h3>"66억 + @"와 "150억 가정"의 간격</h3><p>마일리지·서비스 산출을 <b>150억 기준</b>으로 제시하라는 건, 실제 집행이 66억에서 멈추지 않을 수 있다는 신호입니다. NC는 예산이 두 배로 커졌을 때 감당할 수 있는 조직인지를 봅니다. 66억짜리 제안만 내면 규모 대응력에서 감점됩니다.</p></div>
+<div class="card"><div class="label">02</div><h3>디지털 집행을 AOR이 가져간다는 조건</h3><p>우리는 디지털 매체를 직접 집행하지 못합니다. 그런데도 미디어 전략과 KPI를 요구합니다. 즉 NC가 사는 것은 집행 대행이 아니라 <b>매체 기획력과 AOR과의 협업 프로세스</b>입니다. "AOR과 어떻게 붙어서 일하는가"를 안 쓰면 이 항목은 비어 보입니다.</p></div>
+<div class="card"><div class="label">03</div><h3>"게임 외 브랜딩 전략"을 따로 뽑아 쓴 이유</h3><p>업데이트 고지만 반복하지 말라는 요구입니다. AION2는 2025년 11월 영혼의 서 P2W 논란, 2026년 1월 데바 패스 인상 후 롤백을 겪었습니다. 게임 밖에서 브랜드 호감을 만들어야 게임 안 메시지가 먹힙니다.</p></div>
+<div class="card"><div class="label">04</div><h3>"익숙한 라이브 방송 포맷을 벗어난" 요구</h3><p>쇼케이스·개발자 노트 형식의 피로를 NC 스스로 인지하고 있습니다. 유저는 이미 두 번의 긴급 라이브 방송을 사과 방송으로 기억합니다. 같은 무대 구성으로는 1주년을 축하로 만들 수 없습니다.</p></div>
+<div class="card"><div class="label">05</div><h3>"한국 리소스를 글로벌에서 사용"의 실제 뜻</h3><p>AION2 글로벌은 Steam·PURPLE PC 플랫폼으로 10개 언어를 지원합니다. 한국어 말맛에 기댄 카피, 국내 셀럽 기용, 한국 밈은 재활용이 안 됩니다. <b>언어 의존도가 낮은 소재 설계</b>가 실질 요구입니다.</p></div>
+<div class="card"><div class="label">06</div><h3>"모호한 표현은 불가로 간주"</h3><p>RFP가 직접 명시한 문장입니다. "가능하다", "검토 중", "협의 후 진행" 같은 표현이 들어간 항목은 못 하는 것으로 채점됩니다. 제안서 전체를 확정형 서술로 씁니다.</p></div>
+</div>
+
+<div class="section-title"><h3>미정의 — OT 전 확인질문 11건</h3><p>유선 문의 불가. 메일로 일괄 발송합니다</p></div>
+<div class="question-list">
+<div class="question"><div><strong>1. 챕터 넘버링</strong><span>크리에이티브는 "챕터 1" 기반을 요구하는데 쇼케이스는 "1주년 및 챕터 2" 소개입니다. 11월 업데이트가 챕터 2가 맞습니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>2. 던전 명칭 표기</strong><span>사업내용은 "원종", 크리에이티브 항목은 "원정"으로 표기돼 있습니다. 어느 쪽이 맞습니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>3. 배너 대상 던전의 실체</strong><span>타락한 데바의 성·심연의 뿔 암굴은 2026년 7월 챕터1에 이미 서비스 중입니다. 잠식된 데우스 연구기지·노이란의 숨겨진 유산·비탄의 설원은 미공개입니다. 배너 5종은 11월 신규분 기준입니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>4. 66억의 포함 범위</strong><span>AOR 경유 디지털 매체비가 66억 안에 포함됩니까, 별도입니까?</span></div><span class="tag red">견적 직결</span></div>
+<div class="question"><div><strong>5. AOR 대행사 정보</strong><span>사명과 수수료 구조를 알아야 렙사 수수료를 구분 기재할 수 있습니다.</span></div><span class="tag red">견적 직결</span></div>
+<div class="question"><div><strong>6. 1순위 KPI</strong><span>1주년 캠페인의 성패를 복귀 유저 수, 신규 설치, DAU, 매출 중 무엇으로 판정합니까?</span></div><span class="tag red">전략 직결</span></div>
+<div class="question"><div><strong>7. 쇼케이스 조건</strong><span>500명은 오프라인 관객 수입니까? 장소·일자·온라인 동시 중계 여부가 정해져 있습니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>8. 대만 서비스</strong><span>업무 범위가 "한국만"인데 이미 서비스 중인 대만은 별도 대행사가 담당합니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>9. 글로벌 리소스 재활용의 수위</strong><span>한국 제작 소재의 글로벌 전용 시 언어 현지화 비용은 어느 쪽 예산입니까?</span></div><span class="tag amber">미확인</span></div>
+<div class="question"><div><strong>10. 컨소시엄 고지 기한</strong><span>"제안 준비 단계에서 고지 필수"의 구체적 마감 시점이 언제입니까?</span></div><span class="tag red">참여 직결</span></div>
+<div class="question"><div><strong>11. 견적서 양식</strong><span>66억 견적과 150억 가정 마일리지를 같은 파일에 담습니까, 분리합니까?</span></div><span class="tag amber">미확인</span></div>
+</div>
+
+<div class="section-title"><h3>제출 체크리스트</h3><p>형식 실격이 실력 탈락보다 흔합니다</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:120px">항목</th><th>내용</th><th style="width:110px">상태</th></tr></thead>
+<tbody>
+<tr><td>제출 기한</td><td>2026-08-31(월) 14:00. 마감 초과 시 추가 수령 불가. 대용량 파일은 전송 시간을 감안해 <b>13:00까지 발송 착수</b></td><td><span class="tag amber">준수 필요</span></td></tr>
+<tr><td>제출처</td><td>bidding@ncsoft.com <b>단독 수신</b>. 실무·구매 담당자를 참조로 넣지 않습니다. 통합구매시스템 점검으로 시스템 제출 경로 없음</td><td><span class="tag red">단독 수신</span></td></tr>
+<tr><td>제출 서류</td><td>기업 소개 자료(PPT/PDF, 게임 론칭 캠페인 레퍼런스 포함) · 사업 제안서(PPT/PDF) · 견적서(XLS/PDF, 66억 이내, VAT 별도) · 컨소시엄 업체 자료</td><td><span class="tag amber">4종</span></td></tr>
+<tr><td>서면 제출</td><td>없음. 메일 제출만</td><td><span class="tag green">해당 없음</span></td></tr>
+<tr><td>제출 후 변경</td><td>불가. 제안설명회에서의 내용 변경도 인정되지 않음</td><td><span class="tag red">1회 확정</span></td></tr>
+<tr><td>현장 PT</td><td>2026-09-01(화). <b>본 업무를 담당할 팀의 담당자가 직접 발표</b>. 대표·영업 대리 발표 불가</td><td><span class="tag red">담당자 발표</span></td></tr>
+<tr><td>인력 교체</td><td>제안서에 명시한 투입 인력은 협상·계약 과정에서 교체 불가(NC 합의 시 예외)</td><td><span class="tag amber">확정 기재</span></td></tr>
+<tr><td>문의 경로</td><td>이태헌·전하나(프로젝트) / 이혜진(제안절차) 외 접촉 시 평가상 불이익. 유선 문의 불가</td><td><span class="tag red">메일만</span></td></tr>
+<tr><td>매체 선정 제약</td><td>낮은 노출·인지도 및 접점 효과가 보장되지 않는 매체 지양</td><td><span class="tag amber">근거 첨부</span></td></tr>
+<tr><td>보안</td><td>대외비. 제안 과정에서 취득한 모든 정보 무단전재·복사 금지</td><td><span class="tag red">NDA 수준</span></td></tr>
+</tbody></table></div>
+</section>
+<!-- ══════════ 02 팩트북 ══════════ -->
+<section class="view" id="factbook">
+<div class="page-head"><div class="page-title"><div class="eyebrow">IP &amp; ADVERTISER FACTBOOK</div><h2>원작 자산, 현재 성적, 광고주 기조</h2><p>전략을 말하기 전에 사실부터 세웁니다. 모든 숫자에 출처와 기준 시점을 붙였습니다.</p></div><div class="head-meta"><span class="tag blue">T1·T2 기반</span></div></div>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>원작 아이온: 영원의 탑 (2008) — 물려받은 브랜드 자산</h3>
+<dl>
+<div class="kv"><dt>세계관</dt><dd>천족과 마족이 갈라진 <b>천마전쟁</b>. 에너지 흐름이 무너지며 생긴 이공간 <b>아비스</b>가 두 진영의 전장이 됨</dd></div>
+<div class="kv"><dt>고유 상징</dt><dd><b>날개와 비행</b>. MMORPG에서 비행을 전투와 이동의 기본으로 올린 첫 국산 타이틀</dd></div>
+<div class="kv"><dt>핵심 재미</dt><dd><b>RvR</b>(진영 대 진영 전투) — 개인 경쟁이 아니라 소속 진영의 승패로 감정이 움직이는 구조</dd></div>
+<div class="kv"><dt>실적 기억</dt><dd>PC방 점유율 <b>160주 연속 1위</b>. 30~40대 남성에게 "내가 했던 게임"으로 남아 있음</dd></div>
+<div class="kv"><dt>유산 포인트</dt><dd>날개 · 진영 소속감 · 아비스 대규모 전투. 이 셋은 <b>2년차 캠페인에서 재사용 가능한 자산</b></dd></div>
+<div class="kv"><dt>소진된 카드</dt><dd>"원작의 완전판" 서사는 론칭 캠페인에서 이미 씀. 슬로건 "두 개의 하늘, 하나의 영광"도 소진</dd></div>
+</dl>
+</div>
+
+<div class="card">
+<h3>AION2 — 출시 이후 9개월 성적</h3>
+<dl>
+<div class="kv"><dt>출시</dt><dd>2025-11-19, 한국·대만. 언리얼 엔진 5 오픈월드, PC·모바일 멀티 플랫폼</dd></div>
+<div class="kv"><dt>초기 매출</dt><dd>출시 46일 만에 누적 <b>1,000억 원</b> 돌파(2026-01-03 기준). 출시 첫 주 약 250억</dd></div>
+<div class="kv"><dt>이용자</dt><dd>초기 <b>DAU 150만</b>(하루에 한 번 이상 접속한 사람 수). 멤버십 구매 캐릭터 누적 100만 개 초과</dd></div>
+<div class="kv"><dt>분기 실적</dt><dd>2025년 4분기 매출 <b>941억 원</b>. NC의 4분기 흑자 전환 견인</dd></div>
+<div class="kv"><dt>시즌2</dt><dd>2026-01-21 시작. 원정·토벌전·각성전·악몽 던전 순차 추가, 배틀로얄 '아웃랜드'와 '전장: 점령전' 신설</dd></div>
+<div class="kv"><dt>챕터1</dt><dd>2026-07-01 '모래와 서리의 땅'. 최고 레벨 50 상향, 신규 클래스 <b>권성</b>, 영지 엘테넨(천족)·모르헤임(마족) 추가</dd></div>
+<div class="kv"><dt>글로벌</dt><dd>2026년 하반기 <b>PC 전용</b>(Steam·PURPLE)으로 북미·남미·유럽·일본 출시. 10개 언어 지원</dd></div>
+</dl>
+</div>
+</div>
+
+<div class="grid cols-2" style="margin-top:16px">
+<div class="card" style="border-left:4px solid var(--orange)">
+<h3>브랜드 부채 — 과금 신뢰 이슈 2회</h3>
+<p>제안서 본문에 이 단어를 그대로 쓰지는 않습니다. 그러나 전략의 출발점입니다.</p>
+<dl>
+<div class="kv"><dt>2025-11</dt><dd><b>영혼의 서</b> 논란. 출시 전 "유료 재화로 팔지 않겠다"고 공지한 핵심 성장 아이템이 현금 패키지 구성품으로 판매되며 P2W(돈 쓴 만큼 강해지는 구조) 비판</dd></div>
+<div class="kv"><dt>2026-01</dt><dd><b>데바 패스</b> 논란. 시즌2 전환 시 패스 가격이 2,500 큐나 → 6,500 큐나로 오르고 보상 수령 기간은 9주 → 5주로 단축. 실질 4~5배 인상. 긴급 라이브 방송으로 사과 후 시즌1 수준 롤백</dd></div>
+<div class="kv"><dt>남은 인식</dt><dd>"반발하면 되돌린다"는 학습. 광고 물량이 커질수록 <b>과금 압박의 신호</b>로 해석될 위험</dd></div>
+<div class="kv"><dt>반대 신호</dt><dd>2026-07 챕터1에서 멤버십을 2만 5,000원으로 전면 개편. 유저 반응은 개선 쪽. 시즌2 방향도 PvE 확대·육성 부담 완화</dd></div>
+</dl>
+</div>
+
+<div class="card">
+<h3>광고주 기조 — ㈜엔씨의 2026년</h3>
+<dl>
+<div class="kv"><dt>실적 목표</dt><dd>2026년 연간 매출 최소 2조 원(최대 2.5조 원) 전망. AION2가 신작 IP 매출의 절반인 3,000억을 담당</dd></div>
+<div class="kv"><dt>마케팅 태도</dt><dd>논란 발생 시 당일 긴급 방송으로 대응하는 <b>속도전</b>. 침묵하지 않는 대신, 그만큼 사과 방송이 브랜드 기억에 누적</dd></div>
+<div class="kv"><dt>제품 라인</dt><dd>신더시티·브레이커스·타임 테이커즈·호라이즌 스틸 프론티어스 등 신작 다수 준비. AION2는 <b>캐시카우 유지</b> 역할</dd></div>
+<div class="kv"><dt>광고 이력</dt><dd>론칭 숏폼 광고가 "캐릭터 모션이 어색하다", "날개의 장점이 안 살았다"는 유저 혹평. 억지 연출에 대한 감도가 높음</dd></div>
+<div class="kv"><dt>시사점</dt><dd>NC는 화려한 시네마틱을 살 회사가 아닙니다. <b>유저 반응을 예측하고 미리 막는 대행사</b>를 삽니다</dd></div>
+</dl>
+</div>
+</div>
+
+<div class="section-title"><h3>유효 타깃 세그먼트</h3><p>RFP 요구: "예상 유효 타겟 설정 및 분석을 통한 유입 극대화"</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:120px">세그먼트</th><th style="width:100px">규모 가정</th><th>정의와 접근 각</th><th style="width:130px">1주년 역할</th></tr></thead>
+<tbody>
+<tr><td><b>S1 잔류 코어</b></td><td>현 DAU 기반</td><td>1년째 붙어 있는 유저. 영지·길드에 소속감이 있고 진영전에 감정이 걸려 있음. 이들이 커뮤니티 여론을 만든다</td><td><span class="tag blue">락인 · 1순위</span></td></tr>
+<tr><td><b>S2 조용한 이탈</b></td><td>초기 DAU 150만 대비 감소분</td><td>과금 논란이나 성장 피로로 접었지만 게임 자체를 미워하지 않는 층. 복귀 트리거는 "내 캐릭터가 아직 있다"</td><td><span class="tag blue">복귀 · 1순위</span></td></tr>
+<tr><td><b>S3 원작 향수</b></td><td>30~40대 남성</td><td>2008년 아이온을 했지만 AION2는 안 한 층. 날개·아비스 기억은 있으나 모바일 MMORPG 과금 구조에 냉소적</td><td><span class="tag amber">신규 · 2순위</span></td></tr>
+<tr><td><b>S4 MMO 유목민</b></td><td>경쟁 타이틀 활동층</td><td>리니지·로드나인·신작 사이를 옮겨 다니는 층. 판단 기준은 서버 인구와 콘텐츠 물량</td><td><span class="tag amber">신규 · 2순위</span></td></tr>
+<tr><td><b>S5 관망 대중</b></td><td>—</td><td>MMORPG를 안 하지만 게임 뉴스는 보는 층. 브랜드 호감의 저수지. 여기서 부정 여론이 커지면 S1·S2가 흔들린다</td><td><span class="tag">브랜딩 · 3순위</span></td></tr>
+</tbody></table></div>
+<p class="footer-note">규모 수치는 NC가 공개하지 않았습니다. 확인 전까지 제안서에 절대값을 쓰지 않고 비중과 우선순위로만 표기합니다.</p>
+
+<div class="section-title"><h3>이 문서에 나온 말 풀이</h3><p>게임 비전문가도 읽을 수 있게 한 번씩 풀어둡니다</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:170px">용어</th><th>쉬운 뜻</th><th style="width:90px">쓰인 뷰</th></tr></thead>
+<tbody>
+<tr><td>MMORPG</td><td>수천 명이 같은 온라인 세계에 동시에 접속해서 캐릭터를 키우는 게임</td><td>전체</td></tr>
+<tr><td>RvR</td><td>진영 대 진영 전투. 개인이 아니라 소속된 편끼리 싸우는 구조</td><td>02·08</td></tr>
+<tr><td>P2W</td><td>Pay to Win. 돈을 쓴 만큼 강해지는 구조</td><td>02·07</td></tr>
+<tr><td>DAU</td><td>하루에 한 번 이상 접속한 사람 수</td><td>02·11</td></tr>
+<tr><td>락인(Lock-in)</td><td>이미 하고 있는 유저가 떠나지 않게 붙잡는 것</td><td>01·10</td></tr>
+<tr><td>UA</td><td>User Acquisition. 광고로 새 유저를 데려오는 활동</td><td>11</td></tr>
+<tr><td>AOR</td><td>광고주가 미리 지정해 둔 전담 대행사. AION2 디지털 매체 집행은 여기를 거쳐야 함</td><td>01·11</td></tr>
+<tr><td>DOOH</td><td>디지털 옥외광고. 지하철·건물 외벽의 큰 화면 광고</td><td>11</td></tr>
+<tr><td>마크업 / 비마크업</td><td>매체비에 대행 수수료를 얹어 청구하는 방식 / 수수료를 따로 떼어 청구하는 방식</td><td>11</td></tr>
+<tr><td>렙사 수수료</td><td>매체와 대행사 사이에서 광고 판매를 대행하는 회사가 가져가는 몫</td><td>11</td></tr>
+<tr><td>베리에이션</td><td>같은 시안을 매체별 크기·언어별로 바꿔 만드는 작업</td><td>11·12</td></tr>
+<tr><td>화이트스페이스</td><td>빈자리. 경쟁사가 아직 아무도 서 있지 않은 위치</td><td>05</td></tr>
+<tr><td>포지셔닝 맵</td><td>브랜드들이 어디쯤 서 있는지 두 개의 기준으로 그린 지도</td><td>04</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ══════════ 03 경쟁 ══════════ -->
+<section class="view" id="competitors">
+<div class="page-head"><div class="page-title"><div class="eyebrow">COMPETITIVE RESEARCH</div><h2>2026~2027 국내 MMORPG 경쟁 구도</h2><p>AION2가 싸우는 상대는 신작만이 아닙니다. 같은 회사 신작과도 예산을 나눕니다.</p></div><div class="head-meta"><span class="tag lime">T2 언론 기반</span></div></div>
+
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:150px">타이틀</th><th style="width:110px">퍼블리셔</th><th style="width:110px">시점</th><th>AION2에 주는 압력</th><th style="width:80px">티어</th></tr></thead>
+<tbody>
+<tr><td><b>리니지 M / W / 2M</b></td><td>㈜엔씨</td><td>서비스 중</td><td>같은 회사 캐시카우. 30~40대 남성 MMO 예산을 직접 나눠 갖는다. AION2 광고가 리니지 유저를 데려오면 회사 전체 매출은 제자리</td><td><span class="tag blue">T1</span></td></tr>
+<tr><td><b>크로노 오디세이</b></td><td>카카오게임즈</td><td>2026 출시</td><td>일정이 미뤄진 대작. 콘솔·PC 지향의 액션성으로 "모바일 MMO는 다 똑같다"는 프레임을 깬다</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>아키에이지 크로니클</b></td><td>카카오게임즈</td><td>2026 출시</td><td>원작 IP 계승 구조가 AION2와 동일. "원작 팬을 다시 부른다"는 메시지가 직접 충돌</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>솔: 인챈트</b></td><td>—</td><td>2026 서비스</td><td>2026년 출시군 중 마케팅 물량이 큰 축. 사전 브랜딩 캠페인을 길게 운영</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>제우스: 오만의 신</b></td><td>—</td><td>2026 출시</td><td>신화 세계관 MMORPG. 천족·마족 대립 서사와 소재가 겹친다</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>오딘Q</b></td><td>—</td><td>2026 출시</td><td>오딘 IP 확장작. 북유럽 신화 계열로 서사 경쟁</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>로드나인</b></td><td>—</td><td>서비스 중</td><td>기존 매출 상위권 MMORPG. 유목민 세그먼트(S4)를 붙잡고 있다</td><td><span class="tag pink">T3</span></td></tr>
+<tr><td><b>호라이즌 스틸 프론티어스</b></td><td>㈜엔씨</td><td>2026~</td><td>NC 차세대 MMORPG. 사내 마케팅 예산·인력의 경쟁자</td><td><span class="tag lime">T2</span></td></tr>
+<tr><td><b>신더시티 · 브레이커스 · 타임 테이커즈</b></td><td>㈜엔씨</td><td>준비 중</td><td>장르는 다르지만 NC 브랜드 커뮤니케이션 총량을 나눠 쓴다</td><td><span class="tag lime">T2</span></td></tr>
+</tbody></table></div>
+
+<div class="grid cols-3" style="margin-top:18px">
+<div class="card"><div class="label">경쟁 패턴 01</div><h3>신작은 사전예약으로 싸운다</h3><p>2026~2027 출시군 대부분이 사전예약 인원 경쟁에 예산을 씁니다. 대형 모델 기용, 시네마틱 트레일러, 사전예약 보상 물량이 공식입니다.</p></div>
+<div class="card"><div class="label">경쟁 패턴 02</div><h3>서비스작은 업데이트 고지로 싸운다</h3><p>라이브 게임은 업데이트마다 신규 던전·클래스를 배너로 알리는 방식에 머뭅니다. 브랜드 커뮤니케이션이 거의 없습니다.</p></div>
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">틈</div><h3>1년을 버틴 이야기를 하는 곳이 없다</h3><p>사전예약도 업데이트 고지도 아닌 <b>"이 게임이 1년 동안 어떻게 변했는가"</b>를 캠페인 축으로 쓴 국산 MMORPG가 최근 없습니다. AION2는 지금 이걸 말할 수 있는 유일한 위치입니다.</p></div>
+</div>
+</section>
+
+<!-- ══════════ 04 포지셔닝 ══════════ -->
+<section class="view" id="positioning">
+<div class="page-head"><div class="page-title"><div class="eyebrow">POSITIONING MAP</div><h2>AION2가 지금 서 있는 자리와 옮겨야 할 자리</h2><p>축을 고른 근거를 먼저 밝힙니다.</p></div><div class="head-meta"><span class="tag amber">축 신뢰도 보통</span></div></div>
+
+<div class="card" style="border-left:4px solid var(--orange);margin-bottom:18px">
+<h3>이 맵의 한계</h3>
+<p>Y축(운영 신뢰도)은 언론 보도와 나무위키 논란 정리를 근거로 배치했습니다. 인벤·루리웹·아이온2 갤러리의 <b>유저 원문을 직접 수집하지 않았습니다</b>. 제안서에 이 맵을 쓰려면 8/21~8/23에 커뮤니티 원문 300건 이상을 수집해 축을 재검증해야 합니다. 검증 전까지 이 맵은 내부 논의용입니다.</p>
+</div>
+
+<div class="pmap">
+<div class="pm-title">국내 MMORPG 포지셔닝 · 2026.08 기준</div>
+<div class="pm-field">
+<span class="pm-axis top">운영 신뢰 높음</span>
+<span class="pm-axis bottom">과금 압박 강함</span>
+<span class="pm-axis left">수치·경쟁 중심</span>
+<span class="pm-axis right">세계관·서사 중심</span>
+<div class="pm-node" style="left:14%;top:74%;" title="T3 · 장기 서비스 과금 구조">리니지 계열</div>
+<div class="pm-node" style="left:26%;top:62%;" title="T3 · 매출 상위 유지">로드나인</div>
+<div class="pm-node" style="left:70%;top:26%;" title="T2 · 콘솔 지향 액션">크로노 오디세이</div>
+<div class="pm-node" style="left:76%;top:38%;" title="T2 · 원작 IP 계승">아키에이지 크로니클</div>
+<div class="pm-node" style="left:58%;top:44%;" title="T2 · 신화 세계관">제우스 · 오딘Q</div>
+<div class="pm-node" style="left:64%;top:66%;" title="T2 · 과금 논란 2회 · 서사 자산 강함">AION2 현재</div>
+<div class="pm-node goal" style="left:74%;top:18%;" title="목표 좌표">AION2 목표</div>
+</div>
+</div>
+
+<div class="grid cols-2" style="margin-top:18px">
+<div class="axis-card"><div class="ax">X축 · 수치·경쟁 ↔ 세계관·서사</div><p>유저가 이 게임을 계속하는 이유가 <b>전투력 숫자</b>냐 <b>세계와 진영에 대한 소속감</b>이냐. AION2는 천마전쟁·아비스·영지라는 서사 자산을 갖고 있어 오른쪽에 있습니다. 근거: 원작 아이온의 RvR 구조 계승, 2026-07 영지 시스템(엘테넨·모르헤임) 도입.</p></div>
+<div class="axis-card"><div class="ax">Y축 · 과금 압박 ↔ 운영 신뢰</div><p>유저가 운영을 믿는가. AION2는 논란 2회로 아래쪽에 있지만, 두 번 다 롤백하고 멤버십을 2.5만 원으로 개편하며 위로 올라오는 중입니다. 근거: 2026-01 데바 패스 롤백, 2026-07 멤버십 개편.</p></div>
+</div>
+
+<div class="card" style="margin-top:16px;border-left:4px solid var(--blue)">
+<h3>이동해야 할 방향</h3>
+<p>X축은 이미 좋은 자리입니다. 더 오른쪽으로 밀 필요가 없습니다. <b>2년차 캠페인이 해야 할 일은 Y축을 올리는 것</b>이고, 그건 광고 카피로 안 됩니다. 운영이 바뀐 증거를 유저 언어로 보여주는 콘텐츠가 필요합니다.</p>
+</div>
+</section>
+
+<!-- ══════════ 05 화이트스페이스 ══════════ -->
+<section class="view" id="whitespace">
+<div class="page-head"><div class="page-title"><div class="eyebrow">WHITESPACE</div><h2>비어 있는 자리와 함정</h2><p>빈자리라고 다 기회는 아닙니다. 아무도 안 하는 데는 이유가 있는 경우가 있습니다.</p></div><div class="head-meta"><span class="tag lime">기회 3</span><span class="tag red">함정 2</span></div></div>
+
+<div class="grid cols-3">
+<div class="card" style="border-left:4px solid var(--lime)"><div class="ws-type">기회 W1</div><h3>1주년을 사과가 아니라 결산으로 쓰는 자리</h3><p>국산 MMORPG의 주년 캠페인은 보상 지급 고지에 머뭅니다. AION2는 논란과 롤백까지 포함한 <b>1년 운영 기록</b>을 공개할 수 있는 드문 위치입니다. 감추면 부채, 꺼내면 자산입니다.</p><p class="so-what"><b>So What:</b> 「1년의 기록」을 상시 콘텐츠 축으로. 데이터 기반 결산 리포트를 유저 개인 단위로 발행.</p></div>
+<div class="card" style="border-left:4px solid var(--lime)"><div class="ws-type">기회 W2</div><h3>진영 소속감을 오프라인으로 꺼내는 자리</h3><p>천족·마족 대립은 게임 안에만 있습니다. 500명 규모 쇼케이스를 <b>진영 단위로 나눠</b> 운영하면 관객이 관람자에서 참가자가 됩니다. 라이브 방송 포맷을 벗어나라는 RFP 요구에 직접 답합니다.</p><p class="so-what"><b>So What:</b> 쇼케이스를 발표회가 아니라 진영 대항전으로 설계. 좌석·굿즈·투표를 진영으로 분리.</p></div>
+<div class="card" style="border-left:4px solid var(--lime)"><div class="ws-type">기회 W3</div><h3>언어에 기대지 않는 소재를 만드는 자리</h3><p>경쟁작 소재는 한국어 카피와 국내 셀럽에 의존합니다. AION2는 9월 글로벌 10개 언어 출시가 예정돼 있어 <b>비주얼만으로 성립하는 소재</b>를 만들 명분이 있습니다. 제작비가 두 번 안 듭니다.</p><p class="so-what"><b>So What:</b> 모든 키비주얼·영상을 무자막 컷과 자막 컷으로 이중 설계. 견적서에 글로벌 전용 시 절감액을 명시.</p></div>
+</div>
+
+<div class="grid cols-2" style="margin-top:16px">
+<div class="card" style="border-left:4px solid var(--orange)"><div class="ws-type">함정 F1</div><h3>원작 향수 단독 축</h3><p>"2008년 그 아이온이 돌아왔다"는 각은 비어 보이지만 이미 론칭 캠페인에서 소진했습니다. 그리고 RFP 사업목표 1순위는 <b>기존 고객 락인</b>입니다. 향수 축은 S3(원작 향수층)에만 닿고 S1·S2를 놓칩니다.</p></div>
+<div class="card" style="border-left:4px solid var(--orange)"><div class="ws-type">함정 F2</div><h3>과금 논란을 정면으로 언급하는 캠페인</h3><p>"이제 착해졌습니다"류의 메시지는 잊고 있던 사람에게 논란을 상기시킵니다. 신뢰는 선언이 아니라 <b>기록의 누적</b>으로만 회복됩니다. 광고 카피에서 과금을 말하지 않고, 콘텐츠에서 변경 이력을 보여줍니다.</p></div>
+</div>
+</section>
+
+<!-- ══════════ 06 이종업계 ══════════ -->
+<section class="view" id="cross">
+<div class="page-head"><div class="page-title"><div class="eyebrow">CROSS-INDUSTRY</div><h2>게임 밖에서 빌려올 구조 6개</h2><p>"게임 외 브랜딩 전략"이라는 RFP 요구에 대한 실제 재료입니다.</p></div><div class="head-meta"><span class="tag pink">차용 구조</span></div></div>
+
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:130px">업계 · 사례</th><th style="width:200px">빌려올 구조</th><th>AION2 적용</th></tr></thead>
+<tbody>
+<tr><td><b>프로스포츠 구단</b><br>시즌권·홈경기</td><td>소속을 상품화한다. 유니폼·응원가·홈구장이 정체성이 된다</td><td>천족·마족을 <b>구단처럼</b> 운영. 진영별 굿즈, 진영 컬러 시스템, 시즌 성적표. 진영전 결과를 정규 콘텐츠로 중계</td></tr>
+<tr><td><b>스트리밍 플랫폼</b><br>시즌 공개 방식</td><td>다음 시즌 공개일을 미리 못 박아 기다림을 자산으로 만든다</td><td>4개월 챕터 사이클을 <b>시즌제로 명명</b>하고 다음 챕터 D-day를 상시 노출. 업데이트를 알림이 아니라 약속으로</td></tr>
+<tr><td><b>음악 페스티벌</b><br>라인업 순차 공개</td><td>전체를 한 번에 안 깐다. 1차·2차·최종 라인업으로 기대를 분할</td><td>1주년 업데이트 콘텐츠를 3주에 걸쳐 던전 1개씩 공개. 마지막 1개는 쇼케이스 현장에서만</td></tr>
+<tr><td><b>자동차</b><br>연식 변경 모델</td><td>바뀐 사양을 표로 비교해 보여준다. "무엇이 좋아졌는가"가 광고 본문</td><td>「1년의 기록」의 실물 포맷. <b>출시 시점 vs 지금</b>을 항목별로 비교하는 콘텐츠. 롤백·개편 이력을 포함</td></tr>
+<tr><td><b>피트니스 앱</b><br>연말 결산 리포트</td><td>개인 데이터를 카드로 만들어 준다. 유저가 자발적으로 공유한다</td><td>유저별 <b>1년 비행 기록</b> 발행 — 총 비행 거리, 소속 진영 승률, 처음 죽은 장소, 가장 오래 머문 지역. 공유가 곧 매체</td></tr>
+<tr><td><b>테크 기업</b><br>제품 발표 이벤트</td><td>발표 자체가 콘텐츠다. 무대·조명·영상 완성도가 제품 신뢰로 전이된다</td><td>500명 쇼케이스를 개발자 노트가 아니라 <b>발표 이벤트 수준</b>으로 연출. 사과 방송의 기억을 무대 완성도로 덮는다</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ══════════ 07 인사이트 ══════════ -->
+<section class="view" id="insights">
+<div class="page-head"><div class="page-title"><div class="eyebrow">KEY INSIGHTS</div><h2>패턴에서 문제로</h2><p>조사한 사실이 여기서 판단으로 바뀝니다.</p></div><div class="head-meta"><span class="tag blue">4건</span></div></div>
+
+<div class="insight-card"><div class="index">I1 · 확신도 High</div><h3>이 캠페인의 적은 무관심이 아니라 냉소다.</h3><p><b>왜:</b> AION2는 출시 46일 만에 1,000억을 벌었고 DAU 150만을 찍었습니다. 인지도 문제가 아닙니다. <b>긴장:</b> 같은 기간 과금 논란 2회가 붙었고, 광고 물량이 커질수록 "돈 뽑으려 한다"는 해석이 따라붙습니다.</p><div class="so-what"><b>So What:</b> 도달을 사는 캠페인이 아니라 <b>해석을 바꾸는 캠페인</b>으로 설계합니다. 같은 66억이라도 브랜드 콘텐츠 비중을 올리고, 성과 광고는 유효 타깃으로 좁힙니다.</div></div>
+
+<div class="insight-card"><div class="index">I2 · 확신도 High</div><h3>1주년은 축하할 일이 아니라 증명할 기회다.</h3><p><b>왜:</b> RFP 사업목표 1순위가 "기존 고객 락인"입니다. 잔류 유저는 이미 이 게임을 압니다. 그들에게 필요한 건 새 정보가 아니라 <b>계속할 이유</b>입니다. <b>긴장:</b> 주년 캠페인의 관성은 보상 지급 고지입니다. 보상은 하루 쓰고 끝납니다.</p><div class="so-what"><b>So What:</b> 1주년 메시지를 "감사합니다 + 보상"이 아니라 <b>"1년 동안 이만큼 바꿨다"</b>는 결산으로 잡습니다. 롤백과 개편 이력까지 포함해야 진짜로 읽힙니다.</div></div>
+
+<div class="insight-card"><div class="index">I3 · 확신도 Medium</div><h3>AION2의 진짜 차별점은 던전이 아니라 소속이다.</h3><p><b>왜:</b> 신규 던전 5개는 경쟁작도 냅니다. 던전 이름으로 배너를 만들면 경쟁작 배너와 구분되지 않습니다. <b>긴장:</b> RFP는 던전별 배너 5종을 명시적으로 요구합니다. 콘텐츠 고지를 안 할 수는 없습니다.</p><div class="so-what"><b>So What:</b> 던전 배너 5종을 각각 독립된 소재로 만들지 않고, <b>천족·마족 진영 프레임</b> 안에 배치합니다. 5종이 모이면 하나의 진영 대립 구도가 보이게 설계합니다. 크리에이티브 평가 항목에서 이게 차이를 만듭니다.</div></div>
+
+<div class="insight-card"><div class="index">I4 · 확신도 Medium</div><h3>글로벌 확장성 요구는 아이디어가 아니라 제작 규격 문제다.</h3><p><b>왜:</b> RFP는 "한국의 마케팅 리소스를 글로벌에서 사용하는 만큼 확장성 있는 아이디어"를 요구합니다. 대부분 대행사는 여기에 "글로벌 캠페인 아이디어"로 답합니다. <b>긴장:</b> 업무 범위는 "한국만"입니다. 글로벌 실행 아이디어를 길게 쓰면 범위를 못 읽은 것으로 보입니다.</p><div class="so-what"><b>So What:</b> 답을 <b>제작 규격</b>으로 냅니다. 모든 소재를 텍스트 레이어 분리·무자막 마스터·10개 언어 대응 안전 영역으로 만들고, 글로벌 전용 시 절감되는 재제작비를 견적서에 숫자로 씁니다. 아이디어보다 이게 설득력이 큽니다.</div></div>
+</section>
+<!-- ══════════ 08 키메시지 ══════════ -->
+<section class="view" id="keywords">
+<div class="page-head"><div class="page-title"><div class="eyebrow">KEY MESSAGE</div><h2>필수 제출 크리에이티브 9종의 메시지 설계</h2><p>RFP가 요구한 산출물을 그대로 채웁니다. 하나도 빠뜨리지 않습니다.</p></div><div class="head-meta"><span class="tag red">평가 비중 최대</span></div></div>
+
+<div class="grid cols-2">
+<div class="card" style="border-left:4px solid var(--blue)">
+<div class="label">필수 산출물 A · 1주년</div>
+<h3>키메시지 「두 번째 비행」</h3>
+<p>THE SECOND FLIGHT</p>
+<dl>
+<div class="kv"><dt>카피 축</dt><dd>"1년 전, 우리는 날았다. 이제 어디까지 갈지 정한다."</dd></div>
+<div class="kv"><dt>대상</dt><dd>S1 잔류 코어 + S2 조용한 이탈</dd></div>
+<div class="kv"><dt>근거</dt><dd>날개·비행은 원작부터 이어진 유일한 고유 상징입니다. 1주년 시점에 "첫 비행 → 두 번째 비행"의 시간축이 붙으면 주년 서사와 IP 자산이 한 문장에서 만납니다.</dd></div>
+<div class="kv"><dt>영상 1종</dt><dd>60초. 유저의 실제 1년 플레이 로그를 화면에 얹는 구성. 인게임 렌더 기반, 실사 배우 없음. 마지막 10초에 11월 업데이트 D-day</dd></div>
+<div class="kv"><dt>배너 2종</dt><dd>① 1주년 결산형 — 숫자로 채운 1년 기록 ② 복귀 유도형 — "당신의 캐릭터는 아직 그 자리에 있습니다"</dd></div>
+</dl>
+</div>
+
+<div class="card" style="border-left:4px solid var(--lime)">
+<div class="label">필수 산출물 B · 챕터 전체</div>
+<h3>키메시지 「하늘은 아직 다 열리지 않았다」</h3>
+<p>THE SKY UNFINISHED</p>
+<dl>
+<div class="kv"><dt>카피 축</dt><dd>"4개월마다, 세계가 한 겹씩 열린다."</dd></div>
+<div class="kv"><dt>대상</dt><dd>S3 원작 향수 + S4 MMO 유목민</dd></div>
+<div class="kv"><dt>근거</dt><dd>RFP 사업일정이 "4개월마다 챕터 단위 업데이트"입니다. 이 주기를 감추지 않고 <b>약속으로 공표</b>하면 업데이트 고지가 기대 관리 장치로 바뀝니다. 신규 유저에게는 "지금 들어와도 늦지 않았다"는 신호가 됩니다.</dd></div>
+<div class="kv"><dt>영상 1종</dt><dd>30초. 챕터 1(모래와 서리의 땅)부터 다음 챕터까지 세계가 확장되는 지도 연출. 자막 없이 성립하도록 설계 — 글로벌 재활용 전제</dd></div>
+<div class="kv"><dt>확장성</dt><dd>텍스트 레이어 분리. 10개 언어 안전 영역 확보. 글로벌 전용 시 영상 재제작 불필요</dd></div>
+</dl>
+</div>
+</div>
+
+<div class="section-title"><h3>필수 산출물 C · 던전별 배너 5종</h3><p>5종을 따로 만들지 않고 하나의 진영 대립 구도로 묶습니다</p></div>
+<div class="card" style="border-left:4px solid var(--orange);margin-bottom:14px">
+<h3>확인 필요</h3>
+<p>RFP 본문은 던전을 "원종"으로, 크리에이티브 항목은 "원정"으로 표기합니다. 또 '타락한 데바의 성'과 '심연의 뿔 암굴'은 2026년 7월 챕터1에 이미 서비스 중입니다. 배너 5종의 기준 시점을 OT에서 확인합니다. 회신 전까지는 <b>11월 신규분 기준</b>으로 가정하고 착수합니다.</p>
+</div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:80px">번호</th><th style="width:110px">콘텐츠군</th><th style="width:180px">던전</th><th>배너 메시지 각</th><th style="width:90px">진영</th></tr></thead>
+<tbody>
+<tr><td>B-01</td><td>원정</td><td>타락한 데바의 성</td><td>배신한 수호자와 마주하는 자리. "지켜야 할 것이 적이 되었을 때"</td><td><span class="tag blue">천족</span></td></tr>
+<tr><td>B-02</td><td>원정</td><td>잠식된 데우스 연구기지</td><td>금지된 실험의 흔적. "만들어서는 안 되는 것을 만든 곳"</td><td><span class="tag pink">마족</span></td></tr>
+<tr><td>B-03</td><td>초월</td><td>노이란의 숨겨진 유산</td><td>먼저 도달한 자가 갖는다. 초월 난이도의 경쟁 구도를 전면에</td><td><span class="tag">공통</span></td></tr>
+<tr><td>B-04</td><td>초월</td><td>심연의 뿔 암굴</td><td>아래로 내려갈수록 강해지는 구조. 원작 아비스의 수직 감각을 재현</td><td><span class="tag">공통</span></td></tr>
+<tr><td>B-05</td><td>성역</td><td>비탄의 설원</td><td>진영이 함께 지켜야 하는 마지막 땅. 5종의 시리즈를 닫는 소재</td><td><span class="tag lime">진영전</span></td></tr>
+</tbody></table></div>
+<p class="footer-note">5종을 가로로 나란히 붙이면 왼쪽 천족 · 오른쪽 마족 · 가운데 성역의 구도가 만들어집니다. 개별 배너로도, 하나의 와이드 키비주얼로도 쓰입니다. 매체별 사이즈 베리에이션 시 이 구도가 유지되도록 세이프 영역을 고정합니다.</p>
+
+<div class="section-title"><h3>비주얼·영상 연출 원칙 5</h3><p>론칭 숏폼이 혹평받은 지점을 피합니다</p></div>
+<div class="principles">
+<div class="principle"><div class="n">01</div><h4>실사 배우와 셀럽을 쓰지 않는다</h4><p>글로벌 10개 언어 재활용이 막히고, 유저는 모델비를 과금 압박으로 읽습니다.</p></div>
+<div class="principle"><div class="n">02</div><h4>인게임 렌더를 기본 소스로 쓴다</h4><p>론칭 숏폼의 "캐릭터 모션이 어색하다"는 지적은 억지 연출에서 나왔습니다. 실제 플레이 화면의 신뢰도가 더 높습니다.</p></div>
+<div class="principle"><div class="n">03</div><h4>날개는 장식이 아니라 동사로 쓴다</h4><p>"날개의 장점이 안 살았다"는 유저 반응이 있었습니다. 정지된 날개 이미지가 아니라 비행 그 자체를 보여줍니다.</p></div>
+<div class="principle"><div class="n">04</div><h4>모든 컷은 무자막으로 성립해야 한다</h4><p>자막은 레이어로 얹습니다. 글로벌 전용 시 영상 재편집이 없어야 합니다.</p></div>
+<div class="principle"><div class="n">05</div><h4>숫자는 유저의 것을 쓴다</h4><p>회사 매출·다운로드 수가 아니라 유저 개인의 플레이 기록을 화면에 올립니다. 발신자를 바꾸는 장치입니다.</p></div>
+</div>
+</section>
+
+<!-- ══════════ 09 전략 대안 ══════════ -->
+<section class="view" id="options">
+<div class="page-head"><div class="page-title"><div class="eyebrow">STRATEGIC OPTIONS</div><h2>검토한 3안과 점수</h2><p>버린 안의 이유까지 남깁니다. PT에서 "왜 이걸 골랐나" 질문이 반드시 나옵니다.</p></div><div class="head-meta"><span class="tag lime">A+B 채택</span></div></div>
+
+<div class="grid cols-3">
+<div class="strategy-card recommended"><div class="recommended-ribbon">채택</div><div class="strategy-no">OPTION A</div><h3>두 번째 비행</h3><div class="one-line">1주년을 재도약 선언으로. 원작 날개 자산 × 시간축</div>
+<div class="score-bars">
+<div class="score-row"><span>기존 락인</span><div class="bar"><i style="width:90%"></i></div><b>5</b></div>
+<div class="score-row"><span>신규 유입</span><div class="bar"><i style="width:60%"></i></div><b>3</b></div>
+<div class="score-row"><span>신뢰 회복</span><div class="bar"><i style="width:60%"></i></div><b>3</b></div>
+<div class="score-row"><span>글로벌 확장</span><div class="bar"><i style="width:80%"></i></div><b>4</b></div>
+<div class="score-row"><span>제작 실현</span><div class="bar"><i style="width:80%"></i></div><b>4</b></div>
+</div>
+<div class="strategy-total">19 / 25</div>
+<p>주년 캠페인으로 가장 자연스럽고 IP 자산을 그대로 씁니다. 다만 이것만으로는 과금 신뢰 문제를 건드리지 못합니다.</p>
+</div>
+
+<div class="strategy-card recommended"><div class="recommended-ribbon">병행</div><div class="strategy-no">OPTION B</div><h3>1년의 기록</h3><div class="one-line">운영 변경 이력과 유저 플레이 데이터를 콘텐츠 자산으로</div>
+<div class="score-bars">
+<div class="score-row"><span>기존 락인</span><div class="bar"><i style="width:80%"></i></div><b>4</b></div>
+<div class="score-row"><span>신규 유입</span><div class="bar"><i style="width:40%"></i></div><b>2</b></div>
+<div class="score-row"><span>신뢰 회복</span><div class="bar"><i style="width:100%"></i></div><b>5</b></div>
+<div class="score-row"><span>글로벌 확장</span><div class="bar"><i style="width:60%"></i></div><b>3</b></div>
+<div class="score-row"><span>제작 실현</span><div class="bar"><i style="width:60%"></i></div><b>3</b></div>
+</div>
+<div class="strategy-total">17 / 25</div>
+<p>Y축(운영 신뢰)을 올리는 유일한 안입니다. 단독으로는 캠페인 화력이 부족하고, NC 내부 데이터 협조가 없으면 성립하지 않습니다.</p>
+</div>
+
+<div class="strategy-card"><div class="strategy-no">OPTION C</div><h3>하늘은 아직 다 열리지 않았다</h3><div class="one-line">4개월 챕터 주기를 시즌제로 공표. 세계 확장 서사</div>
+<div class="score-bars">
+<div class="score-row"><span>기존 락인</span><div class="bar"><i style="width:60%"></i></div><b>3</b></div>
+<div class="score-row"><span>신규 유입</span><div class="bar"><i style="width:90%"></i></div><b>5</b></div>
+<div class="score-row"><span>신뢰 회복</span><div class="bar"><i style="width:40%"></i></div><b>2</b></div>
+<div class="score-row"><span>글로벌 확장</span><div class="bar"><i style="width:100%"></i></div><b>5</b></div>
+<div class="score-row"><span>제작 실현</span><div class="bar"><i style="width:80%"></i></div><b>4</b></div>
+</div>
+<div class="strategy-total">19 / 25</div>
+<p>글로벌 확장성이 가장 높습니다. 1주년 시점 메시지로는 약해서 <b>챕터 전체 키메시지</b>로 위치를 옮겼습니다. 08뷰의 필수 산출물 B가 이 안입니다.</p>
+</div>
+</div>
+
+<div class="section-title"><h3>왜 결합인가</h3></div>
+<div class="card">
+<p>A는 화력이 있고 신뢰를 못 건드립니다. B는 신뢰를 건드리고 화력이 없습니다. RFP 사업목표는 <b>락인(1순위)과 유입(2순위)을 동시에</b> 요구하고, 평가 항목에는 "게임 외 브랜딩 전략"이 따로 있습니다. 한 축으로는 두 칸을 못 채웁니다.</p>
+<p style="margin-top:10px">역할을 나눕니다. <b>A는 매체로 나가는 대외 캠페인 축</b>, <b>B는 오운드 채널에서 1년 내내 도는 상시 축</b>, <b>C는 챕터 단위 고지와 글로벌 재활용 축</b>입니다. 예산이 겹치지 않고 채널이 겹치지 않습니다.</p>
+</div>
+
+<div class="section-title"><h3>하지 않을 것</h3></div>
+<div class="not-doing"><div class="no-card"><strong>원작 향수 단독 캠페인</strong><p>론칭에서 소진했고 S1·S2에 닿지 않습니다. 향수는 「두 번째 비행」의 재료로만 씁니다.</p></div>
+<div class="no-card"><strong>과금 개선을 직접 말하는 메시지</strong><p>잊은 사람에게 논란을 상기시킵니다. 변경 이력은 콘텐츠로 보여주고 광고 카피에서는 말하지 않습니다.</p></div>
+<div class="no-card"><strong>대형 셀럽 기용</strong><p>글로벌 재활용이 막히고 모델비가 과금 압박 서사로 되돌아옵니다.</p></div></div>
+</section>
+
+<!-- ══════════ 10 추천 전략 ══════════ -->
+<section class="view" id="recommendation">
+<div class="page-head"><div class="page-title"><div class="eyebrow">RECOMMENDATION</div><h2>연간 로드맵 — 챕터 사이클 기준</h2><p>계약 1년 = 1주년 1회 + 챕터 업데이트 3회. 사전예약·론칭 단계는 없습니다.</p></div><div class="head-meta"><span class="tag blue">4개월 주기</span></div></div>
+
+<div class="decision">
+<div><div class="eyebrow">ANNUAL CAMPAIGN</div><h3>두 번째 비행 · THE SECOND FLIGHT</h3><p>대외 축 A · 상시 축 「1년의 기록」 · 챕터 축 「하늘은 아직 다 열리지 않았다」</p></div>
+<div class="decision-side"><div class="eyebrow">예산</div><div class="score">66<small>억+@</small></div><div class="why">1주년 구간에 40% 집중 · 나머지 챕터 3회 균등 배분</div></div>
+</div>
+
+<div class="section-title"><h3>Phase 설계</h3><p>RFP 사업일정(10월 말~11월 1주년, 이후 4개월 주기)에 그대로 맞췄습니다</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:130px">Phase</th><th style="width:110px">시기</th><th style="width:110px">목표</th><th>핵심 실행</th><th style="width:90px">예산 비중</th></tr></thead>
+<tbody>
+<tr><td><b>P0 온보딩·진단</b></td><td>계약~10월 중순<br>약 4주</td><td>기준선 확보</td><td>커뮤니티 여론 베이스라인 수집(원문 1,000건) · 이탈 유저 정의와 규모 산출 · AOR 대행사 합동 킥오프 · 소재 아카이브 정비 · 진영 자산 시스템 구축</td><td>3%</td></tr>
+<tr><td><b>P1-a 티징</b></td><td>10월 말<br>3주</td><td>기대 형성</td><td>1주년 D-21 카운트다운 · 던전 1개씩 순차 공개(페스티벌 라인업 방식) · 「1년의 기록」 1차 발행 · 복귀 유저 개인 알림</td><td rowspan="3">40%</td></tr>
+<tr><td><b>P1-b 쇼케이스</b></td><td>11월 초</td><td>전환점</td><td>500명 진영 대항 쇼케이스 · 온라인 동시 중계 · 마지막 던전 현장 최초 공개 · 진영별 기프트</td></tr>
+<tr><td><b>P1-c 본 캠페인</b></td><td>11월<br>4주</td><td>락인 + 복귀</td><td>영상 2종 전 매체 집행 · DOOH 집중 2주 · 배너 7종 운영 · 인플루언서 동시 파상 · 복귀 유저 리타게팅</td></tr>
+<tr><td><b>P2 유지</b></td><td>12월~2월</td><td>이탈 방지</td><td>시즌 전환 콘텐츠 · 「1년의 기록」 상시 발행 · 겨울 콜라보 1건 · 진영전 정기 중계 포맷 안착</td><td>14%</td></tr>
+<tr><td><b>P3 챕터 업데이트</b></td><td>3월</td><td>신규 유입</td><td>챕터 키메시지 「하늘은 아직 다 열리지 않았다」 본격 가동 · UA 비중 확대 · 신규 유저 온보딩 콘텐츠</td><td>16%</td></tr>
+<tr><td><b>P4 챕터 업데이트</b></td><td>7월</td><td>성수기 확대</td><td>여름 성수기 물량 · 글로벌 소재 역수입 활용 · 대형 콜라보 1건 · 오프라인 접점 재가동</td><td>17%</td></tr>
+<tr><td><b>P5 2주년 준비</b></td><td>10~11월</td><td>재계약 근거</td><td>2주년 챕터 · 1년 성과 리포트 · 다음 연간 전략 제안</td><td>10%</td></tr>
+</tbody></table></div>
+<p class="footer-note">예산 비중은 제안 가설입니다. NC의 1순위 KPI 회신(확인질문 6번)에 따라 P1과 P3·P4 사이 배분이 바뀝니다.</p>
+
+<div class="section-title"><h3>쇼케이스 설계 — 500명 진영 대항전</h3><p>RFP 요구: 컨셉 · 진행 프로그램 · 방문객과 시청자를 모두 잡는 연출 · 기프트</p></div>
+<div class="grid cols-2">
+<div class="card"><h3>컨셉 · 「비행 허가 · Flight Clearance」</h3><p>입장 순간 관객은 관람자가 아니라 <b>소속 진영의 대표</b>가 됩니다. 티켓이 곧 진영 배정이고, 좌석·조명·응원 도구가 천족과 마족으로 갈립니다. 무대 중앙 성역을 두고 양쪽이 마주 앉는 구조입니다.</p>
+<dl>
+<div class="kv"><dt>왜 이 구조</dt><dd>RFP가 "익숙한 라이브 방송 포맷을 벗어난 새 포맷"을 요구했습니다. 발표자가 말하고 관객이 듣는 구조를 깹니다.</dd></div>
+<div class="kv"><dt>사과 방송 기억 지우기</dt><dd>AION2 유저에게 라이브 방송은 두 번의 긴급 사과로 기억돼 있습니다. 무대 완성도가 이걸 덮습니다.</dd></div>
+</dl>
+</div>
+<div class="card"><h3>진행 프로그램 · 4파트</h3>
+<dl>
+<div class="kv"><dt>1부 · 결산</dt><dd>「1년의 기록」 라이브 발표. 유저 플레이 데이터를 무대 스크린에 실시간 집계. 롤백·개편 이력을 감추지 않고 연표로 노출</dd></div>
+<div class="kv"><dt>2부 · 대항</dt><dd>현장 500명 진영 대항 미션. 온라인 시청자는 실시간 투표로 자기 진영에 점수를 보탠다 — 방문객과 시청자를 같은 게임판에 넣는 장치</dd></div>
+<div class="kv"><dt>3부 · 공개</dt><dd>1주년 업데이트 마지막 던전을 현장 최초 공개. 티저에서 3주간 비워둔 자리를 여기서 채운다</dd></div>
+<div class="kv"><dt>4부 · 약속</dt><dd>다음 챕터 D-day 공표. 4개월 주기를 무대에서 못 박는다</dd></div>
+</dl>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>기프트 아이디어</h3>
+<p>굿즈가 아니라 <b>기록물</b>로 갑니다. 방문객 개인의 1년 플레이 데이터를 현장에서 인쇄한 <b>비행 기록증</b> — 총 비행 거리, 소속 진영, 첫 접속일, 가장 오래 머문 지역이 찍힌 카드. 진영 컬러의 케이스와 함께 제공합니다. 제작 단가가 낮고, 개인화되어 있어 SNS 공유율이 높으며, 굿즈와 달리 중고 거래되지 않습니다. 온라인 시청자에게는 같은 데이터를 디지털 카드로 발행합니다.</p></div>
+
+<div class="section-title"><h3>실행 원칙</h3></div>
+<div class="principles">
+<div class="principle"><div class="n">01</div><h4>메시지의 발신자를 유저로 옮긴다</h4><p>회사가 주장하지 않고 유저 기록이 말하게 합니다.</p></div>
+<div class="principle"><div class="n">02</div><h4>업데이트 고지를 약속으로 바꾼다</h4><p>4개월 주기를 공표해 기다림을 자산으로 만듭니다.</p></div>
+<div class="principle"><div class="n">03</div><h4>모든 소재를 두 번 쓴다</h4><p>국내 집행 후 글로벌 전용까지 계산해 규격을 설계합니다.</p></div>
+<div class="principle"><div class="n">04</div><h4>진영을 모든 접점의 분류 기준으로 쓴다</h4><p>배너·굿즈·이벤트·커뮤니티를 천족과 마족으로 나눕니다.</p></div>
+</div>
+</section>
+<!-- ══════════ 11 미디어·KPI ══════════ -->
+<section class="view" id="media">
+<div class="page-head"><div class="page-title"><div class="eyebrow">MEDIA MIX &amp; KPI</div><h2>66억 배분과 성과 측정 모델</h2><p>디지털 집행은 NC의 AOR 대행사를 거칩니다. 우리가 파는 것은 기획과 협업 구조입니다.</p></div><div class="head-meta"><span class="tag amber">가설 · AOR 확인 후 확정</span></div></div>
+
+<div class="card" style="border-left:4px solid var(--orange);margin-bottom:16px">
+<h3>견적 구조의 전제</h3>
+<p>아래 배분은 <b>66억에 디지털 매체비가 포함된다는 가정</b>입니다. 확인질문 4번(66억의 포함 범위)과 5번(AOR 수수료 구조) 회신에 따라 전체가 재계산됩니다. 제안서에는 두 시나리오를 모두 넣습니다. RFP가 요구한 대로 마크업·비마크업·렙사 수수료를 각각 분리해 기재합니다.</p>
+</div>
+
+<div class="section-title"><h3>매체 배분 · 연간</h3></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:150px">구분</th><th style="width:80px">비중</th><th style="width:90px">금액</th><th>역할과 선정 근거</th></tr></thead>
+<tbody>
+<tr><td><b>디지털 퍼포먼스</b><br><span style="color:var(--muted);font-size:11px">AOR 경유</span></td><td>34%</td><td>22.4억</td><td>유튜브·메타·구글 UAC·카카오·네이버 GFA. 복귀 유저 리타게팅과 신규 UA. 세그먼트 S2·S4 대상. AOR 집행이므로 우리는 기획·소재·성과 분석을 담당</td></tr>
+<tr><td><b>디지털 브랜딩</b><br><span style="color:var(--muted);font-size:11px">AOR 경유</span></td><td>13%</td><td>8.6억</td><td>유튜브 마스트헤드·프리롤, 네이버·카카오 메인. 1주년과 챕터 D-day에 집중. 접점 효과가 검증된 대형 지면만 사용</td></tr>
+<tr><td><b>DOOH · 옥외</b></td><td>13%</td><td>8.6억</td><td>강남역·홍대·코엑스 대형 LED, 지하철 2호선. 1주년 2주 집중. 오프라인 노출이 커뮤니티 인증샷으로 재확산되는 구조를 노림</td></tr>
+<tr><td><b>영상·소재 제작</b></td><td>15%</td><td>9.9억</td><td>영상 2종 + 배너 7종 + 연간 챕터 3회분 소재. 글로벌 겸용 규격 설계 포함</td></tr>
+<tr><td><b>쇼케이스·오프라인</b></td><td>10%</td><td>6.6억</td><td>500명 규모 쇼케이스 1회 + 오프라인 접점 2회. 장소·연출·중계·기프트 일체</td></tr>
+<tr><td><b>인플루언서·스트리머</b></td><td>8%</td><td>5.3억</td><td>치지직·유튜브 MMORPG 버티컬. 게임 방송인 중심. 도달보다 <b>플레이 시간</b>을 계약 기준으로</td></tr>
+<tr><td><b>콜라보·프로모션</b></td><td>5%</td><td>3.3억</td><td>연 2회. 타깃 관심사 기반(30~40대 남성 접점)</td></tr>
+<tr><td><b>대행 운영 fee</b></td><td>2%</td><td>1.3억</td><td>전담 인력 12명 운영. 매체 수수료와 별도 항목으로 분리 기재</td></tr>
+<tr style="background:var(--panel2)"><td><b>합계</b></td><td><b>100%</b></td><td><b>66.0억</b></td><td>VAT 별도</td></tr>
+</tbody></table></div>
+
+<div class="grid cols-2" style="margin-top:16px">
+<div class="card"><h3>매체 선정에서 제외한 것</h3><p>RFP는 "낮은 노출·인지도 및 접점 효과가 보장되지 않는 매체 선정 지양"을 명시했습니다. 제안서에 제외 근거를 함께 씁니다.</p>
+<dl>
+<div class="kv"><dt>소규모 커뮤니티 배너</dt><dd>인벤·루리웹·디시 배너 광고는 노출 대비 접점 효과가 낮습니다. 이 채널은 <b>광고가 아니라 콘텐츠</b>로 접근합니다</dd></div>
+<div class="kv"><dt>지상파 TV</dt><dd>타깃 도달 효율이 낮고, 글로벌 소재 재활용과 무관합니다. OTT 프리롤로 대체합니다</dd></div>
+<div class="kv"><dt>버스·택시 래핑</dt><dd>인증샷 유발력이 고정형 대형 LED보다 낮습니다</dd></div>
+</dl>
+</div>
+<div class="card"><h3>마일리지·서비스 지원 · 150억 가정</h3><p>RFP 요구에 따라 예산 증액 시나리오(150억)를 별도 표로 제출합니다.</p>
+<dl>
+<div class="kv"><dt>산출 기준</dt><dd>매체비 구간별 마일리지율을 매체군별로 분리 산출. 디지털·DOOH·OTT 각각 요율이 다릅니다</dd></div>
+<div class="kv"><dt>서비스 지원</dt><dd>보너스 노출, 무상 소재 베리에이션, 성과 리포트 고도화, 크리에이티브 A/B 테스트 물량을 항목화</dd></div>
+<div class="kv"><dt>기재 방식</dt><dd>마크업 수수료율 / 비마크업 수수료율 / 렙사 수수료율을 3개 열로 분리. RFP가 명시적으로 요구한 형식입니다</dd></div>
+<div class="kv"><dt>DA 단가</dt><dd>소재 제작 단가와 베리에이션 단가를 별도 표로. 언어 베리에이션 단가를 함께 제시해 글로벌 확장성을 견적으로 증명합니다</dd></div>
+</dl>
+</div>
+</div>
+
+<div class="section-title"><h3>KPI 모델 · 3층</h3><p>RFP 요구: "예산에 따른 KPI 제안". 층을 나눠야 광고 성과와 사업 성과를 구분해 책임질 수 있습니다</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:110px">층</th><th style="width:150px">지표</th><th>정의</th><th style="width:120px">책임 소재</th></tr></thead>
+<tbody>
+<tr><td rowspan="3"><b>L1 사업</b><br><span style="color:var(--muted);font-size:11px">NC와 공동</span></td><td>복귀 유저 수</td><td>1주년 캠페인 기간 30일 이상 미접속 후 재접속한 계정 수</td><td rowspan="3">NC 주 · 대행 보조</td></tr>
+<tr><td>DAU 회복률</td><td>캠페인 종료 시점 DAU / 캠페인 시작 시점 DAU</td></tr>
+<tr><td>매출 순위 유지일</td><td>구글플레이·앱스토어 매출 상위 구간 유지 일수</td></tr>
+<tr><td rowspan="4"><b>L2 캠페인</b><br><span style="color:var(--muted);font-size:11px">대행 책임</span></td><td>유효 도달</td><td>전체 도달이 아니라 <b>MMORPG 플레이 이력 보유 30~40대</b> 도달 수</td><td rowspan="4">대행 전담</td></tr>
+<tr><td>CPI · CPM</td><td>설치당 비용 · 1,000회 노출당 비용. 매체군별 분리 관리</td></tr>
+<tr><td>쇼케이스 동시 시청</td><td>온라인 최고 동시 시청자 수 + 현장 500명 만족도</td></tr>
+<tr><td>소재 효율</td><td>배너 7종·영상 2종의 개별 CTR. 하위 30%는 2주 단위 교체</td></tr>
+<tr><td rowspan="3"><b>L3 브랜드</b><br><span style="color:var(--muted);font-size:11px">이 캠페인의 진짜 성패</span></td><td>커뮤니티 감성 비율</td><td>인벤·루리웹·아이온2 갤러리 언급 중 긍정 대 부정 비율. <b>주간 추적</b></td><td rowspan="3">대행 전담</td></tr>
+<tr><td>「1년의 기록」 공유 수</td><td>유저가 자발적으로 SNS·커뮤니티에 올린 개인 기록 카드 수</td></tr>
+<tr><td>부정 이슈 확산 차단</td><td>이슈 발생부터 대응까지 경과 시간. 목표 <b>4시간 이내</b></td></tr>
+</tbody></table></div>
+<div class="card" style="margin-top:14px;border-left:4px solid var(--blue)"><h3>L3를 앞에 두는 이유</h3><p>AION2는 도달이 부족한 게임이 아닙니다. 출시 46일 만에 1,000억을 벌었고 DAU 150만을 찍었습니다. 2년차에 무너질 수 있는 건 노출량이 아니라 <b>여론</b>입니다. 커뮤니티 감성 비율을 계약 KPI에 넣는 대행사는 드뭅니다. 이 항목을 먼저 제시하는 것 자체가 차별화입니다.</p></div>
+</section>
+
+<!-- ══════════ 12 실행 체계 ══════════ -->
+<section class="view" id="ops">
+<div class="page-head"><div class="page-title"><div class="eyebrow">ORGANIZATION &amp; RISK</div><h2>전담 조직과 이슈 관리</h2><p>RFP는 인력 구성 제출을 필수로 하고, 제안서에 쓴 인력은 교체할 수 없습니다.</p></div><div class="head-meta"><span class="tag red">인력 확정 필요</span></div></div>
+
+<div class="card" style="border-left:4px solid var(--orange);margin-bottom:16px">
+<h3>먼저 정할 것 — 컨소시엄</h3>
+<p>RFP 필수 요건은 <b>오프라인·디지털 미디어 전문 인력 보유</b>입니다. 현재 MX실 가용 인력으로 66억 규모 매체 기획과 500명 오프라인 쇼케이스를 단독 수행하는 것은 불가능합니다. 컨소시엄 구성은 선택이 아니라 참여 조건입니다.</p>
+<p style="margin-top:8px">RFP는 컨소시엄 구성 시 <b>제안 준비 단계에서 NC에 사전 고지</b>할 것을 요구합니다. 고지 없이 제출하면 형식 흠결이 됩니다. 8/21까지 파트너를 확정하고 고지 메일을 보내야 합니다. 또한 NC는 계약 협상 과정에서 컨소시엄 구성사 변경을 요청할 수 있습니다.</p>
+</div>
+
+<div class="section-title"><h3>전담 조직 · 코어 12명</h3></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:130px">역할</th><th style="width:60px">인원</th><th>담당 업무</th><th style="width:100px">투입률</th></tr></thead>
+<tbody>
+<tr><td><b>총괄 CD</b></td><td>1</td><td>캠페인 관점 유지, 크리에이티브 최종 승인, NC 의사결정 라인 대응. <b>PT 발표자</b></td><td>50%</td></tr>
+<tr><td><b>기획 AE</b></td><td>2</td><td>연간 전략 운영, 챕터별 캠페인 기획, NC 마케팅사업팀 일상 커뮤니케이션, 일정 관리</td><td>100%</td></tr>
+<tr><td><b>아트 디렉터</b></td><td>2</td><td>키비주얼, 배너 7종, 소재 베리에이션 감리, 글로벌 규격 설계</td><td>100%</td></tr>
+<tr><td><b>카피라이터</b></td><td>1</td><td>키메시지, 단계별 커뮤니케이션 메시지, 커뮤니티 톤 관리</td><td>100%</td></tr>
+<tr><td><b>영상 PD</b></td><td>1</td><td>영상 2종 + 챕터별 영상, 숏폼, 쇼케이스 중계 연출</td><td>100%</td></tr>
+<tr><td><b>디지털 미디어 플래너</b></td><td>1</td><td>디지털 매체 기획, AOR 대행사 연동, UA 성과 관리</td><td>100%</td></tr>
+<tr><td><b>오프라인 미디어 플래너</b></td><td>1</td><td>DOOH·옥외 기획과 집행, 지면 확보, 노출 검증</td><td>100%</td></tr>
+<tr><td><b>프로모션·이벤트</b></td><td>2</td><td>쇼케이스 운영, 콜라보, 기프트 제작, 현장 진행</td><td>100%</td></tr>
+<tr><td><b>데이터·커뮤니티 애널리스트</b></td><td>1</td><td>커뮤니티 여론 일일 모니터링, 감성 비율 산출, 소재 효율 리포트, 「1년의 기록」 데이터 설계</td><td>100%</td></tr>
+</tbody></table></div>
+<p class="footer-note">이름·경력·포트폴리오를 제안서에 실명으로 기재합니다. 협상·계약 과정에서 교체가 불가하므로, 제출 전 각자의 12개월 가용성을 확인합니다.</p>
+
+<div class="section-title"><h3>이슈 관리 프레임워크 · 4단계</h3><p>AION2는 과금 논란을 두 번 겪었습니다. 세 번째가 캠페인 기간에 터질 가능성을 전제로 설계합니다</p></div>
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:110px">단계</th><th style="width:130px">담당</th><th>내용</th><th style="width:110px">목표 시간</th></tr></thead>
+<tbody>
+<tr><td><b>1 감지</b></td><td>데이터·커뮤니티 애널리스트</td><td>인벤·루리웹·아이온2 갤러리·유튜브 댓글 일일 모니터링. 특정 키워드 언급량이 평시 대비 3배를 넘으면 자동 알림</td><td>상시</td></tr>
+<tr><td><b>2 등급</b></td><td>총괄 CD</td><td>L1 단순 불만 / L2 확산 조짐 / L3 공식 대응 필요. 등급 판정 기준을 계약 시 NC와 합의해 문서화</td><td>1시간 내</td></tr>
+<tr><td><b>3 대응</b></td><td>CD + NC 마케팅사업팀</td><td>L3는 <b>진행 중인 광고 즉시 일시 정지</b> 후 NC와 직통 협의. 논란 상황에서 광고가 계속 돌면 불에 기름을 붓습니다. 정지 권한과 절차를 계약서에 명시</td><td>4시간 내</td></tr>
+<tr><td><b>4 기록</b></td><td>애널리스트</td><td>이슈·대응·결과를 로그로 축적. 이 로그가 「1년의 기록」 콘텐츠의 원천 자료가 됩니다</td><td>주간</td></tr>
+</tbody></table></div>
+
+<div class="section-title"><h3>주요 리스크</h3></div>
+<div class="risk"><strong>캠페인 기간 중 과금 이슈 재발</strong><span><b class="risk-level high">높음</b></span><span>발생 확률 · 영향 모두 큼</span><span>광고 즉시 정지 프로토콜을 계약서에 명시. 「1년의 기록」 축이 이미 돌고 있으면 신뢰 자산이 완충재가 됩니다</span></div>
+<div class="risk"><strong>AOR 대행사와의 집행 병목</strong><span><b class="risk-level high">높음</b></span><span>디지털 전량이 여기 걸림</span><span>P0 온보딩 4주에 AOR 합동 킥오프를 넣고, 소재 전달 기한·승인 절차·성과 데이터 공유 규격을 문서로 확정</span></div>
+<div class="risk"><strong>업데이트 콘텐츠 변경</strong><span><b class="risk-level medium">중간</b></span><span>RFP에 "변경될 수 있음" 명시</span><span>배너 5종을 진영 프레임으로 묶어 설계했기 때문에 던전 하나가 바뀌어도 구도가 유지됩니다. 소재 교체 단가를 견적에 미리 반영</span></div>
+<div class="risk"><strong>글로벌 출시 일정과 국내 캠페인 충돌</strong><span><b class="risk-level medium">중간</b></span><span>글로벌 PC 출시 예정</span><span>업무 범위는 한국만이지만 소재는 공유됩니다. 국내 제작 마스터의 글로벌 전달 시점과 권한을 계약 시 정리</span></div>
+<div class="risk"><strong>예산 증액 시 대응 역량</strong><span><b class="risk-level medium">중간</b></span><span>150억 가정이 근거</span><span>컨소시엄 파트너의 증원 가능 인원을 제안서에 명시. 66억과 150억 두 시나리오의 조직도를 함께 제출</span></div>
+<div class="risk"><strong>성공 기준</strong><span><b class="risk-level medium">지표</b></span><span>측정</span><span>1주년 캠페인 종료 시점 커뮤니티 감성 비율이 캠페인 시작 대비 개선 · 복귀 유저 수 목표 달성 · L3 이슈 대응 4시간 내 100%</span></div>
+</section>
+
+<!-- ══════════ 13 제안서 목차 ══════════ -->
+<section class="view" id="toc">
+<div class="page-head"><div class="page-title"><div class="eyebrow">PROPOSAL TOC &amp; PT</div><h2>제안서 목차와 발표 전략</h2><p>심사위원이 읽는 순서대로 씁니다. 평가 항목과 목차를 1:1로 붙입니다.</p></div><div class="head-meta"><span class="tag blue">약 55p</span></div></div>
+
+<div class="card" style="margin-bottom:16px"><h3>스토리라인 한 줄</h3><p style="font-size:15px;margin-top:6px">1년치 데이터를 우리가 이미 읽었다는 걸 보여주고 → 2년차의 문제를 한 문장으로 못 박은 뒤 → 그 문제를 푸는 캠페인과 실물 크리에이티브를 보여주고 → 66억을 어떻게 쓰는지와 누가 하는지로 닫는다.</p></div>
+
+<div class="table-wrap"><table class="t">
+<thead><tr><th style="width:50px">장</th><th style="width:200px">제목</th><th style="width:60px">분량</th><th>내용</th><th style="width:130px">대응 평가 항목</th></tr></thead>
+<tbody>
+<tr><td>00</td><td>표지 · 목차</td><td>2p</td><td>대외비 표기. 제안사·컨소시엄 명기</td><td>—</td></tr>
+<tr><td>01</td><td><b>우리가 읽은 AION2의 지금</b></td><td>4p</td><td>1년 성적 · 커뮤니티 여론 · 경쟁 구도. 숫자와 유저 원문 인용으로 시작. <b>여기서 심사위원이 "얘네는 우리 게임을 안다"를 판정한다</b></td><td>전략 기획</td></tr>
+<tr><td>02</td><td><b>2년차의 문제 정의</b></td><td>1p</td><td>한 문장. "지갑을 다시 열 이유를 유저 스스로 말하게 만드는 일"</td><td>전략 기획</td></tr>
+<tr><td>03</td><td><b>캠페인 전략 · 두 번째 비행</b></td><td>5p</td><td>관점 한 문장 → 3축 구조(대외·상시·챕터) → 유효 타깃 5세그먼트 → 브랜딩과 퍼포먼스의 역할 분담</td><td>전략 기획</td></tr>
+<tr><td>04</td><td><b>11월 1주년 실행안</b></td><td>7p</td><td>티징 3주 → 쇼케이스 → 본 캠페인 4주. 주차별 실행 그리드</td><td>단계별 콘텐츠</td></tr>
+<tr><td>05</td><td><b>크리에이티브</b></td><td>12p</td><td>1주년 키메시지·영상·배너 2종 / 챕터 키메시지·영상 / 던전 배너 5종. <b>실물 시안. 최대 분량</b></td><td>크리에이티브</td></tr>
+<tr><td>06</td><td><b>쇼케이스</b></td><td>5p</td><td>진영 대항 컨셉 · 4파트 프로그램 · 무대 연출 · 온라인 연동 · 비행 기록증 기프트</td><td>단계별 콘텐츠</td></tr>
+<tr><td>07</td><td><b>프로모션 · 콘텐츠</b></td><td>5p</td><td>숏폼 시리즈 · 「1년의 기록」 상시 콘텐츠 · 콜라보 2건 · 새 라이브 포맷 제안</td><td>단계별 콘텐츠</td></tr>
+<tr><td>08</td><td><b>미디어 전략과 KPI</b></td><td>6p</td><td>매체 8군 배분과 근거 · 제외 매체와 이유 · AOR 협업 프로세스 · 3층 KPI 모델</td><td>매체 구성·운용</td></tr>
+<tr><td>09</td><td><b>연간 로드맵</b></td><td>2p</td><td>P0~P5. 4개월 챕터 사이클 기준 · 예산 시기별 배분</td><td>전략 기획</td></tr>
+<tr><td>10</td><td><b>실행 체계와 리스크</b></td><td>4p</td><td>코어 12명 실명 조직도 · 컨소시엄 R&amp;R · 이슈 관리 4단계 · 리스크 6건</td><td>투입 인력</td></tr>
+<tr><td>11</td><td><b>견적</b></td><td>2p</td><td>요약 표. 상세는 별도 XLS. 수수료 3종 분리 · 150억 마일리지 시나리오</td><td>견적 타당성</td></tr>
+<tr><td>—</td><td>회사 소개 · 레퍼런스</td><td>별책</td><td>게임 론칭 마케팅 캠페인 레퍼런스 우선 배치. MMORPG 실적을 앞에</td><td>유사 실적</td></tr>
+</tbody></table></div>
+
+<div class="grid cols-2" style="margin-top:16px">
+<div class="card"><h3>PT 전략 · 9월 1일</h3>
+<dl>
+<div class="kv"><dt>발표자</dt><dd>본 업무를 담당할 팀의 담당자가 직접 발표해야 합니다. 총괄 CD가 메인, 기획 AE와 미디어 플래너가 해당 파트 분담</dd></div>
+<div class="kv"><dt>첫 3분</dt><dd>회사 소개로 시작하지 않습니다. <b>커뮤니티 유저 원문 인용</b>으로 엽니다. 심사위원 중 마케팅사업팀 실무자가 매일 보는 글이라 즉시 붙습니다</dd></div>
+<div class="kv"><dt>중심 배치</dt><dd>크리에이티브 12p를 발표 중반이 아니라 <b>전반 3분의 1 지점</b>에 배치. 심사위원의 집중력이 남아 있을 때 실물을 보여줍니다</dd></div>
+<div class="kv"><dt>예상 질문</dt><dd>"왜 셀럽을 안 쓰나" / "AOR과 어떻게 나눠 일하나" / "예산이 150억으로 커지면 감당 되나" / "커뮤니티 감성 비율을 어떻게 측정하나" — 4개 답변을 준비합니다</dd></div>
+<div class="kv"><dt>금지 표현</dt><dd>"가능합니다", "검토하겠습니다", "협의 후 진행". RFP가 모호한 표현을 불가로 간주한다고 명시했습니다</dd></div>
+</dl>
+</div>
+<div class="card"><h3>제작 일정 · D-12</h3>
+<dl>
+<div class="kv"><dt>8/20</dt><dd>확인질문 11건 메일 발송 · 컨소시엄 후보 접촉</dd></div>
+<div class="kv"><dt>8/21</dt><dd>컨소시엄 확정 및 NC 사전 고지 · 목차 확정</dd></div>
+<div class="kv"><dt>8/21~23</dt><dd>커뮤니티 원문 300건 이상 수집 → 포지셔닝 축 재검증 · 크리에이티브 착수</dd></div>
+<div class="kv"><dt>8/26</dt><dd>크리에이티브 시안 9종 내부 확정 · 견적 초안</dd></div>
+<div class="kv"><dt>8/28</dt><dd>제안서 전체 1차 완성 · 내부 검수(모호 표현 전수 점검)</dd></div>
+<div class="kv"><dt>8/29~30</dt><dd>수정 반영 · 견적서 최종 · 컨소시엄 자료 취합</dd></div>
+<div class="kv"><dt>8/31 13:00</dt><dd>발송 착수. 용량이 크므로 14:00 마감 1시간 전에 시작</dd></div>
+<div class="kv"><dt>8/31~9/1</dt><dd>PT 리허설 2회. 담당자 직접 발표 연습</dd></div>
+</dl>
+</div>
+</div>
+</section>
+
+<!-- ══════════ 14 출처 ══════════ -->
+<section class="view" id="sources">
+<div class="page-head"><div class="page-title"><div class="eyebrow">SOURCE TRACE</div><h2>출처와 신뢰도 등급</h2><p>T1·T2가 14건, T3가 4건입니다. T4(출처 불명·콘텐츠팜)는 본문에 쓰지 않았습니다.</p></div><div class="head-meta"><span class="tag blue">T1 5</span><span class="tag lime">T2 9</span><span class="tag pink">T3 4</span></div></div>
+
+<div class="grid cols-4" style="margin-bottom:18px">
+<div class="card metric"><div class="label">T1 · 1차 자료</div><div class="value">5</div><div class="sub">RFP 원문 · NC 공식 발표</div></div>
+<div class="card metric"><div class="label">T2 · 검증 언론</div><div class="value">9</div><div class="sub">주요 매체 보도</div></div>
+<div class="card metric"><div class="label">T3 · 참고</div><div class="value">4</div><div class="sub">업계 매체 · 위키</div></div>
+<div class="card metric"><div class="label">T4 · 미사용</div><div class="value">0</div><div class="sub">본문 사용 금지 준수</div></div>
+</div>
+
+<div class="section-title"><h3>T1 · 1차 자료</h3></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>㈜엔씨</div><div><h4>AION2 2027 연간 광고대행사 선정 제안요청서 (2026-08-10, 대외비)</h4><p>사업 배경·목표·예산 66억·업무 범위·일정·평가 항목·제출 조건 전부. 이 문서의 01·11·12·13뷰 근거</p></div><span class="used">01·11·12·13</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>아이온2 2026년 시즌2 업데이트 로드맵 공개 (2026-01-07)</h4><p><a href="https://about.ncsoft.com/news/article/aion2_update_260107" target="_blank">about.ncsoft.com ↗</a> 시즌2 던전 일정, 아웃랜드·전장 점령전 신설</p></div><span class="used">02</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>Chapter 1. 모래와 서리의 땅 업데이트 (2026-07-01)</h4><p><a href="https://about.ncsoft.com/news/article/Aion2_update_20260701" target="_blank">about.ncsoft.com ↗</a> 만렙 50, 권성 클래스, 엘테넨·모르헤임 영지</p></div><span class="used">02·08</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>아이온2 2026년 하반기 글로벌 출시 · PC 플랫폼 (2026-04-22)</h4><p><a href="https://about.ncsoft.com/news/article/aion2_update_260422" target="_blank">about.ncsoft.com ↗</a> Steam·PURPLE, 10개 언어, 지역별 서버</p></div><span class="used">02·07</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>NC 뉴스룸 · 시즌2 로드맵</h4><p><a href="https://www.nc.com/newsroom/news/articles/?articleId=695e09bfd7d02357e6489139&amp;boardLanguage=ko&amp;locale=ko-KR" target="_blank">nc.com ↗</a> 공식 뉴스룸 원문</p></div><span class="used">02</span></div>
+
+<div class="section-title"><h3>T2 · 검증된 언론 보도</h3></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>뉴시스</div><div><h4>아이온2, 이용자 150만 '리니지급'…일주일 매출 250억 (2025-11-28)</h4><p><a href="https://www.newsis.com/view/NISX20251128_0003420800" target="_blank">newsis.com ↗</a> 초기 DAU 150만, 첫 주 매출 250억</p></div><span class="used">02·07</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>파이낸셜신문</div><div><h4>아이온2 매출 1천억 돌파 (2026-01)</h4><p><a href="https://www.efnews.co.kr/news/articleView.html?idxno=126496" target="_blank">efnews.co.kr ↗</a> 출시 46일 누적 1,000억. 교차 확인 완료</p></div><span class="used">02·07</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>EBN</div><div><h4>엔씨소프트, 아이온2로 4분기 흑자…2026 매출 2조원 기대</h4><p><a href="https://www.ebn.co.kr/news/articleView.html?idxno=1693140" target="_blank">ebn.co.kr ↗</a> 4분기 매출 941억, 연간 목표</p></div><span class="used">02</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>디일렉</div><div><h4>엔씨, 올해 매출 2조5000억원 가시권</h4><p><a href="https://www.thelec.kr/news/articleView.html?idxno=54833" target="_blank">thelec.kr ↗</a> 신작 IP 매출 목표 중 아이온2 3,000억</p></div><span class="used">02</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>ZDNet Korea</div><div><h4>아이온2 하반기 글로벌 출시 확정…스팀 위시리스트 오픈 (2026-04-22)</h4><p><a href="https://zdnet.co.kr/view/?no=20260422103743" target="_blank">zdnet.co.kr ↗</a> 글로벌 플랫폼 확정. T1과 교차 확인</p></div><span class="used">02·07</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>이투데이</div><div><h4>엔씨, 美 SGF 2026에 아이온2 출품…9월 글로벌 출시</h4><p><a href="https://www.etoday.co.kr/news/view/2590912" target="_blank">etoday.co.kr ↗</a> 글로벌 출시 시점 9월</p></div><span class="used">02·07</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>디지털투데이</div><div><h4>아이온2 출시 당일 긴급 방송…접속 불편 사과, 과금 논란 즉시 삭제 (2025-11)</h4><p><a href="https://www.digitaltoday.co.kr/news/articleView.html?idxno=606149" target="_blank">digitaltoday.co.kr ↗</a> 영혼의 서 논란과 당일 대응</p></div><span class="used">02·07·12</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>플레이포럼</div><div><h4>7월 1일 챕터1 업데이트 확정…멤버십 2만 5000원으로 전면 개편</h4><p><a href="https://www.playforum.net/news/articleView.html?idxno=634607" target="_blank">playforum.net ↗</a> 멤버십 개편. 신뢰 회복 신호의 근거</p></div><span class="used">02·04</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t2">T2</span><br>CEO스코어데일리</div><div><h4>2026 전망 · 초대형 대작 출격 러시</h4><p><a href="https://m.ceoscoredaily.com/page/view/2025121616122617573" target="_blank">ceoscoredaily.com ↗</a> 2026 출시 예정 MMORPG 라인업</p></div><span class="used">03</span></div>
+
+<div class="section-title"><h3>T3 · 참고용</h3></div>
+<div class="source-card"><div class="domain"><span class="source-type t3">T3</span><br>나무위키</div><div><h4>아이온2 / 논란 및 사건 사고</h4><p><a href="https://namu.wiki/w/%EC%95%84%EC%9D%B4%EC%98%A82/%EB%85%BC%EB%9E%80%20%EB%B0%8F%20%EC%82%AC%EA%B1%B4%20%EC%82%AC%EA%B3%A0" target="_blank">namu.wiki ↗</a> 데바 패스 가격 변동 수치. <b>T2 보도로 교차 확인 필요</b></p></div><span class="used">02·04</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t3">T3</span><br>나무위키</div><div><h4>아이온: 영원의 탑</h4><p><a href="https://namu.wiki/w/%EC%95%84%EC%9D%B4%EC%98%A8:%20%EC%98%81%EC%9B%90%EC%9D%98%20%ED%83%91" target="_blank">namu.wiki ↗</a> 원작 세계관·PC방 점유율 160주 기록</p></div><span class="used">02</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t3">T3</span><br>게임메카</div><div><h4>아이온2 숏폼 광고, 유저 다수 '어색하다' 혹평</h4><p><a href="https://www.gamemeca.com/view.php?gid=1766260" target="_blank">gamemeca.com ↗</a> 론칭 숏폼에 대한 유저 반응. 08뷰 연출 원칙의 근거</p></div><span class="used">02·08</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t3">T3</span><br>게임메카</div><div><h4>아이온의 근본, 천마전쟁은 왜 시작됐나</h4><p><a href="https://www.gamemeca.com/view.php?gid=1762193" target="_blank">gamemeca.com ↗</a> 천마전쟁·아비스 배경 서사</p></div><span class="used">02·08</span></div>
+
+<div class="card" style="margin-top:18px;border-left:4px solid var(--orange)">
+<h3>DATA GAP · 확인 전까지 제안서에 쓰지 않는 것</h3>
+<dl>
+<div class="kv"><dt>2026년 8월 지표</dt><dd>현재 DAU·매출 순위. 공개 자료가 2026년 1분기에서 멈춰 있습니다</dd></div>
+<div class="kv"><dt>유저 원문 데이터</dt><dd>커뮤니티 감성 비율의 기준선. 8/21~23 직접 수집 예정</dd></div>
+<div class="kv"><dt>경쟁 참여사</dt><dd>이번 입찰에 누가 들어오는지. NC가 공개하지 않습니다</dd></div>
+<div class="kv"><dt>AOR 대행사</dt><dd>사명·수수료율·집행 절차. 확인질문 5번</dd></div>
+<div class="kv"><dt>세그먼트 규모</dt><dd>S1~S5의 실제 인원. 절대값 대신 우선순위로만 표기</dd></div>
+</dl>
+</div>
+</section>
+
+</main>
+</div>
+</div>
+<script>
+const navItems=[...document.querySelectorAll('.nav-item')];
+function goView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const t=document.getElementById(id);if(!t)return;t.classList.add('active');navItems.forEach(n=>n.classList.toggle('active',n.dataset.view===id));window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'','#'+id)}
+navItems.forEach(n=>n.addEventListener('click',()=>goView(n.dataset.view)));
+window.addEventListener('load',()=>{const h=location.hash.replace('#','');if(document.getElementById(h))goView(h)});
+document.querySelectorAll('[data-goto]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();goView(a.dataset.goto)}));
+function filterTable(gridId){const el=document.getElementById(gridId);if(!el)return;const wrap=el.closest('.view');const type=wrap.querySelector('.filter.active')?.dataset.filter||'all';const q=(wrap.querySelector('.search')?.value||'').toLowerCase();
+  el.querySelectorAll('[data-type]').forEach(r=>{const mt=type==='all'||r.dataset.type===type;const mq=!q||r.innerText.toLowerCase().includes(q);r.style.display=mt&&mq?'':'none'});
+  el.querySelectorAll('.group-block').forEach(g=>{const anyVisible=[...g.querySelectorAll('[data-type]')].some(c=>c.style.display!=='none');g.style.display=anyVisible?'':'none'})}
+document.querySelectorAll('.filters').forEach(bar=>{bar.addEventListener('click',e=>{const b=e.target.closest('.filter');if(!b)return;bar.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filterTable(bar.dataset.table)});const s=bar.querySelector('.search');if(s)s.addEventListener('input',()=>filterTable(bar.dataset.table))});
+let expanded=false;function toggleAll(){expanded=!expanded;document.querySelector('.top-actions .top-btn').textContent=expanded?'대시보드 보기':'전체 펼침';document.querySelector('.sidebar').style.display=expanded?'none':'';document.querySelector('.layout').style.gridTemplateColumns=expanded?'1fr':'';document.querySelectorAll('.view').forEach(v=>v.style.display=expanded?'block':'');if(!expanded){document.querySelectorAll('.view').forEach(v=>v.style.display='');document.querySelector('.view.active').style.display='block'}}
+</script>
+</body>
+</html>
