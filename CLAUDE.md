@@ -116,7 +116,7 @@
 - `legal-compliance` (법무) — 계약·NDA 쟁점 플래그(자문 대체 아님)
 
 **⑥ 역할·파이프라인 오케스트레이터**
-- `marketer` (마케터) — RFP부터 발산까지 **4챕터 자동 체이닝**. `0 RFP 분석 → CH1 현황 조사(팩트) → CH2 진단(포지셔닝·빈자리) → CH3 문제 정의(한 문장) → CH4 발산(방향 후보)`. 각 챕터가 끝나면 자동으로 다음 챕터로 넘어간다. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer (CH2·CH3은 marketer 자체 수행). **산출 포맷은 `mx-research-dashboard-design`(좌측 탭 12뷰 대시보드)이 표준** — `mx-deck-design`은 발표용 제안서에만. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"브랜드 진단"/"문제 정의"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"/"마케터 돌려"
+- `marketer` (마케터) — RFP부터 발산까지 **4챕터 자동 체이닝**. `0 RFP 분석 → CH1 현황 조사(팩트) → CH2 진단(포지셔닝·빈자리) → CH3 문제 정의(한 문장) → CH4 발산(방향 후보)`. 각 챕터가 끝나면 자동으로 다음 챕터로 넘어간다. 담당: rfp-analyst · market-research · design-trend-radar · reference-curator · brainstormer (CH2·CH3은 marketer 자체 수행). **산출 포맷은 `mx-research-dashboard-design`(좌측 탭 12뷰 대시보드)이 표준** — `mx-deck-design`은 발표용 제안서에만. 트리거 "RFP 분석"/"시장조사"/"경쟁사 분석"/"브랜드 진단"/"문제 정의"/"트렌드 봐줘"/"레퍼런스 찾아줘"/"브레인스토밍"/"리서치 쭉 돌려줘"/"마케터 돌려". **v8.1 품질 규칙**: CH1은 조사 6스텝(S1 카테고리 정의·S2 시장규모·S3 공급측·S4 수요측·S5 이종업계·S6 트렌드) 고정 — "빠르게"여도 S1·S2·S3·S6은 필수, "제대로"면 S4·S5까지. 출처는 T1~T4 티어를 달고 T4는 본문 금지, 핵심 수치는 교차 확인 2건, 못 찾으면 DATA GAP. 글은 초등 5학년 기준 `용어(쉬운 풀이)` 형식.
 - `brand-pipeline` (브랜드 파이프라인) — 브랜드 제안 풀프로세스 오케스트레이션(manus-1 → manus-2 → runable-3, 단계 게이트 필수)
 - `manus-1` (마누스 1차) — 경쟁 리서치·포지셔닝·BX 비주얼 프롬프트(슬라이드 생성 금지)
 - `manus-2` (마누스 2차) — 비주얼 아이덴티티 추출·컨셉/무드보드 발산(슬라이드 생성 금지)

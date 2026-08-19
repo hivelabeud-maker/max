@@ -6,6 +6,8 @@
 
 | 날짜 | 버전 | 무엇이 바뀌었나 | 왜 | 영향 파일 | 팀 공지 |
 |---|---|---|---|---|---|
+| 2026-08-11 | 에이전트 가이드 v1.1 | HTML 가이드에 **「리서치 실행」 탭 신설**하고 첫 화면으로 배치. 담은 것: "마케터 돌려" 한 문장 → 4챕터 자동 진행, 조사 6스텝 표(S1~S6, 필수/제대로 구분), 출처 등급 T1~T4 표, 어려운 말 풀어쓰기 대조표, 결과 12뷰 목록, 대시보드 vs 덱 선택 기준, 복붙용 요청 문장 7줄 | v8.1 사양이 에이전트 파일에만 있고 팀원이 보는 화면에는 없었다. 라우팅 한 문장으로 끝난다는 걸 모르면 기능을 하나씩 부르게 된다 | `.claude/projects/202608_사내_팀클로드온보딩/01-에이전트가이드-v1.1-20260811.html`, `team-onboarding/html/agent-guide_v1.1.html`, `team-onboarding/README.md` | ✅ 필요 — 배포 링크 교체 |
+| 2026-08-11 | agent-pack v8.1 | CH1에 **조사 6스텝**(카테고리 정의·시장규모·공급측·수요측·이종업계·트렌드) 명시. **출처 티어 게이트**(T4 본문 금지·교차확인·DATA GAP) 추가. **용어 풀이 규칙**(초등 5학년 기준, `용어(쉬운 풀이)` 형식, 02 뷰에 말 풀이 표) 추가 | 조사가 경쟁사 목록 훑기로 끝나 포지셔닝 축이 광고 문구 복제가 됐다. 결과물에 전문 용어가 그대로 나와 비전공 팀원이 못 읽었다 | `.claude/agents/marketer.md`, `.claude/skills/mx-research-dashboard-design/SKILL.md`, `team-onboarding/80_*`, 팩 사본 | ✅ 필요 — "제대로 조사해줘" 트리거 안내 |
 | 2026-08-11 | agent-pack v8 | 마케터를 5단계 → **4챕터 자동 체이닝**으로 교체. 산출 포맷을 `mx-research-dashboard-design`(좌측 탭 12뷰)으로 고정. 팩에 `skills/` 2종 + 루트용 `CLAUDE.md` 추가 | 라우팅만 있고 산출 모양이 매번 달랐다. "마케터 돌려"의 결과 포맷을 하나로 못 박음 | `team-onboarding/agent-pack/**`, `.claude/agents/marketer.md`, `CLAUDE.md` | ✅ 필요 — `80_마케터_라우팅_가이드.md` 배포 |
 | 2026-08-11 | 온보딩 HTML v2 | 배포용 HTML을 `team-onboarding/html/`로 분리. v1(스크롤형) 보존, v2(좌측 네비 00~08) 신규 | 마크다운 원본과 배포본이 섞여 어느 걸 팀원에게 줄지 헷갈렸다 | `team-onboarding/html/**`, `team-onboarding/README.md` | ✅ 필요 — v2 링크로 배포 |
 | 2026-07 | 온보딩 v1 | `team-onboarding/` 문서 세트(00~99) + 스크롤형 HTML 최초 구축 | 팀원 Claude 사용 수준 편차 해소 | `team-onboarding/**` | — |
