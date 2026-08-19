@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AION2 2027 입찰 전략</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <style>
+
 /* Research & Strategy OS — 좌측 번호 네비게이터 + 뷰 전환형 대시보드 (팀 채택 구조) */
 :root{
   /* 기본 = 모노톤. 아래 4색 외에는 절대 새 색을 만들지 않는다 */
@@ -75,9 +73,23 @@ button,input{font:inherit}.app{min-height:100vh}
 @media(max-width:1100px){.layout{grid-template-columns:205px minmax(0,1fr)}.main{padding:25px 22px 60px}.grid.cols-4{grid-template-columns:repeat(2,1fr)}.grid.cols-3{grid-template-columns:1fr}.flow{grid-template-columns:repeat(4,1fr)}.decision,.reco-head{grid-template-columns:1fr}.decision-side,.reco-score{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:15px 0 0;align-items:flex-start}.streams{grid-template-columns:repeat(2,1fr)}.principles,.roadmap,.not-doing,.axis-grid,.cat-cards,.bta{grid-template-columns:1fr}.risk{grid-template-columns:1fr 1fr}.request-vs,.ws-grid{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
 @media(max-width:740px){.topbar{padding:0 16px}.top-actions .pill,.top-btn.print{display:none}.layout{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;overflow:auto;gap:4px}.project-mini,.nav-label{display:none}.nav-item{width:auto;white-space:nowrap}.nav-item .nav-num,.nav-item .nav-badge{display:none}.main{padding:20px 14px 50px}.grid.cols-4,.grid.cols-2{grid-template-columns:1fr}.page-head{display:block}.head-meta{justify-content:flex-start;margin-top:12px}.flow{grid-template-columns:repeat(2,1fr)}.streams{grid-template-columns:1fr}.search{margin-left:0;width:100%}.risk{grid-template-columns:1fr}.source-card{grid-template-columns:1fr}}
 @media print{.topbar,.sidebar,.filters,.top-actions{display:none!important}.layout{display:block}.main{padding:0;max-width:none}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:auto}.card,.strategy-card,.reco-hero,.decision,.pmap{box-shadow:none;break-inside:avoid}.page-head{margin-top:24px}body{background:#fff}}
+
+/* ── Artifact host adaptation ──────────────────────────────────────────────
+   팀 표준 디자인 시스템(모노톤 #f2f1ee + 포인트 4색 고정)에 단일 테마로 고정한다.
+   뷰어 테마와 무관하게 같은 화면이 나오도록 바탕과 글자색을 명시적으로 칠한다. */
+:root{color-scheme:light}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;padding:0;font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",
+  -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif}
+.app{background:var(--bg)}
+.table-wrap{overflow-x:auto}
+.nav-item:focus-visible,.top-btn:focus-visible,a:focus-visible{
+  outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 </style>
-</head>
-<body>
+
 <div class="app">
 
 <header class="topbar">
@@ -220,7 +232,7 @@ button,input{font:inherit}.app{min-height:100vh}
 <tr><td>제출 후 변경</td><td>불가. 제안설명회에서의 내용 변경도 인정되지 않음</td><td><span class="tag red">1회 확정</span></td></tr>
 <tr><td>현장 PT</td><td>2026-09-01(화). <b>본 업무를 담당할 팀의 담당자가 직접 발표</b>. 대표·영업 대리 발표 불가</td><td><span class="tag red">담당자 발표</span></td></tr>
 <tr><td>인력 교체</td><td>제안서에 명시한 투입 인력은 협상·계약 과정에서 교체 불가(NC 합의 시 예외)</td><td><span class="tag amber">확정 기재</span></td></tr>
-<tr><td>문의 경로</td><td>이태헌·전하나(프로젝트) / 이혜진(제안절차) 외 접촉 시 평가상 불이익. 유선 문의 불가</td><td><span class="tag red">메일만</span></td></tr>
+<tr><td>문의 경로</td><td>RFP 지정 담당자(프로젝트 2인 · 제안절차 1인) 외 접촉 시 평가상 불이익. 유선 문의 불가</td><td><span class="tag red">메일만</span></td></tr>
 <tr><td>매체 선정 제약</td><td>낮은 노출·인지도 및 접점 효과가 보장되지 않는 매체 지양</td><td><span class="tag amber">근거 첨부</span></td></tr>
 <tr><td>보안</td><td>대외비. 제안 과정에서 취득한 모든 정보 무단전재·복사 금지</td><td><span class="tag red">NDA 수준</span></td></tr>
 </tbody></table></div>
@@ -995,5 +1007,3 @@ function filterTable(gridId){const el=document.getElementById(gridId);if(!el)ret
 document.querySelectorAll('.filters').forEach(bar=>{bar.addEventListener('click',e=>{const b=e.target.closest('.filter');if(!b)return;bar.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filterTable(bar.dataset.table)});const s=bar.querySelector('.search');if(s)s.addEventListener('input',()=>filterTable(bar.dataset.table))});
 let expanded=false;function toggleAll(){expanded=!expanded;document.querySelector('.top-actions .top-btn').textContent=expanded?'대시보드 보기':'전체 펼침';document.querySelector('.sidebar').style.display=expanded?'none':'';document.querySelector('.layout').style.gridTemplateColumns=expanded?'1fr':'';document.querySelectorAll('.view').forEach(v=>v.style.display=expanded?'block':'');if(!expanded){document.querySelectorAll('.view').forEach(v=>v.style.display='');document.querySelector('.view.active').style.display='block'}}
 </script>
-</body>
-</html>
