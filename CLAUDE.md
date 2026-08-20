@@ -143,6 +143,14 @@
 | **N개 항목**을 같은 구조로 반복 (팩트북·경쟁사 DB) | `intel-deck-design` |
 | **영상 컷**을 시간 순서로 (광고 콘티·브랜드 필름 SB) | `storyboard-deck-design` |
 
+### HTML 산출물 공통 표준 (2026-08 개정)
+- **바탕은 화이트(`--bg:#fff`)다.** 웜그레이(#f2f1ee·#f9f8f4·#f6f4ee 계열)는 폐기. 되돌리지 않는다.
+- 위계는 색이 아니라 `1px solid var(--line)` + **중첩 카드만 `#fafafa`**로 만든다.
+- 포인트 4색(blue/lime/pink/orange = T1~T4)은 그대로. 새 색 생성 금지.
+- 표는 `class="table"`(`t` 아님) + 열 수별 모디파이어 `table--sm/md/lg`.
+- 날짜 축이 있는 일정은 표 대신 `.tl` 블록. 휴무일은 `.tl-row.off`로 남겨 작업일에서 뺀다.
+- 납품 전 **1440 / 1100 / 900 / 740 / 620 / 430px** 여섯 폭 확인.
+
 > `research-deck-design`과 `intel-deck-design`은 골격이 비슷하다(좌측 네비 + 뷰 전환, 동일 4색).
 > 갈림길은 **축**이다 — 주제 하나를 여러 관점으로 쪼개면 research, 항목 여럿에 같은 틀을 반복하면 intel.
 

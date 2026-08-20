@@ -134,10 +134,10 @@ description: 영상·시네마틱 스토리보드(콘티)를 컷 카드 그리�
 ```css
 :root{
   /* 기본 = 모노톤 */
-  --bg:#f2f1ee; --panel:#fff; --panel2:#faf9f6;
-  --ink:#161616; --muted:#77756e; --line:#e3e1da;
+  --bg:#ffffff; --panel:#fff; --panel2:#fafafa;
+  --ink:#161616; --muted:#77756e; --line:#e6e5e3;
   --accent:#1a1a17;          /* 강조는 검정이다. 파랑이 아니다 */
-  --accent2:#e6e4dd; --ph:#ece9e2;
+  --accent2:#ececea; --ph:#efefed;
   /* 포인트 4색 (고정) */
   --pink:#ff86f6; --blue:#2e53f9; --lime:#c5ff79; --orange:#ff6e23;
   --pink2:#ffeafd; --blue2:#e7ecfe; --lime2:#eeffd9; --orange2:#ffe4d3;

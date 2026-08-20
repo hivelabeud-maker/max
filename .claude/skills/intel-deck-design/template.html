@@ -7,7 +7,7 @@
 <!-- ⚠️ Artifact 발행 시 외부 폰트 CDN은 CSP로 차단된다. 시스템 폰트 스택만 사용할 것 -->
 <style>
 :root{
-  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
+  --bg:#ffffff;--panel:#fff;--panel2:#fafafa;--ink:#161616;--muted:#77756e;--line:#e6e5e3;
   --accent:#1a1a17;--shadow:0 12px 30px rgba(24,24,24,.06);
   --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
   --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
@@ -15,7 +15,7 @@
          "Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-*{box-sizing:border-box}html{scroll-behavior:smooth;background:#f2f1ee}
+*{box-sizing:border-box}html{scroll-behavior:smooth;background:#ffffff}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);letter-spacing:-.015em;font-size:14px}
 button{font:inherit}
 
@@ -30,16 +30,16 @@ button{font:inherit}
 
 /* ---------- layout ---------- */
 .layout{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:calc(100vh - 72px)}
-.sidebar{background:#f9f8f4;border-right:1px solid var(--line);padding:21px 15px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.sidebar{background:#ffffff;border-right:1px solid var(--line);padding:21px 15px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
 .project-mini{padding:13px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:16px}
 .eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
 .project-mini h2{font-size:13px;margin:6px 0 4px;line-height:1.4}
 .project-mini p{font-size:10px;color:var(--muted);margin:0}
-.progress{height:4px;background:#ece9e1;border-radius:5px;margin-top:11px;overflow:hidden}
+.progress{height:4px;background:#efefed;border-radius:5px;margin-top:11px;overflow:hidden}
 .progress span{display:block;height:100%;background:var(--accent)}
 .nav-label{font-size:9px;font-weight:800;color:#97948c;letter-spacing:.13em;margin:17px 10px 7px}
 .nav-item{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:7px;color:#68665f;text-align:left;cursor:pointer;font-size:11px;margin:2px 0}
-.nav-item:hover{background:#efede7;color:#222}
+.nav-item:hover{background:#f3f3f2;color:#222}
 .nav-item.active{background:var(--accent);color:#fff;font-weight:700}
 .nav-num{font-family:var(--mono);font-size:9px;opacity:.7;width:17px;flex:none}
 .nav-badge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 6px;background:rgba(0,0,0,.08);flex:none}
@@ -113,7 +113,7 @@ button{font:inherit}
 .ch .grade{position:absolute;top:12px;right:12px;font-size:9px;font-weight:900;width:20px;height:20px;border-radius:5px;display:grid;place-items:center}
 .ch .grade.S{background:var(--blue);color:#fff}
 .ch .grade.A{background:var(--lime);color:#1c2b06}
-.ch .grade.B{background:#efede7;color:#666}
+.ch .grade.B{background:#f3f3f2;color:#666}
 .ch .grade.C{background:#f4f3ef;color:#9a978f}
 .ch .cn{font-weight:800;font-size:13px;padding-right:26px}
 .ch .cr{font-size:9.5px;color:var(--muted);font-weight:700}
@@ -147,7 +147,7 @@ button{font:inherit}
 /* ---------- 7. timeline ---------- */
 .tl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 .tls{position:relative;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 10px;min-height:92px}
-.tls.hot{border:2px solid var(--accent);background:#f4f3f0}
+.tls.hot{border:2px solid var(--accent);background:#fafafa}
 .tls .num{font-family:var(--mono);font-size:9px;color:var(--muted)}
 .tls strong{display:block;font-size:10.5px;margin:7px 0 3px;line-height:1.35}
 .tls span{font-size:9px;color:var(--muted);line-height:1.4}

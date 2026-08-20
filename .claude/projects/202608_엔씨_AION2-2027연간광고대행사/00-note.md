@@ -79,3 +79,14 @@
 - **배경색 화이트로 전환** (실장 요청). `--bg` #f2f1ee → #ffffff, 사이드바 #f9f8f4 → #fff, 웜그레이 계열(#f7f6f2·#f6f4ee·#efede7 등) 전부 중성 그레이로 치환. 포인트 4색은 그대로. 카드가 묻히지 않게 중첩 카드만 #fafafa로 한 단계 톤다운.
 - 수정 중 발견한 결함: 00뷰 "제안 준비 기간" 지표가 12일로 남아 있었다(치환 앵커 불일치로 앞선 수정이 조용히 실패). 7일로 정정하고, 이후 수치 전수 검증(7.5·12일·5.7/6.1/5.6명·42.5/39.5·9종 잔여 0건 확인) 절차를 넣음. "지금 결정해야 하는 것 3건" → 4건 정정.
 - 검증: 17뷰 × 6폭 자동 점검 통과(가로 오버플로·눌린 셀 0건). 중첩 표가 카드를 밀던 430px 오버플로는 `.grid>*,.card{min-width:0}`로 해소.
+
+### 2026-08-19 (5차 · 스킬 원본 반영)
+- 이번 프로젝트에서 잡은 개선을 **스킬 원본에 역반영**해 다음 프로젝트부터 자동 적용되게 함(실장 지시).
+- 대상 4종: `mx-research-dashboard-design` · `research-deck-design` · `intel-deck-design` · `storyboard-deck-design` (SKILL.md + template.html + HOWTO.html)
+- **팔레트 화이트 전환**: `--bg` #f2f1ee → #ffffff, `--panel2` #faf9f6 → #fafafa, `--line` #e3e1da → #e6e5e3, `--accent2` #e6e4dd → #ececea. 사이드바·표 헤더·nav hover 등 웜그레이 12종을 중성 그레이로 일괄 치환. 포인트 4색은 불변.
+- **템플릿 자체 버그 수정**: `mx-research-dashboard-design/template.html`이 마크업은 `<table class="t">`, CSS는 `.table{}`이라 표 스타일이 하나도 안 걸리는 상태였다. 이번 AION2 건의 "레이아웃 깨짐"의 실제 원인. 마크업·문서 모두 `table`로 통일.
+- 두 대시보드 스킬 template에 견고성 CSS 추가: `table--sm/md/lg` 최소너비 모디파이어, `tr.grouprow`·`tr.sumrow`, `td.num`, `.grid>*,.card{min-width:0}`, 중첩 카드 톤다운, 980/900/640px 반응형 접힘, `.tl` 타임라인 컴포넌트 일체.
+- SKILL.md 문서 보강: 화이트 바탕에서 위계 만드는 3가지 방법, 표 클래스·모디파이어 규칙표, rowspan 금지와 grouprow 대안, "일정은 표로 만들지 않는다(.tl)", 휴무일을 작업일에서 빼는 원칙, 6폭 검수 절차, 흔한 실수 5종.
+- **부수 발견**: `mx-deck-design`의 frontmatter description에 ` #F3F3F3` ` #171717`이 있어 YAML이 주석으로 잘라먹고 있었다 — 스킬 목록에 설명이 "화이트 배경 +"에서 끊겨 노출됨(289자 → 109자). 괄호 안으로 옮겨 해소. 전 스킬 frontmatter 전수 점검 완료(잔여 0).
+- 검증: 4종 template 렌더 — 바탕 rgb(255,255,255), JS 에러 0, 가로 오버플로 0.
+- 과거 프로젝트 산출 HTML(삼양·MAX실·온보딩 등)은 납품 기록이라 손대지 않음.

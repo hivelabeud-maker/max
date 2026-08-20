@@ -30,12 +30,18 @@ description: 좌측 번호 네비게이터 + 뷰 전환형 "리서치·전략 �
 ## 디자인 토큰 — 손대지 않는다
 
 ```css
---bg:#f2f1ee; --panel:#fff; --panel2:#faf9f6; --ink:#161616; --muted:#77756e; --line:#e3e1da;
+--bg:#ffffff; --panel:#fff; --panel2:#fafafa; --ink:#161616; --muted:#77756e; --line:#e6e5e3;
 --accent:#1a1a17;   /* 잉크 강조(네비 active·decision·reco-head 배경) */
 /* 고정 포인트 4색 — 이 4색 외 새 색 금지 */
 --pink:#ff86f6;  --blue:#2e53f9;  --lime:#c5ff79;  --orange:#ff6e23;
 --pink2:#ffeafd; --blue2:#e7ecfe; --lime2:#eeffd9; --orange2:#ffe4d3;  /* 각 soft 배경 */
 ```
+
+
+**바탕은 화이트다.** `--bg`와 `--panel`이 둘 다 `#fff`라서 위계를 색으로 못 만든다.
+표면마다 `1px solid var(--line)`을 남기고, **중첩 카드**(카드 안의 카드)만 `#fafafa`로
+한 단계 내린다(3단 중첩은 다시 `#fff`). 과거 웜그레이(#f2f1ee·#f9f8f4·#f6f4ee)는 폐기됐다 —
+새로 만들 때 그 값을 다시 쓰지 않는다.
 
 **4색 의미 배정(고정)** — 분류·강조가 꼭 필요한 곳에만 쓴다:
 
@@ -84,6 +90,23 @@ description: 좌측 번호 네비게이터 + 뷰 전환형 "리서치·전략 �
 - **포지셔닝**: `.pm-node`는 `left/top`(%)로 배치, `.pm-node.goal`은 우리 목표 위치 1개(원형). `title`에 좌표 근거(출처 tier).
 - **점수 바**: `.score-bars .bar i`의 `width%`는 점수(5→100%, 4→80%…)와 맞춘다. `.strategy-total b`는 합산.
 - **네비 뱃지 = 실제 개수**: `overview`의 metric 숫자와 네비 `{{N}}`은 실제 채운 카드 수와 어긋나면 안 된다.
+
+
+## 표와 일정
+
+- 표 클래스는 **`table`이다**(`t` 아님). `class="t"`로 쓰면 CSS가 하나도 안 걸려
+  맨몸 표가 나오고, 겉보기엔 레이아웃이 깨진 것처럼 보인다.
+  `<div class="table-wrap"><table class="table table--md">…</table></div>`
+- `.table` 기본 `min-width:1020px`은 6열 이상 기준. 열이 적으면 모디파이어를 붙인다 —
+  3열 이하 `table--sm`(560) · 4열 `table--md`(720) · 5열 `table--lg`(880).
+  안 붙이면 좁은 폭에서 셀이 30px까지 눌린다.
+- 숫자 열은 `<td class="num">`(우측 정렬·tabular-nums). 구분 열을 rowspan으로 묶지 말고
+  전폭 그룹 헤더행 `<tr class="grouprow"><td colspan="N">`을 쓴다. 합계행은 `tr.sumrow`.
+- **일정은 표로 만들지 않는다.** 날짜 축이 있으면 `.tl` 블록
+  (`.tl-row` > `.tl-date` + `.tl-body` > `.tl-track` / `.tl-gate`). 휴무행은 `.tl-row.off`로
+  남겨서 "이 날은 안 쓴다"를 보이게 한다.
+- 만든 뒤 **1440 / 1100 / 900 / 740 / 620 / 430px에서 확인**한다. 페이지 가로 스크롤이
+  생기는지, 표 셀이 50px 아래로 눌리는지 두 가지만 보면 된다.
 
 ## 원칙 (마케터 산출과 동일)
 

@@ -86,8 +86,8 @@ description: 마케터 리서치·전략 산출 표준 대시보드 HTML 생성 
 ```css
 :root{
   /* 기본 = 모노톤. 아래 4색 외에는 절대 새 색을 만들지 않는다 */
-  --bg:#f2f1ee; --panel:#fff; --panel2:#faf9f6; --ink:#161616; --muted:#77756e; --line:#e3e1da;
-  --accent:#1a1a17; --accent2:#e6e4dd; --shadow:0 12px 30px rgba(24,24,24,.06);
+  --bg:#ffffff; --panel:#fff; --panel2:#fafafa; --ink:#161616; --muted:#77756e; --line:#e6e5e3;
+  --accent:#1a1a17; --accent2:#ececea; --shadow:0 12px 30px rgba(24,24,24,.06);
   /* 포인트 4색(고정) — 분류·강조가 꼭 필요한 곳에만 */
   --pink:#ff86f6; --blue:#2e53f9; --lime:#c5ff79; --orange:#ff6e23;
   --pink2:#ffeafd; --blue2:#e7ecfe; --lime2:#eeffd9; --orange2:#ffe4d3;
@@ -102,6 +102,16 @@ description: 마케터 리서치·전략 산출 표준 대시보드 HTML 생성 
 
 사용 룰: 새 색 생성 금지. 의미 없는 장식으로 쓰지 않는다 — 분류·강조가 꼭 필요할 때만.
 출처 없는 항목은 "추정"으로 표기하고 색을 매기지 않는다.
+
+**바탕은 화이트다.** `--bg`와 `--panel`이 둘 다 `#fff`라서 카드가 바탕에 묻힐 수 있다.
+위계는 색이 아니라 아래 세 가지로 만든다 — 이걸 어기면 화면이 납작해진다.
+
+1. 모든 표면(card·flow-step·source-card 등)에 `1px solid var(--line)`을 남긴다
+2. **중첩 카드**(카드 안의 카드)만 `#fafafa`로 한 단계 내린다. 3단 중첩은 다시 `#fff`
+3. 표의 그룹 헤더행·합계행은 `tr.grouprow` / `tr.sumrow`로 톤을 준다
+
+회색 바탕으로 되돌리지 않는다. 과거 버전의 웜그레이(#f2f1ee·#f9f8f4·#f6f4ee 계열)는
+전부 폐기됐다 — 새로 만들 때 그 값을 다시 쓰면 안 된다.
 
 ## 레이아웃 — 사이드바 + 뷰 전환
 
@@ -122,7 +132,54 @@ description: 마케터 리서치·전략 산출 표준 대시보드 HTML 생성 
 - 모바일(≤740px)에서는 사이드바가 상단 가로 스크롤 칩으로 축소
 
 핵심 컴포넌트: `.card` `.card.metric`(큰 숫자) `.decision`(다크 결론 히어로) `.flow`(파이프라인 단계)
-`.table-wrap table.t`(출처·데이터 표) `.tag`(포인트 4색 분류 태그)
+`.table-wrap table.table`(출처·데이터 표) `.tag`(포인트 4색 분류 태그) `.tl`(일자별 타임라인)
+
+## 표 규칙 (가장 자주 깨지는 곳)
+
+**클래스 이름은 `table`이다.** `class="t"`로 쓰면 CSS가 하나도 안 걸려서
+border-collapse·패딩·헤더 스타일·min-width가 전부 빠진 맨몸 표가 나온다.
+겉보기엔 "레이아웃이 깨졌다"로 보이지만 원인은 이 한 글자다.
+
+```html
+<div class="table-wrap"><table class="table table--md"> … </table></div>
+```
+
+`.table` 기본 `min-width:1020px`은 **6열 이상 기준**이다. 열이 적으면 모디파이어를 붙인다.
+안 붙이면 좁은 폭에서 셀이 30px까지 눌려 한 글자씩 줄바꿈된다.
+
+| 열 수 | 클래스 |
+|---|---|
+| 3열 이하 | `table table--sm` (560px) |
+| 4열 | `table table--md` (720px) |
+| 5열 | `table table--lg` (880px) |
+| 6열 이상 | `table` (1020px 기본값) |
+
+그 외:
+- 숫자 열은 `<td class="num">` — 우측 정렬 + `tabular-nums` + 줄바꿈 금지. 헤더도 `<th class="num">`
+- **rowspan으로 구분 열을 묶지 않는다.** 남은 열의 폭을 잡아먹는다.
+  전폭 그룹 헤더행 `<tr class="grouprow"><td colspan="N">구분명</td></tr>`을 쓴다
+- 합계행은 `<tr class="sumrow">`
+
+### 일정은 표로 만들지 않는다 — `.tl`을 쓴다
+
+날짜 축이 있는 일정을 6열 표로 짜면 어느 폭에서도 읽히지 않는다.
+좌측 날짜 레일 + 우측 트랙 N개 구조인 `.tl`을 쓴다. 640px 이하에서 세로로 접힌다.
+
+```html
+<div class="tl">
+  <div class="tl-row today">                     <!-- .off = 휴무행 -->
+    <div class="tl-date"><b>8/21 금</b><span>D-10</span></div>
+    <div class="tl-body">
+      <div class="tl-track"><em>전략·기획</em><p>…</p></div>
+      <div class="tl-track"><em>크리에이티브</em><p>…</p></div>
+      <div class="tl-gate"><em>게이트</em><span class="tag red">전략 락</span></div>
+    </div>
+  </div>
+</div>
+```
+
+**휴무일을 일정에서 빼고 센다.** 주말·공휴일을 작업일로 잡으면 계획 자체가 거짓말이 된다.
+`.tl-row.off`로 남겨서 "여기는 안 쓴다"를 보이게 한다.
 
 ## 유연 레이아웃 규칙 (모바일에서 깨지지 않게 — 필수)
 
@@ -130,6 +187,10 @@ description: 마케터 리서치·전략 산출 표준 대시보드 HTML 생성 
 2. 표·차트는 `overflow-x: auto` 컨테이너 안에 — 페이지 가로 스크롤 금지.
 3. 숫자는 항상 `font-variant-numeric: tabular-nums`.
 4. 사이드바는 데스크톱 고정폭(약 240~280px), 모바일은 가로 스크롤 칩으로 전환.
+5. `.grid > *`와 `.card`에 `min-width:0`. 안 주면 카드 안의 표가 카드를 밀어
+   페이지 전체가 가로로 흐른다.
+6. 만든 뒤 **1440 / 1100 / 900 / 740 / 620 / 430px 여섯 폭에서 확인**한다.
+   확인 항목 두 개 — 페이지 가로 스크롤이 생기는가, 표 셀이 50px 아래로 눌리는가.
 
 ## 빠른 시작
 
@@ -139,6 +200,12 @@ cp .claude/skills/research-dashboard-design/template.html ./<프로젝트명>-re
 ```
 
 ## 흔한 실수
+
+- **표에 `class="t"`를 씀** → CSS가 안 걸려 맨몸 표가 나온다. `class="table"`이다.
+- **열이 적은 표에 모디파이어를 안 붙임** → 좁은 폭에서 셀이 눌린다.
+- **바탕을 회색으로 되돌림** → 화이트가 표준이다. 위계는 보더와 중첩 카드로 만든다.
+- **일정을 6열 표로 만듦** → `.tl` 블록을 쓴다.
+- **주말을 작업일에 포함해서 일정을 셈** → 실제 가용 일수를 먼저 계산하고 시작한다.
 
 - 스크롤형(list-deck-design)이나 슬라이드형(mx-deck-design)과 헷갈려서 좌측을 목차로 씀 → 여긴 진짜 탭(뷰 전환)이어야 한다.
 - 00 요약 또는 11 출처 추적을 생략함 → 이 둘은 항상 있어야 한다.
