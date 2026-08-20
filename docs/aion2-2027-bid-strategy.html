@@ -9,8 +9,8 @@
 /* Research & Strategy OS — 좌측 번호 네비게이터 + 뷰 전환형 대시보드 (팀 채택 구조) */
 :root{
   /* 기본 = 모노톤. 아래 4색 외에는 절대 새 색을 만들지 않는다 */
-  --bg:#f2f1ee;--panel:#fff;--panel2:#faf9f6;--ink:#161616;--muted:#77756e;--line:#e3e1da;
-  --accent:#1a1a17;--accent2:#e6e4dd;--shadow:0 12px 30px rgba(24,24,24,.06);
+  --bg:#ffffff;--panel:#fff;--panel2:#fafafa;--ink:#161616;--muted:#77756e;--line:#e6e5e3;
+  --accent:#1a1a17;--accent2:#ececea;--shadow:0 12px 30px rgba(24,24,24,.06);
   /* 포인트 4색(고정) — 분류·강조가 꼭 필요한 곳에만 */
   --pink:#ff86f6;--blue:#2e53f9;--lime:#c5ff79;--orange:#ff6e23;
   --pink2:#ffeafd;--blue2:#e7ecfe;--lime2:#eeffd9;--orange2:#ffe4d3;
@@ -23,22 +23,22 @@ button,input{font:inherit}.app{min-height:100vh}
 .brand{display:flex;align-items:center;gap:13px}.brand-mark{width:34px;height:34px;border:1px solid rgba(255,255,255,.24);border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:12px;background:linear-gradient(145deg,#2b2a26,#0f0f0e)}
 .brand h1{font-size:15px;margin:0 0 3px;font-weight:800}.brand p{font-size:10px;color:rgba(255,255,255,.5);margin:0;letter-spacing:.04em}.top-actions{display:flex;gap:8px;align-items:center}.pill{font-size:10px;padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.72)}
 .top-btn{border:1px solid rgba(255,255,255,.18);color:#fff;background:rgba(255,255,255,.06);padding:8px 11px;border-radius:7px;cursor:pointer;font-size:11px}.top-btn:hover{background:rgba(255,255,255,.12)}
-.layout{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:calc(100vh - 72px)}.sidebar{background:#f9f8f4;border-right:1px solid var(--line);padding:21px 15px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
-.project-mini{padding:13px 13px 15px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:16px}.eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}.project-mini h2{font-size:13px;margin:6px 0 4px;line-height:1.4}.project-mini p{font-size:10px;color:var(--muted);margin:0}.progress{height:4px;background:#ece9e1;border-radius:5px;margin-top:11px;overflow:hidden}.progress span{display:block;width:100%;height:100%;background:var(--accent)}
-.nav-label{font-size:9px;font-weight:800;color:#97948c;letter-spacing:.13em;margin:17px 10px 7px}.nav-item{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:7px;color:#68665f;text-align:left;cursor:pointer;font-size:11px;margin:2px 0}.nav-item:hover{background:#efede7;color:#222}.nav-item.active{background:var(--accent);color:#fff;font-weight:700}.nav-num{font-family:ui-monospace,monospace;font-size:9px;opacity:.7;width:17px}.nav-badge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 6px;background:rgba(0,0,0,.08)}.nav-item.active .nav-badge{background:rgba(255,255,255,.16)}
+.layout{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:calc(100vh - 72px)}.sidebar{background:#ffffff;border-right:1px solid var(--line);padding:21px 15px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.project-mini{padding:13px 13px 15px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:16px}.eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}.project-mini h2{font-size:13px;margin:6px 0 4px;line-height:1.4}.project-mini p{font-size:10px;color:var(--muted);margin:0}.progress{height:4px;background:#efefed;border-radius:5px;margin-top:11px;overflow:hidden}.progress span{display:block;width:100%;height:100%;background:var(--accent)}
+.nav-label{font-size:9px;font-weight:800;color:#97948c;letter-spacing:.13em;margin:17px 10px 7px}.nav-item{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:7px;color:#68665f;text-align:left;cursor:pointer;font-size:11px;margin:2px 0}.nav-item:hover{background:#f3f3f2;color:#222}.nav-item.active{background:var(--accent);color:#fff;font-weight:700}.nav-num{font-family:ui-monospace,monospace;font-size:9px;opacity:.7;width:17px}.nav-badge{margin-left:auto;font-size:8px;border-radius:99px;padding:2px 6px;background:rgba(0,0,0,.08)}.nav-item.active .nav-badge{background:rgba(255,255,255,.16)}
 .main{padding:30px 34px 70px;max-width:1600px;width:100%}.view{display:none}.view.active{display:block}.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:21px}.page-title h2{font-size:25px;line-height:1.15;margin:3px 0 7px;letter-spacing:-.04em}.page-title p{font-size:12px;color:var(--muted);margin:0}.head-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.tag{font-size:9px;font-weight:700;border-radius:999px;padding:5px 9px;background:#fff;border:1px solid var(--line);color:#555}.tag.green{color:#4f6e1c;background:var(--lime2);border-color:#c8f0a0}.tag.amber{color:#a04a10;background:var(--orange2);border-color:#ffc6a0}.tag.blue{color:var(--blue);background:var(--blue2);border-color:#c7d3fb}.tag.red{color:#a63c9a;background:var(--pink2);border-color:#ffc7f8}
 .grid{display:grid;gap:13px}.grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}.card.flat{box-shadow:none}.card h3{font-size:13px;margin:0 0 10px}.card p{font-size:11px;color:#4f4d47;line-height:1.65}.metric .label{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}.metric .value{font-size:27px;font-weight:900;margin:6px 0 2px;letter-spacing:-.045em}.metric .sub{font-size:9px;color:var(--muted)}
 .section-title{display:flex;align-items:center;justify-content:space-between;margin:26px 0 11px}.section-title h3{font-size:15px;margin:0}.section-title p{font-size:10px;color:var(--muted);margin:0}.divider{height:1px;background:var(--line);margin:22px 0}
-.flow{display:grid;grid-template-columns:repeat(8,minmax(80px,1fr));gap:7px}.flow-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 9px;min-height:90px}.flow-step.done{border-color:#d9d7cf;background:#fbfbf9}.flow-step.active{border:2px solid var(--accent);background:#f4f3f0}.flow-step .num{font-family:ui-monospace,monospace;font-size:9px;color:var(--muted)}.flow-step strong{display:block;font-size:10.5px;margin:8px 0 3px}.flow-step span{font-size:9px;color:var(--muted);line-height:1.35}.flow-step .check{position:absolute;right:8px;top:8px;font-size:9px;color:var(--accent)}
+.flow{display:grid;grid-template-columns:repeat(8,minmax(80px,1fr));gap:7px}.flow-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 9px;min-height:90px}.flow-step.done{border-color:#dedddb;background:#fbfbf9}.flow-step.active{border:2px solid var(--accent);background:#fafafa}.flow-step .num{font-family:ui-monospace,monospace;font-size:9px;color:var(--muted)}.flow-step strong{display:block;font-size:10.5px;margin:8px 0 3px}.flow-step span{font-size:9px;color:var(--muted);line-height:1.35}.flow-step .check{position:absolute;right:8px;top:8px;font-size:9px;color:var(--accent)}
 .decision{background:linear-gradient(135deg,#1a1a17,#2c2b26);color:#fff;border-radius:14px;padding:24px;display:grid;grid-template-columns:1.4fr .8fr;gap:22px;box-shadow:0 16px 36px rgba(20,20,18,.16)}.decision .eyebrow{color:rgba(255,255,255,.55)}.decision h3{font-size:22px;line-height:1.38;letter-spacing:-.04em;margin:8px 0 11px}.decision p{font-size:11px;line-height:1.7;color:rgba(255,255,255,.7);margin:0}.decision-side{border-left:1px solid rgba(255,255,255,.16);padding-left:20px;display:flex;flex-direction:column;justify-content:center}.decision-side .score{font-size:37px;font-weight:900;color:var(--lime)}.decision-side .score small{font-size:12px;color:rgba(255,255,255,.55)}.decision-side .why{font-size:10px;color:rgba(255,255,255,.63);line-height:1.6;margin-top:6px}
 .kv{display:grid;grid-template-columns:135px 1fr;border-top:1px solid var(--line)}.kv:first-child{border-top:0}.kv dt,.kv dd{margin:0;padding:13px 0;font-size:11px}.kv dt{color:var(--muted);font-weight:700}.kv dd{line-height:1.65}.request-vs{display:grid;grid-template-columns:1fr 54px 1fr;align-items:stretch;gap:8px}.request-box{border:1px solid var(--line);border-radius:11px;padding:18px;background:#fff}.request-box.real{border-color:var(--blue);background:var(--blue2)}.request-box .label{font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.1em}.request-box h3{font-size:16px;line-height:1.5;margin:8px 0}.arrow{display:grid;place-items:center;color:var(--accent);font-size:22px}
-.question-list{counter-reset:q}.question{display:grid;grid-template-columns:31px 1fr auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid var(--line)}.question:last-child{border-bottom:0}.question:before{counter-increment:q;content:counter(q);width:25px;height:25px;border-radius:7px;background:#f0eee8;display:grid;place-items:center;font-size:9px;font-weight:900;color:#777}.question strong{font-size:11px;display:block;margin:2px 0 3px}.question span{font-size:9.5px;color:var(--muted)}
+.question-list{counter-reset:q}.question{display:grid;grid-template-columns:31px 1fr auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid var(--line)}.question:last-child{border-bottom:0}.question:before{counter-increment:q;content:counter(q);width:25px;height:25px;border-radius:7px;background:#f4f4f3;display:grid;place-items:center;font-size:9px;font-weight:900;color:#777}.question strong{font-size:11px;display:block;margin:2px 0 3px}.question span{font-size:9.5px;color:var(--muted)}
 .streams{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stream{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px}.stream.active{border:2px solid var(--accent);background:#f7fbfa}.stream .count{font-size:21px;font-weight:900}.stream strong{font-size:10px;display:block;margin-top:5px}.stream p{font-size:9px;color:var(--muted);margin:3px 0 0}
 .filters{display:flex;gap:7px;align-items:center;margin-bottom:11px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;padding:6px 9px;border-radius:7px;font-size:9px;color:#666;cursor:pointer}.filter.active{background:var(--accent);color:#fff;border-color:var(--accent)}.search{margin-left:auto;min-width:210px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;font-size:10px;outline:none}.search:focus{border-color:#b3b0a8}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;background:#fff}.table{border-collapse:collapse;width:100%;min-width:1020px}.table th{position:sticky;top:0;background:#f6f4ee;color:#777;font-size:8.5px;text-align:left;letter-spacing:.06em;text-transform:uppercase;padding:11px;border-bottom:1px solid var(--line)}.table td{font-size:9.5px;line-height:1.5;padding:12px 11px;border-bottom:1px solid #eeece6;vertical-align:top}.table tr:last-child td{border-bottom:0}.eid{font-family:ui-monospace,monospace;font-size:9px;font-weight:800;color:var(--blue);background:var(--blue2);padding:3px 5px;border-radius:4px;white-space:nowrap}.confidence{display:inline-flex;gap:3px}.confidence i{display:block;width:7px;height:7px;border-radius:2px;background:#ddd}.confidence i.on{background:var(--ink)}.source-type{font-size:8px;padding:2px 5px;border-radius:4px;background:#efede7;color:#666;white-space:nowrap;font-weight:800}.source-type.t1{background:var(--blue);color:#fff}.source-type.t2{background:var(--lime);color:#1c2b06}.source-type.t3{background:var(--pink);color:#3a0a34}.source-type.t4{background:var(--orange);color:#fff}.claim-link{color:var(--accent);text-decoration:none;font-weight:700}.claim-link:hover{text-decoration:underline}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;background:#fff}.table{border-collapse:collapse;width:100%;min-width:1020px}.table th{position:sticky;top:0;background:#fafafa;color:#777;font-size:8.5px;text-align:left;letter-spacing:.06em;text-transform:uppercase;padding:11px;border-bottom:1px solid var(--line)}.table td{font-size:9.5px;line-height:1.5;padding:12px 11px;border-bottom:1px solid #efefee;vertical-align:top}.table tr:last-child td{border-bottom:0}.eid{font-family:ui-monospace,monospace;font-size:9px;font-weight:800;color:var(--blue);background:var(--blue2);padding:3px 5px;border-radius:4px;white-space:nowrap}.confidence{display:inline-flex;gap:3px}.confidence i{display:block;width:7px;height:7px;border-radius:2px;background:#ddd}.confidence i.on{background:var(--ink)}.source-type{font-size:8px;padding:2px 5px;border-radius:4px;background:#f3f3f2;color:#666;white-space:nowrap;font-weight:800}.source-type.t1{background:var(--blue);color:#fff}.source-type.t2{background:var(--lime);color:#1c2b06}.source-type.t3{background:var(--pink);color:#3a0a34}.source-type.t4{background:var(--orange);color:#fff}.claim-link{color:var(--accent);text-decoration:none;font-weight:700}.claim-link:hover{text-decoration:underline}
 .insight-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;padding:19px 18px 17px;min-height:220px}.insight-card .index{font-family:ui-monospace,monospace;color:#9b978e;font-size:9px}.insight-card h3{font-size:15px;line-height:1.45;margin:10px 0 8px}.insight-card p{font-size:10.5px;color:#5b5952;line-height:1.65;margin:0}.so-what{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.so-what .label{font-size:8px;color:var(--accent);font-weight:900;letter-spacing:.12em}.so-what strong{font-size:10.5px;line-height:1.55;display:block;margin-top:5px}.evidence-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:13px}.evidence-chips span{font-family:ui-monospace,monospace;font-size:8px;background:var(--blue2);color:var(--blue);padding:3px 5px;border-radius:4px}
-.strategy-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:19px;display:flex;flex-direction:column;min-height:420px}.strategy-card.recommended{border:2px solid var(--accent);box-shadow:0 15px 32px rgba(20,20,18,.12);position:relative}.recommended-ribbon{position:absolute;right:14px;top:14px;font-size:8px;background:var(--accent);color:#fff;padding:4px 7px;border-radius:999px;font-weight:800}.strategy-no{font-family:ui-monospace,monospace;font-size:9px;color:#999}.strategy-card h3{font-size:18px;margin:9px 0 5px}.strategy-card .one-line{font-size:10px;color:var(--muted);line-height:1.55;min-height:47px}.score-bars{margin:15px 0}.score-row{display:grid;grid-template-columns:64px 1fr 24px;align-items:center;gap:7px;margin:7px 0;font-size:8.5px;color:#777}.bar{height:5px;background:#ece9e2;border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}.score-row b{font-size:8px;text-align:right}.strategy-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.strategy-list li{font-size:9.5px;line-height:1.5;padding:9px 0;border-bottom:1px solid #efede8;display:grid;grid-template-columns:58px 1fr;gap:7px}.strategy-list li strong{font-size:8.5px;color:var(--muted)}.strategy-total{margin-top:auto;padding-top:15px;display:flex;justify-content:space-between;align-items:end}.strategy-total span{font-size:9px;color:var(--muted)}.strategy-total b{font-size:25px}
-.reco-hero{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}.reco-head{background:#1a1a17;color:#fff;padding:26px 28px;display:grid;grid-template-columns:1fr 210px;gap:25px}.reco-head h3{font-size:25px;margin:7px 0 10px;letter-spacing:-.04em}.reco-head p{font-size:11px;color:rgba(255,255,255,.69);line-height:1.7}.reco-score{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.18)}.reco-score b{font-size:42px;color:var(--lime)}.reco-score span{font-size:9px;color:rgba(255,255,255,.55)}.reco-body{padding:24px 28px}.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.principle{background:#f7f6f2;border:1px solid #ebe8e0;border-radius:10px;padding:15px}.principle .n{font-family:ui-monospace,monospace;color:#8b877e;font-size:9px}.principle h4{font-size:12px;margin:8px 0 5px}.principle p{font-size:9.5px;color:var(--muted);line-height:1.55;margin:0}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:11px;overflow:hidden}.phase{background:#fff;padding:19px}.phase .time{font-size:9px;font-weight:800;color:var(--accent);letter-spacing:.07em}.phase h4{font-size:12px;margin:7px 0}.phase ul{margin:0;padding-left:16px}.phase li{font-size:9.5px;line-height:1.6;color:#555;margin:3px 0}.not-doing{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.no-card{background:var(--orange2);border:1px solid #ffc6a0;border-radius:10px;padding:13px}.no-card strong{font-size:10px;color:#a04a10}.no-card p{font-size:9px;color:#8a5636;line-height:1.5;margin:5px 0 0}
+.strategy-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:19px;display:flex;flex-direction:column;min-height:420px}.strategy-card.recommended{border:2px solid var(--accent);box-shadow:0 15px 32px rgba(20,20,18,.12);position:relative}.recommended-ribbon{position:absolute;right:14px;top:14px;font-size:8px;background:var(--accent);color:#fff;padding:4px 7px;border-radius:999px;font-weight:800}.strategy-no{font-family:ui-monospace,monospace;font-size:9px;color:#999}.strategy-card h3{font-size:18px;margin:9px 0 5px}.strategy-card .one-line{font-size:10px;color:var(--muted);line-height:1.55;min-height:47px}.score-bars{margin:15px 0}.score-row{display:grid;grid-template-columns:64px 1fr 24px;align-items:center;gap:7px;margin:7px 0;font-size:8.5px;color:#777}.bar{height:5px;background:#efefed;border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}.score-row b{font-size:8px;text-align:right}.strategy-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.strategy-list li{font-size:9.5px;line-height:1.5;padding:9px 0;border-bottom:1px solid #f3f3f2;display:grid;grid-template-columns:58px 1fr;gap:7px}.strategy-list li strong{font-size:8.5px;color:var(--muted)}.strategy-total{margin-top:auto;padding-top:15px;display:flex;justify-content:space-between;align-items:end}.strategy-total span{font-size:9px;color:var(--muted)}.strategy-total b{font-size:25px}
+.reco-hero{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}.reco-head{background:#1a1a17;color:#fff;padding:26px 28px;display:grid;grid-template-columns:1fr 210px;gap:25px}.reco-head h3{font-size:25px;margin:7px 0 10px;letter-spacing:-.04em}.reco-head p{font-size:11px;color:rgba(255,255,255,.69);line-height:1.7}.reco-score{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.18)}.reco-score b{font-size:42px;color:var(--lime)}.reco-score span{font-size:9px;color:rgba(255,255,255,.55)}.reco-body{padding:24px 28px}.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.principle{background:#fafafa;border:1px solid #ececea;border-radius:10px;padding:15px}.principle .n{font-family:ui-monospace,monospace;color:#8b877e;font-size:9px}.principle h4{font-size:12px;margin:8px 0 5px}.principle p{font-size:9.5px;color:var(--muted);line-height:1.55;margin:0}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:11px;overflow:hidden}.phase{background:#fff;padding:19px}.phase .time{font-size:9px;font-weight:800;color:var(--accent);letter-spacing:.07em}.phase h4{font-size:12px;margin:7px 0}.phase ul{margin:0;padding-left:16px}.phase li{font-size:9.5px;line-height:1.6;color:#555;margin:3px 0}.not-doing{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.no-card{background:var(--orange2);border:1px solid #ffc6a0;border-radius:10px;padding:13px}.no-card strong{font-size:10px;color:#a04a10}.no-card p{font-size:9px;color:#8a5636;line-height:1.5;margin:5px 0 0}
 .risk{display:grid;grid-template-columns:1.2fr .5fr .5fr 1.4fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}.risk:last-child{border-bottom:0}.risk strong{font-size:10px}.risk span{font-size:9px;color:var(--muted)}.risk-level{font-size:8px;padding:3px 6px;border-radius:5px;width:max-content;font-weight:800}.risk-level.high{background:var(--orange);color:#fff}.risk-level.medium{background:var(--pink2);color:#a63c9a}
 /* 브랜드 전용: 포지셔닝 맵 · 화이트스페이스 · 축 · 카테고리 · BTA */
 .pmap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px;position:relative;height:460px;box-shadow:var(--shadow)}.pm-title{font-weight:800;font-size:13px;margin-bottom:14px}.pm-field{position:absolute;top:46px;left:70px;right:52px;bottom:56px;border-left:1px solid #ddd;border-bottom:1px solid #ddd}.pm-field:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed #eee}.pm-field:after{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1px dashed #eee}.pm-axis{position:absolute;font-size:9px;color:var(--muted);font-weight:700}.pm-axis.top{top:-18px;left:calc(50% - 30px)}.pm-axis.bottom{bottom:-22px;left:calc(50% - 30px)}.pm-axis.left{top:calc(50% - 8px);left:-58px;writing-mode:vertical-rl;transform:rotate(180deg)}.pm-axis.right{top:calc(50% - 8px);right:-46px;writing-mode:vertical-rl}.pm-node{position:absolute;font-size:9.5px;font-weight:700;transform:translate(-50%,-50%);cursor:help;background:rgba(255,255,255,.7);padding:1px 4px;border-radius:4px}.pm-node.goal{background:var(--accent);color:#fff;padding:8px 10px;border-radius:50%;font-size:9px;text-align:center;line-height:1.2}
@@ -84,7 +84,7 @@ button,input{font:inherit}.app{min-height:100vh}
 .table--lg{min-width:880px}
 .table tr.grouprow td{background:var(--panel2);font-weight:800;font-size:10px;
   letter-spacing:.05em;color:var(--ink);border-bottom:1px solid var(--line)}
-.table tr.sumrow td{background:#f0eee8;font-weight:800}
+.table tr.sumrow td{background:#f4f4f3;font-weight:800}
 .table td,.table th{font-variant-numeric:tabular-nums}
 .table td.num{text-align:right;white-space:nowrap;font-weight:800}
 
@@ -92,7 +92,7 @@ button,input{font:inherit}.app{min-height:100vh}
 .tl{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
   border-radius:11px;overflow:hidden}
 .tl-row{display:grid;grid-template-columns:130px minmax(0,1fr);background:#fff}
-.tl-row.off{background:#f4f3f0}
+.tl-row.off{background:#fafafa}
 .tl-row.today{background:var(--blue2)}
 .tl-date{padding:14px;border-right:1px solid var(--line);display:flex;
   flex-direction:column;gap:3px;justify-content:flex-start}
@@ -133,6 +133,14 @@ button,input{font:inherit}.app{min-height:100vh}
   .page-head{display:block}
   .head-meta{justify-content:flex-start;margin-top:12px;flex-wrap:wrap}
 }
+
+/* 그리드/플렉스 자식이 콘텐츠 최소너비 때문에 부풀지 않게 — 중첩 표가 카드 밖으로 밀던 문제 */
+.grid>*,.card,.tl-body>*,.risk>*{min-width:0}
+.card .table-wrap{max-width:100%}
+
+/* 바탕이 화이트라 카드가 묻히지 않게 — 중첩 카드만 한 단계 톤다운 */
+.card .card{background:#fafafa;box-shadow:none}
+.card .card .card{background:#fff}
 </style>
 </head>
 <body>
@@ -197,7 +205,7 @@ button,input{font:inherit}.app{min-height:100vh}
 
 <div class="grid cols-4" style="margin-top:18px">
 <div class="card metric"><div class="label">사업 예산</div><div class="value">66억</div><div class="sub">+ @ · VAT 별도 · 마일리지 산출은 150억 가정</div></div>
-<div class="card metric"><div class="label">제안 준비 기간</div><div class="value">12일</div><div class="sub">8/19 16시 수령 → 8/31 14시 제출</div></div>
+<div class="card metric"><div class="label">제안 준비 기간</div><div class="value">7일</div><div class="sub">실질 작업일. 달력 13일 − 주말 4 − 수령일·마감일 2</div></div>
 <div class="card metric"><div class="label">필수 크리에이티브</div><div class="value">11종</div><div class="sub">키메시지 2 · 영상 2 · 배너 7</div></div>
 <div class="card metric"><div class="label">업데이트 사이클</div><div class="value">4개월</div><div class="sub">계약 1년 = 챕터 3회 + 1주년 1회</div></div>
 </div>
@@ -212,7 +220,7 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="flow-step"><div class="num">06</div><strong>PT 리허설</strong><span>담당 팀 직접 발표</span></div>
 </div>
 
-<div class="section-title"><h3>지금 결정해야 하는 것 3건</h3><p>이게 안 정해지면 제안서 작성이 시작되지 않습니다</p></div>
+<div class="section-title"><h3>지금 결정해야 하는 것 4건</h3><p>이게 안 정해지면 제안서 작성이 시작되지 않습니다</p></div>
 <div class="risk"><strong>컨소시엄을 구성할 것인가</strong><span><b class="risk-level high">8/21까지</b></span><span>참여 가부 직결</span><span>RFP는 오프라인·디지털 미디어 전문 인력 보유를 필수로 요구하고, 컨소시엄 구성 시 제안 준비 단계에서 NC에 사전 고지해야 합니다. 현재 MX실 가용 인력(1팀 3명·2팀 4명)으로 66억 규모 매체 기획과 500명 오프라인 쇼케이스를 단독 수행하는 것은 불가능합니다.</span></div>
 <div class="risk"><strong>확인질문 메일을 언제 보낼 것인가</strong><span><b class="risk-level high">8/20 오전</b></span><span>회신 대기 시간 필요</span><span>NC는 유선 문의를 받지 않고 이메일로 일괄 회신합니다. 회신이 늦으면 크리에이티브 방향이 흔들립니다. 11개 질문을 한 번에 보냅니다.</span></div>
 <div class="risk"><strong>참여 자체가 성립하는가 — 사각지대 4건</strong><span><b class="risk-level high">8/21까지</b></span><span>제안 비용 쓰기 전</span><span>보증증권 한도, 선집행 34억 자금 계획, 기존 론칭 대행사 재참여 여부, 캠페인 총괄 실적 파트너 확보. 네 칸 중 하나라도 안 되면 전략과 무관하게 참여가 성립하지 않습니다. <a href="#gaps" data-goto="gaps"><b>→ 14뷰 사각지대 점검</b></a></span></div>
@@ -531,6 +539,7 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="principle"><div class="n">03</div><h4>날개는 장식이 아니라 동사로 쓴다</h4><p>"날개의 장점이 안 살았다"는 유저 반응이 있었습니다. 정지된 날개 이미지가 아니라 비행 그 자체를 보여줍니다.</p></div>
 <div class="principle"><div class="n">04</div><h4>모든 컷은 무자막으로 성립해야 한다</h4><p>자막은 레이어로 얹습니다. 글로벌 전용 시 영상 재편집이 없어야 합니다.</p></div>
 <div class="principle"><div class="n">05</div><h4>숫자는 유저의 것을 쓴다</h4><p>회사 매출·다운로드 수가 아니라 유저 개인의 플레이 기록을 화면에 올립니다. 발신자를 바꾸는 장치입니다.</p></div>
+<div class="principle" style="border-left:3px solid var(--orange)"><div class="n">06</div><h4>광고에서 본 화면이 게임에 있어야 한다</h4><p>클릭률을 올리려고 실제 게임에 없는 일러스트나 다른 장르 화면을 UA 소재에 쓰지 않습니다. AION2는 이미 <b>"말한 것과 다르다"</b>는 이유로 두 번 신뢰를 잃었습니다. 소재에서 같은 방식을 쓰면 캠페인이 문제의 일부가 됩니다.</p></div>
 </div>
 </section>
 
@@ -585,7 +594,8 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="section-title"><h3>하지 않을 것</h3></div>
 <div class="not-doing"><div class="no-card"><strong>원작 향수 단독 캠페인</strong><p>론칭에서 소진했고 S1·S2에 닿지 않습니다. 향수는 「두 번째 비행」의 재료로만 씁니다.</p></div>
 <div class="no-card"><strong>과금 개선을 직접 말하는 메시지</strong><p>잊은 사람에게 논란을 상기시킵니다. 변경 이력은 콘텐츠로 보여주고 광고 카피에서는 말하지 않습니다.</p></div>
-<div class="no-card"><strong>대형 셀럽 기용</strong><p>글로벌 재활용이 막히고 모델비가 과금 압박 서사로 되돌아옵니다.</p></div></div>
+<div class="no-card"><strong>대형 셀럽 기용</strong><p>글로벌 재활용이 막히고 모델비가 과금 압박 서사로 되돌아옵니다.</p></div>
+<div class="no-card"><strong>미끼형 UA 소재</strong><p>실제 게임에 없는 화면·일러스트로 설치를 유도하는 방식. 설치 단가는 내려가지만 하루 만에 빠져나가고, L3 KPI인 커뮤니티 감성 비율이 직접 떨어집니다. 이 게임은 신뢰가 문제인 게임입니다.</p></div></div>
 </section>
 
 <!-- ══════════ 10 추천 전략 ══════════ -->
@@ -653,7 +663,7 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="table-wrap"><table class="table table--md">
 <thead><tr><th style="width:150px">구분</th><th style="width:80px">비중</th><th style="width:90px">금액</th><th>역할과 선정 근거</th></tr></thead>
 <tbody>
-<tr><td><b>디지털 퍼포먼스</b><br><span style="color:var(--muted);font-size:11px">AOR 경유</span></td><td>34%</td><td>22.4억</td><td>유튜브·메타·구글 UAC·카카오·네이버 GFA. 복귀 유저 리타게팅과 신규 UA. 세그먼트 S2·S4 대상. AOR 집행이므로 우리는 기획·소재·성과 분석을 담당</td></tr>
+<tr><td><b>디지털 퍼포먼스</b><br><span style="color:var(--muted);font-size:11px">AOR 경유</span></td><td>34%</td><td>22.4억</td><td>유튜브·메타·구글 UAC·카카오·네이버 GFA. 복귀 유저 리타게팅과 신규 UA. 세그먼트 S2·S4 대상. AOR 집행이므로 우리는 기획·소재·성과 분석을 담당. 소재는 실제 인게임 화면 기반으로만 제작</td></tr>
 <tr><td><b>디지털 브랜딩</b><br><span style="color:var(--muted);font-size:11px">AOR 경유</span></td><td>13%</td><td>8.6억</td><td>유튜브 마스트헤드·프리롤, 네이버·카카오 메인. 1주년과 챕터 D-day에 집중. 접점 효과가 검증된 대형 지면만 사용</td></tr>
 <tr><td><b>DOOH · 옥외</b></td><td>13%</td><td>8.6억</td><td>강남역·홍대·코엑스 대형 LED, 지하철 2호선. 1주년 2주 집중. 오프라인 노출이 커뮤니티 인증샷으로 재확산되는 구조를 노림</td></tr>
 <tr><td><b>영상·소재 제작</b></td><td>15%</td><td>9.9억</td><td>영상 2종 + 배너 7종 + 연간 챕터 3회분 소재. 글로벌 겸용 규격 설계 포함</td></tr>
@@ -692,7 +702,7 @@ button,input{font:inherit}.app{min-height:100vh}
 <tr><td rowspan="4"><b>L2 캠페인</b><br><span style="color:var(--muted);font-size:11px">대행 책임</span></td><td>유효 도달</td><td>전체 도달이 아니라 <b>MMORPG 플레이 이력 보유 30~40대</b> 도달 수</td><td rowspan="4">대행 전담</td></tr>
 <tr><td>CPI · CPM</td><td>설치당 비용 · 1,000회 노출당 비용. 매체군별 분리 관리</td></tr>
 <tr><td>쇼케이스 동시 시청</td><td>온라인 최고 동시 시청자 수 + 현장 500명 만족도</td></tr>
-<tr><td>소재 효율</td><td>배너 7종·영상 2종의 개별 CTR. 하위 30%는 2주 단위 교체</td></tr>
+<tr><td>소재 효율</td><td>배너 7종·영상 2종의 개별 CTR <b>×  설치 후 D1 잔존</b>을 함께 본다. CTR만 높고 잔존이 낮은 소재는 미끼형으로 판정해 <b>즉시 내린다</b>. 하위 30%는 2주 단위 교체</td></tr>
 <tr><td rowspan="3"><b>L3 브랜드</b><br><span style="color:var(--muted);font-size:11px">이 캠페인의 진짜 성패</span></td><td>커뮤니티 감성 비율</td><td>인벤·루리웹·아이온2 갤러리 언급 중 긍정 대 부정 비율. <b>주간 추적</b></td><td rowspan="3">대행 전담</td></tr>
 <tr><td>「1년의 기록」 공유 수</td><td>유저가 자발적으로 SNS·커뮤니티에 올린 개인 기록 카드 수</td></tr>
 <tr><td>부정 이슈 확산 차단</td><td>이슈 발생부터 대응까지 경과 시간. 목표 <b>4시간 이내</b></td></tr>
@@ -782,12 +792,12 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="card"><h3>제작 일정 · D-12</h3>
 <dl>
 <div class="kv"><dt>8/20</dt><dd>확인질문 11건 메일 발송 · 컨소시엄 후보 접촉</dd></div>
-<div class="kv"><dt>8/21</dt><dd>컨소시엄 확정 및 NC 사전 고지 · 목차 확정</dd></div>
-<div class="kv"><dt>8/21~23</dt><dd>커뮤니티 원문 300건 이상 수집 → 포지셔닝 축 재검증 · 크리에이티브 착수</dd></div>
-<div class="kv"><dt>8/26</dt><dd>크리에이티브 시안 11종 내부 확정 · 견적 초안</dd></div>
-<div class="kv"><dt>8/28 18시</dt><dd><b>완성 락.</b> 제안서·견적서·컨소시엄 자료 전부 마감. 모호 표현 전수 점검과 법무 검토를 이 안에서 끝냅니다</dd></div>
+<div class="kv"><dt>8/21 금</dt><dd><b>기획·전략 전체 확정</b>(캠페인·쇼케이스·프로모션·미디어 17항목) · 컨소시엄 확정 및 NC 사전 고지 · 목차 확정</dd></div>
+<div class="kv"><dt>8/24~26</dt><dd>커뮤니티 원문 300건 수집 → 포지셔닝 축 재검증 · 크리에이티브 제작. 전략은 손대지 않음</dd></div>
+<div class="kv"><dt>8/26 수</dt><dd>배너 7종 · 키메시지 2종 락 · 견적 초안. 스토리보드는 AI 제작 3일이라 8/27까지</dd></div>
+<div class="kv"><dt>8/28 18시</dt><dd><b>완성 락.</b> 제안서·견적서·컨소시엄 자료 전부 마감. 모호 표현 전수 점검과 법무 검토를 이 안에서 끝냅니다. <b>이후 내용 수정은 없습니다</b> — 주말과 제출일 오전은 고치는 시간이 아닙니다</dd></div>
 <div class="kv"><dt>8/29~30</dt><dd>휴무. 이 이틀을 쓰지 않아도 되게 앞 일정을 조입니다</dd></div>
-<div class="kv"><dt>8/31 오전</dt><dd>최종 검수 — 파일 열림·폰트 깨짐·페이지 누락만 확인. 내용 수정 없음</dd></div>
+<div class="kv"><dt>8/31 오전</dt><dd><b>오탈자 검수만.</b> 맞춤법·숫자 표기·파일 열림 확인까지. 레이아웃 수정과 내용 보완은 하지 않습니다</dd></div>
 <div class="kv"><dt>8/31 13:00</dt><dd>발송 착수. 용량이 크므로 14:00 마감 1시간 전에 시작</dd></div>
 <div class="kv"><dt>8/31 밤</dt><dd>PT 리허설 1회. 제출과 PT 사이가 24시간 미만이라 창이 하나뿐입니다</dd></div>
 </dl>
@@ -820,7 +830,7 @@ button,input{font:inherit}.app{min-height:100vh}
 
 <div class="risk"><strong>G6 · AOR 경유가 실질 수익을 깎는다</strong><span><b class="risk-level medium">견적 직결</b></span><span>재무</span><span>66억 중 디지털 매체비가 약 31억(47%)입니다. 이게 AOR을 통과하면 해당 구간의 매체 수수료를 AOR이 가져갈 가능성이 있습니다. 그러면 66억은 우리 매출로 인식되지 않고, 실제 수익 기반은 제작·프로모션·오프라인 구간으로 좁아집니다. <b>대응:</b> 확인질문 4·5번 회신 전까지 견적 확정 불가. 회신 내용에 따라 수익성이 참여 기준 아래로 떨어지면 그때 철수를 판단합니다.</span></div>
 
-<div class="risk"><strong>G7 · 제안 비용 전액 자부담</strong><span><b class="risk-level medium">의사결정</b></span><span>재무</span><span>"본 제안 관련 소요경비는 일체 제안 참여사의 부담." 크리에이티브 11종을 실물 완성도로 만들어야 하고(평가 항목이 "제작 및 기획"입니다), 컨소시엄 조율과 PT 준비까지 12일에 압축됩니다. 탈락 시 전액 손실입니다. <b>대응:</b> 상대평가 구도(G8)를 먼저 파악하고, 승산이 낮다고 판단되면 제안 비용을 쓰기 전에 접습니다.</span></div>
+<div class="risk"><strong>G7 · 제안 비용 전액 자부담</strong><span><b class="risk-level medium">의사결정</b></span><span>재무</span><span>"본 제안 관련 소요경비는 일체 제안 참여사의 부담." 크리에이티브 11종을 실물 완성도로 만들어야 하고(평가 항목이 "제작 및 기획"입니다), 컨소시엄 조율과 PT 준비까지 실질 7영업일에 압축됩니다. 탈락 시 전액 손실입니다. <b>대응:</b> 상대평가 구도(G8)를 먼저 파악하고, 승산이 낮다고 판단되면 제안 비용을 쓰기 전에 접습니다.</span></div>
 
 <div class="section-title"><h3>각도 3 · 일정</h3><p>제출 마감보다 계약 후 첫 달이 더 위험합니다</p></div>
 
@@ -877,18 +887,18 @@ button,input{font:inherit}.app{min-height:100vh}
 
 <!-- ══════════ 15 산출물 물량·타임라인 ══════════ -->
 <section class="view" id="production">
-<div class="page-head"><div class="page-title"><div class="eyebrow">DELIVERABLES &amp; TIMELINE</div><h2>총 나가야 할 물량과 역산 일정</h2><p>RFP가 요구한 항목을 하나도 빼지 않고 세고, 우리 공수 기준으로 사람과 날짜를 계산했습니다.</p></div><div class="head-meta"><span class="tag red">가용 영업일 7.5</span><span class="tag amber">필요 인력 5.7명</span></div></div>
+<div class="page-head"><div class="page-title"><div class="eyebrow">DELIVERABLES &amp; TIMELINE</div><h2>총 나가야 할 물량과 역산 일정</h2><p>RFP가 요구한 항목을 하나도 빼지 않고 세고, 우리 공수 기준으로 사람과 날짜를 계산했습니다.</p></div><div class="head-meta"><span class="tag red">가용 영업일 7</span><span class="tag amber">필요 인력 5.9명</span></div></div>
 
 <div class="card" style="border-left:4px solid var(--orange);margin-bottom:20px">
-<h3>먼저 — 실제 작업일은 12일이 아니라 7.5일입니다</h3>
-<p>RFP 수령 8/19(수) 16시, 제출 8/31(월) 14시. 달력으로는 12일이지만 <b>주말 4일과 반나절 두 번</b>을 빼면 이렇게 남습니다.</p>
+<h3>먼저 — 실제 작업일은 7일입니다</h3>
+<p>RFP 수령 8/19(수) 16시, 제출 8/31(월) 14시. 달력으로 13일이지만 실제로 손을 쓸 수 있는 날은 이렇게 남습니다.</p>
 <div class="grid cols-4" style="margin-top:12px">
-<div class="card metric"><div class="label">달력 일수</div><div class="value">12</div><div class="sub">8/19 16시 ~ 8/31 14시</div></div>
-<div class="card metric"><div class="label">주말 제외</div><div class="value">−4</div><div class="sub">8/22·23 · 8/29·30</div></div>
-<div class="card metric"><div class="label">실질 영업일</div><div class="value">7.5</div><div class="sub">8/20~21 · 8/24~28 · 8/31 오전</div></div>
-<div class="card metric"><div class="label">완성 락</div><div class="value">8/28</div><div class="sub">금요일 18시 · 이후 수정 없음</div></div>
+<div class="card metric"><div class="label">달력 일수</div><div class="value">13</div><div class="sub">8/19(수) ~ 8/31(월)</div></div>
+<div class="card metric"><div class="label">주말</div><div class="value">−4</div><div class="sub">8/22·23 · 8/29·30</div></div>
+<div class="card metric"><div class="label">수령일 · 마감일</div><div class="value">−2</div><div class="sub">8/19는 16시 수령 · 8/31 오전은 검수·발송</div></div>
+<div class="card metric"><div class="label">실질 작업일</div><div class="value">7</div><div class="sub">8/20~21 · 8/24~28</div></div>
 </div>
-<p style="margin-top:12px">우리 조직은 야간·휴일 근로를 하지 않는 것을 전제로 운영합니다. 8/29(토)·8/30(일)을 일정에 넣고 계산하면 그 전제가 깨집니다. <b>완성 기준일은 8/28(금) 18시</b>이고, 8/31(월) 오전은 최종 검수와 발송에만 씁니다.</p>
+<p style="margin-top:12px">우리 조직은 야간·휴일 근로를 하지 않는 것을 전제로 운영합니다. 8/29(토)·8/30(일)을 일정에 넣고 계산하면 그 전제가 깨집니다. <b>완성 기준일은 8/28(금) 18시</b>이고, 8/31(월) 오전은 <b>오탈자 검수와 발송</b>에만 씁니다. 내용을 고치는 시간이 아니라서 8/31은 작업일로 세지 않습니다.</p>
 </div>
 
 <div class="section-title"><h3>RFP 필수 산출물 전수 — 유형별 수량</h3><p>제안 요청 사항 7개 구분을 항목 단위로 분해했습니다. 하나라도 빠지면 그 항목이 0점입니다</p></div>
@@ -946,27 +956,27 @@ button,input{font:inherit}.app{min-height:100vh}
 <tbody>
 <tr><td>배너 시안</td><td>7종</td><td>1종 1.5일</td><td>10.5</td><td>팀 표준 "게임 배너 시안 1종 1.5일" 적용</td></tr>
 <tr><td>1주년 메인 키비주얼</td><td>1종</td><td>3일</td><td>3.0</td><td>배너 7종의 톤 기준이 되므로 먼저 나와야 함</td></tr>
-<tr><td>영상 스토리보드</td><td>2편</td><td>1편 2일</td><td>4.0</td><td>60초 · 30초</td></tr>
-<tr><td>영상 애니매틱</td><td>2편</td><td>1편 2일</td><td>4.0</td><td>인게임 소스 편집 기준</td></tr>
+<tr><td>영상 스토리보드</td><td>2편</td><td><s style="color:var(--muted)">1편 2일</s> → 2편 3일</td><td>3.0</td><td><b>AI 이미지 생성으로 컷 비주얼 일괄 생성.</b> 팀 표준 4일 → 3일. 프롬프트 반복 · 컷 간 톤 정합 · 업스케일 · 리터치가 붙어 <b>3일 아래로는 안 내려간다</b></td></tr>
+<tr><td>영상 애니매틱</td><td>2편</td><td>1편 2일</td><td>4.0</td><td>인게임 소스 편집 기준. 여기는 AI로 줄지 않는다 — 실제 게임 화면을 써야 하므로</td></tr>
 <tr><td>전략·기획 문서</td><td>27항목</td><td>—</td><td>8.0</td><td>00~14뷰 내용을 제안서 문법으로 전환</td></tr>
 <tr><td>제안서 조판</td><td>약 55p</td><td>—</td><td>10.0</td><td>mx-deck-design 규격</td></tr>
 <tr><td>견적서·단가표</td><td>3표</td><td>—</td><td>3.0</td><td>수수료 3종 분리 · 150억 시나리오</td></tr>
-<tr style="background:var(--panel2)"><td colspan="3"><b>합계</b></td><td><b>42.5</b></td><td>7.5영업일로 나누면 <b>동시 투입 5.7명</b></td></tr>
+<tr style="background:var(--panel2)"><td colspan="3"><b>합계</b></td><td><b>41.5</b></td><td>7영업일로 나누면 <b>평균 5.9명</b>. 실제로는 아래처럼 앞뒤가 다르다</td></tr>
 </tbody></table></div>
 
 <div class="grid cols-2" style="margin-top:16px">
 <div class="card" style="border-left:4px solid var(--orange)">
 <h3>여기서 나오는 결론</h3>
-<p>8월 셋째 주 기준 1팀 투입률 217%, 2팀 175%입니다. 현재 진행 중인 웹젠·넷마블·현대·스마일게이트·조이시티 일감을 그대로 두고 <b>5.7명을 7.5일간 빼내는 것은 불가능합니다</b>.</p>
+<p>평균 5.9명은 실제 그림이 아닙니다. <b>기획·전략이 8/21(금)까지 끝나야</b> 그 위에 크리에이티브를 올릴 수 있어서, 부하가 앞뒤로 갈립니다.</p><div class="table-wrap" style="margin:12px 0"><table class="table table--sm"><thead><tr><th>구간</th><th style="width:70px">일수</th><th style="width:90px">man-day</th><th>하루 필요 인원</th></tr></thead><tbody><tr><td>8/20~21 · 전략·기획</td><td class="num">2</td><td class="num">8.0</td><td><b>4.0명</b> — 전략 27항목을 이틀에</td></tr><tr><td>8/24~28 · 제작·조판·견적</td><td class="num">5</td><td class="num">33.5</td><td><b>6.7명</b> — 크리에이티브 20.5 + 조판 10 + 견적 3</td></tr></tbody></table></div><p>8월 셋째 주 기준 1팀 투입률 217%, 2팀 175%입니다. 진행 중인 웹젠·넷마블·현대·스마일게이트·조이시티 일감을 그대로 두고 <b>이 인원을 빼내는 것은 불가능합니다</b>.</p>
 <p style="margin-top:8px">선택지는 둘입니다.</p>
 <dl>
-<div class="kv"><dt>① 컨소시엄 분담</dt><dd>전략·미디어·견적(약 21 man-day)을 파트너가 맡고, 우리는 크리에이티브 21.5 man-day에 집중. 그러면 <b>우리 쪽 필요 인력 2.9명</b>으로 내려갑니다</dd></div>
+<div class="kv"><dt>① 컨소시엄 분담</dt><dd>전략·미디어·견적(21 man-day)을 파트너가 맡고, 우리는 크리에이티브 20.5 man-day에 집중. 그러면 <b>우리 쪽 필요 인력 2.9명</b>으로 내려갑니다</dd></div>
 <div class="kv"><dt>② 참여 포기</dt><dd>파트너가 8/21까지 안 잡히면 이 수치가 그대로 남습니다. 14뷰 판정표의 네 번째 칸이 ✗가 됩니다</dd></div>
 </dl>
 </div>
 <div class="card" style="border-left:4px solid var(--blue)">
 <h3>영상 2편의 현실적 수준</h3>
-<p>평가 항목이 "크리에이티브 <b>제작</b> 및 기획"이라 기획안만으로는 부족합니다. 그렇다고 7.5일에 실사 영상 2편을 완성할 수는 없습니다.</p>
+<p>평가 항목이 "크리에이티브 <b>제작</b> 및 기획"이라 기획안만으로는 부족합니다. 그렇다고 7일에 실사 영상 2편을 완성할 수는 없습니다.</p>
 <dl>
 <div class="kv"><dt>제출 수준</dt><dd>스토리보드 전 컷 + <b>애니매틱</b>(인게임 소스를 컷 순서대로 편집하고 자막·사운드를 얹은 러프 영상)</dd></div>
 <div class="kv"><dt>이유</dt><dd>PT 현장에서 재생됩니다. 정지 컷 나열보다 30초 애니매틱 한 편이 크리에이티브 항목 점수를 만듭니다</dd></div>
@@ -984,53 +994,53 @@ button,input{font:inherit}.app{min-height:100vh}
 <div class="tl-gate"><em>게이트</em><span class="tag green">완료</span></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/20 목</b><span>D-11</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>확인질문 11건 메일 발송 · 론칭 대행사 파악</p></div>
+<div class="tl-track"><em>전략·기획</em><p>확인질문 11건 발송 · 론칭 대행사 파악 · <b>문제 정의와 3축 컨셉 확정</b></p></div>
 <div class="tl-track"><em>크리에이티브</em><p>레퍼런스 수집 · 인게임 소스 확보</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>보증증권 발급 한도 조회</p></div>
 <div class="tl-gate"><em>게이트</em><span class="tag red">G11 방어자 확인</span></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/21 금</b><span>D-10</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>컨소시엄 확정 · NC 사전 고지 · 목차 확정</p></div>
+<div class="tl-track"><em>전략·기획</em><p><b>기획·전략 전체 확정</b> — 캠페인 5 · 쇼케이스 4 · 프로모션 4 · 미디어 4항목. 컨소시엄 확정 · NC 사전 고지 · 목차 확정</p></div>
 <div class="tl-track"><em>크리에이티브</em><p>키비주얼 방향 3안 제시</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>선집행 자금 계획 판정</p></div>
-<div class="tl-gate"><em>게이트</em><span class="tag red">참여 판정 · 방어선 1</span></div></div></div>
+<div class="tl-gate"><em>게이트</em><span class="tag red">전략 락 · 방어선 1</span><span class="tag red">참여 판정</span></div></div></div>
 
 <div class="tl-row off"><div class="tl-date"><b>8/22 토 · 8/23 일</b><span>휴무</span></div><div class="tl-body">
 <div class="tl-track"><p>일정에 넣지 않습니다. 야간·휴일 근로 미실시가 전제입니다.</p></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/24 월</b><span>D-7</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>커뮤니티 원문 300건 수집 → 포지셔닝 축 재검증</p></div>
+<div class="tl-track"><em>전략·기획</em><p>커뮤니티 원문 300건 수집 → 포지셔닝 축 재검증. <b>전략은 이 시점부터 손대지 않는다</b></p></div>
 <div class="tl-track"><em>크리에이티브</em><p>키비주얼 확정 · 배너 1~3 착수</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>매체 배분 초안 · AOR 회신 반영</p></div>
 <div class="tl-gate"><em>게이트</em><span class="tag red">키비주얼 확정 · 방어선 2</span></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/25 화</b><span>D-6</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>전략 문서 27항목 초안</p></div>
-<div class="tl-track"><em>크리에이티브</em><p>배너 4~7 · 영상 스토리보드 2편</p></div>
+<div class="tl-track"><em>전략·기획</em><p>확정된 전략을 제안서 문법으로 전환 · 조판 착수</p></div>
+<div class="tl-track"><em>크리에이티브</em><p>배너 4~7 · <b>영상 스토리보드 2편 착수</b>(AI 컷 생성, 8/27까지 3일)</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>단가표 · 수수료 3종 구조 설계</p></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/26 수</b><span>D-5</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>쇼케이스 4항목 · 프로모션 4항목</p></div>
-<div class="tl-track"><em>크리에이티브</em><p><b>크리에이티브 11종 내부 확정</b></p></div>
+<div class="tl-track"><em>전략·기획</em><p>제안서 조판 진행 · 인력 구성표 실명 확정</p></div>
+<div class="tl-track"><em>크리에이티브</em><p><b>배너 7종 · 키메시지 2종 락</b> · 스토리보드 진행</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>150억 마일리지 시나리오</p></div>
-<div class="tl-gate"><em>게이트</em><span class="tag red">시안 락 · 방어선 3</span></div></div></div>
+<div class="tl-gate"><em>게이트</em><span class="tag red">배너 락 · 방어선 3</span></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/27 목</b><span>D-4</span></div><div class="tl-body">
-<div class="tl-track"><em>전략·기획</em><p>제안서 조판 · 인력 구성표 실명 확정</p></div>
-<div class="tl-track"><em>크리에이티브</em><p>애니매틱 2편 편집</p></div>
+<div class="tl-track"><em>전략·기획</em><p>제안서 전 장 조판 완료</p></div>
+<div class="tl-track"><em>크리에이티브</em><p>스토리보드 완성 · 애니매틱 2편 편집 착수</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>견적서 1차</p></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/28 금</b><span>D-3</span></div><div class="tl-body">
 <div class="tl-track"><em>전략·기획</em><p>전체 1차 완성 · 모호 표현 전수 점검 · 법무 검토(G1·G2)</p></div>
 <div class="tl-track"><em>크리에이티브</em><p>애니매틱 완성 · 별책 레퍼런스</p></div>
 <div class="tl-track"><em>미디어·견적</em><p>견적서 최종 · 컨소시엄 자료 취합</p></div>
-<div class="tl-gate"><em>게이트</em><span class="tag red">18시 완성 락</span></div></div></div>
+<div class="tl-gate"><em>게이트</em><span class="tag red">18시 완성 락 — 이후 내용 수정 없음</span></div></div></div>
 
 <div class="tl-row off"><div class="tl-date"><b>8/29 토 · 8/30 일</b><span>휴무</span></div><div class="tl-body">
 <div class="tl-track"><p>이 이틀을 쓰지 않아도 되게 앞 일정을 조입니다. 버퍼로 잡아두되 계획에는 넣지 않습니다.</p></div></div></div>
 
 <div class="tl-row"><div class="tl-date"><b>8/31 월</b><span>D-day</span></div><div class="tl-body">
-<div class="tl-track"><em>오전</em><p>최종 검수 — 파일 열림 · 폰트 깨짐 · 페이지 누락만 확인. 내용 수정 없음</p></div>
+<div class="tl-track"><em>오전</em><p><b>오탈자 검수만.</b> 맞춤법 · 숫자 표기 · 담당자명 · 파일 열림 여부까지. 레이아웃 수정 · 내용 보완 · 시안 교체는 <b>하지 않습니다</b> — 손대는 순간 버전이 꼬이고 발송이 늦습니다</p></div>
 <div class="tl-track"><em>13:00</em><p>발송 착수. 용량이 크므로 마감 1시간 전에 시작</p></div>
 <div class="tl-track"><em>14:00</em><p>마감. 초과 시 추가 수령 불가</p></div>
 <div class="tl-gate"><em>게이트</em><span class="tag red">bidding@ncsoft.com 단독 수신</span></div></div></div>
@@ -1045,9 +1055,9 @@ button,input{font:inherit}.app{min-height:100vh}
 </div>
 
 <div class="section-title"><h3>일정 방어선 3개</h3><p>이 중 하나라도 밀리면 8/28 완성 락이 깨집니다</p></div>
-<div class="risk"><strong>8/21 · 컨소시엄 확정</strong><span><b class="risk-level high">고정</b></span><span>D-10</span><span>여기서 파트너가 안 잡히면 필요 인력 5.7명이 그대로 남습니다. 밀 수 없는 날짜입니다. 미확정 시 8/22 오전에 참여 철회를 결정하고 제안 비용을 쓰지 않습니다</span></div>
-<div class="risk"><strong>8/24 · 키비주얼 확정</strong><span><b class="risk-level high">고정</b></span><span>D-7</span><span>배너 7종이 여기서 파생됩니다. 하루 밀리면 배너 10.5 man-day가 4일 안에 들어가야 하고, 산술적으로 불가능합니다. 8/21에 방향 3안을 미리 올려두고 24일 오전에 바로 고릅니다</span></div>
-<div class="risk"><strong>8/26 · 시안 11종 락</strong><span><b class="risk-level high">고정</b></span><span>D-5</span><span>이후 이틀은 조판·애니매틱·견적에 씁니다. OT 회신이 늦어 던전명이 미확정이면 <b>기다리지 않고</b> 가정을 명시한 채 확정합니다 — 08뷰에 이미 그 가정을 적어뒀습니다</span></div>
+<div class="risk"><strong>8/21 금 · 기획·전략 확정 + 컨소시엄 확정</strong><span><b class="risk-level high">고정</b></span><span>D-10</span><span>전략이 금요일에 안 닫히면 다음 주 5일이 통째로 흔들립니다. 크리에이티브는 전략 위에 올라가는 것이라, 전략을 고치면 배너 7종이 같이 갑니다. 컨소시엄도 같은 날 확정합니다 — 파트너가 없으면 전략 27항목 8 man-day를 이틀에 4명이 붙어야 하는데, 그 인원이 없습니다. 둘 중 하나라도 미확정이면 8/22 오전에 참여 철회를 결정하고 제안 비용을 쓰지 않습니다</span></div>
+<div class="risk"><strong>8/24 월 · 키비주얼 확정</strong><span><b class="risk-level high">고정</b></span><span>D-7</span><span>배너 7종이 여기서 파생됩니다. 하루 밀리면 배너 10.5 man-day가 4일 안에 들어가야 하고, 산술적으로 불가능합니다. 8/21에 방향 3안을 미리 올려두고 24일 오전에 바로 고릅니다</span></div>
+<div class="risk"><strong>8/26 수 · 배너 7종 · 키메시지 2종 락</strong><span><b class="risk-level high">고정</b></span><span>D-5</span><span>스토리보드·애니매틱은 8/28까지 이어집니다. 이후 이틀은 조판·애니매틱·견적에 씁니다. OT 회신이 늦어 던전명이 미확정이면 <b>기다리지 않고</b> 가정을 명시한 채 확정합니다 — 08뷰에 이미 그 가정을 적어뒀습니다</span></div>
 </section>
 
 <!-- ══════════ 16 출처 ══════════ -->
