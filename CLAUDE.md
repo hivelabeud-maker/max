@@ -40,6 +40,13 @@
 | 영상 대본·릴스 스크립트 | 말하기용 부분집합만 | 가볍게 |
 | 클라이언트 발송 문서 | 전체 + `tone-guardian` 경유 | 전체 |
 
+## 제안·기획 착수 전 필수 경유
+👉 `.claude/library/proposal-psychology.md`
+- RFP 제안·마케팅 기획을 시작하면 **요구사항을 읽기 전에** 이 문서를 먼저 본다.
+- 4가지 사고: ① 손실 회피(안 했을 때의 손실을 쓴다) ② 고객사도 자기 문제를 모른다(근거 있는 문제 재정의)
+  ③ 담당자는 내부 보고를 통과해야 한다(제안서 = 보고서 완제품) ④ 자랑보다 의도와 과정이 신뢰를 만든다
+- 착수 전 자문 7문과 프롬프트 3종 포함. `rfp-analyst`·`marketer`·`critic`·`review-panel`이 자동 경유한다.
+
 ## 5가지 핵심 원칙
 👉 자세한 내용은 `.claude/library/core-directives.md` 참조
 - 이원화 사고방식 (Logical Mode ↔ Creative Mode)
@@ -72,6 +79,7 @@
 ├── projects/                   # 프로젝트별 노트
 └── library/
     ├── core-directives.md     # 5가지 핵심 원칙
+    ├── proposal-psychology.md  # 제안 행동심리 — RFP·기획 착수 전 필수 경유
     ├── prompt-guide.md        # 프롬프트 생성 가이드
     ├── project-note-rules.md  # 프로젝트 노트 요약/원본 로그 이원 구조 규칙
     ├── qc-checklist.md

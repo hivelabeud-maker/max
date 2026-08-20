@@ -155,6 +155,62 @@ p,dd,li,td,th{word-break:keep-all}
 .head-meta{flex-wrap:wrap;gap:6px}
 .card p{line-height:1.7}
 .kv dd{line-height:1.7}
+
+/* ══ v3 · 타이포 확대에 맞춘 행·표 재조판 ═══════════════════════════════════
+   폰트만 키우고 행 높이·패딩·열 폭을 그대로 두면 글자가 상자에 갇힌다.
+   여기서 여백을 글자 크기에 비례해 다시 잡는다. 태그류는 12px로 되돌린다. */
+
+/* 1) 태그·뱃지·라벨은 12px — 정보가 아니라 분류 표식이라 작아도 된다 */
+.tag,.nav-badge,.source-type,.risk-level,.ws-type,.strategy-no,
+.recommended-ribbon,.eyebrow,.pill,.eid,.bvk-id,.cid,.strategy-list li strong,
+.so-what .label,.evidence-chips span,.source-card .used,.axis-card .pick,
+.flow-step .num,.flow-step .check,.insight-card .index,.principle .n,
+.phase .time,.tl-track em,.tl-gate em,.tl-date span,.nav-label{font-size:12px}
+.nav-num{font-size:12px}
+.table th{font-size:12px;padding:14px;line-height:1.5}
+
+/* 2) 행 높이 — 글자가 커진 만큼 위아래 여백도 같이 늘린다 */
+.kv{grid-template-columns:170px minmax(0,1fr)}
+.kv dt,.kv dd{padding:16px 0;line-height:1.75}
+.question{padding:17px 0;gap:14px}
+.question span{line-height:1.7;display:block;margin-top:4px}
+.risk{padding:17px 0;gap:14px}
+.risk span{line-height:1.7}
+.strategy-list li{padding:13px 0;line-height:1.7;grid-template-columns:76px minmax(0,1fr)}
+.score-row{grid-template-columns:88px minmax(0,1fr) 34px;gap:11px;margin:11px 0}
+.table td{line-height:1.7;padding:16px 14px}
+
+/* 3) 카드 안쪽 여백 */
+.source-card{padding:18px;gap:18px}
+.brand-card{padding:18px;min-height:190px;gap:7px}
+.principle,.axis-card,.stream{padding:20px}
+.no-card{padding:17px}
+.cat-card2,.bta-card{padding:20px}
+.ws-card{padding:22px}
+.request-box{padding:24px}
+.phase{padding:24px}
+.filter{padding:9px 13px}
+.search{padding:10px 13px;min-width:240px}
+.decision{padding:30px;gap:26px}
+.reco-head{padding:30px 32px}
+.reco-body{padding:28px 32px}
+.flow-step{min-height:142px;padding:17px 14px}
+.tl-date{padding:17px}
+.tl-body{padding:16px 18px;gap:14px}
+
+/* 4) 요소 사이 간격 — 밀도가 아니라 리듬을 만든다 */
+.grid{gap:16px}
+.section-title{margin:34px 0 14px}
+.page-head{margin-bottom:26px}
+.card h3{margin:0 0 12px;line-height:1.45}
+.card p+p{margin-top:10px}
+.insight-card h3{line-height:1.5;margin:12px 0 10px}
+.so-what{margin-top:18px;padding-top:15px}
+.strategy-card .one-line{min-height:62px;line-height:1.65}
+.pmap{height:560px}
+.pm-node{padding:3px 7px}
+.footer-note{margin-top:30px;line-height:1.7}
+.table tr.grouprow td{font-size:14px;padding:14px}
 </style>
 </head>
 <body>
@@ -184,15 +240,16 @@ p,dd,li,td,th{word-break:keep-all}
   <button class="nav-item" data-view="keywords"><span class="nav-num">08</span>캠페인 키메시지</button>
   <button class="nav-item" data-view="options"><span class="nav-num">09</span>전략 대안<span class="nav-badge">3</span></button>
   <button class="nav-item" data-view="recommendation"><span class="nav-num">10</span>추천 전략·연간 로드맵</button>
+  <button class="nav-item" data-view="plusalpha"><span class="nav-num">11</span>경쟁 예측·플러스알파<span class="nav-badge">6</span></button>
   <div class="nav-label">EXECUTION</div>
-  <button class="nav-item" data-view="media"><span class="nav-num">11</span>미디어 믹스·KPI</button>
-  <button class="nav-item" data-view="ops"><span class="nav-num">12</span>실행 체계·리스크</button>
-  <button class="nav-item" data-view="toc"><span class="nav-num">13</span>제안서 목차·PT 전략</button>
+  <button class="nav-item" data-view="media"><span class="nav-num">12</span>미디어 믹스·KPI</button>
+  <button class="nav-item" data-view="ops"><span class="nav-num">13</span>실행 체계·리스크</button>
+  <button class="nav-item" data-view="toc"><span class="nav-num">14</span>제안서 목차·PT 전략</button>
   <div class="nav-label">GAP AUDIT</div>
-  <button class="nav-item" data-view="gaps"><span class="nav-num">14</span>사각지대 점검<span class="nav-badge">11</span></button>
-  <button class="nav-item" data-view="production"><span class="nav-num">15</span>산출물 물량·타임라인<span class="nav-badge">40</span></button>
+  <button class="nav-item" data-view="gaps"><span class="nav-num">15</span>사각지대 점검<span class="nav-badge">11</span></button>
+  <button class="nav-item" data-view="production"><span class="nav-num">16</span>산출물 물량·타임라인<span class="nav-badge">40</span></button>
   <div class="nav-label">AUDIT &amp; TRACE</div>
-  <button class="nav-item" data-view="sources"><span class="nav-num">16</span>출처·근거 추적<span class="nav-badge">24</span></button>
+  <button class="nav-item" data-view="sources"><span class="nav-num">17</span>출처·근거 추적<span class="nav-badge">24</span></button>
 </aside>
 
 <main class="main">
@@ -261,7 +318,7 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="section-title"><h3>지금 결정해야 하는 것 4건</h3><p>이게 안 정해지면 제안서 작성이 시작되지 않습니다</p></div>
 <div class="risk"><strong>컨소시엄을 구성할 것인가</strong><span><b class="risk-level high">8/21까지</b></span><span>참여 가부 직결</span><span>RFP는 오프라인·디지털 미디어 전문 인력 보유를 필수로 요구하고, 컨소시엄 구성 시 제안 준비 단계에서 NC에 사전 고지해야 합니다. 현재 MX실 가용 인력(1팀 3명·2팀 4명)으로 66억 규모 매체 기획과 500명 오프라인 쇼케이스를 단독 수행하는 것은 불가능합니다.</span></div>
 <div class="risk"><strong>확인질문 메일을 언제 보낼 것인가</strong><span><b class="risk-level high">8/20 오전</b></span><span>회신 대기 시간 필요</span><span>NC는 유선 문의를 받지 않고 이메일로 일괄 회신합니다. 회신이 늦으면 크리에이티브 방향이 흔들립니다. 12개 질문을 한 번에 보냅니다.</span></div>
-<div class="risk"><strong>참여 자체가 성립하는가 — 사각지대 4건</strong><span><b class="risk-level high">8/21까지</b></span><span>제안 비용 쓰기 전</span><span>보증증권 한도, 선집행 34억 자금 계획, 기존 론칭 대행사 재참여 여부, 캠페인 총괄 실적 파트너 확보. 네 칸 중 하나라도 안 되면 전략과 무관하게 참여가 성립하지 않습니다. <a href="#gaps" data-goto="gaps"><b>→ 14뷰 사각지대 점검</b></a></span></div>
+<div class="risk"><strong>참여 자체가 성립하는가 — 사각지대 4건</strong><span><b class="risk-level high">8/21까지</b></span><span>제안 비용 쓰기 전</span><span>보증증권 한도, 선집행 34억 자금 계획, 기존 론칭 대행사 재참여 여부, 캠페인 총괄 실적 파트너 확보. 네 칸 중 하나라도 안 되면 전략과 무관하게 참여가 성립하지 않습니다. <a href="#gaps" data-goto="gaps"><b>→ 15뷰 사각지대 점검</b></a></span></div>
 <div class="risk"><strong>크리에이티브 착수 기준을 무엇으로 할 것인가</strong><span><b class="risk-level medium">8/22</b></span><span>제작 리드타임</span><span>영상 2종·배너 7종을 8/31까지 내려면 8/26에는 시안이 확정돼야 합니다. 던전명 확인 회신을 기다리다 늦으면, 확인 전 가정을 명시하고 먼저 착수합니다.</span></div>
 </section>
 
@@ -294,17 +351,17 @@ p,dd,li,td,th{word-break:keep-all}
 <tr><td><b>2-C</b></td><td>"AION2 글로벌 서비스와 접목할 수 있는 글로벌 마케팅 아이디어 발굴 및 개발 — 한국의 마케팅 리소스를 글로벌에서 사용하는 만큼 <b>확장성이 있는 아이디어</b> 개발"</td><td>글로벌 <b>실행</b>이 아니라 <b>확장성</b>을 묻습니다. 업무 범위는 한국만입니다. 글로벌 캠페인안을 길게 쓰면 범위를 못 읽은 것으로 보입니다. 답은 제작 규격으로 냅니다</td><td>07뷰 I4<br>08뷰 원칙 04</td></tr>
 
 <tr class="grouprow"><td colspan="4">3. 사업 내용</td></tr>
-<tr><td><b>3-A</b></td><td>"계약 기간: 계약 시작일로부터 1년"</td><td>시작일이 계약일입니다. 결과 공지 9/8 → 협상 → 계약이라 실제 착수는 9월 하순. 1주년 티징까지 4~6주뿐입니다</td><td>14뷰 G8</td></tr>
-<tr><td><b>3-B</b></td><td>"사업 예산: 66억 + @"</td><td>"+ @"와 마일리지 150억 가정이 한 문서에 같이 있습니다. 증액 시나리오를 준비한 곳과 아닌 곳이 갈립니다</td><td>11뷰 · 14뷰 G6</td></tr>
+<tr><td><b>3-A</b></td><td>"계약 기간: 계약 시작일로부터 1년"</td><td>시작일이 계약일입니다. 결과 공지 9/8 → 협상 → 계약이라 실제 착수는 9월 하순. 1주년 티징까지 4~6주뿐입니다</td><td>15뷰 G8</td></tr>
+<tr><td><b>3-B</b></td><td>"사업 예산: 66억 + @"</td><td>"+ @"와 마일리지 150억 가정이 한 문서에 같이 있습니다. 증액 시나리오를 준비한 곳과 아닌 곳이 갈립니다</td><td>12뷰 · 15뷰 G6</td></tr>
 <tr><td>3-C ①</td><td>"캠페인 전략/컨셉 구성, <b>슬로건 수립</b> 및 크리에이티브 기획/제작"</td><td><b>슬로건이 업무 범위에 명시</b>돼 있습니다. 제안요청사항의 키메시지와는 별개 항목입니다. 슬로건 안 없이 제출하면 업무 범위 하나가 통째로 빕니다</td><td>08뷰 슬로건</td></tr>
 <tr><td>3-C ②</td><td>"게임 시장 분석 / 타겟 세그먼트 분석을 통해 각 사업 단계에 적합한 프로모션 기획 및 마케팅 운영"</td><td>세그먼트 분석이 <b>계약 업무</b>입니다. 제안서의 타깃 정의가 그대로 12개월 실행 기준이 됩니다</td><td>02뷰 S1~S5</td></tr>
-<tr><td>3-C ③</td><td>"디지털 / 오프라인 매체 <b>관리</b>"</td><td>집행은 AOR을 거치지만 <b>관리 책임은 우리</b>입니다. AOR 협업 프로세스를 안 쓰면 이 항목에 답이 없는 셈입니다</td><td>11뷰 · 12뷰</td></tr>
-<tr><td>3-C ④</td><td>"기타 프로젝트의 마케팅 활동과 관련된 <b>업무 일체</b>"</td><td>범위 무한 확장 조항. 제안서 내용이 계약과 동일 효력을 갖는 조항과 결합하면 상한 없는 의무가 됩니다</td><td>14뷰 G1 · G2</td></tr>
+<tr><td>3-C ③</td><td>"디지털 / 오프라인 매체 <b>관리</b>"</td><td>집행은 AOR을 거치지만 <b>관리 책임은 우리</b>입니다. AOR 협업 프로세스를 안 쓰면 이 항목에 답이 없는 셈입니다</td><td>12뷰 · 13뷰</td></tr>
+<tr><td>3-C ④</td><td>"기타 프로젝트의 마케팅 활동과 관련된 <b>업무 일체</b>"</td><td>범위 무한 확장 조항. 제안서 내용이 계약과 동일 효력을 갖는 조항과 결합하면 상한 없는 의무가 됩니다</td><td>15뷰 G1 · G2</td></tr>
 
 <tr class="grouprow"><td colspan="4">4. 사업 일정 — 제목에 (TBD)가 붙어 있다</td></tr>
-<tr><td><b>4-①</b></td><td>"2026년 10월 말 ~ 11월: AION2 1주년 업데이트 사업활동"</td><td>티징 시작 지점입니다. 계약 후 첫 산출물이 여기 걸립니다</td><td>10뷰 P1<br>15뷰 타임라인</td></tr>
+<tr><td><b>4-①</b></td><td>"2026년 10월 말 ~ 11월: AION2 1주년 업데이트 사업활동"</td><td>티징 시작 지점입니다. 계약 후 첫 산출물이 여기 걸립니다</td><td>10뷰 P1<br>16뷰 타임라인</td></tr>
 <tr><td><b>4-②</b></td><td>"이후 4개월마다 챕터 단위 업데이트 진행"</td><td>연간 계획의 축입니다. 계약 1년 = 1주년 1회 + 챕터 3회</td><td>10뷰 Phase</td></tr>
-<tr><td><b>4-★</b></td><td>제목 자체가 <b>"4. 사업 일정 (TBD)"</b></td><td>NC가 일정을 확정하지 않았다고 스스로 표기했습니다. 로드맵을 <b>날짜 고정형으로 짜면 안 됩니다</b> — "챕터 D-21 / D-day / D+14" 같은 상대 기준으로 짜야 일정이 밀려도 제안이 살아남습니다. 필수 확인사항에도 "상기 예산과 마케팅 일정은 변동될 수 있음"이 다시 나옵니다</td><td>10뷰 Phase<br>12뷰 리스크</td></tr>
+<tr><td><b>4-★</b></td><td>제목 자체가 <b>"4. 사업 일정 (TBD)"</b></td><td>NC가 일정을 확정하지 않았다고 스스로 표기했습니다. 로드맵을 <b>날짜 고정형으로 짜면 안 됩니다</b> — "챕터 D-21 / D-day / D+14" 같은 상대 기준으로 짜야 일정이 밀려도 제안이 살아남습니다. 필수 확인사항에도 "상기 예산과 마케팅 일정은 변동될 수 있음"이 다시 나옵니다</td><td>10뷰 Phase<br>13뷰 리스크</td></tr>
 </tbody></table></div>
 
 <div class="grid cols-3" style="margin-top:16px">
@@ -317,13 +374,13 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="table-wrap"><table class="table table--sm">
 <thead><tr><th style="width:150px">평가 항목</th><th>RFP가 요구한 것</th><th style="width:190px">우리 대응</th></tr></thead>
 <tbody>
-<tr><td><b>투입 인력의 전문성</b></td><td>기획·미디어 전담 인력 셋팅 등 운영 상세 계획. 오프라인/디지털 미디어 전문 인력 보유 <b>필수</b>. 인력 구성 제출 필수. 컨소시엄 가능</td><td>12뷰 참조 — 코어 12명 + 컨소시엄 R&amp;R 표. 이름·경력·투입률까지 기재</td></tr>
+<tr><td><b>투입 인력의 전문성</b></td><td>기획·미디어 전담 인력 셋팅 등 운영 상세 계획. 오프라인/디지털 미디어 전문 인력 보유 <b>필수</b>. 인력 구성 제출 필수. 컨소시엄 가능</td><td>13뷰 참조 — 코어 12명 + 컨소시엄 R&amp;R 표. 이름·경력·투입률까지 기재</td></tr>
 <tr><td><b>전략 기획의 적절성</b></td><td>11월 1주년 업데이트 마케팅 전략, 국내 MMORPG 시장 인사이트 반영, 게임 외 브랜딩 전략, 유효 타겟 설정, 브랜딩+퍼포먼스</td><td>07·09·10뷰 — 문제 정의 한 문장 → 컨셉 → 연간 로드맵</td></tr>
 <tr><td><b>창의적 크리에이티브</b></td><td>1주년 키메시지·영상 1종·배너 2종 / 챕터 전체 키메시지 1종·영상 1종 / 던전별 배너 5종</td><td>08·10뷰 — 실물 시안 11종. 여기가 실질 승부처</td></tr>
 <tr><td><b>유사분야 사업수행실적</b></td><td>회사 소개서 + 게임 론칭 마케팅 캠페인 레퍼런스</td><td>별책. MMORPG·게임 타이틀 실적을 앞에 배치</td></tr>
-<tr><td><b>효과적인 매체 구성·운용</b></td><td>매체 운영 트렌드와 유저 성향 반영한 미디어 구성 및 근거, 예산 구성과 운영 방안(UA 포함), 예산별 KPI, 미디어 믹스</td><td>11뷰 — 매체 6군 배분 + 3층 KPI 모델</td></tr>
+<tr><td><b>효과적인 매체 구성·운용</b></td><td>매체 운영 트렌드와 유저 성향 반영한 미디어 구성 및 근거, 예산 구성과 운영 방안(UA 포함), 예산별 KPI, 미디어 믹스</td><td>12뷰 — 매체 6군 배분 + 3층 KPI 모델</td></tr>
 <tr><td><b>단계별·목적별 콘텐츠 기획</b></td><td>숏폼 포함 영상 콘텐츠, 콜라보, 기존 라이브 방송 포맷을 벗어난 새 포맷, 500명 규모 쇼케이스</td><td>10뷰 — 챕터 사이클별 콘텐츠 그리드 + 쇼케이스 연출안</td></tr>
-<tr><td><b>견적 타당성</b></td><td>66억 이내 전체 견적, 활동별 대행 fee·수수료 명시, DA 소재 제작·베리에이션 단가, 마크업/비마크업/렙사 수수료 구분, 150억 가정 마일리지</td><td>11뷰 — 별도 XLS. 수수료 3종 분리 기재</td></tr>
+<tr><td><b>견적 타당성</b></td><td>66억 이내 전체 견적, 활동별 대행 fee·수수료 명시, DA 소재 제작·베리에이션 단가, 마크업/비마크업/렙사 수수료 구분, 150억 가정 마일리지</td><td>12뷰 — 별도 XLS. 수수료 3종 분리 기재</td></tr>
 </tbody></table></div>
 
 <div class="section-title"><h3>숨은 니즈 — RFP가 말하지 않은 채점 기준</h3><p>문장 뒤에 있는 의도를 읽습니다</p></div>
@@ -768,7 +825,115 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="principle"><div class="n">04</div><h4>진영을 모든 접점의 분류 기준으로 쓴다</h4><p>배너·굿즈·이벤트·커뮤니티를 천족과 마족으로 나눕니다.</p></div>
 </div>
 </section>
-<!-- ══════════ 11 미디어·KPI ══════════ -->
+<!-- ══════════ 11 경쟁 제안 예측·+α ══════════ -->
+<section class="view" id="plusalpha">
+<div class="page-head"><div class="page-title"><div class="eyebrow">COMPETITIVE PROPOSAL &amp; PLUS ALPHA</div><h2>우리 제안의 핵심, 그리고 남들이 못 쓸 여섯 장</h2><p>상대평가입니다. 잘 쓴 제안이 아니라 <b>다른 제안</b>이 이깁니다.</p></div><div class="head-meta"><span class="tag red">상대기준 평가</span><span class="tag lime">+α 6건</span></div></div>
+
+<div class="decision">
+<div><div class="eyebrow">OUR CORE PROPOSITION</div><h3>브랜딩을 매체비로 사지 않겠습니다</h3>
+<p>AION2는 인지도가 부족한 게임이 아닙니다. 출시 46일에 1,000억을 벌었고 DAU 150만을 찍었습니다. 2년차에 무너질 수 있는 것은 노출량이 아니라 <b>여론</b>입니다. 그래서 우리는 도달을 사는 대신 <b>매체비가 들지 않는 신뢰 자산</b>을 만들고, 화력은 복귀·신규에만 씁니다. 이것이 RFP의 "게임 외 브랜딩"과 NC가 컨콜에서 말한 "매스 마케팅 지양·바이럴 중심"을 동시에 받는 유일한 형태입니다.</p></div>
+<div class="decision-side"><div class="eyebrow">한 문장</div><div class="score" style="font-size:20px;line-height:1.5;color:var(--lime)">광고가 아니라<br>기록으로 증명한다</div><div class="why">「두 번째 비행」이 대외 축, 「1년의 기록」이 상시 축, 「하늘은 계속 열린다」가 챕터 축</div></div>
+</div>
+
+<div class="section-title"><h3>경쟁사는 무엇을 낼 것인가 — RFP 요구 수준의 표준 답안</h3><p>요구사항을 성실히 읽으면 자연스럽게 도달하는 답들입니다. 이걸 우리도 채우되, 여기서 이기려 하면 안 됩니다</p></div>
+<div class="table-wrap"><table class="table table--md">
+<thead><tr><th style="width:180px">RFP 항목 · 변별력</th><th style="width:38%">경쟁사 표준 제안 (예상)</th><th>왜 그렇게 갈 수밖에 없나</th></tr></thead>
+<tbody>
+<tr><td><b>1주년 캠페인</b><br><span class="tag" style="margin-top:7px;display:inline-block">낮음 · 3사 중복</span></td><td>"1주년 감사제" 컨셉 · 대형 보상 지급 고지 · 감사 영상 · 유저 감사 이벤트</td><td>주년 마케팅의 관성입니다. 안전하고, 광고주가 거절할 이유가 없어서 거의 모든 제안서에 들어갑니다</td></tr>
+<tr><td><b>크리에이티브</b><br><span class="tag" style="margin-top:7px;display:inline-block">낮음</span></td><td>실사 시네마틱 + 유명 배우·성우 기용 · 날개 펼치는 웅장한 키비주얼 · 던전별 배너 5종을 각각 독립 소재로</td><td>"1주년 = 스케일"이라는 등식, 그리고 크리에이티브 항목 배점이 커 보이니 화려한 쪽으로 갑니다</td></tr>
+<tr><td><b>미디어</b><br><span class="tag" style="margin-top:7px;display:inline-block">없음 · 사실상 동일</span></td><td>유튜브·메타·카카오 중심 표준 믹스 · 지하철·옥외 · 인플루언서 시딩 · CPI/CPM 기반 KPI</td><td>디지털 집행이 AOR 고정이라 매체 차별화 여지가 거의 없습니다. 배분 비율만 조금씩 다릅니다</td></tr>
+<tr><td><b>쇼케이스</b><br><span class="tag" style="margin-top:7px;display:inline-block">낮음</span></td><td>500명 오프라인 발표회 · 개발자 토크 · 신규 콘텐츠 시연 · 굿즈 랜덤 증정</td><td>"쇼케이스"라는 단어가 이미 포맷을 지시합니다. RFP가 "익숙한 포맷을 벗어나라"고 쓴 이유입니다</td></tr>
+<tr><td><b>콜라보</b><br><span class="tag" style="margin-top:7px;display:inline-block">낮음 · 중복</span></td><td>편의점·치킨·의류 브랜드 콜라보 · 굿즈 · 팝업스토어</td><td>30~40대 남성 접점의 정석입니다. 제안서에 이름만 다른 같은 안이 3개 들어옵니다</td></tr>
+<tr><td><b>글로벌</b><br><span class="tag amber" style="margin-top:7px;display:inline-block">오독 가능성</span></td><td>"글로벌 캠페인 아이디어" 슬라이드 2~3장 · 해외 인플루언서 · 현지화 방향</td><td>RFP 문구를 실행 요구로 오독합니다. 업무 범위가 한국만인데 글로벌 실행안을 씁니다</td></tr>
+<tr><td><b>조직·견적</b><br><span class="tag" style="margin-top:7px;display:inline-block">없음</span></td><td>인력 구성표 · 표준 수수료율 · 마일리지 표</td><td>양식이 정해져 있어 형식은 같습니다. 차이는 숫자의 근거뿐입니다</td></tr>
+</tbody></table></div>
+<div class="card" style="margin-top:14px;border-left:4px solid var(--orange)">
+<h3>여기서 나오는 판단</h3>
+<p>RFP 요구를 성실히 채운 제안서 3~5부가 심사장에 나란히 놓입니다. <b>내용의 70%는 서로 겹칩니다.</b> 상대평가에서 그 70%는 점수를 만들지 않습니다. 승부는 남은 30%, 그중에서도 <b>"이 회사만 쓸 수 있는 문장"</b>이 몇 개인가로 갈립니다. 아래 여섯 개가 그 문장입니다.</p>
+</div>
+
+<div class="section-title"><h3>+α 여섯 장 — 요구받지 않았지만 먼저 낸다</h3><p>각각 왜 남들이 못 쓰는지, 얼마나 드는지, 어느 평가 항목에 꽂히는지를 함께 답니다</p></div>
+
+<div class="grid cols-2">
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 1 · 전략 기획</div>
+<h3>IR 발언을 인용한 예산 논리</h3>
+<p>NC가 컨콜에서 <b>"브랜드 마케팅보다 타겟팅된 UA와 바이럴, 매스 마케팅은 지양"</b>, <b>"마케팅비를 매출 대비 5~6%"</b>라고 말한 것을 제안서에 인용하고, 우리 전략이 그 기조에서 나왔음을 보입니다. 론칭 약 200억 대비 2년차 66억이 <b>1/3</b>이라는 계산도 함께 냅니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>광고 대행사는 보통 광고주 IR을 안 읽습니다. RFP만 읽습니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>0원 · 조사 반나절</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>전략 기획의 적절성 · 견적 타당성</dd></div>
+</dl></div>
+
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 2 · 단계별 콘텐츠</div>
+<h3>지스타 2026을 계산에 넣은 쇼케이스 날짜</h3>
+<p>1주년(11/19)이 지스타 개막일과 겹칩니다. 날짜를 <b>11월 5~12일로 특정</b>하고 이유를 답니다. 동시에 NC가 지스타에 참가할 경우 현장으로 합류하는 <b>분기 계획</b>을 같이 냅니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>대부분 "11월 중"이라고 씁니다. 달력을 안 봅니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>0원 · 다만 행사장 가예약은 8월 중 착수</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>단계별 콘텐츠 기획 · 투입 인력의 전문성</dd></div>
+</dl></div>
+
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 3 · 크리에이티브</div>
+<h3>배너 5종을 한 장으로 잇는 진영 구도</h3>
+<p>던전별 배너 5종을 각각 만들지 않고 <b>천족(좌) – 성역(중) – 마족(우)</b> 구도로 설계합니다. 개별 배너로도 쓰이고, 가로로 붙이면 하나의 와이드 키비주얼이 됩니다. 매체별 사이즈 베리에이션에서도 구도가 유지되도록 세이프 영역을 고정합니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>5종을 5개의 과제로 받습니다. 시리즈로 볼 이유가 없습니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>추가 0원 · 설계 방식의 차이</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>창의적 크리에이티브 — <b>배점 최대 추정</b></dd></div>
+</dl></div>
+
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 4 · 매체 운용</div>
+<h3>커뮤니티 감성 비율을 계약 KPI로</h3>
+<p>인벤·루리웹·아이온2 갤러리 언급의 긍정 대 부정 비율을 <b>주간 추적</b>해 계약 지표로 겁니다. 소재 효율도 CTR 단독이 아니라 <b>CTR × 설치 후 D1 잔존</b>으로 보고, 잔존이 낮은 미끼형 소재는 즉시 내립니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>불리한 지표를 스스로 계약에 넣는 대행사는 드뭅니다. 그래서 신뢰가 됩니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>애널리스트 1명 상시 · 이미 조직도에 포함</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>매체 구성·운용 · 게임 외 브랜딩</dd></div>
+</dl></div>
+
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 5 · 리스크 관리</div>
+<h3>논란 발생 시 광고 즉시 정지 프로토콜</h3>
+<p>커뮤니티 이슈를 L1~L3로 등급화하고, <b>L3는 진행 중인 광고를 4시간 내 일시 정지</b>한 뒤 NC와 직통 협의합니다. 정지 권한과 절차를 계약서에 명시합니다. AION2는 과금 논란을 두 번 겪었고, 그때 광고가 계속 돌면 불에 기름을 붓습니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>대행사에게 광고 정지는 매출 손실입니다. 먼저 제안하지 않습니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>정지 기간 손실 감수 · 그만큼 신뢰를 삽니다</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>운영 상세 계획 · 투입 인력의 전문성</dd></div>
+</dl></div>
+
+<div class="card" style="border-left:4px solid var(--lime)"><div class="label">+α 6 · 글로벌·견적</div>
+<h3>글로벌 확장성을 아이디어가 아니라 단가표로</h3>
+<p>업무 범위는 한국만입니다. 그래서 글로벌 캠페인안을 쓰지 않고, 모든 소재를 <b>무자막 마스터 + 텍스트 레이어 분리 + 10개 언어 안전 영역</b>으로 만들고 <b>글로벌 전용 시 절감되는 재제작비를 견적서에 숫자로</b> 넣습니다.</p>
+<dl>
+<div class="kv"><dt>남들이 못 쓰는 이유</dt><dd>글로벌 요구를 실행 요구로 오독해 슬라이드를 늘립니다. 범위를 못 읽은 것으로 보입니다</dd></div>
+<div class="kv"><dt>비용</dt><dd>0원 · 제작 규격의 차이. 우리가 매체·언어 베리를 대량으로 돌려본 조직이라 가능</dd></div>
+<div class="kv"><dt>꽂히는 항목</dt><dd>견적 타당성 · 전략 기획</dd></div>
+</dl></div>
+</div>
+
+<div class="section-title"><h3>+α를 어디에 놓을 것인가</h3><p>따로 모아 두면 부록으로 읽힙니다. 해당 항목 안에서 터뜨립니다</p></div>
+<div class="table-wrap"><table class="table table--md">
+<thead><tr><th style="width:80px">+α</th><th style="width:180px">제안서 배치</th><th>표현 방식</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>01장 진단 · 11장 견적</td><td>인용 박스로. "㈜엔씨 2026년 컨퍼런스콜" 출처를 달아 사실로 제시합니다</td></tr>
+<tr><td><b>2</b></td><td>06장 쇼케이스 첫 장</td><td>달력 이미지 한 장. 11/19에 지스타와 1주년을 겹쳐 보여주고 그 아래 권고 날짜</td></tr>
+<tr><td><b>3</b></td><td>05장 크리에이티브</td><td>배너 5종을 개별로 한 번, 이어붙인 와이드로 한 번. <b>PT에서 넘기며 보여주는 순간을 만듭니다</b></td></tr>
+<tr><td><b>4</b></td><td>08장 미디어·KPI</td><td>KPI 표의 L3 층에. 계약 지표로 걸겠다는 문장을 명시</td></tr>
+<tr><td><b>5</b></td><td>10장 리스크</td><td>4단계 플로우 + 계약서 명시 문구 초안까지</td></tr>
+<tr><td><b>6</b></td><td>05장 말미 · 11장 단가표</td><td>언어 베리 단가를 표로. 절감액을 원 단위로</td></tr>
+</tbody></table></div>
+
+<div class="card" style="margin-top:16px;border-left:4px solid var(--orange)">
+<h3>하지 않을 +α</h3>
+<p>돈이 들거나 약속이 위험한 것은 넣지 않습니다. 제안서 내용이 계약과 동일한 효력을 갖기 때문입니다(14뷰 G1).</p>
+<div class="grid cols-3" style="margin-top:12px">
+<div class="card"><strong>무상 제작 물량 약속</strong><p>"월 N종 무상"은 12개월 무상 의무가 됩니다. 단가표로 대신합니다.</p></div>
+<div class="card"><strong>성과 미달 시 환불·보전</strong><p>KPI를 계약에 걸되 페널티는 협상 단계에서 다룹니다. 제안서에 쓰면 상한 없는 부채입니다.</p></div>
+<div class="card"><strong>대형 IP 콜라보 사전 확약</strong><p>확정되지 않은 파트너 이름을 쓰면 허위사실 조항에 걸립니다.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ══════════ 12 미디어·KPI ══════════ -->
 <section class="view" id="media">
 <div class="page-head"><div class="page-title"><div class="eyebrow">MEDIA MIX &amp; KPI</div><h2>66억 배분과 성과 측정 모델</h2><p>디지털 집행은 NC의 AOR 대행사를 거칩니다. 우리가 파는 것은 기획과 협업 구조입니다.</p></div><div class="head-meta"><span class="tag blue">IR 근거 반영</span><span class="tag amber">가설 · AOR 확인 후 확정</span></div></div>
 
@@ -851,7 +1016,7 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="card" style="margin-top:14px;border-left:4px solid var(--blue)"><h3>L3를 앞에 두는 이유</h3><p>AION2는 도달이 부족한 게임이 아닙니다. 출시 46일 만에 1,000억을 벌었고 DAU 150만을 찍었습니다. 2년차에 무너질 수 있는 건 노출량이 아니라 <b>여론</b>입니다. 커뮤니티 감성 비율을 계약 KPI에 넣는 대행사는 드뭅니다. 이 항목을 먼저 제시하는 것 자체가 차별화입니다.</p></div>
 </section>
 
-<!-- ══════════ 12 실행 체계 ══════════ -->
+<!-- ══════════ 13 실행 체계 ══════════ -->
 <section class="view" id="ops">
 <div class="page-head"><div class="page-title"><div class="eyebrow">ORGANIZATION &amp; RISK</div><h2>전담 조직과 이슈 관리</h2><p>RFP는 인력 구성 제출을 필수로 하고, 제안서에 쓴 인력은 교체할 수 없습니다.</p></div><div class="head-meta"><span class="tag red">인력 확정 필요</span></div></div>
 
@@ -897,7 +1062,7 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="risk"><strong>성공 기준</strong><span><b class="risk-level medium">지표</b></span><span>측정</span><span>1주년 캠페인 종료 시점 커뮤니티 감성 비율이 캠페인 시작 대비 개선 · 복귀 유저 수 목표 달성 · L3 이슈 대응 4시간 내 100%</span></div>
 </section>
 
-<!-- ══════════ 13 제안서 목차 ══════════ -->
+<!-- ══════════ 14 제안서 목차 ══════════ -->
 <section class="view" id="toc">
 <div class="page-head"><div class="page-title"><div class="eyebrow">PROPOSAL TOC &amp; PT</div><h2>제안서 목차와 발표 전략</h2><p>심사위원이 읽는 순서대로 씁니다. 평가 항목과 목차를 1:1로 붙입니다.</p></div><div class="head-meta"><span class="tag blue">약 55p</span></div></div>
 
@@ -947,13 +1112,13 @@ p,dd,li,td,th{word-break:keep-all}
 </div>
 </section>
 
-<!-- ══════════ 14 사각지대 점검 ══════════ -->
+<!-- ══════════ 15 사각지대 점검 ══════════ -->
 <section class="view" id="gaps">
 <div class="page-head"><div class="page-title"><div class="eyebrow">BLIND SPOT AUDIT</div><h2>다섯 각도 재점검 — 놓쳤던 11건</h2><p>전략이 아니라 <b>참여 가부</b>를 좌우하는 항목들입니다. RFP 본문을 법무·재무·일정·경쟁·자사역량 각도로 다시 읽었습니다.</p></div><div class="head-meta"><span class="tag red">참여 조건 4</span><span class="tag amber">실행 조건 7</span></div></div>
 
 <div class="card" style="border-left:4px solid var(--orange);margin-bottom:20px">
 <h3>결론 먼저</h3>
-<p>앞의 00~13뷰는 <b>"어떻게 이길 것인가"</b>를 다룹니다. 이 뷰는 <b>"들어가도 되는가"</b>를 다룹니다. 아래 <span style="color:var(--orange);font-weight:700">G1·G2·G5·G11</span> 네 건은 하나라도 막히면 전략이 아무리 좋아도 참여가 성립하지 않습니다. 8/21 컨소시엄 결정과 <b>같은 날</b> 판정해야 합니다.</p>
+<p>앞의 00~14뷰는 <b>"어떻게 이길 것인가"</b>를 다룹니다. 이 뷰는 <b>"들어가도 되는가"</b>를 다룹니다. 아래 <span style="color:var(--orange);font-weight:700">G1·G2·G5·G11</span> 네 건은 하나라도 막히면 전략이 아무리 좋아도 참여가 성립하지 않습니다. 8/21 컨소시엄 결정과 <b>같은 날</b> 판정해야 합니다.</p>
 </div>
 
 <div class="section-title"><h3>각도 1 · 법무·계약</h3><p>RFP 「3. 제안 참여 시 유의 사항」을 조항 단위로 읽었습니다</p></div>
@@ -984,7 +1149,7 @@ p,dd,li,td,th{word-break:keep-all}
 
 <div class="section-title"><h3>각도 4 · 경쟁·평가 구조</h3></div>
 
-<div class="risk"><strong>G11 · 상대평가 · 기존 론칭 대행사가 방어자다</strong><span><b class="risk-level high">참여 조건</b></span><span>경쟁</span><span>RFP 평가 구분은 <b>"상대기준 평가"</b>입니다. 절대 점수가 아니라 참여사 사이의 순위입니다. AION2 론칭 캠페인(2025)을 집행한 대행사가 재참여하면 1년치 데이터·NC 내부 프로세스·AOR 관계를 이미 갖고 들어옵니다. 신규 진입자는 그 격차를 크리에이티브 하나로 뒤집어야 합니다. <b>대응:</b> 론칭 캠페인 집행사를 8/20까지 파악합니다(TVCF 크레딧, 광고대상 수상 이력, 업계 확인). 방어자가 있다면 우리 승산은 <b>"기존 대행사가 절대 못 쓸 각"</b>에 걸립니다 — 07뷰 I1의 냉소 진단과 12뷰의 광고 즉시 정지 프로토콜이 그 각입니다. 현 대행사는 자기가 만든 1년을 부정하는 제안을 못 냅니다.</span></div>
+<div class="risk"><strong>G11 · 상대평가 · 기존 론칭 대행사가 방어자다</strong><span><b class="risk-level high">참여 조건</b></span><span>경쟁</span><span>RFP 평가 구분은 <b>"상대기준 평가"</b>입니다. 절대 점수가 아니라 참여사 사이의 순위입니다. AION2 론칭 캠페인(2025)을 집행한 대행사가 재참여하면 1년치 데이터·NC 내부 프로세스·AOR 관계를 이미 갖고 들어옵니다. 신규 진입자는 그 격차를 크리에이티브 하나로 뒤집어야 합니다. <b>대응:</b> 론칭 캠페인 집행사를 8/20까지 파악합니다(TVCF 크레딧, 광고대상 수상 이력, 업계 확인). 방어자가 있다면 우리 승산은 <b>"기존 대행사가 절대 못 쓸 각"</b>에 걸립니다 — 07뷰 I1의 냉소 진단과 13뷰의 광고 즉시 정지 프로토콜이 그 각입니다. 현 대행사는 자기가 만든 1년을 부정하는 제안을 못 냅니다.</span></div>
 
 <div class="card" style="margin-top:14px">
 <h3>동점 시 규칙에서 역산한 배점 추정</h3>
@@ -992,7 +1157,7 @@ p,dd,li,td,th{word-break:keep-all}
 <dl>
 <div class="kv"><dt>근거 1</dt><dd>평가 항목 7개 중 기술평가가 6개, 견적 타당성이 1개입니다. 기술 비중이 압도적입니다</dd></div>
 <div class="kv"><dt>근거 2</dt><dd>제안 요청 사항 중 <b>크리에이티브만 산출물 수량이 개별 지정</b>돼 있습니다(키메시지 2·영상 2·배너 7). 다른 항목은 "제안"으로 끝납니다. 채점표를 만들 수 있게 써 둔 유일한 항목입니다</dd></div>
-<div class="kv"><dt>결론</dt><dd>제안서 55p 중 크리에이티브에 12p를 배정한 13뷰 구성을 유지합니다. 동점 상황을 대비해 <b>여기에 자원을 몰아넣는 것이 기대값이 가장 높습니다</b></dd></div>
+<div class="kv"><dt>결론</dt><dd>제안서 55p 중 크리에이티브에 12p를 배정한 14뷰 구성을 유지합니다. 동점 상황을 대비해 <b>여기에 자원을 몰아넣는 것이 기대값이 가장 높습니다</b></dd></div>
 </dl>
 </div>
 
@@ -1027,7 +1192,7 @@ p,dd,li,td,th{word-break:keep-all}
 </tbody></table></div>
 </section>
 
-<!-- ══════════ 15 산출물 물량·타임라인 ══════════ -->
+<!-- ══════════ 16 산출물 물량·타임라인 ══════════ -->
 <section class="view" id="production">
 <div class="page-head"><div class="page-title"><div class="eyebrow">DELIVERABLES &amp; TIMELINE</div><h2>총 나가야 할 물량과 역산 일정</h2><p>RFP가 요구한 항목을 하나도 빼지 않고 세고, 우리 공수 기준으로 사람과 날짜를 계산했습니다.</p></div><div class="head-meta"><span class="tag red">가용 영업일 7</span><span class="tag amber">필요 인력 6.1명</span></div></div>
 
@@ -1087,11 +1252,11 @@ p,dd,li,td,th{word-break:keep-all}
 <tr><td>수수료율 구분표</td><td class="num">1</td><td>마크업 / 비마크업 / 렙사 <b>3종 분리</b></td></tr>
 <tr class="grouprow"><td colspan="3">기타 — 별책</td></tr>
 <tr><td>회사 소개서</td><td class="num">1</td><td>—</td></tr>
-<tr><td>게임 론칭 마케팅 캠페인 레퍼런스</td><td class="num">1</td><td>14뷰 자사 역량 항목 참조</td></tr>
+<tr><td>게임 론칭 마케팅 캠페인 레퍼런스</td><td class="num">1</td><td>15뷰 자사 역량 항목 참조</td></tr>
 <tr class="grouprow"><td colspan="3">업무 범위 파생 — 사업 내용 3-C. 제안요청사항 표에는 없고 개요에만 있어 놓치기 쉽다</td></tr>
 <tr><td>슬로건</td><td class="num">1</td><td>3-C ① "슬로건 수립" 명시. 키메시지와 별개 — 챕터가 바뀌어도 안 바뀌는 1년 고정 문구</td></tr>
 <tr><td>매체 운영·관리 체계</td><td class="num">1</td><td>3-C ③ "디지털 / 오프라인 매체 <b>관리</b>". 집행은 AOR이지만 관리 책임은 우리 — AOR 협업 프로세스 문서</td></tr>
-<tr><td>업무 범위 상한 정의</td><td class="num">1</td><td>3-C ④ "업무 일체" 무한 확장 조항 대응. 기준 수량표 + 초과분 별도 단가. 14뷰 G1·G2</td></tr>
+<tr><td>업무 범위 상한 정의</td><td class="num">1</td><td>3-C ④ "업무 일체" 무한 확장 조항 대응. 기준 수량표 + 초과분 별도 단가. 15뷰 G1·G2</td></tr>
 <tr class="sumrow"><td>총계</td><td class="num">40</td><td>크리에이티브 11 + 제안요청사항 문서·기획 26 + 업무 범위 파생 3</td></tr>
 </tbody></table></div>
 <p class="footer-note">제출 파일은 4종입니다 — 기업 소개 자료(PPT/PDF) · 사업 제안서(PPT/PDF) · 견적서(XLS/PDF) · 컨소시엄 업체 자료. 서면 제출은 없고 메일 단독 수신입니다.</p>
@@ -1105,7 +1270,7 @@ p,dd,li,td,th{word-break:keep-all}
 <tr><td>슬로건 · 키메시지 카피</td><td>3종</td><td>1종 0.5일</td><td>1.5</td><td>슬로건 1(업무 범위 3-C ①) + 키메시지 2(제안요청사항). 기존 표에서 전략 문서에 묻혀 있던 것을 분리</td></tr>
 <tr><td>영상 스토리보드</td><td>2편</td><td><s style="color:var(--muted)">1편 2일</s> → 2편 3일</td><td>3.0</td><td><b>AI 이미지 생성으로 컷 비주얼 일괄 생성.</b> 팀 표준 4일 → 3일. 프롬프트 반복 · 컷 간 톤 정합 · 업스케일 · 리터치가 붙어 <b>3일 아래로는 안 내려간다</b></td></tr>
 <tr><td>영상 애니매틱</td><td>2편</td><td>1편 2일</td><td>4.0</td><td>인게임 소스 편집 기준. 여기는 AI로 줄지 않는다 — 실제 게임 화면을 써야 하므로</td></tr>
-<tr><td>전략·기획 문서</td><td>27항목</td><td>—</td><td>8.0</td><td>00~14뷰 내용을 제안서 문법으로 전환</td></tr>
+<tr><td>전략·기획 문서</td><td>27항목</td><td>—</td><td>8.0</td><td>00~15뷰 내용을 제안서 문법으로 전환</td></tr>
 <tr><td>제안서 조판</td><td>약 55p</td><td>—</td><td>10.0</td><td>mx-deck-design 규격</td></tr>
 <tr><td>견적서·단가표</td><td>3표</td><td>—</td><td>3.0</td><td>수수료 3종 분리 · 150억 시나리오</td></tr>
 <tr style="background:var(--panel2)"><td colspan="3"><b>합계</b></td><td><b>43.0</b></td><td>7영업일로 나누면 <b>평균 6.1명</b>. 실제로는 아래처럼 앞뒤가 다르다</td></tr>
@@ -1118,7 +1283,7 @@ p,dd,li,td,th{word-break:keep-all}
 <p style="margin-top:8px">선택지는 둘입니다.</p>
 <dl>
 <div class="kv"><dt>① 컨소시엄 분담</dt><dd>전략·미디어·견적(21 man-day)을 파트너가 맡고, 우리는 크리에이티브 22.0 man-day에 집중. 그러면 <b>우리 쪽 필요 인력 3.1명</b>으로 내려갑니다</dd></div>
-<div class="kv"><dt>② 참여 포기</dt><dd>파트너가 8/21까지 안 잡히면 이 수치가 그대로 남습니다. 14뷰 판정표의 네 번째 칸이 ✗가 됩니다</dd></div>
+<div class="kv"><dt>② 참여 포기</dt><dd>파트너가 8/21까지 안 잡히면 이 수치가 그대로 남습니다. 15뷰 판정표의 네 번째 칸이 ✗가 됩니다</dd></div>
 </dl>
 </div>
 <div class="card" style="border-left:4px solid var(--blue)">
@@ -1127,7 +1292,7 @@ p,dd,li,td,th{word-break:keep-all}
 <dl>
 <div class="kv"><dt>제출 수준</dt><dd>스토리보드 전 컷 + <b>애니매틱</b>(인게임 소스를 컷 순서대로 편집하고 자막·사운드를 얹은 러프 영상)</dd></div>
 <div class="kv"><dt>이유</dt><dd>PT 현장에서 재생됩니다. 정지 컷 나열보다 30초 애니매틱 한 편이 크리에이티브 항목 점수를 만듭니다</dd></div>
-<div class="kv"><dt>덤</dt><dd>08뷰 연출 원칙 02가 "인게임 렌더를 기본 소스로 쓴다"입니다. 제출용 애니매틱이 그대로 <b>본 제작의 1차 편집본</b>이 됩니다. 14뷰 G8(계약 후 4~6주)의 대응 근거이기도 합니다</dd></div>
+<div class="kv"><dt>덤</dt><dd>08뷰 연출 원칙 02가 "인게임 렌더를 기본 소스로 쓴다"입니다. 제출용 애니매틱이 그대로 <b>본 제작의 1차 편집본</b>이 됩니다. 15뷰 G8(계약 후 4~6주)의 대응 근거이기도 합니다</dd></div>
 </dl>
 </div>
 </div>
@@ -1207,7 +1372,7 @@ p,dd,li,td,th{word-break:keep-all}
 <div class="risk"><strong>8/26 수 · 배너 7종 · 키메시지 2종 락</strong><span><b class="risk-level high">고정</b></span><span>D-5</span><span>스토리보드·애니매틱은 8/28까지 이어집니다. 이후 이틀은 조판·애니매틱·견적에 씁니다. OT 회신이 늦어 던전명이 미확정이면 <b>기다리지 않고</b> 가정을 명시한 채 확정합니다 — 08뷰에 이미 그 가정을 적어뒀습니다</span></div>
 </section>
 
-<!-- ══════════ 16 출처 ══════════ -->
+<!-- ══════════ 17 출처 ══════════ -->
 <section class="view" id="sources">
 <div class="page-head"><div class="page-title"><div class="eyebrow">SOURCE TRACE</div><h2>출처와 신뢰도 등급</h2><p>T1·T2가 19건, T3가 5건입니다. T4(출처 불명·콘텐츠팜)는 본문에 쓰지 않았습니다.</p></div><div class="head-meta"><span class="tag blue">T1 7</span><span class="tag lime">T2 12</span><span class="tag pink">T3 5</span></div></div>
 
@@ -1219,7 +1384,7 @@ p,dd,li,td,th{word-break:keep-all}
 </div>
 
 <div class="section-title"><h3>T1 · 1차 자료</h3></div>
-<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>㈜엔씨</div><div><h4>AION2 2027 연간 광고대행사 선정 제안요청서 (2026-08-10, 대외비)</h4><p>사업 배경·목표·예산 66억·업무 범위·일정·평가 항목·제출 조건 전부. 이 문서의 01·11·12·13뷰 근거</p></div><span class="used">01·11·12·13</span></div>
+<div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>㈜엔씨</div><div><h4>AION2 2027 연간 광고대행사 선정 제안요청서 (2026-08-10, 대외비)</h4><p>사업 배경·목표·예산 66억·업무 범위·일정·평가 항목·제출 조건 전부. 이 문서의 01·11·12·14뷰 근거</p></div><span class="used">01·11·12·13</span></div>
 <div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>아이온2 2026년 시즌2 업데이트 로드맵 공개 (2026-01-07)</h4><p><a href="https://about.ncsoft.com/news/article/aion2_update_260107" target="_blank">about.ncsoft.com ↗</a> 시즌2 던전 일정, 아웃랜드·전장 점령전 신설</p></div><span class="used">02</span></div>
 <div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>Chapter 1. 모래와 서리의 땅 업데이트 (2026-07-01)</h4><p><a href="https://about.ncsoft.com/news/article/Aion2_update_20260701" target="_blank">about.ncsoft.com ↗</a> 만렙 50, 권성 클래스, 엘테넨·모르헤임 영지</p></div><span class="used">02·08</span></div>
 <div class="source-card"><div class="domain"><span class="source-type t1">T1</span><br>NCSOFT</div><div><h4>아이온2 2026년 하반기 글로벌 출시 · PC 플랫폼 (2026-04-22)</h4><p><a href="https://about.ncsoft.com/news/article/aion2_update_260422" target="_blank">about.ncsoft.com ↗</a> Steam·PURPLE, 10개 언어, 지역별 서버</p></div><span class="used">02·07</span></div>
