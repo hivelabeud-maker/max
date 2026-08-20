@@ -54,3 +54,13 @@
 - 아티팩트 발행: https://claude.ai/code/artifact/ee2984cf-6219-4973-858e-9016bbaef387
   - 아티팩트용 변환본 `docs/aion2-2027-bid-strategy.artifact.html` 별도 생성 (CSP상 jsdelivr 차단 → Google Fonts Noto Sans KR 대체, doctype/head/body 제거, 단일 라이트 테마 명시)
   - **대외비 문서라 NC 담당자 실명 3인은 아티팩트 버전에서 제거**. 저장소 원본에는 유지
+
+### 2026-08-19 (3차 · 레이아웃 결함 수정)
+- 사용자가 15뷰 레이아웃 깨짐 지적. Chromium(playwright-core) 렌더 검증으로 원인 확인.
+- **근본 원인: 표 클래스 불일치.** 템플릿 CSS는 `.table`을 스타일링하는데 내가 작성한 표 17개는 전부 `class="t"`였다. 결과적으로 border-collapse·padding·헤더 스타일·min-width가 하나도 적용되지 않은 무스타일 표 상태. 15뷰뿐 아니라 **전 뷰의 표가 동일 결함**이었다.
+  - 조치: 17개 표 전부 `class="table"`로 교체 + 열 수별 최소너비 모디파이어(`table--sm` 560 / `table--md` 720 / `table--lg` 880) 자동 부여. `.table-wrap{overflow:auto}` 안에서만 가로로 흐르고 페이지는 흐르지 않는다.
+- **6열 타임라인 표 → 블록 컴포넌트(.tl)로 전면 교체.** 860px 이하에서 셀이 28px까지 눌려 한 글자씩 줄바꿈되던 구간. 좌측 날짜 레일 + 우측 3트랙(전략·기획 / 크리에이티브 / 미디어·견적) + 게이트 칩 구조. 640px 이하에서 세로 스택.
+- **38항목 표에서 rowspan 제거.** 구분 열을 rowspan으로 묶던 것을 전폭 그룹 헤더행(`tr.grouprow`)으로 바꿔 비고 열에 폭을 돌려줌. 수량 열은 `td.num` 우측 정렬 + tabular-nums.
+- 반응형 보정 추가: `.risk` 4열 그리드가 900/640px에서 단계적으로 접힘, `.section-title`·`.page-head`가 980px 이하에서 세로 배치, `.principles`·`.roadmap`·`.bta`·`.ws-grid` 640px 이하 1열.
+- 검증: 17뷰 × 6폭(1440/1100/900/740/620/430) 자동 점검 — 페이지 가로 오버플로 0건, 눌린 셀 0건(TOC 장번호 50px은 의도된 고정폭). 아티팩트 래핑 시뮬레이션 렌더에서 JS 에러 0건, body 배경 #f2f1ee 정상 적용, 탭 전환 정상.
+- 아티팩트 재배포(동일 URL 유지): https://claude.ai/code/artifact/ee2984cf-6219-4973-858e-9016bbaef387
