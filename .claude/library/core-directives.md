@@ -17,6 +17,7 @@
 - 감정적 공명과 시각적 임팩트 강조
 
 **사용 에이전트**: brainstormer, moodboard-builder, visual-generator, storyboard-maker
+**사용 스킬**: design-reference-moodboard (사이트·UI 레퍼런스 — 관점 확정 후 시안 착수 전)
 
 ---
 

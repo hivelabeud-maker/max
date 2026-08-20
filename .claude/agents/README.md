@@ -44,6 +44,7 @@ RFP 수주부터 포지셔닝까지, 데이터와 논리 기반의 의사결정�
 - **역할**: 컨셉별 무드보드를 레퍼런스 + 생성 이미지로 조합
 - **출력**: 비주얼 무드 + 톤 정의 + 색감·타이포그래피 가이드
 - **트리거**: "무드보드", "분위기 잡아줘", "톤 보드 만들어"
+- **경계**: 생성 이미지를 섞은 컨셉 톤 보드 담당. 실제 운영 사이트를 수집하는 디자인 레퍼런스 무드보드는 `design-reference-moodboard` 스킬
 
 ### `visual-generator` (비주얼 제너레이터)
 - **역할**: 키비주얼, 목업, 스타일프레임 이미지 생성 (Higgsfield 사용)
@@ -67,9 +68,10 @@ RFP 수주부터 포지셔닝까지, 데이터와 논리 기반의 의사결정�
 - **트리거**: "트렌드", "요즘 뭐가 유행", "레퍼런스 트렌드"
 
 ### `reference-curator` (레퍼런스 큐레이터)
-- **역할**: 클라이언트·카테고리별 레퍼런스 모아 큐레이션
+- **역할**: 클라이언트·카테고리별 레퍼런스 모아 큐레이션 — 영상·모션·패키지·인쇄·브랜딩 톤 담당
 - **출력**: 시안별 참고 사례 5-10개 + 출처 URL + 선정 이유
 - **트리거**: "레퍼런스 찾아줘", "참고 사례", "벤치마크 모아줘"
+- **경계**: 사이트·UI·웹 화면 레퍼런스는 `design-reference-moodboard` 스킬이 맡는다
 
 ### `design-system-guardian` (시스템 가디언)
 - **역할**: 시안이 사내 디자인 시스템(컬러·타입·컴포넌트·그리드) 준수하는지 점검
@@ -168,6 +170,7 @@ RFP 수주부터 포지셔닝까지, 데이터와 논리 기반의 의사결정�
 7️⃣ 이미지 생성? → visual-generator
   ↓
 8️⃣ 트렌드/레퍼런스? → design-trend-radar, reference-curator
+     └ 사이트·UI 레퍼런스면 → design-reference-moodboard 스킬 (Tier 1·2·3 각 6개)
   ↓
 9️⃣ 시안 검수? → design-critique, design-system-guardian
   ↓
@@ -193,6 +196,13 @@ rfp-analyst → market-research → concept-director → brainstormer
 brainstormer → moodboard-builder → storyboard-maker → visual-generator
    (발상)        (톤 정의)         (영상 계획)        (자산 생성)
 ```
+
+### UI·웹사이트 구축 흐름
+```
+marketer → concept-director → [design-reference-moodboard 스킬] → 시안 → design-critique
+(리서치 4챕터)  (관점 한 문장)      (레퍼런스 18개 · Tier 1/2/3)      (제작)    (6영역 검수)
+```
+관점 한 문장이 Tier 2·3 레퍼런스의 검색 기준으로 넘어간다.
 
 ### Quality Gate 흐름
 ```
