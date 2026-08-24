@@ -18,6 +18,7 @@
 
 | 착수 | 프로젝트 | 클라이언트 | 분류 | 상태 | 최근 갱신 | 노트 |
 |---|---|---|---|---|---|---|
+| 2026-08 | 2026MMORPG AI Cinematic Background OS | 확인 필요 (AION2 IP) | `사내자산/영상모션` | skill v2.0 구축 완료, 실제 SB 분석 착수 전 | 2026-08-24 | [2026MMORPG_AI_CINEMATIC_BACKGROUND_OS](2026MMORPG_AI_CINEMATIC_BACKGROUND_OS/00-note.md) |
 | 2026-08 | 사내 팀 클로드 온보딩 | 사내 (MX실) | `사내자산/기타` | agent-pack v8.1 반영 완료, 배포 대기 | 2026-08-11 | [202608_사내_팀클로드온보딩](202608_사내_팀클로드온보딩/00-note.md) |
 | 2026-08 | 넷마블 게임 크리에이티브 팩트북 | 넷마블 | `리서치/게임UI` | 1단계 — 타이틀 검증표·샘플 팩트북 완료, 담당자 확인 대기 | 2026-08 | [202608_넷마블_게임크리에이티브팩트북](202608_넷마블_게임크리에이티브팩트북/00-note.md) |
 | 2026-07 | 불닭닷컴 2차 리뉴얼 | 삼양 | `제안/웹디지털` | 리서치·전략 deck 완료, 관점 확정·IA 워크숍 대기 | 2026-07-23 | [202607_삼양_불닭닷컴리뉴얼](202607_삼양_불닭닷컴리뉴얼/00-note.md) |
@@ -28,3 +29,4 @@
 |---|---|---|---|
 | agent-pack (마케터 세트) | v8.1 | [CHANGELOG](202608_사내_팀클로드온보딩/CHANGELOG.md) | `team-onboarding/agent-pack/` |
 | 온보딩 HTML | v2 | 〃 | `team-onboarding/html/` |
+| game-cinematic-image-prompter (스킬) | v2.0 | [CHANGELOG](2026MMORPG_AI_CINEMATIC_BACKGROUND_OS/CHANGELOG.md) | `.claude/skills/game-cinematic-image-prompter/` |
