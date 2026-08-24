@@ -203,7 +203,7 @@ cp .claude/skills/research-dashboard-design/template.html ./<프로젝트명>-re
 ## 제안·기획 건이면 심리 렌즈 산출물이 들어갈 자리가 있다
 
 마케터 P0(제안 심리 게이트)를 통과한 산출물은 아래 뷰에 **각각 착지시킨다.**
-따로 모아 부록으로 두지 않는다 — 부록에 두면 부록으로 읽힌다. 근거는 `.claude/library/proposal-psychology.md`.
+따로 모아 부록으로 두지 않는다 — 부록에 두면 부록으로 읽힌다. 근거는 `proposal-psychology` 스킬.
 
 | 렌즈 | 착지 뷰 | 형태 |
 |---|---|---|

@@ -15,7 +15,7 @@ tools: Read, Glob, Grep, WebSearch
 
 ## 관점별 렌즈 고정 (제안·기획 건)
 
-`.claude/library/proposal-psychology.md`의 렌즈를 관점에 **고정 배정**한다. 5관점이 같은 말을 반복하지 않게 만드는 장치다.
+`proposal-psychology` 스킬의 렌즈를 관점에 **고정 배정**한다. 5관점이 같은 말을 반복하지 않게 만드는 장치다.
 
 | 관점 | 쓰는 렌즈 | 반드시 답할 것 |
 |---|---|---|
