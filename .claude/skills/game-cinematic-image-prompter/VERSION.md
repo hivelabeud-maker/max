@@ -1,10 +1,12 @@
 # game-cinematic-image-prompter — VERSION
 
-**현재 판**: v2.1
+**현재 판**: v2.2
 
 **배포 대상**: `.claude/skills/game-cinematic-image-prompter/` 전체(SKILL.md + references/ + assets/project-template/)
 
 **변경 이력**: `.claude/projects/2026MMORPG_AI_CINEMATIC_BACKGROUND_OS/CHANGELOG.md`
+
+**v2.2 (2026-08-24)**: Gate 4-a의 기본 경로를 3안 비교에서 1샷 생성(레퍼런스 정리→프롬프트 설계→생성→검토)으로 바꿨다. 3안 비교는 삭제하지 않고 사용자가 명시적으로 요청할 때만 쓰는 선택 절차로 남겼다. `05-master-concept-set.md`를 `05-scene-generation.md`로 리네임.
 
 **v2.1 (2026-08-24)**: 게이트 체계를 8단계에서 사용자 작성 6단계(Gate 1~6, Gate 4는 3안비교/잠금/Scene Gap 3개 하위단계)로 재정렬. 각 Gate의 세부 항목을 12개 안팎 컬럼으로 정밀화하고, 매 응답 Gate 표시·프롬프트 끝 메타정보·고정 잠금 문장 등 운영 규칙을 추가.
 

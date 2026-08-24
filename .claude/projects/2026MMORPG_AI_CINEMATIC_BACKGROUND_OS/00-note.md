@@ -4,7 +4,7 @@
 - **업무 범위**: AION2 게임 시네마틱용 AI 배경 제작 체계(V2) 구축 + 실제 SB 기반 배경 제작
 - **일정**: 2026-08 착수 ~ 상시 갱신
 - **견적**: 해당 없음 (체계 구축 단계, 실제 제작 착수 시 별도 산정)
-- **상태**: 스킬을 사용자 정의 6-Gate 스펙(SB분석→VisualBible→ShotMatrix→구조마스터제작[3안비교/잠금/SceneGap]→파생과부분수정→최종출력)으로 재정렬 완료. 실제 SB 이미지 기반 Gate 1 분석은 아직 착수 전.
+- **상태**: 스킬을 사용자 정의 6-Gate 스펙(SB분석→VisualBible→ShotMatrix→구조마스터제작[씬생성/잠금/SceneGap]→파생과부분수정→최종출력)으로 재정렬 완료. Gate 4-a는 기본 1샷 생성, 3안 비교는 명시 요청 시만. 실제 SB 이미지 기반 Gate 1 분석은 아직 착수 전.
 - **변경 이력**: `CHANGELOG.md` (스킬 규칙·게이트 정의가 바뀔 때만 한 줄 추가)
 
 ## 요약 (매 세션 종료 시 갱신)
@@ -25,6 +25,7 @@
   - `_index.md` 분류 태그(`사내자산` vs `실행`) 최종 확인
   - Claude Project 병행 여부 확인 후 `PROJECT_INSTRUCTIONS.md`를 실제 Claude Project에 붙여넣기
   - Scene Gap Analysis를 Gate 4-c로 유지한 판단(사용자의 최신 6-Gate 스펙엔 명시 안 됐으나 최초 비삭제 원칙에 따라 유지)을 다음 세션에서 재확인
+  - 사용자가 "마스터 시안 3안 제작 의미없다"며 원칙 변경을 요청 → 확인 질문으로 "완전 제거 vs 기본은 1샷·필요시만 3안" 중 후자로 확정. Gate 4-a를 1샷 기본 경로로 전면 재작성하고 3안 비교는 선택 절차로 격하(삭제는 아님)
 
 ## 원본 로그 (append-only, 절대 덮어쓰지 않음)
 
@@ -41,3 +42,6 @@
 - Gate 4 안에 3안비교(4-a)·Structure Master 잠금(4-b)·Scene Gap Analysis(4-c) 세 하위 단계를 유지하되 파일은 분리한 채로 게이트 번호만 통합 — "방법론이 섞이지 않게" 원칙과 사용자의 새 6단계 번호 체계를 동시에 만족시키는 절충.
 - 확인 질문 2개 제시(3안 비교 유지 여부, Scene Gap Analysis 누락 여부) 중 3안 비교는 "그대로 유지"로 답변 받음. Scene Gap Analysis는 질문하지 않고 최초 비삭제 원칙에 따라 유지하는 판단을 내리고 다음 액션에 재확인 항목으로 남김.
 - references 01·03·04·08·09·11·12·13, project-template 01·04·05·06·07·10, 00-workflow-diagram.md, PROJECT_INSTRUCTIONS.md 전체 재작성. 게이트 번호 전수 검사(Gate 5A/5B/7/0 잔존 문자열 grep)로 교차 참조 정합성 확인.
+- 사용자가 "마스터 시안 3안 제작 의미없어. 프롬프트 설계해서 레퍼런스랑 넣어서 씬을 만들어 내야해"라며 Gate 4-a의 3안 비교 절차 자체에 이의 제기. 최초 10대 원칙 중 "3안 비교" 항목이 명시적 비삭제 대상이었고 직전 라운드에 "그대로 유지"로 재확인했던 것과 정면으로 배치되는 지시라 완전 제거 vs 절충안을 확인 질문으로 물음.
+- 답변: "기본은 1샷, 필요시만 3안". Gate 4-a를 전면 재작성 — 기본 경로(레퍼런스 정리→프롬프트 설계→1샷 생성→검토, 불만족 시 원인 진단 후 그 부분만 재생성)를 1번으로, 3안 비교(A/B/C, 5축 평가표 등 기존 내용 그대로)를 "명시적 요청 시만" 쓰는 선택 경로로 격하. 3안 비교 절차 자체는 삭제하지 않아 최초 원칙과 완전히 모순되지는 않는 형태로 절충.
+- `references/05-master-concept-set.md` → `references/05-scene-generation.md` 리네임(내용 재작성), `project-template/05-master-concept-set.md` → `project-template/05-scene-generation.md` 동일 리네임. 13-approval-gates.md·SKILL.md(게이트표+description)·00-workflow-diagram.md·06-master-lock.md·16-revision-protocol.md·PROJECT_INSTRUCTIONS.md의 교차 참조 전부 수정. skill v2.1 → v2.2.

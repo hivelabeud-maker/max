@@ -4,6 +4,7 @@
 
 | 날짜 | 버전 | 무엇이 바뀌었나 | 왜 | 영향 파일 | 팀 공지 필요 여부 |
 |---|---|---|---|---|---|
+| 2026-08-24 | skill v2.2 | Gate 4-a 기본 경로를 3안 비교에서 1샷 생성으로 변경. 3안 비교는 명시 요청 시만 쓰는 선택 절차로 남김. `05-master-concept-set.md` → `05-scene-generation.md` 리네임 | 매번 3안을 만드는 게 대부분 씬에 비효율적이라는 실사용 판단. 원래 "삭제·약화 금지" 원칙이었으나 사용자가 절차 자체를 재검토해 절충안(기본 1샷 + 선택적 3안)으로 확정 | `references/05-scene-generation.md`(신규), `13-approval-gates.md`, `SKILL.md`, `00-workflow-diagram.md`, `06-master-lock.md`, `16-revision-protocol.md`, `PROJECT_INSTRUCTIONS.md`, `project-template/05-scene-generation.md`(신규) | 아니오 (아직 실사용 전) |
 | 2026-08-24 | skill v2.1 | 게이트 체계를 8단계(Gate 0~7)에서 사용자가 직접 작성한 6단계(Gate 1~6, Gate 4는 3안비교/잠금/SceneGap 3개 하위단계)로 재정렬. SB분석 12항목, Shot Matrix 12항목+제작순서≠편집순서, 프롬프트 끝 메타정보 6종, 고정 잠금문장, 매응답 Gate표시 규칙, Magnific/Higgsfield 정밀설정, 관찰가능 품질조건 9종 반영 | 사용자가 실제 운용하며 다듬은 더 정밀한 스펙을 제시. 기존 체계와 게이트 번호가 달라 그대로 두면 문서와 실제 대화가 어긋남 | `.claude/skills/game-cinematic-image-prompter/` 전체, `.claude/library/claude-project-export/PROJECT_INSTRUCTIONS.md` | 아니오 (아직 실사용 전, 팀 배포 전 단계) |
 | 2026-08-24 | skill v2.0 | V1(업로드 zip 22파일)을 방법론/프로젝트 데이터/Claude Project export 3분리 구조로 재구축. Master Concept Set·Master Lock·Scene Gap Analysis를 별도 파일로 분리, Scene Gap을 6개 카테고리로 재정의, 세션 재개·부분승인 프로토콜 신규 추가 | AION 고유명사가 방법론 파일에 섞여 있어 재사용 시 오염 위험, 게이트 원칙이 6곳에 중복돼 드리프트 발생(실증: CLAUDE_HANDOFF의 8원칙과 신규 10원칙 불일치) | `.claude/skills/game-cinematic-image-prompter/` 전체, `.claude/library/claude-project-export/PROJECT_INSTRUCTIONS.md` | 아니오 (아직 실사용 전, 팀 배포 전 단계) |
 

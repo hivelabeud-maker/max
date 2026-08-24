@@ -1,6 +1,6 @@
 ---
 name: game-cinematic-image-prompter
-description: 게임 시네마틱용 AI 배경 이미지를 SB(스토리보드)에서 출발해 제작하는 체계. SB 분석 → Visual Bible → Shot Matrix → 마스터 시안 3안 비교 → Master Lock → Scene Gap Analysis → 파생 제작 → 업스케일·영상화 순서를 게이트로 강제한다. 승인 없이 다음 게이트로 넘어가지 않고, 한 패스에 한 작업만 하며, 캐릭터·FX보다 무인 배경과 클린 플레이트를 먼저 완성한다. 특정 IP 이름을 여기 넣지 않는다 — 프로젝트 고유 데이터는 `.claude/projects/`의 해당 프로젝트 폴더에 둔다. 트리거 "SB 분석해줘", "시네마틱 배경 만들자", "Visual Bible 잡아줘", "마스터 시안 3안", "Scene Gap 분석", "게임 배경 프롬프트".
+description: 게임 시네마틱용 AI 배경 이미지를 SB(스토리보드)에서 출발해 제작하는 체계. SB 분석 → Visual Bible → Shot Matrix → 씬 생성(기본 1샷, 요청 시만 마스터 3안 비교) → Master Lock → Scene Gap Analysis → 파생 제작 → 업스케일·영상화 순서를 게이트로 강제한다. 승인 없이 다음 게이트로 넘어가지 않고, 한 패스에 한 작업만 하며, 캐릭터·FX보다 무인 배경과 클린 플레이트를 먼저 완성한다. 특정 IP 이름을 여기 넣지 않는다 — 프로젝트 고유 데이터는 `.claude/projects/`의 해당 프로젝트 폴더에 둔다. 트리거 "SB 분석해줘", "시네마틱 배경 만들자", "Visual Bible 잡아줘", "씬 만들어줘", "마스터 시안 3안", "Scene Gap 분석", "게임 배경 프롬프트".
 ---
 
 # Game Cinematic Image Prompter
@@ -18,7 +18,7 @@ description: 게임 시네마틱용 AI 배경 이미지를 SB(스토리보드)�
 | 1 | SB 분석 | 장면별 12개 항목 표 + 공간 이동 경로·감정 곡선 요약 | 금지 |
 | 2 | Visual Bible | 세계관·형태문법·재질·색상·시간대·깊이규칙·유지/금지 요소 | 금지 |
 | 3 | Shot Matrix | 숏별 12개 항목 + 이미지 제작 순서와 영상 편집 순서 구분 | 금지 |
-| 4 | 구조 마스터 제작 | (a) 3안 비교 → (b) Structure Master 잠금 → (c) Scene Gap Analysis | (a)부터 허용 |
+| 4 | 구조 마스터 제작 | (a) 씬 생성(기본 1샷, 요청 시만 3안 비교) → (b) Structure Master 잠금 → (c) Scene Gap Analysis | (a)부터 허용 |
 | 5 | 파생과 부분 수정 | 6개 작업 분류 중 하나로 분류 후 한 변수만 변경 | 허용 |
 | 6 | 최종 출력 | Magnific 업스케일 설정 + Higgsfield 영상화 설정 | 해당 없음 |
 
