@@ -4,7 +4,7 @@
 - **업무 범위**: AION2 게임 시네마틱용 AI 배경 제작 체계(V2) 구축 + 실제 SB 기반 배경 제작
 - **일정**: 2026-08 착수 ~ 상시 갱신
 - **견적**: 해당 없음 (체계 구축 단계, 실제 제작 착수 시 별도 산정)
-- **상태**: V2 스킬·템플릿·Claude Project Instructions 구축 완료. 실제 SB 이미지 기반 Gate 1 분석은 아직 착수 전.
+- **상태**: 스킬을 사용자 정의 6-Gate 스펙(SB분석→VisualBible→ShotMatrix→구조마스터제작[3안비교/잠금/SceneGap]→파생과부분수정→최종출력)으로 재정렬 완료. 실제 SB 이미지 기반 Gate 1 분석은 아직 착수 전.
 - **변경 이력**: `CHANGELOG.md` (스킬 규칙·게이트 정의가 바뀔 때만 한 줄 추가)
 
 ## 요약 (매 세션 종료 시 갱신)
@@ -24,6 +24,7 @@
   - 실제 SB 이미지·게임 레퍼런스 업로드 후 Gate 1(SB 분석)부터 시작
   - `_index.md` 분류 태그(`사내자산` vs `실행`) 최종 확인
   - Claude Project 병행 여부 확인 후 `PROJECT_INSTRUCTIONS.md`를 실제 Claude Project에 붙여넣기
+  - Scene Gap Analysis를 Gate 4-c로 유지한 판단(사용자의 최신 6-Gate 스펙엔 명시 안 됐으나 최초 비삭제 원칙에 따라 유지)을 다음 세션에서 재확인
 
 ## 원본 로그 (append-only, 절대 덮어쓰지 않음)
 
@@ -35,3 +36,8 @@
 - 요청 도중 "방법론이 섞이지 않도록"이라는 추가 지시로 인터럽트 — Master Concept Set/Master Lock/Scene Gap Analysis를 별도 파일로 분리하고, 템플릿과 방법론의 번호 체계를 일치시켜 카테고리 경계를 명확히 하는 방향으로 반영.
 - 미답변 질문(오케스트레이터 에이전트, Higgsfield 직접 연동)은 사용자의 최종 요청 목록에 포함되지 않아 이번 빌드 범위에서 제외 — 스킬 단독 수동 트리거로 구축.
 - `.claude/skills/game-cinematic-image-prompter/`(SKILL.md + references 17종 + project-template 11종), `.claude/library/claude-project-export/PROJECT_INSTRUCTIONS.md` 구축.
+- 이후 별개 요청으로 `easy-learning-writing` 스킬 신설(`.claude/skills/easy-learning-writing/`, CLAUDE.md 글쓰기 기준 섹션에 반영) — dumbify를 상속하고 시작점·정보순서·명사형금지·이유붙이기·Learning Structure·원본보호만 추가하는 상위 레이어로 설계.
+- 사용자가 훨씬 정밀한 6단계 승인 게이트 스펙을 직접 작성해 제시(각 Gate별 12개 안팎 세부 항목, 예상 AI 생성 오류 컬럼, 이미지제작순서≠영상편집순서 구분, 매 응답 Gate 표시 규칙, 프롬프트 끝 메타정보 6종, 고정 잠금 문장, Magnific/Higgsfield 정밀 설정, 관찰가능 품질조건 9종 포함). 기존 Gate 0~7(8단계) 체계를 사용자의 6단계 체계(Gate1 SB분석/Gate2 VisualBible/Gate3 ShotMatrix/Gate4 구조마스터제작/Gate5 파생과부분수정/Gate6 최종출력)로 재정렬.
+- Gate 4 안에 3안비교(4-a)·Structure Master 잠금(4-b)·Scene Gap Analysis(4-c) 세 하위 단계를 유지하되 파일은 분리한 채로 게이트 번호만 통합 — "방법론이 섞이지 않게" 원칙과 사용자의 새 6단계 번호 체계를 동시에 만족시키는 절충.
+- 확인 질문 2개 제시(3안 비교 유지 여부, Scene Gap Analysis 누락 여부) 중 3안 비교는 "그대로 유지"로 답변 받음. Scene Gap Analysis는 질문하지 않고 최초 비삭제 원칙에 따라 유지하는 판단을 내리고 다음 액션에 재확인 항목으로 남김.
+- references 01·03·04·08·09·11·12·13, project-template 01·04·05·06·07·10, 00-workflow-diagram.md, PROJECT_INSTRUCTIONS.md 전체 재작성. 게이트 번호 전수 검사(Gate 5A/5B/7/0 잔존 문자열 grep)로 교차 참조 정합성 확인.

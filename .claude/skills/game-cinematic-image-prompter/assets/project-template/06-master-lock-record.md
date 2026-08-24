@@ -1,4 +1,4 @@
-# Gate 5A — Master Lock 기록
+# Gate 4-b — Master Lock 기록
 
 이 파일은 확정 후 절대 덮어쓰지 않는다. 재잠금이 필요하면 새 버전 블록을 아래에 추가한다.
 

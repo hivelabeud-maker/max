@@ -1,4 +1,4 @@
-# Gate 5B — Scene Gap Analysis
+# Gate 4-c — Scene Gap Analysis
 
 ## SB 샷 ↔ 확보 이미지 대조표
 

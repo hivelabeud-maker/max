@@ -1,6 +1,6 @@
 # 도구별 역할과 권장 설정
 
-도구 UI와 모델명은 자주 바뀐다. 아래 역할 분리는 유지하되, 실제 수치는 사용 시점의 화면에서 다시 확인한다.
+Seedream·Nano Banana 라우팅은 Gate 4(구조 마스터 제작)에서, Magnific·Higgsfield 설정은 Gate 6(최종 출력)에서 쓴다. 도구 UI와 모델명은 자주 바뀐다. 아래 역할 분리는 유지하되, 실제 수치는 사용 시점의 화면에서 다시 확인한다.
 
 **최종 확인일**: (이 값을 채운 사람이 실제 UI를 확인한 날짜를 적는다. 이 값이 3개월 이상 지났다면 아래 수치를 그대로 믿지 말고 먼저 실제 도구에서 현재 옵션을 확인한다.)
 
@@ -22,22 +22,28 @@
 - 승인 마스터는 가능하면 4K로 출력하거나 2배 업스케일 후 4K에서 검수
 - 최종 납품이 1080p라도 4K 마스터를 다운스케일하면 원경의 큰 형태와 재질이 더 단단해진다.
 
-## Magnific Precision V2 시작점
+## Magnific Precision V2 시작점 (Gate 6)
+
+구조·카메라·톤이 모두 승인된 후에만 쓴다.
 
 - Scale: 2×
-- Preset: 사실적 3D 환경에 가장 가까운 프리셋
-- Creativity: -5 ~ -3
-- Resemblance: +6 ~ +8
-- HDR: +1 ~ +3
-- Fractality: -2 ~ 0
+- Optimized for: 3D Renders (또는 가장 가까운 사실적 환경 프리셋)
+- Creativity: 낮음 (-5 ~ -3)
+- Resemblance: 높음 (+6 ~ +8)
+- HDR: 낮음~중간 (+1 ~ +3)
+- Fractality: 낮음 (-2 ~ 0)
 - Grain: 최소
 - Sharpness: 낮음~중간
 
-먼저 2×를 한 번만 수행한다. 구조가 바뀌면 Resemblance를 높이고 Creativity를 낮춘다. 문양이 인위적으로 매끈해지면 HDR과 Sharpness를 낮춘다.
+먼저 2×를 한 번만 수행한다. 구조가 바뀌면 Resemblance를 높이고 Creativity를 낮춘다. 문양이 인위적으로 매끈해지면 HDR과 Sharpness를 낮춘다. Magnific Creative는 특정 영역에 정보가 부족해 국부적인 재생성이 필요할 때만 쓴다 — 전체 이미지에 높은 창의성을 적용하지 않는다.
 
-## Higgsfield Cinema Studio 시작점
+## Higgsfield Cinema Studio 시작점 (Gate 6)
 
-- 테스트: 720p, 최종: 1080p 이상, 24fps
+승인된 최종 정지 이미지를 기준으로 영상화한다.
+
+- **한 클립에는 하나의 숏만 배치한다.**
+- **먼저 저해상도(720p)로 카메라 동작을 검증한 후 최종 해상도(1080p 이상)로 생성한다.**
+- 24fps
 - 한 샷 4–6초
 - Look: 절제된 시네마 톤(과도한 필터 프리셋 지양)
 - 심도: f/5.6–8 상당

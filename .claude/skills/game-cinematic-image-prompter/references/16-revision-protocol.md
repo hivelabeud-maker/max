@@ -16,9 +16,9 @@
 
 - **Gate 2(Visual Bible) 반려** → Gate 1로 되돌아가지 않는다. Visual Bible만 다시 쓴다. 단, 반려 사유가 "SB 해석 자체가 틀렸다"면 Gate 1도 함께 재검토한다.
 - **Gate 4(Master Concept Set) 반려** → 세 안 모두 방향이 틀렸으면 Visual Bible(Gate 2)이나 Shot Matrix(Gate 3)의 전제를 먼저 의심한다. 한두 안만 문제라면 해당 안만 재생성한다.
-- **Gate 5A(Master Lock) 이후 잠금 항목 자체를 바꿔야 할 때** → 이미 잠근 항목을 조용히 덮어쓰지 않는다. `06-master-lock-record.md`에 새 버전 번호로 추가하고, 이 재잠금이 이미 진행된 Gate 6 산출물에 미치는 영향을 사용자에게 먼저 알린다.
-- **Gate 5B(Scene Gap Analysis) 반려** → 우선순위 재조정이면 목록만 고친다. 공백 자체를 잘못 짚었으면 대조표를 다시 만든다.
-- **Gate 6(파생 제작) QC 재생성 판정** → `12-qc-checklist.md`의 "판정별 처리"를 따른다. 잠금 항목 문제면 Gate 5A로, 실행 오류면 같은 Gate 6에서 재작업한다.
+- **Gate 4-b(Master Lock) 이후 잠금 항목 자체를 바꿔야 할 때** → 이미 잠근 항목을 조용히 덮어쓰지 않는다. `06-master-lock-record.md`에 새 버전 번호로 추가하고, 이 재잠금이 이미 진행된 Gate 5 산출물에 미치는 영향을 사용자에게 먼저 알린다.
+- **Gate 4-c(Scene Gap Analysis) 반려** → 우선순위 재조정이면 목록만 고친다. 공백 자체를 잘못 짚었으면 대조표를 다시 만든다.
+- **Gate 5(파생과 부분 수정) QC 재생성 판정** → `12-qc-checklist.md`의 "판정별 처리"를 따른다. 잠금 항목 문제면 Gate 4-b로, 실행 오류면 같은 Gate 5에서 재작업한다.
 
 ## 처리 후 기록
 

@@ -28,6 +28,6 @@ game-cinematic-image-prompter 기준으로 분석해줘.
 
 ## 사용 전 준비
 
-1. 프로젝트 폴더의 `00-project-brief.md`를 먼저 채운다. 비어 있으면 Claude가 Gate 0에서 먼저 요청한다.
+1. 프로젝트 폴더의 `00-project-brief.md`를 먼저 채운다. 비어 있으면 Claude가 Gate 1 전에 먼저 요청한다.
 2. SB 이미지, 게임 캡처, 참고 레퍼런스에 역할이 드러나는 파일명을 붙인다(예: `SB_01.png`, `REF_STRUCTURE_MASTER.png`, `REF_TONE.png`). 파일명에 역할을 명시하면 서로 다른 레퍼런스의 조형이 뒤섞이는 문제가 크게 줄어든다.
 3. Claude Project라면 이 파일들을 Project Knowledge에, Claude Code라면 프로젝트 폴더 또는 세션에 첨부한다.

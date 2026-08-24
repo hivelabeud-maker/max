@@ -1,4 +1,4 @@
-# Master Concept Set 3안 생성 규칙 (Gate 4)
+# Master Concept Set 3안 생성 규칙 (Gate 4-a)
 
 ## 왜 3안인가
 
