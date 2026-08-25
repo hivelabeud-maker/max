@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AION2 · 다른 방식, 같은 세계</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#080a10; --bg2:#0b0e15; --panel:#12151d; --panel2:#0e111a;
+  --line:rgba(255,255,255,.075); --line2:rgba(255,255,255,.13);
+  --ink:#e9ebef; --dim:#9aa1ad; --mute:#5e6673;
+  --gold:#d7a24a; --frost:#6ea8dc;
+  --act-도입:#8892a1; --act-악몽:#c0574a; --act-원정:#d7a24a;
+  --act-초월:#a97fd6; --act-성역:#6ea8dc; --act-대립:#d47f52; --act-엔딩:#57b2c9;
+  --font:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);
+  -webkit-font-smoothing:antialiased;line-height:1.55;
+  background-image:radial-gradient(1200px 700px at 78% -8%,rgba(215,162,74,.06),transparent 60%),
+                   radial-gradient(1000px 640px at 8% 108%,rgba(110,168,220,.06),transparent 60%);}
+.wrap{max-width:1560px;margin:0 auto;padding:0 clamp(16px,3vw,44px)}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(8,10,16,.86);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{font-weight:800;letter-spacing:.14em;font-size:13px}
+.brand b{color:var(--gold)}
+.metaline{color:var(--mute);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.tabs{margin-left:auto;display:flex;gap:6px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:11px;padding:4px}
+.tab{appearance:none;border:0;background:transparent;color:var(--dim);
+  font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:.02em;
+  padding:8px 15px;border-radius:8px;cursor:pointer;transition:.16s}
+.tab:hover{color:var(--ink)}
+.tab.on{background:linear-gradient(180deg,#20242f,#171b24);color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--line2)}
+
+/* hero */
+.hero{padding:52px 0 26px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--frost);font-size:11.5px;font-weight:700;
+  letter-spacing:.26em;text-transform:uppercase;margin-bottom:16px}
+h1{font-size:clamp(30px,4.4vw,54px);font-weight:800;letter-spacing:-.01em;
+  line-height:1.08;text-wrap:balance}
+h1 .thin{color:var(--dim);font-weight:600}
+.summary{max-width:940px;margin-top:16px;color:var(--dim);
+  font-size:15px;line-height:1.72}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-size:12px;color:var(--dim);border:1px solid var(--line2);
+  border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.02)}
+.chip.k{color:var(--gold);border-color:rgba(215,162,74,.4)}
+
+/* direction strip */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;padding:24px 0 6px}
+.dcard{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.dcard .lb{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:9px}
+.dcard .bd{font-size:13px;color:var(--dim);line-height:1.6}
+.dcard .bd b{color:var(--ink);font-weight:600}
+
+.seclabel{display:flex;align-items:center;gap:12px;margin:30px 0 16px}
+.seclabel h2{font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--ink)}
+.seclabel .cnt{font-size:11.5px;color:var(--mute);letter-spacing:.1em}
+.seclabel .rule{flex:1;height:1px;background:var(--line)}
+
+/* grid */
+.grid{display:grid;gap:16px;padding-bottom:20px}
+.grid.r169{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+.grid.r916{grid-template-columns:repeat(auto-fill,minmax(214px,1fr))}
+
+.cut{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  overflow:hidden;display:flex;flex-direction:column;
+  border-top:2px solid var(--act,#8892a1);transition:.18s;position:relative}
+.cut:hover{border-color:var(--line2);transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(0,0,0,.42)}
+.cut .head{display:flex;align-items:center;gap:9px;padding:11px 13px 9px}
+.cut .sh{font-size:11.5px;font-weight:800;letter-spacing:.05em}
+.cut .tc{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.cut .actag{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--act,#8892a1);
+  border:1px solid color-mix(in srgb,var(--act) 42%,transparent);
+  border-radius:6px;padding:3px 8px}
+
+.frame{position:relative;margin:0 13px;border-radius:9px;overflow:hidden;
+  background:linear-gradient(135deg,#141821,#0c0f16);border:1px solid var(--line)}
+.grid.r169 .frame{aspect-ratio:16/9}
+.grid.r916 .frame{aspect-ratio:9/16}
+.frame img{width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .5s}
+.frame img.ld{opacity:1}
+.frame .ph{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;text-align:center;padding:14px;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--act) 26%,#0c0f16),#0a0d14)}
+.frame .ph .pn{font-size:26px;font-weight:800;color:rgba(255,255,255,.9)}
+.frame .ph .pt{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.04em}
+.frame .ovl{position:absolute;left:0;right:0;bottom:0;pointer-events:none;
+  display:flex;align-items:flex-end;justify-content:flex-start;padding:12px 14px;
+  background:linear-gradient(0deg,rgba(0,0,0,.62),rgba(0,0,0,0) 62%)}
+.frame .ovl span{font-size:clamp(17px,3.2vw,26px);font-weight:800;color:#fff;
+  letter-spacing:.04em;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+/* 9:16 safe area */
+.grid.r916 .frame .safe{position:absolute;inset:9% 6%;border:1px dashed rgba(255,255,255,.22);
+  border-radius:4px;pointer-events:none;display:block}
+.grid.r169 .frame .safe{display:none}
+.grid.r916 .frame .safe::after{content:'세로 안전영역';position:absolute;top:-16px;left:0;
+  font-size:8.5px;letter-spacing:.1em;color:rgba(255,255,255,.4)}
+
+.copybar{margin:11px 13px 0;background:var(--panel2);border:1px solid var(--line);
+  border-radius:8px;padding:9px 12px;min-height:38px;display:flex;align-items:center}
+.copybar .q{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.copybar .none{font-size:11.5px;color:var(--mute);letter-spacing:.1em}
+
+.meta{display:grid;grid-template-columns:1fr;gap:11px;padding:13px}
+.meta .col .ml{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:5px}
+.meta .col .mv{font-size:12px;color:var(--dim);line-height:1.6}
+.meta .col.cam .mv{color:var(--ink);font-weight:500}
+
+/* production guide */
+.guide{margin:28px 0 60px;background:linear-gradient(180deg,#0e1119,#0b0e15);
+  border:1px solid var(--line);border-radius:16px;padding:26px clamp(20px,3vw,34px)}
+.guide h3{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:20px}
+.guide .rows{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.guide .gh{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.guide .gb{font-size:13px;color:var(--dim);line-height:1.7}
+.guide .gb .g{color:var(--gold)}
+.guide .gb .f{color:var(--frost)}
+@media(max-width:720px){.guide .rows{grid-template-columns:1fr;gap:20px}
+  .topbar .metaline{display:none}}
+.foot{color:var(--mute);font-size:11px;text-align:center;padding:0 0 40px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><b>AION2</b> STORYBOARD</span>
+  <span class="metaline" id="metaline">CHAPTER 1 BRAND FILM · 30 SEC</span>
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-fmt="r169">🎬 16:9 시네마틱</button>
+    <button class="tab" data-fmt="r916">📱 9:16 숏폼</button>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">AION2 · CHAPTER 1 BRAND FILM · REALISTIC EDIT TEMPO</div>
+    <h1>다른 방식, 같은 세계 <span class="thin">— 천족 편</span></h1>
+    <p class="summary">날개를 펼친 데바가 악몽·원정·초월·성역을 지나며 선택의 폭을 넓힌다. 인원과 공간의 규모가 단계적으로 확장되고, 모래와 서리의 서로 다른 흐름이 Chapter 1의 하나의 세계로 이어진다.</p>
+    <div class="chips">
+      <span class="chip k" id="chipcount">17 SHOTS / 30 SEC</span>
+      <span class="chip">카피 중심 서사</span>
+      <span class="chip">콘텐츠별 컷수 차등</span>
+      <span class="chip">기존 이미지 재선정</span>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="dcard"><div class="lb">연출 방향</div><div class="bd"><b>카메라 중심 서사</b> — 대사보다 앵글·움직임·전환으로 문장을 완성한다.</div></div>
+    <div class="dcard"><div class="lb">톤 · 룩</div><div class="bd"><b>실사 게임 CG</b> — 금빛 모래(외부)와 푸른 서리(내부)의 온도 대비.</div></div>
+    <div class="dcard"><div class="lb">서사 축</div><div class="bd">도입 → <b>악몽 · 원정 · 초월 · 성역</b> → 대립 → 심벌·엔딩.</div></div>
+    <div class="dcard"><div class="lb">이미지 소스</div><div class="bd"><b>기존 SB 스틸 재선정</b> — 신규 생성 없이 확정 컷 재편집.</div></div>
+  </div>
+
+  <div class="seclabel"><h2 id="sech">16:9 시네마틱 · 컷 시퀀스</h2><span class="cnt">SHOT 01–17</span><span class="rule"></span></div>
+
+  <main class="grid r169" id="grid"></main>
+
+  <section class="guide">
+    <h3>Editing &amp; Production Guide</h3>
+    <div class="rows">
+      <div>
+        <div class="gh">편집 리듬</div>
+        <div class="gb">도입 <span class="g">0–4.3초</span> → 악몽 4.3–7.5초 → 원정 7.5–12.2초 → 초월 12.2–14.2초 → 성역 14.2–18초 → 대립 18–24.4초 → 심벌·엔딩 <span class="f">24.4–30초</span></div>
+      </div>
+      <div>
+        <div class="gh">일관성</div>
+        <div class="gb">연결 컷은 1.3–1.5초, 전투·초월·성역은 1.8–2초를 확보한다. 24.4초 이후 내레이션을 비우고, 엔드 카드는 2.5초 동안 노출한다.</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">템플릿 · 내용은 하단 SHOTS 데이터만 교체하면 반영됩니다 &nbsp;·&nbsp; 16:9 / 9:16 공용</p>
+</div>
+
+<script>
+const SHOTS = [{"n": 1, "tc": "00.0–01.4", "act": "도입", "copy": "날개를 펼치는 순간", "scene": "데바의 시선이 열리고 접힌 날개 끝에 미세한 빛이 번진다. 움직임을 최소화해 첫 문장의 집중도를 높인다.", "cam": "85mm 클로즈업 · 눈에서 날개로 랙포커스.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/7c3fed90-0b78-460d-b31a-ba4886984616.png"}, {"n": 2, "tc": "01.4–02.8", "act": "도입", "copy": "하나의 길로", "scene": "절벽 너머 광대한 세계와 여러 방향의 빛이 동시에 드러난다. 데바 앞에 하나로 정해지지 않은 가능성을 펼친다.", "cam": "28mm 리어 와이드 · 1.4초간 느린 전진.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/33610834-c6c7-41f0-a644-d3e123537999.png"}, {"n": 3, "tc": "02.8–04.3", "act": "도입", "copy": "정해지지 않는다.", "scene": "데바가 절벽을 박차고 모래 대지 위로 비상한다. 상승 동작으로 앞 문장을 완성하고 본격적인 여정을 시작한다.", "cam": "35mm 로우앵글→와이드 풀백 · 상승 매치.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/fde2e0da-cb6b-4213-843f-8de5709485eb.png"}, {"n": 4, "tc": "04.3–05.6", "act": "악몽", "copy": "", "scene": "황량한 협곡을 가르는 시점 위로 거대한 날개 그림자가 덮친다. 다음 전투의 위협을 짧고 강하게 예고한다.", "cam": "20mm 전진 POV · 그림자 통과 순간 하드컷.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/76086403-5f64-47fe-81d4-2a96f7d4b87f.png"}, {"n": 5, "tc": "05.6–07.5", "act": "악몽", "copy": "홀로 악몽에 맞서고", "scene": "후드와 기계 중장갑을 두른 몬스터의 주먹을 홀로 막아낸다. 충돌 불꽃과 가까운 원근감으로 고독한 전투를 강조한다.", "cam": "24mm 근접 액션 · 충돌점 6프레임 홀드.", "overlay": "악몽", "img": "https://www.figma.com/api/mcp/asset/79308098-99d8-495a-842f-24a36ae2011d.png"}, {"n": 6, "tc": "07.5–08.8", "act": "원정", "copy": "", "scene": "사막 성채 앞, 천족 동료들이 주인공의 뒤로 합류한다. 세 인물의 시선과 달리는 방향을 다음 보스전으로 연결한다.", "cam": "32mm 풀숏 · 후방 동료 진입 후 짧은 트래킹.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/87608fc4-f30b-4f6a-b79c-fc86278d180b.png"}, {"n": 7, "tc": "08.8–10.8", "act": "원정", "copy": "", "scene": "선두 데바가 사막의 원형 워프를 통과해 푸른 수정 동굴로 진입한다. 따뜻한 외부와 차가운 내부를 한 프레임에서 전환한다.", "cam": "24mm 리어 트래킹 · 포털 원형 매치 와이프.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/5c2c4c2e-b49c-4632-90fb-e98af8c245d2.png"}, {"n": 8, "tc": "10.8–12.2", "act": "원정", "copy": "동료와 원정을 돌파하며,", "scene": "천족 원정대가 역할을 나눠 거대 보스를 동시에 공략한다. 방어·근접 공격·공중 견제·마법 지원이 하나의 흐름으로 이어진다.", "cam": "28mm 3/4 와이드 · 보스 중심 2초 오비트.", "overlay": "원정", "img": "https://www.figma.com/api/mcp/asset/fe34eed0-768a-44e3-aee7-c39cc9413c4f.png"}, {"n": 9, "tc": "12.2–14.2", "act": "초월", "copy": "한계를 넘어 초월하고", "scene": "네 명의 천족 데바가 차원의 파편 사이를 화살촉 대형으로 돌파한다. 방패·검·지팡이·창의 역할이 같은 상승 방향을 만든다.", "cam": "18mm 정면 와이드 · 파편 사이 급가속.", "overlay": "초월", "img": "https://www.figma.com/api/mcp/asset/982f3a8f-54aa-4098-a19a-b8c4b74cc01b.png"}, {"n": 10, "tc": "14.2–16.0", "act": "성역", "copy": "모두의 힘으로", "scene": "은빛 날개의 천족 데바들이 얼어붙은 성역 중앙로를 함께 달린다. 원근선 끝의 거대 보스를 공동의 목표로 고정한다.", "cam": "21mm 로우 리어 트래킹 · 보스에 원포인트.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/f07d2835-35ca-417f-996b-2e730d61ca96.png"}, {"n": 11, "tc": "16.0–18.0", "act": "성역", "copy": "성역의 정점으로", "scene": "천족 파티가 성역의 거대 보스를 둘러싸고 빈틈을 나눠 공략한다. 여러 무기와 은빛 날개의 방향이 보스 한 지점으로 수렴한다.", "cam": "24mm 전투 POV · 타격점 푸시인 후 컷아웃.", "overlay": "성역", "img": "https://www.figma.com/api/mcp/asset/456818d3-21b6-4457-8bdb-f28e14add641.png"}, {"n": 12, "tc": "18.0–20.2", "act": "대립", "copy": "", "scene": "성역의 협동 장면에서 규모가 확장되며 천족과 마족 데바들이 각 진영에서 날아오른다. 다음 대립 장면으로 전장의 범위를 넓힌다.", "cam": "21mm 에어리얼 풀백 · 양 진영 궤적을 교차.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/e2015435-57c0-4b34-a6d4-b61d4913a3c6.png"}, {"n": 13, "tc": "20.2–22.2", "act": "대립", "copy": "다른 방식, 같은 세계로", "scene": "천족과 마족의 서로 다른 영역이 하나의 광대한 세계 안에 펼쳐진다. 중앙 데바의 비행을 따라 두 진영의 공간을 한 화면으로 연결한다.", "cam": "24mm 에어리얼 풀백 · 좌우 세계 패럴랙스.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/ac52c1aa-caae-4b6d-81f8-30555d88e452.png"}, {"n": 14, "tc": "22.2–24.4", "act": "대립", "copy": "이제 서로를 향해", "scene": "은빛 날개의 천족과 흑자색 날개의 마족이 공중에서 정면으로 마주한다. 무기 충돌보다 날개 색과 시선의 대비로 대립을 선명하게 보여준다.", "cam": "50mm 대칭 투숏 · 충돌 직전 4프레임 홀드.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/eac4cbf4-ff50-4845-bce6-a3b556ca1924.png"}, {"n": 15, "tc": "24.4–25.8", "act": "엔딩", "copy": "", "scene": "금빛 모래와 푸른 서리 입자가 검은 화면 양쪽에서 서로를 향해 흐른다. 내레이션을 비우고 음악과 입자음으로 엔딩 전환을 시작한다.", "cam": "고정 정면 · 좌우 입자 흐름 매치.", "overlay": "모래와 서리의 흐름", "img": "https://www.figma.com/api/mcp/asset/27a0da05-778a-4609-a12e-3f7b6ee853cb.png"}, {"n": 16, "tc": "25.8–27.5", "act": "엔딩", "copy": "하나로 이어지다", "scene": "두 입자가 중앙에서 교차하며 하나의 푸른 소용돌이와 숫자 1을 연상시키는 형태를 만든다. 잔광을 엔드 카드 배경으로 남긴다.", "cam": "중앙 결집 순간 미세 푸시인 · 글로우 디졸브.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/d92f3b08-52a0-4d72-8e26-87ffb24ab121.png"}, {"n": 17, "tc": "27.5–30.0", "act": "엔딩", "copy": "Chapter 1, 모래와 서리의 땅", "scene": "입자 잔광 위에 AION2 BI와 Chapter 1 ‘모래와 서리의 땅’ 타이틀이 순차적으로 나타난다. 완성된 엔드 카드를 최소 1.8초 유지한다.", "cam": "BI 0.3초→타이틀 0.4초→1.8초 홀드.", "overlay": "", "img": "https://www.figma.com/api/mcp/asset/afd01be9-4608-48ed-93c9-61421435a4b4.png"}];
+const grid = document.getElementById('grid');
+
+function card(s){
+  const el = document.createElement('article');
+  el.className='cut';
+  el.style.setProperty('--act','var(--act-'+s.act+')');
+  const copy = s.copy ? '<span class="q">'+s.copy+'</span>' : '<span class="none">전환 컷 · 카피 없음</span>';
+  const ovl = s.overlay ? '<div class="ovl"><span>'+s.overlay+'</span></div>' : '';
+  const sh = String(s.n).padStart(2,'0');
+  el.innerHTML =
+    '<div class="head"><span class="sh">SHOT '+sh+'</span><span class="tc">'+s.tc+'</span>'+
+      '<span class="actag">'+s.act+'</span></div>'+
+    '<div class="frame">'+
+      '<div class="ph"><div class="pn">'+sh+'</div><div class="pt">'+s.act+' · '+s.tc+'</div></div>'+
+      (s.img?'<img loading="lazy" alt="SHOT '+sh+'" src="'+s.img+'">':'')+
+      ovl+'<div class="safe"></div>'+
+    '</div>'+
+    '<div class="copybar">'+copy+'</div>'+
+    '<div class="meta">'+
+      '<div class="col"><div class="ml">장면 · 의미</div><div class="mv">'+s.scene+'</div></div>'+
+      '<div class="col cam"><div class="ml">카메라 · 전환</div><div class="mv">'+s.cam+'</div></div>'+
+    '</div>';
+  const img = el.querySelector('img');
+  if(img){ img.addEventListener('load',()=>img.classList.add('ld'));
+           img.addEventListener('error',()=>img.remove()); }
+  return el;
+}
+SHOTS.forEach(s=>grid.appendChild(card(s)));
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    const f=t.dataset.fmt;
+    grid.classList.remove('r169','r916'); grid.classList.add(f);
+    const v916 = f==='r916';
+    document.getElementById('sech').textContent = (v916?'9:16 숏폼':'16:9 시네마틱')+' · 컷 시퀀스';
+    document.getElementById('metaline').textContent =
+      'CHAPTER 1 BRAND FILM · 30 SEC · '+(v916?'9:16 세로':'16:9 가로');
+  });
+});
+</script>
+</body>
+</html>
