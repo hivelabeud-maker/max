@@ -1,0 +1,350 @@
+=== p1 ===
+Research
+HIVELAB
+=== p2 ===
+실사와 엑스레이(투시도) 형태 활용 안
+https://www.marukolabs.com/ https://kray.in.ua/
+=== p3 ===
+https://www.orano.group/experience/innovation/en/protect https://viewport3.com/
+실사와 엑스레이(투시도) 형태 활용 안
+=== p4 ===
+https://www.8bit.ai/ https://solutions.alphanelabs.com/
+3D 라인 활용안
+=== p5 ===
+https://www.hikeys1977 .com/
+레이아웃
+=== p6 ===
+https://www.jeton.com/
+레이아웃
+=== p7 ===
+https://superconscious-app.webflow.io/
+레이아웃
+=== p8 ===
+UX Strategy & Research
+for Career 
+HIVELAB
+=== p9 ===
+Career UX Strategy
+구직자와 고용주가 채용 과정에서 시행착오를 줄이고
+서로에게 한 관계로 이어질 수 있도록
+ Fit
+정보를 효과적으로 공유할 수 있는 사용자 경험을 제공하는 것
+=== p10 ===
+Audit
+42dot
+Problem 1
+텍스트 위주의 정보 제공
+시각적 요소가 부족
+기업, 구성원 이미지들을 활용하여
+시각적 정보 제공 필요
+Problem 2
+원하는 내용의
+정보 탐색이 어려움
+검색 필터 기능, 사용자 데이터 등을 활용하여 지
+원자와 알맞는 정보 제공 필요
+Problem 3
+직무 중심의 구조로
+기업 가치관 파악이 어려움
+기업 문화등을 나타낼 수 있는
+콘텐츠들을 추가하여 기업 가치관 전달 필요
+=== p11 ===
+exploration Personalization Communication
+01 02 03
+지원자가  
+할 수 있도록
+탐색을 편리하게
+검색, 필터, 태깅 기능을 통해
+정보를 쉽게 탐색할 수 있게 함
+지원자와 에 
+빠르게 접근할 수 있도록
+딱 맞는 정보
+지원자의 위치 및 활동 기록, 데이터등을 
+활용하여 맞춤 정보를 제공
+지원자와 기업이  
+가치관을 공유할 수 있도록
+소통을 통해
+직원 인터뷰, 기업문화 및 복리후생, 챗봇
+기능 등을 통해 지원자와 소통 
+Career UX Strategy
+=== p12 ===
+Career UX Strategy
+Apply
+Research Site : deel
+https://www.deel.com/careers/ https://www.deel.com/careers/open-roles/ https://www.deel.com/careers/position/?ashby_jid=9d1727c5-305d-4309-ad25-843133b542e5
+Ashby템플릿 페이지로 이동하는 것이 아닌
+42dot 홈페이지 안에서 Ashby 솔루션을 활용하여
+할 수 있게 합니다.일관된 채용 프로세스를 경험
+=== p13 ===
+Candidate Employer
+=== p14 ===
+Candidate
+내 커리어에 적합한 기업를 찾는 것
+=== p15 ===
+기업의 가치관에 적합한 인재를 찾는 것
+Employer
+=== p16 ===
+FIT
+=== p17 ===
+구직자와 고용주가 채용 과정에서 시행착오를 줄이고
+서로에게 Fit한 관계로 이어질 수 있도록
+정보를 효과적으로 공유할 수 있는 사용자 경험을 제공하는 것
+=== p18 ===
+Research
+타 서비스 채용 페이지 리서치를 통해
+채용 프로세스 UX 인사이트 도출
+=== p19 ===
+UX INSIGHTReference.
+지원자가 탐색을 
+편리하게 할 수 있도록
+exploration
+키워드 검색 기능으로 직관적이고 빠르게
+원하는 정보에 도달할 수 있게 함
+Search
+지원자가 원하는 조건을 기준으로
+그에 알맞는 정보만 명확하게 노출함
+Filter
+지원자가 관심있는 키워드를 중심으로
+자유롭게 탐색하게 함
+Tagging
+LINK
+LINK
+LINK
+=== p20 ===
+UX INSIGHTReference.
+지원자가 탐색을 
+편리하게 할 수 있도록
+exploration
+키워드 검색 기능으로 직관적이고 빠르게
+원하는 정보에 도달할 수 있게 함
+Search
+지원자가 원하는 조건을 기준으로
+그에 알맞는 정보만 명확하게 노출함
+Filter
+지원자가 관심있는 키워드를 중심으로
+자유롭게 탐색하게 함
+Tagging
+LINK
+LINK
+LINK
+LINK
+=== p21 ===
+UX INSIGHTReference.
+지원자가 탐색을 
+편리하게 할 수 있도록
+exploration
+키워드 검색 기능으로 직관적이고 빠르게
+원하는 정보에 도달할 수 있게 함
+Search
+지원자가 원하는 조건을 기준으로
+그에 알맞는 정보만 명확하게 노출함
+Filter
+지원자가 관심있는 키워드를 중심으로
+자유롭게 탐색하게 함
+Tagging
+LINK
+LINK
+=== p22 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공
+Information
+LINK
+LINK
+=== p23 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공
+Information
+LINK
+LINK
+LINK
+=== p24 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공 (AI 기술 활용)
+Information
+LINK
+LINK
+LINK
+=== p25 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공 (AI 기술 활용)
+Information
+열람한 채용공고 기반
+개인화 정보 제공
+LINK
+LINK
+LINK
+=== p26 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공 (AI 기술 활용)
+Information
+사용자 활동 기록 기반
+개인화 정보 제공
+LINK
+LINK
+LINK
+=== p27 ===
+UX INSIGHTReference.
+지원자와 딱 맞는 정보에 
+빠르게 접근할 수 있도록
+Personalization
+직군별 구분 및 간단한 설명을 통해 
+지원자가 관심있는 분야로 빠르게 접근
+Job introduction
+접속한 지역이나 국가에 맞는 주요 채용 정보를 
+우선 노출하여 지원자에 맞춘 정보를 제공
+Locations
+지원자의 활동 기록 및 정보를 활용하여
+맞춤 정보를 제공 (AI 기술 활용)
+Information
+사용자 데이터 기반
+개인화 정보 제공
+LINK
+LINK
+LINK
+=== p28 ===
+UX INSIGHTReference.
+지원자와 기업이 소통을 통해
+가치관을 공유할 수 있도록
+Communication
+채용 담당자에게 직접적으로 문의하기 어려운 질문들을
+챗봇을 통해 소통할 수 있음
+Chatbot
+같은 직원의 생생한 목소리를 통해 
+구성원이 어떤 가치관을 가지고 일하는지 알 수 있음
+Interview
+기업문화 혹은 복리후생등의 정보 제공을 통해 
+기업이 일하는 방식과 가치관을 전달
+Values
+LINK
+LINK
+=== p29 ===
+UX INSIGHTReference.
+지원자와 기업이 소통을 통해
+가치관을 공유할 수 있도록
+Communication
+채용 담당자에게 직접적으로 문의하기 어려운 질문들을
+챗봇을 통해 소통할 수 있음
+Chatbot
+같은 직원의 생생한 목소리를 통해 
+구성원이 어떤 가치관을 가지고 일하는지 알 수 있음
+Interview
+기업문화 혹은 복리후생등의 정보 제공을 통해 
+기업이 일하는 방식과 가치관을 전달
+Values
+LINK
+LINK
+=== p30 ===
+UX INSIGHTReference.
+지원자와 기업이 소통을 통해
+가치관을 공유할 수 있도록
+Communication
+채용 담당자에게 직접적으로 문의하기 어려운 질문들을
+챗봇을 통해 소통할 수 있음
+Chatbot
+같은 직원의 생생한 목소리를 통해 
+구성원이 어떤 가치관을 가지고 일하는지 알 수 있음
+Interview
+기업문화 혹은 복리후생등의 정보 제공을 통해 
+기업이 일하는 방식과 가치관을 전달
+Values
+LINK
+LINK
+LINK
+=== p31 ===
+Ashby와의 연동
+=== p32 ===
+지원자 관리, 스케줄, AI 지원서 분석 등
+채용 과정에서 생기는 과정을 관리해주는 시스템
+Ashby
+=== p33 ===
+Ashby 서비스 이용 기업
+https://www.notion.com/ko/careers https://jobs.ashbyhq.com/notion https://jobs.ashbyhq.com/notion/4ebcc11d-4d32-4cef-9001-190c0156188f
+Notion
+https://www.notion.com/ko/careers
+새창 이동
+=== p34 ===
+Ashby 서비스 이용 기업
+eightsleep
+https://www.eightsleep.com/careers/
+Anchor이동
+Embed areaEmbed area
+https://www.eightsleep.com/careers/ https://www.eightsleep.com/careers/ https://www.eightsleep.com/careers/?
+ashby_jid=68e2d1b4-a705-4ec9-a0c0-4157d963261c
+=== p35 ===
+Ashby 서비스 이용 기업
+deel
+https://www.deel.com/careers/
+페이지 이동
+새창 이동
+https://www.deel.com/careers/ https://www.deel.com/careers/open-roles/ https://www.deel.com/careers/position/?ashby_jid=9d1727c5-305d-4309-ad25-843133b542e5
+=== p36 ===
+Infographic References
+기능 표현에 대해 그래픽 일관성을 유지하여 베리에이션 한 사례를 모았습니다.
+HIVELAB
+=== p37 ===
+Infographic References
+Kakaobank / Social Contents
+=== p38 ===
+Infographic References
+Naver Cloud Platform / Architecture & Function Icon
+=== p39 ===
+Infographic References
+Naver Cloud Platform / Architecture & Function Icon
+=== p40 ===
+Infographic References
+Osstem Implant / OneClick Function Icon
+=== p41 ===
+Infographic References
+NAVER / Promotion Contents
+=== p42 ===
+EOD
+HIVELAB
