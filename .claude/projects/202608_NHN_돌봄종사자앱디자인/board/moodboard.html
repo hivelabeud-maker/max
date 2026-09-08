@@ -1,0 +1,566 @@
+<title>따뜻한 손길 색 체계</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#FDFBF7; --panel:#FFFFFF; --panel2:#F4EDE2;
+  --ink:#2B2521; --ink2:#4A4038; --ink3:#6B5F55; --ink4:#9C8A74;
+  --line:#D6CBB8; --line-soft:#E8E0D5;
+  --fail:#B3261E; --fail-tint:#FCE9E6;
+  --warn:#8F5A00; --warn-tint:#FFF4D1;
+  --pass:#456E2F; --pass-tint:#EDF3E6;
+  --deep-pink:#A83254; --deep-lav:#6B3FA0;
+  --shadow:0 1px 2px rgba(74,64,56,.06), 0 8px 24px rgba(74,64,56,.05);
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#1C1916; --panel:#252017; --panel:#26211C; --panel2:#302A24;
+    --ink:#F5EFE6; --ink2:#DED4C6; --ink3:#B3A695; --ink4:#8A7C6B;
+    --line:#453D34; --line-soft:#37302A;
+    --fail:#FF9A90; --fail-tint:#3D2320;
+    --warn:#F0B653; --warn-tint:#3A2C12;
+    --pass:#9ED47C; --pass-tint:#22301A;
+    --deep-pink:#FF9BB4; --deep-lav:#C9A6F5;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1C1916; --panel:#26211C; --panel2:#302A24;
+  --ink:#F5EFE6; --ink2:#DED4C6; --ink3:#B3A695; --ink4:#8A7C6B;
+  --line:#453D34; --line-soft:#37302A;
+  --fail:#FF9A90; --fail-tint:#3D2320;
+  --warn:#F0B653; --warn-tint:#3A2C12;
+  --pass:#9ED47C; --pass-tint:#22301A;
+  --deep-pink:#FF9BB4; --deep-lav:#C9A6F5;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink2);font-family:var(--sans);font-weight:400;line-height:1.65;
+  -webkit-font-smoothing:antialiased;font-size:15px}
+.wrap{max-width:1180px;margin:0 auto;padding:56px 32px 96px}
+h1,h2,h3{color:var(--ink);text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin:0 0 14px}
+h1{font-size:clamp(38px,5.4vw,62px);font-weight:600;letter-spacing:-.025em;line-height:1.04}
+.lede{font-size:17px;color:var(--ink3);max-width:62ch;margin:18px 0 0;font-weight:300}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.chip{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border:1px solid var(--line);border-radius:4px;color:var(--ink3)}
+.chip b{color:var(--ink);font-weight:500}
+section{margin-top:64px}
+.shead{display:flex;align-items:baseline;gap:14px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.snum{font-family:var(--mono);font-size:12px;color:var(--ink4);letter-spacing:.08em}
+h2{font-size:21px;font-weight:600;letter-spacing:-.01em}
+.snote{margin-left:auto;font-size:12.5px;color:var(--ink4);font-family:var(--mono)}
+p{margin:0 0 14px;max-width:68ch}
+.dim{color:var(--ink3)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* thesis */
+.thesis{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:28px;box-shadow:var(--shadow)}
+.thesis .verdict{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.bignum{font-family:var(--mono);font-size:56px;font-weight:500;color:var(--fail);line-height:1;letter-spacing:-.03em}
+.verdict p{margin:0;max-width:46ch;font-size:14px}
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.pcard{border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.pswatch{padding:18px 16px 16px}
+.pswatch .lineA,.pswatch .lineB{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px}
+.pswatch .lineA{margin-bottom:8px}
+.pswatch .r{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.pfoot{background:var(--panel);padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line)}
+.pfoot .hex{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;padding:3px 7px;border-radius:3px;white-space:nowrap}
+.tag.no{background:var(--fail-tint);color:var(--fail)}
+.tag.ok{background:var(--pass-tint);color:var(--pass)}
+.tag.mid{background:var(--warn-tint);color:var(--warn)}
+
+/* ramp */
+.ramp{display:grid;grid-template-columns:repeat(9,1fr);gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.rstep{display:flex;flex-direction:column}
+.rchip{height:88px}
+.rmeta{background:var(--panel);padding:10px 8px 12px;border-top:1px solid var(--line);text-align:center}
+.rtok{font-family:var(--mono);font-size:11px;color:var(--ink);font-weight:500}
+.rhex{font-family:var(--mono);font-size:9.5px;color:var(--ink4);margin-top:2px;letter-spacing:-.02em}
+.rratio{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;margin-top:6px;font-weight:500}
+.rratio.t{color:var(--pass)} .rratio.n{color:var(--ink4)} .rratio.b{color:var(--warn)}
+.ruse{font-size:10px;color:var(--ink4);margin-top:4px;line-height:1.35}
+@media(max-width:820px){.ramp{grid-template-columns:repeat(3,1fr)}}
+
+/* tables */
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{text-align:left;font-weight:500;font-size:11px;font-family:var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink4);padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--ink2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td b{color:var(--ink);font-weight:600}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:-1px;border:1px solid rgba(0,0,0,.12)}
+
+/* signal rows */
+.sig{display:flex;flex-direction:column;gap:10px}
+.srow{display:grid;grid-template-columns:120px 1fr;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.slabel{background:var(--panel);padding:14px;font-size:13px;font-weight:600;color:var(--ink);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:center;gap:3px}
+.slabel span{font-weight:400;font-size:11px;color:var(--ink4);font-family:var(--mono)}
+.sdemo{padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sdemo .txt{font-weight:600;font-size:15px}
+.sdemo .rr{font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums;opacity:.75}
+@media(max-width:640px){.srow{grid-template-columns:1fr}.slabel{border-right:0;border-bottom:1px solid var(--line)}}
+
+/* area bar */
+.areabar{display:flex;height:44px;border-radius:6px;overflow:hidden;border:1px solid var(--line);font-family:var(--mono);font-size:11.5px}
+.areabar div{display:flex;align-items:center;justify-content:center;color:#2B2521}
+.arealeg{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--ink3)}
+
+/* ui specimens */
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 28px;align-items:start}
+@media(max-width:760px){.specs{grid-template-columns:1fr}}
+.screen{max-width:none}
+.spec{display:flex;flex-direction:column;gap:10px}
+.spec .cap{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink4)}
+.spec .cap b{color:var(--ink2);font-size:12.5px;font-weight:600}
+.spec .cap .wbs{font-family:var(--mono);font-size:10.5px;border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+.screen{width:100%;max-width:400px;background:#FDFBF7;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  box-shadow:var(--shadow);font-size:16px;line-height:1.5;color:#4A4038}
+.screen .bar{background:#E8E0D5;padding:12px 16px;font-size:14px;font-weight:600;color:#2B2521;
+  display:flex;justify-content:space-between;align-items:center}
+.screen .bar .sub{font-weight:400;font-size:12px;color:#6B5F55;font-family:var(--mono)}
+.screen .body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.alert{background:#FCE9E6;border-radius:10px;padding:14px}
+.alert .hd{display:flex;align-items:center;gap:8px;color:#B3261E;font-weight:700;font-size:16px;margin-bottom:6px}
+.alert .hd .ic{width:22px;height:22px;border-radius:11px;background:#B3261E;color:#FFF;font-size:13px;
+  display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 22px}
+.alert p{margin:0;font-size:15px;color:#4A4038}
+.btn{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:10px;font-weight:700;font-size:16px}
+.btn.primary{background:#FF879F;color:#2B2521}
+.btn.danger{background:#B3261E;color:#FFFFFF}
+.btn.ghost{background:#FFFFFF;color:#4A4038;border:1.5px solid #9C8A74}
+.rowitem{display:flex;align-items:center;gap:12px;background:#FFFFFF;border:1px solid #E8E0D5;border-radius:10px;padding:12px 14px;min-height:48px}
+.rowitem .box{width:24px;height:24px;border-radius:6px;border:2px solid #9C8A74;flex:0 0 24px}
+.rowitem.done{background:#EDF3E6;border-color:#456E2F}
+.rowitem.done .box{background:#456E2F;border-color:#456E2F;color:#FFF;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.rowitem .t{flex:1;font-size:16px}
+.rowitem.done .t{color:#456E2F;font-weight:600}
+.rowitem .m{font-family:var(--mono);font-size:12px;color:#6B5F55}
+.aichip{display:inline-flex;align-items:center;gap:7px;background:#F5EDFF;border-left:4px solid #DDA5FF;
+  border-radius:0 8px 8px 0;padding:10px 12px;font-size:14px;color:#6B3FA0;font-weight:600}
+.aicard{background:#FFFFFF;border:1px solid #E8E0D5;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:9px}
+.aicard .q{font-size:15px;color:#4A4038;margin:0}
+.warnrow{display:flex;align-items:center;gap:10px;background:#FFF4D1;border-radius:10px;padding:12px 14px;min-height:48px}
+.warnrow .t{flex:1;font-size:15px;color:#8F5A00;font-weight:600}
+.statline{display:flex;gap:10px}
+.stat{flex:1;background:#F4EDE2;border-radius:10px;padding:12px;text-align:center}
+.stat .n{font-family:var(--mono);font-size:24px;font-weight:600;color:#2B2521;line-height:1.1}
+.stat .l{font-size:12px;color:#6B5F55;margin-top:3px}
+.ratio-note{font-family:var(--mono);font-size:11px;color:var(--ink4);display:flex;flex-wrap:wrap;gap:10px}
+
+/* axes */
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+.axis{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.axis .ax-t{display:flex;align-items:baseline;gap:9px}
+.axis h3{font-size:16px;font-weight:600}
+.axis .ax-n{font-family:var(--mono);font-size:11px;color:var(--ink4)}
+.axis .claim{font-size:13.5px;color:var(--ink2);font-weight:500;margin:0}
+.rules{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+.rules li{font-size:12.5px;color:var(--ink3);padding-left:14px;position:relative;line-height:1.5}
+.rules li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--ink4)}
+.refs{margin-top:auto;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:5px}
+.refs a{font-size:12px;color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px}
+.refs a:hover{color:var(--deep-pink);border-color:var(--deep-pink)}
+.refs .rl{display:flex;gap:7px;align-items:baseline}
+.refs .rid{font-family:var(--mono);font-size:10px;color:var(--ink4);flex:0 0 26px}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;background:var(--panel);padding:20px 22px}
+.callout h3{font-size:14.5px;margin-bottom:8px;font-weight:600}
+.callout p{font-size:13.5px;margin-bottom:0;color:var(--ink3)}
+ol.todo{counter-reset:t;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+ol.todo li{counter-increment:t;position:relative;padding-left:36px;font-size:14px;color:var(--ink2);max-width:76ch}
+ol.todo li::before{content:counter(t,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11.5px;
+  color:var(--ink4);border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+footer{margin-top:72px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink4);font-family:var(--mono);line-height:1.8}
+a:focus-visible,.refs a:focus-visible{outline:2px solid var(--deep-pink);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:no-preference){.refs a{transition:color .15s,border-color .15s}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">NHN WAPLAT AI CARE · 돌봄종사자 APP</p>
+  <h1>따뜻한 손길</h1>
+  <p class="lede">확정된 TYPE B의 온기를 유지한 채, 비어 있던 대비·신호 위계를 채운 색 체계. 분위기 제시가 아니라 <b>164개 화면에 적용 가능한 토큰 정의</b>가 목적이다.</p>
+  <div class="meta">
+    <span class="chip">확정 콘셉트 <b>TYPE B</b></span>
+    <span class="chip">폰트 <b>NanumSquare Round</b></span>
+    <span class="chip">본문 <b>16px↑</b></span>
+    <span class="chip">터치 <b>48dp</b></span>
+    <span class="chip">대비 <b>4.5:1↑</b> · 본문 7:1 목표</span>
+  </div>
+</header>
+
+<section>
+  <div class="shead"><span class="snum">01</span><h2>왜 확장이 필요한가</h2>
+    <span class="snote">WCAG 2.x 상대휘도 · 전량 재계산</span></div>
+  <div class="thesis">
+    <div class="verdict">
+      <span class="bignum">0 / 4</span>
+      <p>확정 4색 중 흰 배경에서 <b>4.5:1을 통과하는 색은 없다.</b> 비텍스트 기준 3:1(1.4.11)조차 통과하지 못한다. 4색은 전부 <b>면(surface) 자격만 있고 획(text·icon) 자격이 없다.</b></p>
+    </div>
+    <div class="proof">
+      <div class="pcard">
+        <div class="pswatch" style="background:#FF879F">
+          <div class="lineA"><span style="color:#FFFFFF">흰 글씨 — 긴급</span><span class="r" style="color:#FFFFFF">2.28</span></div>
+          <div class="lineB"><span style="color:#2B2521;font-weight:600">N80 — 긴급</span><span class="r" style="color:#2B2521">6.64</span></div>
+        </div>
+        <div class="pfoot"><span class="hex">#FF879F 핑크</span><span class="tag no">획 불가 2.28</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pswatch" style="background:#DDA5FF">
+          <div class="lineA"><span style="color:#FFFFFF">흰 글씨 — 신호</span><span class="r" style="color:#FFFFFF">1.93</span></div>
+          <div class="lineB"><span style="color:#2B2521;font-weight:600">N80 — 신호</span><span class="r" style="color:#2B2521">7.85</span></div>
+        </div>
+        <div class="pfoot"><span class="hex">#DDA5FF 라벤더</span><span class="tag no">획 불가 1.93</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pswatch" style="background:#FFCF1C">
+          <div class="lineA"><span style="color:#FFFFFF">흰 글씨 — 주의</span><span class="r" style="color:#FFFFFF">1.48</span></div>
+          <div class="lineB"><span style="color:#2B2521;font-weight:600">N80 — 주의</span><span class="r" style="color:#2B2521">10.22</span></div>
+        </div>
+        <div class="pfoot"><span class="hex">#FFCF1C 옐로</span><span class="tag no">획 불가 1.48</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pswatch" style="background:#E8E0D5">
+          <div class="lineA"><span style="color:#FFFFFF">흰 글씨 — 배경</span><span class="r" style="color:#FFFFFF">1.31</span></div>
+          <div class="lineB"><span style="color:#2B2521;font-weight:600">N80 — 배경</span><span class="r" style="color:#2B2521">11.56</span></div>
+        </div>
+        <div class="pfoot"><span class="hex">#E8E0D5 웜 베이지</span><span class="tag no">획 불가 1.31</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">02</span><h2>웜 뉴트럴 스케일</h2>
+    <span class="snote">확정 #E8E0D5 = N20 으로 편입</span></div>
+  <p class="dim">청색 기조 그레이를 배제하고 베이지 기조로 텍스트·보더·배경을 전부 처리한다. 대비를 올려도 톤이 병원 앱으로 넘어가지 않게 잠그는 장치다. 확장이 아니라 <b>확정색의 파생</b>이라는 점이 클라이언트 설득의 핵심이다.</p>
+  <div class="ramp">
+    <div class="rstep"><div class="rchip" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #E8E0D5"></div>
+      <div class="rmeta"><div class="rtok">N00</div><div class="rhex">#FFFFFF</div><div class="rratio n">1.00</div><div class="ruse">카드 면</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#FDFBF7"></div>
+      <div class="rmeta"><div class="rtok">N05</div><div class="rhex">#FDFBF7</div><div class="rratio n">1.03</div><div class="ruse">앱 바탕</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#F4EDE2"></div>
+      <div class="rmeta"><div class="rtok">N10</div><div class="rhex">#F4EDE2</div><div class="rratio n">1.16</div><div class="ruse">섹션 구분</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#E8E0D5"></div>
+      <div class="rmeta"><div class="rtok">N20</div><div class="rhex">#E8E0D5</div><div class="rratio n">1.31</div><div class="ruse">확정색<br>헤더·그룹</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#D6CBB8"></div>
+      <div class="rmeta"><div class="rtok">N30</div><div class="rhex">#D6CBB8</div><div class="rratio n">1.60</div><div class="ruse">디바이더</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#9C8A74"></div>
+      <div class="rmeta"><div class="rtok">N40</div><div class="rhex">#9C8A74</div><div class="rratio b">3.33</div><div class="ruse">아이콘·보더<br>비텍스트만</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#6B5F55"></div>
+      <div class="rmeta"><div class="rtok">N60</div><div class="rhex">#6B5F55</div><div class="rratio t">6.19</div><div class="ruse">보조 텍스트</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#4A4038"></div>
+      <div class="rmeta"><div class="rtok">N70</div><div class="rhex">#4A4038</div><div class="rratio t">10.09</div><div class="ruse">본문 기본</div></div></div>
+    <div class="rstep"><div class="rchip" style="background:#2B2521"></div>
+      <div class="rmeta"><div class="rtok">N80</div><div class="rhex">#2B2521</div><div class="rratio t">15.12</div><div class="ruse">제목·수치</div></div></div>
+  </div>
+  <p class="dim" style="margin-top:16px;font-size:13px">베이지 면(N20) 위 텍스트 검증 — <span class="mono">N80 11.56</span> · <span class="mono">N70 7.71</span> · <span class="mono">N60 4.73</span>(캡션까지만) · <span class="mono">N40 2.55 미달</span>. <b>베이지 위에는 N60 이상만 올린다.</b> 실사용 본문 최저는 N60이며, 4.5:1을 겨우 넘는 <span class="mono">#7E7062 = 4.79</span> 대역은 본문에 쓰지 않는다.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">03</span><h2>신호 3단계</h2>
+    <span class="snote">일반 정보에는 색을 배정하지 않는다</span></div>
+  <p class="dim">이 앱의 핵심 화면은 긴급 안부확인 · 이상보고 · AI검증이다. 색이 장식으로 도처에 깔리면 경고가 묻힌다. 규칙을 뒤집어, <b>일반 정보는 무채로만 표현하고 채도 있는 색은 주의·긴급·완료에만 배정한다.</b></p>
+  <div class="sig">
+    <div class="srow"><div class="slabel">정보<span>기본 상태</span></div>
+      <div class="sdemo" style="background:#F4EDE2">
+        <span class="txt" style="color:#4A4038">오늘 방문 4건 · 기록 완료 2건</span>
+        <span class="rr" style="color:#4A4038">N70 on N10 — 8.68</span></div></div>
+    <div class="srow"><div class="slabel">주의<span>#8F5A00</span></div>
+      <div class="sdemo" style="background:#FFF4D1">
+        <span class="txt" style="color:#8F5A00">기록 미완 · 확인 필요</span>
+        <span class="rr" style="color:#8F5A00">tint 위 5.26 · 흰 배경 5.78</span></div></div>
+    <div class="srow"><div class="slabel">긴급<span>#B3261E</span></div>
+      <div class="sdemo" style="background:#FCE9E6">
+        <span class="txt" style="color:#B3261E">위험 신호 감지 · 즉시 확인</span>
+        <span class="rr" style="color:#B3261E">tint 위 5.58 · 흰 배경 6.54</span></div></div>
+    <div class="srow"><div class="slabel">완료<span>#456E2F</span></div>
+      <div class="sdemo" style="background:#EDF3E6">
+        <span class="txt" style="color:#456E2F">전송 완료 · 서버 저장됨</span>
+        <span class="rr" style="color:#456E2F">tint 위 5.27 · 흰 배경 5.96</span></div></div>
+  </div>
+  <div class="callout" style="margin-top:18px">
+    <h3>주의색은 확정 옐로의 어두운 파생이다</h3>
+    <p>확정 <span class="mono">#FFCF1C</span>는 1.48:1로 텍스트가 불가하므로, 옐로는 tint 면(<span class="mono">#FFF4D1</span>)에서 살고 획은 딥 앰버가 담당한다. 색상 계열이 유지되므로 톤 충돌이 없다. 긴급 레드는 확정 핑크와 같은 웜 레드 계열이지만 명도 차 6.54 대 2.28로 한눈에 갈린다 — 채도 낮은 핑크는 온기, 어둡고 진한 레드는 위험.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">04</span><h2>확정 4색 역할 재정의</h2>
+    <span class="snote">면으로 후퇴 · 획은 파생 딥컬러가 담당</span></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>색</th><th>새 역할</th><th>허용</th><th>금지</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dot" style="background:#FF879F"></span><b>핑크</b><br><span class="mono" style="font-size:11px;color:var(--ink4)">#FF879F</span></td>
+          <td>브랜드 온기<br>주요 액션의 <b>면</b></td>
+          <td>버튼 채움(그 위 텍스트는 N80 = 6.64), 선택 상태 면, 강조 배지 면</td>
+          <td><b>텍스트·아이콘 금지</b>(2.28)<br>핑크 면 위 흰 글씨 금지(2.28)<br>N70도 4.43으로 미달 — N80만 가능</td></tr>
+        <tr><td><span class="dot" style="background:#DDA5FF"></span><b>라벤더</b><br><span class="mono" style="font-size:11px;color:var(--ink4)">#DDA5FF</span></td>
+          <td><b>AI 보조 신호</b> 전용 마커</td>
+          <td>AI 감지 카드의 면·좌측 바, tint <span class="mono">#F5EDFF</span></td>
+          <td>텍스트 금지(1.93)<br>일반 UI로 확산 금지 — 확산되면 AI 마커 기능이 죽는다</td></tr>
+        <tr><td><span class="dot" style="background:#FFCF1C"></span><b>옐로</b><br><span class="mono" style="font-size:11px;color:var(--ink4)">#FFCF1C</span></td>
+          <td>주의 계열의 <b>면</b>, 하이라이트</td>
+          <td>주의 배지 면, 진행 인디케이터 면, 그 위 텍스트는 N80(10.22)</td>
+          <td><b>텍스트·아이콘 절대 금지</b>(1.48)<br>흰 배경 위 얇은 선 금지</td></tr>
+        <tr><td><span class="dot" style="background:#E8E0D5"></span><b>웜 베이지</b><br><span class="mono" style="font-size:11px;color:var(--ink4)">#E8E0D5</span></td>
+          <td>구조색(N20)<br>면 분할</td>
+          <td>헤더·그룹·리스트 배경</td>
+          <td>텍스트 금지<br>이 위 텍스트는 N60 이상만</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:15px;margin:26px 0 12px">파생 딥컬러 — 획 역할 전담</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>토큰</th><th>HEX</th><th>흰 배경</th><th>tint 위</th><th>용도</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dot" style="background:#A83254"></span>딥 핑크</td><td class="num">#A83254</td><td class="num"><b>6.46</b></td><td class="num">5.85 <span style="color:var(--ink4)">#FFF0F3</span></td><td>링크, 강조 텍스트, 활성 아이콘</td></tr>
+        <tr><td><span class="dot" style="background:#E85C7C"></span>미드 핑크</td><td class="num">#E85C7C</td><td class="num"><b>3.36</b></td><td class="num">—</td><td>활성 보더·언더라인 등 비텍스트(1.4.11)</td></tr>
+        <tr><td><span class="dot" style="background:#6B3FA0"></span>딥 라벤더</td><td class="num">#6B3FA0</td><td class="num"><b>7.38</b></td><td class="num">6.48 <span style="color:var(--ink4)">#F5EDFF</span></td><td>"AI 신호" 라벨 텍스트·아이콘</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim" style="margin-top:14px;font-size:13px">이 3색으로 확정 4색이 못 하는 획 역할이 전부 메워진다. 클라이언트에게는 <b>"색이 늘어난 것"이 아니라 "같은 색의 진한 버전이 생긴 것"</b>으로 설명된다 — 확정 콘셉트 훼손 논쟁을 피하는 프레이밍이다.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">05</span><h2>화면 면적 배분</h2>
+    <span class="snote">신호색이 5%를 넘으면 경고가 죽는다</span></div>
+  <div class="areabar">
+    <div style="background:#E8E0D5;flex:70">웜 뉴트럴 70%</div>
+    <div style="background:#FF879F;flex:25">확정 4색 25%</div>
+    <div style="background:#B3261E;flex:5;color:#FFFFFF">5%</div>
+  </div>
+  <div class="arealeg">
+    <span>면·바탕·텍스트 — 웜 뉴트럴</span><span>브랜드 온기 — 확정 4색(면 전용)</span><span>주의·긴급·완료 — 신호색</span>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">06</span><h2>UI 무드 스펙이먼</h2>
+    <span class="snote">실제 화면 · 360px 폭 · 본문 16px · 타깃 48dp</span></div>
+  <p class="dim">스와치만으로는 무드가 잡히지 않는다. 실제 화면 조각에 이 팔레트를 얹어, 온기와 경고가 같은 화면에서 공존하는지 확인한다. 화면 번호는 WBS 항목이다.</p>
+  <div class="specs">
+
+    <div class="spec">
+      <div class="cap"><b>긴급 안부확인</b><span class="wbs">2.3</span><span>온기 위에서 경고가 살아나는가</span></div>
+      <div class="screen">
+        <div class="bar">오늘 <span class="sub">09:40</span></div>
+        <div class="body">
+          <div class="alert">
+            <div class="hd"><span class="ic">!</span>위험 신호 감지</div>
+            <p>김○○ 어르신 — 12시간 활동 없음. 즉시 확인이 필요합니다.</p>
+          </div>
+          <div class="btn danger">지금 전화하기</div>
+          <div class="btn ghost">방문 일정 잡기</div>
+        </div>
+      </div>
+      <div class="ratio-note"><span>긴급 6.54</span><span>흰 글씨 on 레드 6.54</span><span>보더 N40 3.33</span></div>
+    </div>
+
+    <div class="spec">
+      <div class="cap"><b>돌봄기록 흐름</b><span class="wbs">3.3</span><span>저입력 · 완료를 색으로 회수</span></div>
+      <div class="screen">
+        <div class="bar">방문 기록 <span class="sub">3 / 5</span></div>
+        <div class="body">
+          <div class="rowitem done"><span class="box">✓</span><span class="t">건강 상태 확인</span><span class="m">09:12</span></div>
+          <div class="rowitem done"><span class="box">✓</span><span class="t">복약 확인</span><span class="m">09:20</span></div>
+          <div class="rowitem"><span class="box"></span><span class="t">식사 보조</span></div>
+          <div class="warnrow"><span class="t">특이사항 미입력</span><span class="btn ghost" style="min-height:40px;padding:0 14px;font-size:14px">입력</span></div>
+          <div class="btn primary">기록 전송</div>
+        </div>
+      </div>
+      <div class="ratio-note"><span>완료 5.27</span><span>주의 5.26</span><span>핑크 면 위 N80 6.64</span></div>
+    </div>
+
+    <div class="spec">
+      <div class="cap"><b>AI 검증</b><span class="wbs">3.3.5</span><span>진단이 아니라 신호까지만</span></div>
+      <div class="screen">
+        <div class="bar">기록 확인 <span class="sub">AI 보조</span></div>
+        <div class="body">
+          <div class="aichip">◇ AI 신호 감지</div>
+          <div class="aicard">
+            <p class="q">지난 3회 기록과 <b>식사량 항목</b>이 다릅니다. 확인해 주세요.</p>
+            <div class="btn ghost" style="min-height:44px;font-size:15px">기록 다시 보기</div>
+          </div>
+          <p style="margin:0;font-size:13px;color:#6B5F55">판단은 담당자가 합니다. AI는 확인이 필요한 곳만 표시합니다.</p>
+        </div>
+      </div>
+      <div class="ratio-note"><span>딥 라벤더 on tint 6.48</span><span>라벤더는 면·바만 담당</span></div>
+    </div>
+
+    <div class="spec">
+      <div class="cap"><b>근무 현황</b><span class="wbs">2.1</span><span>평상 상태에는 색을 쓰지 않는다</span></div>
+      <div class="screen">
+        <div class="bar">오늘 근무 <span class="sub">08.19 (수)</span></div>
+        <div class="body">
+          <div class="statline">
+            <div class="stat"><div class="n">4</div><div class="l">방문 예정</div></div>
+            <div class="stat"><div class="n">2</div><div class="l">기록 완료</div></div>
+            <div class="stat"><div class="n">1</div><div class="l">이동 중</div></div>
+          </div>
+          <div class="rowitem"><span class="t">10:30 박○○ 어르신</span><span class="m">요양</span></div>
+          <div class="rowitem"><span class="t">13:00 이○○ 어르신</span><span class="m">생활</span></div>
+          <div class="btn primary">근무 시작</div>
+        </div>
+      </div>
+      <div class="ratio-note"><span>전 요소 무채 — 신호색 0%</span><span>N70 on N10 8.68</span></div>
+    </div>
+
+  </div>
+  <div class="callout" style="margin-top:20px">
+    <h3>네 화면을 나란히 놓고 확인할 것</h3>
+    <p>근무 현황에는 신호색이 <b>한 점도 없고</b>, 긴급 안부확인에는 레드가 화면의 작은 비율만 차지한다. 이 대비가 유지돼야 경고가 경고로 읽힌다. 핑크는 네 화면 모두에서 <b>버튼 면으로만</b> 등장하고 글자로는 한 번도 쓰이지 않았다 — 확정 4색의 역할 제한이 실제로 지켜지는지 보는 기준이다.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">07</span><h2>무드 4축과 레퍼런스</h2>
+    <span class="snote">18건 · 전부 검색결과로 URL 확인</span></div>
+  <p class="dim">각 축은 <b>규칙 + 그 규칙이 실제로 작동하는 제품</b>으로 짝지어 둔다. 규격 문서는 08로 분리했다 — 규칙의 출처와 무드의 출처는 다른 것이다.</p>
+  <div class="axes">
+
+    <div class="axis">
+      <div class="ax-t"><span class="ax-n">01</span><h3>온기</h3></div>
+      <p class="claim">차갑지 않은 회색.</p>
+      <ul class="rules">
+        <li>radius를 <b>3단으로 분화</b> — 카드 16 / 버튼·입력 12 / 칩·프로그레스 full</li>
+        <li>본문 색은 웜 차콜 계열. 청색 그레이 배제(N70·N80이 이 역할)</li>
+        <li>온기의 출처를 채도가 아니라 <b>형태와 웜 뉴트럴 면적</b>에 둔다</li>
+      </ul>
+      <div class="refs">
+        <div class="rl"><span class="rid">M1</span><a href="https://design.duolingo.com/identity/color">Duolingo — Color / shape</a></div>
+        <div class="rl"><span class="rid">M2</span><a href="https://about.daangn.com/blog/archive/%EB%8B%B9%EA%B7%BC-%EB%A6%AC%EB%B8%8C%EB%9E%9C%EB%94%A9-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EB%B8%8C%EB%9E%9C%EB%93%9C/">당근 리브랜딩 — 컬러·아이콘</a></div>
+        <div class="rl"><span class="rid">M3</span><a href="https://www.metalab.com/work/headspace">Headspace — MetaLab 케이스</a></div>
+        <div class="rl"><span class="rid">M4</span><a href="https://ixd.prattsi.org/2026/02/design-critique-finch-self-care-pet-ios-app/">Finch — Pratt 디자인 크리틱</a></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink4);margin:10px 0 0">주의 — 당근·Duolingo는 고채도다. <b>형태 언어만</b> 가져오고 채도는 버린다.</p>
+    </div>
+
+    <div class="axis">
+      <div class="ax-t"><span class="ax-n">02</span><h3>신뢰</h3></div>
+      <p class="claim">읽히는 것이 곧 신뢰.</p>
+      <ul class="rules">
+        <li>본문 16px 이상, Bold를 기본 굵기로. 타깃 <b>48×48dp</b></li>
+        <li>입력 <b>순서는 유지, 룩만 교체</b> — 50·60대 사용자의 기존 관행을 깨지 않는다</li>
+        <li>정보 밀도는 시니어 전용 기기보다 높게. 사용자는 하루 수십 건을 처리한다</li>
+      </ul>
+      <div class="refs">
+        <div class="rl"><span class="rid">M5</span><a href="https://brunch.co.kr/@ssoxxl/64">맞춤돌봄케어 — 현행 화면 리뷰</a></div>
+        <div class="rl"><span class="rid">M6</span><a href="https://www.papa.com/resources/blog/creating-tech-for-older-adults">Papa — 고령 사용자 설계 원칙</a></div>
+        <div class="rl"><span class="rid">M7</span><a href="https://seniorsite.org/resource/grandpad-tablet-review-simple-tech-that-actually-works-for-seniors/">GrandPad — 16pt Bold 기본</a></div>
+        <div class="rl"><span class="rid">M8</span><a href="https://rondesignlab.com/cases/oscar-health-mobile-app-ux-ui-design">Oscar Health — 병원처럼 안 보이기</a></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink4);margin:10px 0 0">M5는 우리 사용자가 <b>지금 쓰는 화면</b>이다. 톤의 참조가 아니라 넘어야 할 기준선.</p>
+    </div>
+
+    <div class="axis" style="border-color:var(--deep-pink)">
+      <div class="ax-t"><span class="ax-n">03</span><h3>신호</h3></div>
+      <p class="claim">색 단독으로 신호를 만들지 않는다.</p>
+      <ul class="rules">
+        <li><b>색 + 아이콘 형태 + 짧은 라벨 3중 인코딩.</b> 직사광·장갑·색각이상을 한 번에 처리</li>
+        <li>긴급과 주의는 같은 컴포넌트의 색 변형이 아니라 <b>별도 등급의 컴포넌트</b></li>
+        <li>긴급 버튼에 <b>오발동 방지</b> — 길게 누르기 / 밀어서 취소</li>
+        <li>토큰을 역할 기반으로 명명해 BI 후행 리스크를 흡수</li>
+      </ul>
+      <div class="refs">
+        <div class="rl"><span class="rid">M9</span><a href="https://help.birdie.care/en/articles/3889187-evaluating-your-care-recipient-s-care-using-a-risk-level-status">Birdie — RAG 리스크 등급 ★</a></div>
+        <div class="rl"><span class="rid">M10</span><a href="https://www.connectedinmotion.ca/blog/dexcom-g7s-enhanced-alerts/">Dexcom G7 — 2단 경고 구조</a></div>
+        <div class="rl"><span class="rid">M11</span><a href="https://support.life360.com/hc/en-us/articles/23053474049687-SOS-Alerts">Life360 — SOS 오발동 방지</a></div>
+        <div class="rl"><span class="rid">M12</span><a href="https://asphalt.gojek.io/pages/foundations_colors.html">Gojek Asphalt — 역할 기반 토큰</a></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink4);margin:10px 0 0">넷 다 <b>톤은 우리와 다르다</b>. 논리만 가져온다 — 아래 09 참조.</p>
+    </div>
+
+    <div class="axis">
+      <div class="ax-t"><span class="ax-n">04</span><h3>지속</h3></div>
+      <p class="claim">하루 단위 루프.</p>
+      <ul class="rules">
+        <li>일정 → 이동 → 체크인 → 기록 → 종료. 화면 이동보다 <b>한 화면 안에서 상태가 전진</b></li>
+        <li>본문은 4.5:1이 아니라 <b>7:1 이상</b>을 기본값으로 — 야외 직사광 대비 마진</li>
+        <li>통신 불안정 대비 <b>오프라인 상태 표시</b> 컴포넌트 필요</li>
+      </ul>
+      <div class="refs">
+        <div class="rl"><span class="rid">M13</span><a href="https://www.darrenamer.co.uk/home/cera-care">Cera Care — 케어러 앱 ★</a></div>
+        <div class="rl"><span class="rid">M14</span><a href="https://www.birdie.care/product-features/carer-app">Birdie Carer App</a></div>
+        <div class="rl"><span class="rid">M15</span><a href="https://alayacare.com/wp-content/uploads/2023/06/alayacare-mobile-app.pdf">AlayaCare — 제품 PDF(화면 포함)</a></div>
+        <div class="rl"><span class="rid">M16</span><a href="https://ads.kaipoke.biz/home-visit/function/visit-record.html">カイポケ — 訪問記録</a></div>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink4);margin:10px 0 0">M13은 범위가 가장 가깝다 — 양 플랫폼 디자인 시스템 납품, 리포트 완료 20일→6.7시간.</p>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">08</span><h2>규격 근거</h2>
+    <span class="snote">수치의 출처 · 무드 레퍼런스와 구분</span></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>규격</th><th>우리 적용</th><th>출처</th></tr></thead>
+      <tbody>
+        <tr><td>WCAG 1.4.3 Contrast (Minimum)</td><td class="num">4.5:1</td><td><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" style="color:var(--deep-pink)">w3.org</a></td></tr>
+        <tr><td>WCAG 1.4.6 Contrast (Enhanced)</td><td class="num">본문 7:1 목표</td><td><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-enhanced.html" style="color:var(--deep-pink)">w3.org</a></td></tr>
+        <tr><td>WCAG 1.4.11 Non-text Contrast</td><td class="num">3:1 · N40 하한</td><td><a href="https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html" style="color:var(--deep-pink)">w3.org</a></td></tr>
+        <tr><td>Material — Accessibility</td><td class="num">터치 48dp</td><td><a href="https://m2.material.io/design/usability/accessibility.html" style="color:var(--deep-pink)">m2.material.io</a></td></tr>
+        <tr><td>서울시 고령층 친화 디지털 접근성 표준</td><td class="num">본문 14pt 하한 → 16px 상향</td><td><a href="https://smart.seoul.go.kr/board/41/4901/board_view.do" style="color:var(--deep-pink)">smart.seoul.go.kr</a></td></tr>
+        <tr><td>Apple HIG — Accessibility</td><td>상태의 색 이외 중복 표기</td><td><a href="https://developer.apple.com/design/human-interface-guidelines/accessibility" style="color:var(--deep-pink)">developer.apple.com</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim" style="margin-top:14px;font-size:13px">대비값은 전량 재계산해 검증했다. <b>규격 문서 URL은 이 환경의 송신 정책에 막혀 열어보지 못했다</b> — Apple HIG만 200 응답 확인. 무드 레퍼런스 16건은 검색결과에 URL·제목이 실제로 반환된 것만 등재했으나, 페이지 본문과 화면 이미지는 확인하지 못했다.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">09</span><h2>선례가 없는 지점</h2>
+    <span class="snote">레퍼런스로 방어되지 않는 영역</span></div>
+  <div class="callout" style="border-left-color:var(--fail)">
+    <h3>"웜 파스텔 기조에서 긴급을 살린" 완성 사례를 찾지 못했다</h3>
+    <p>신호 축에 등재한 4건은 <b>신호 논리는 강하지만 톤이 전부 우리와 다르다</b> — Birdie는 고채도 RAG, Dexcom은 의료기기, Life360은 다크, Gojek은 고채도 그린. 즉 <b>"따뜻한 손길 × 긴급"의 조합은 우리가 처음 푸는 문제</b>에 가깝다. 레퍼런스로 방어할 수 없으므로, 06의 UI 스펙이먼처럼 <b>실물 대비 검증을 우리가 직접 만들어 근거로 남기는 것</b>이 유일한 방법이다.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px">
+    <div class="callout" style="border-left-color:var(--warn)">
+      <h3>NanumSquare Round의 실서비스 본문 선례가 없다</h3>
+      <p>폰트 자체 정보(산돌 제작, 상업적 사용 가능)만 확인됐고, <b>이 폰트가 실제 앱 본문에서 어떻게 읽히는지 검증된 사례를 찾지 못했다.</b> 라운드 계열은 소자 크기에서 획이 뭉치므로, 방문 시각·연락처 같은 숫자 가독성과 12sp 이하 대역을 <b>자체 실측</b>해 본문 하한을 정해야 한다.</p>
+    </div>
+    <div class="callout" style="border-left-color:var(--pass)">
+      <h3>개발사 = 한강시스템, 확인됐다</h3>
+      <p>케어포 가족돌봄(<span class="mono">com.hangang.carefor_family</span>)의 개발사가 <b>한강시스템(주)</b>이고 자사 사업 페이지에 "장기요양 운영관리 시스템 케어포"가 올라와 있다. 개발사가 이미 요양 도메인 UI 관행을 갖고 있다는 뜻이므로, <b>우리 신호 체계·radius·타이포 위계가 기존 관행과 충돌하는 지점을 QA 전에 문서로 못 박아야 한다.</b></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">10</span><h2>처리할 것</h2>
+    <span class="snote">10/26 개발 QA 기준</span></div>
+  <ol class="todo">
+    <li><b>신호를 3중 인코딩으로 확정한다.</b> 색 + 아이콘 형태 + 짧은 라벨. Birdie의 RAG 문자 코드(<span class="mono">n/t</span>·<span class="mono">m/t</span>)가 직접 근거다. 직사광·장갑·색각이상 세 조건을 한 장치로 처리하는 유일한 해법이며, <span class="mono">#FFCF1C</span>가 텍스트로 못 쓰이는 제약도 이 규칙으로 흡수된다.</li>
+    <li><b>radius를 3단으로 분화한다.</b> 현재 "12~16px"은 범위일 뿐 규칙이 아니다. 카드 16 / 버튼·입력 12 / 칩·프로그레스 full 로 확정한다.</li>
+    <li><b>컬러 토큰을 역할 기반으로 명명한다.</b> <span class="mono">brand-primary</span>가 바뀌어도 <span class="mono">signal-urgent</span>·<span class="mono">signal-caution</span>·<span class="mono">signal-done</span>은 불변이 되도록. NHN 내부 BI가 후행 적용될 때 재작업 범위를 확정 4색으로 한정하는 장치이자, 회신에 박아둔 "BI가 확정 무드와 크게 다르면 별도 산정" 방어선의 기술적 뒷받침이다.</li>
+    <li><b>긴급 버튼 오발동 방지를 한강시스템과 협의한다.</b> 장갑 착용·이동 중 조작이라 오탭 위험이 크다. 길게 누르기 / 밀어서 취소 모델은 개발 구현 부담이 있으므로 <b>10/26 QA에 꺼내면 반영이 안 된다.</b></li>
+    <li><b>터치 타깃 44px → 48dp.</b> 제안서 표기가 iOS 기준이다. 안드로이드 비중이 높은 사용자층에는 Material 48dp가 안전하다. 이미 납품된 분량이 있으므로 QA 구간 수정 범위로 잡는다.</li>
+    <li><b>레퍼런스 링크 전수 확인.</b> 무드 16건은 검색결과로 URL이 확인됐으나 화면을 열어보지는 못했다. 국내 앱(케어포·케어네이션·맞춤돌봄케어)은 <b>직접 설치해 캡처</b>해야 하며, 개발사 관행 파악 목적상 케어포가 1순위다.</li>
+    <li><b>완료 색 <span class="mono">#4C7A34</span> → <span class="mono">#456E2F</span> 교체 완료.</b> 원안은 tint 위 4.48:1로 미달이었다. 교체값은 5.27:1로 주의·긴급과 같은 대역에 들어온다.</li>
+  </ol>
+</section>
+
+
+<footer>
+  하이브랩 · NHN WAPLAT AI CARE 돌봄종사자 APP<br>
+  대비값은 WCAG 2.x 상대휘도 공식으로 전량 재계산해 검증했다. 레퍼런스 URL은 미검증 — 07 참조.
+</footer>
+
+</div>
