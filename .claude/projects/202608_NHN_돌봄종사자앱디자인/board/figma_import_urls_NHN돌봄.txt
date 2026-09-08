@@ -1,0 +1,56 @@
+# NHN돌봄 — Figma html.to.design 붙여넣기용 URL 목록
+# 상태: 미완결. 아래는 WebSearch로 URL이 확인된 항목이며 실물 확인 전이다.
+
+## Awwwards
+Vibrant Wellness  [Site of the Day]
+https://www.awwwards.com/sites/vibrant-wellness
+
+HEVA HEALTH  [Site of the Day]
+https://www.awwwards.com/sites/heva-health
+
+Health By Habit  [Site of the Day]
+https://www.awwwards.com/sites/health-by-habit
+
+Anima Wellness I PeachWeb  [Honorable Mention]
+https://www.awwwards.com/sites/anima-wellness-i-peachweb
+
+We Are Wellness  [Nominee]
+https://www.awwwards.com/sites/we-are-wellness-1
+
+Comprehensive Healthcare Medical  [Nominee]
+https://www.awwwards.com/sites/comprehensive-healthcare-medical
+
+
+## CSS Design Awards
+Heva Health (CSSDA)
+https://www.cssdesignawards.com/sites/heva-health/45818/
+
+Google Cloud Demos — Healthcare
+https://www.cssdesignawards.com/sites/google-cloud-demos-healthcare/38190/
+
+Keikku
+https://www.cssdesignawards.com/sites/keikku/46872/
+
+Good Life Meds
+https://www.cssdesignawards.com/sites/good-life-meds/48835/
+
+OneLine Health
+https://www.cssdesignawards.com/sites/oneline-health/47553/
+
+Ethical Life
+https://www.cssdesignawards.com/sites/ethical-life/47814/
+
+
+## GDWEB
+뷰웰의원
+https://www.gdweb.co.kr/sub/view.asp?str_no=27003
+
+모닝케어
+https://www.gdweb.co.kr/sub/view.asp?Txt_fgbn=5&str_no=4166
+
+인비트로스
+https://www.gdweb.co.kr/sub/view.asp?Txt_fgbn=5&str_no=23073
+
+이모션
+https://www.gdweb.co.kr/sub/view.asp?Txt_fgbn=5&str_no=24576
+
