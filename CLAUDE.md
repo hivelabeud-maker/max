@@ -65,7 +65,7 @@
 ├── skills/                    # 커스텀 스킬
 │   ├── (논리·근거) pyramid-principle/ mece-issue-tree/ storyline-builder/
 │   ├── (근거 검증) source-grading/ insight-derivation/
-│   ├── (수주 실무) creative-brief/ objection-library/
+│   ├── (진단·수주) ux-audit/ creative-brief/ objection-library/
 │   ├── intel-deck-design/
 │   ├── list-deck-design/
 │   ├── mx-deck-design/
@@ -136,7 +136,7 @@
 - `intel-deck-design` — 항목 N개를 같은 구조로 반복하는 인텔리전스 DB (좌측 번호 네비 + 항목별 탭, 모노톤+포인트 4색, SAFE/CAUTION/DO NOT USE 라벨, DATA GAP 박스, 검색·필터, template.html 동반). 트리거 "인텔 대시보드"/"항목별 상세 보게"/"팩트북 만들어줘"/"타이틀별로 정리"
 - `mx-research-dashboard-design` — **마케터 에이전트 산출 표준 포맷**. 좌측 사이드바 + 12뷰 탭 전환(00 요약 → 01 브리프·문제정의 → 02 팩트북 → 03 경쟁리서치 → 04 포지셔닝맵 → 05 화이트스페이스 → 06 이종업계 → 07 인사이트 → 08 밸류키워드 → 09 전략대안 → 10 추천전략 → 11 출처추적). 모노톤+포인트 4색(출처 티어 T1~T4 고정). **"마케터 돌려" 라우팅이 문서·HTML 산출로 이어지면 자동으로 이 레이아웃**. 트리거 "리서치 대시보드로 정리"/"마케터 산출물 만들어줘"/"좌측 탭으로 정리"
 
-### 제안 고도화 스킬 7종 (논리·근거 계열)
+### 제안 고도화 스킬 8종 (논리·근거 계열)
 > 산출물 조판 스킬이 "어떻게 보이게 할까"라면, 이 7종은 "무엇을 왜 그렇게 주장하는가"를 만든다.
 > 전체 순서와 지시 방법은 `.claude/library/proposal-pipeline.md` 참조.
 
@@ -146,6 +146,7 @@
 - `pyramid-principle` — 지배 메시지 한 문장 + 키라인 + 근거의 3층 구조. 모든 문서 조판 직전의 마지막 관문. 트리거 "목차 짜줘", "결론부터", "핵심 메시지 뭐지"
 - `storyline-builder` — 한 줄 = 슬라이드 한 장. 제목을 주제가 아니라 발견으로 쓰고, 제목만 이어 읽어 이야기가 되는지 검사. 트리거 "스토리라인 짜줘", "장표 순서"
 - `creative-brief` — 막연한 요청을 착수 가능한 2장짜리 브리프로. 10개 질문 + 미확인 가정 명시. 트리거 "브리프 써줘", "킥오프 정리"
+- `ux-audit` — 현행 서비스를 8개 고정 지표로 진단. 화면 캡처에 번호 마킹 + Good/Need Improvement/Critical 판정 → 3~5개 그룹으로 묶어 Issue→Approach 표. 리뉴얼·개선 제안의 진단 챕터. 트리거 "UX 진단", "페인포인트 뽑아줘", "현행 서비스 분석"
 - `objection-library` — PT 예상 반론을 진단 질문 중심 대응 카드로. 트리거 "예상 질문 뽑아줘", "반론 대비", "Q&A 정리"
 
 ### HTML 산출물 스킬 6종 선택 기준
