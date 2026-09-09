@@ -127,7 +127,7 @@ def main():
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>%s</title>%s
 <style>
-html,body{margin:0;padding:0;width:100%%;height:100%%;overflow:hidden;background:#04020e;
+html,body{margin:0;padding:0;width:100%%;height:100%%;overflow:hidden;background:#000000;
 touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
 canvas{display:block;touch-action:none;image-rendering:pixelated;image-rendering:crisp-edges;}
