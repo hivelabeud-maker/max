@@ -40,13 +40,13 @@ CHARS = [
   },
 ]
 
-MONS = [
-  ('m_blue',   'mon_normal_slime_blue_sd',   96),
-  ('m_red',    'mon_normal_slime_red_sd',    96),
-  ('m_metal',  'mon_normal_slime_metal_sd',  96),
-  ('m_helmet', 'mon_normal_slime_helmet_sd', 104),
-  ('m_gold',   'mon_elite_slime_yellow_sd',  120),
-]
+# ── 몬스터 ───────────────────────────────────────────────────────────────────
+# 2차(NEON DEFENSE)는 몹을 그림이 아니라 코드로 그린다 (src/data/neonmob.js).
+# 1차의 슬라임 5종 시트는 원본과 함께 제거했으므로 여기도 비운다.
+# 나중에 실제 몹 아트가 들어오면 (키, 원본폴더, 셀높이) 를 추가하기만 하면
+# sprite.js 가 시트를 우선으로 집는다 — neonmob 은 자동으로 폴백이 된다.
+#   예: ('n_gr', 'mon_neon_diamond', 96),
+MONS = []
 MON_ANIMS = [('walk', 'walk', 8)]   # atk 스트립은 미사용이라 정리함 (2026-09-03)
 
 # ── UI 아이콘 (선택) — src/art/raw/ui/<이름>.png 이 있으면 가공해 넣는다.
@@ -87,12 +87,15 @@ def strip_white(im, tol=18):
         if y < H-1: push(x, y+1)
     return im
 
-# ★ 배경은 하나뿐이다. 인게임과 결과 화면이 같은 이미지를 쓰므로
-#   여기 한 줄만 바꾸면 두 화면이 함께 바뀐다.
-#   교체 방법: src/art/raw/bg.png 에 파일을 넣으면 그쪽이 우선한다 (아래 경로 우선순위 참조)
-BGS = [
-  ('bg', '05. 인게임 배경/Chapter_1_06.png', 760, 80),
-]
+# ── 배경 ─────────────────────────────────────────────────────────────────────
+# 2차는 배경도 코드로 그린다 (screens.js drawBG — 별 3층 + 성운 + 네온 격자).
+# 1차의 던전 배경 원본은 제거했으므로 비워 둔다.
+# ★ 나중에 배경 그림을 쓰려면 src/art/raw/bg.png 를 넣고 아래에 항목을 되살린다.
+#   인게임과 결과 화면이 같은 이미지를 쓰므로 한 줄이면 두 화면이 함께 바뀐다.
+#   ⚠️ 그림 배경을 넣는 순간 data/enemies.js 의 gates 가 다시 의미를 갖는다.
+#      지금은 네 변 전면 개방(우주엔 벽이 없다)이라, 통로가 그려진 배경을
+#      넣으면 벽에서 몹이 솟는다. 그 그림에 맞춰 다시 측정할 것.
+BGS = []
 
 
 def pick_frames(files, spec):

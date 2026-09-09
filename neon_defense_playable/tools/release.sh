@@ -10,6 +10,8 @@
 #   6. 클라이언트 납품 흔적 검사
 #   7. git 이 있으면 자동 커밋
 #
+# 필요 도구: python3 node rsync zip unzip tar  (0단계에서 먼저 확인한다)
+#
 # 사용:  ./tools/release.sh            (프로젝트 폴더에서)
 # 되돌리기:  ./tools/rollback.sh       (백업 목록이 뜬다)
 # =============================================================================
@@ -17,12 +19,33 @@ set -euo pipefail
 
 PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CODE="$(dirname "$PROJ")"
-FINAL="$CODE/NEON_DEFENSE_FINAL"
-VIDEO="$CODE/NEON_DEFENSE_영상추출"
+# 납품 폴더 — 기본은 프로젝트 옆이다(맥 작업 폴더 구조 기준).
+# 프로젝트가 다른 저장소 안에 들어가 있으면 그 저장소를 더럽히므로
+# 환경변수로 덮어쓸 수 있게 했다:
+#   NEON_FINAL_DIR=~/Desktop/납품 ./tools/release.sh
+FINAL="${NEON_FINAL_DIR:-$CODE/NEON_DEFENSE_FINAL}"
+VIDEO="${NEON_VIDEO_DIR:-$CODE/NEON_DEFENSE_영상추출}"
 TS="$(date +%Y-%m-%d_%H%M)"
 SNAP="$PROJ/releases/$TS"
 
 cd "$PROJ"
+
+# ── 0. 필요한 도구 확인 ──────────────────────────────────────────────────────
+# 맥에는 전부 기본으로 있지만 리눅스 컨테이너·CI 에는 rsync·zip 이 없는 경우가
+# 있다. 없이 들어가면 4단계 한복판에서 "command not found" 로 죽어서 원인이
+# 안 보인다. 여기서 한 번에 알려준다.
+MISS=""
+for _t in python3 node rsync zip unzip tar; do
+  command -v "$_t" >/dev/null 2>&1 || MISS="$MISS $_t"
+done
+if [ -n "$MISS" ]; then
+  echo "✗ 필요한 도구가 없다:$MISS"
+  echo "  맥:    brew install${MISS}"
+  echo "  우분투: sudo apt-get install -y${MISS}"
+  echo "  (빌드·QA 만 돌리려면: python3 tools/build.py --uihd && node tools/qa.js)"
+  exit 1
+fi
+
 echo "════════════════════════════════════════════════════════════"
 echo " NEON DEFENSE — 릴리스  $TS"
 echo "════════════════════════════════════════════════════════════"
@@ -45,8 +68,18 @@ python3 tools/build.py --uihd --video >/dev/null && echo "   ✓ dist/playable_u
 
 # 9:16 고정 데모 — 납품본의 화면비 기본값만 뒤집는다 (게임 로직은 동일)
 cp dist/playable_uihd.html dist/playable_uihd_demo.html
-sed -i '' "s/mode  : Q.video ? 'video' : 'ad',/mode  : Q.ad ? 'ad' : 'video',   \/* 데모 시연용 — 기본 9:16 고정 *\//" \
-  dist/playable_uihd_demo.html
+# sed -i 는 BSD(맥)와 GNU(리눅스·CI) 문법이 다르다. 맥 문법(-i '')만 쓰면
+# 리눅스에서 스크립트가 통째로 죽는다 — 이식성 때문에 python 으로 치환한다
+python3 - "dist/playable_uihd_demo.html" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = "mode  : Q.video ? 'video' : 'ad',"
+new = "mode  : Q.ad ? 'ad' : 'video',   /* 데모 시연용 — 기본 9:16 고정 */"
+if old not in s:
+    sys.exit("치환 대상 없음")
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, new, 1))
+PYEOF
 grep -q "Q.ad ? 'ad' : 'video'" dist/playable_uihd_demo.html \
   || { echo "   ✗ 데모 빌드 치환 실패 — build.py 의 RENDER.mode 줄이 바뀌었는지 확인"; exit 1; }
 echo "   ✓ dist/playable_uihd_demo.html   (9:16 고정 시연용)"

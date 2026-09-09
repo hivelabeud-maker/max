@@ -5,40 +5,77 @@
 
 > **새 세션은 [docs/00_인수인계.md](docs/00_인수인계.md) 부터 읽을 것.**
 > 작업 계획·재사용 판정·주의사항이 전부 거기 있다.
+> HUD 기준은 [docs/reference/브리프_넷마블_2차.jpg](docs/reference/) — 고객사 브리프 원본이다.
 
 ## 지금 상태
 
-**0단계(프로젝트 준비)까지만 완료.** 게임 코드는 아직 1차 그대로다 — 톤 전환·HUD 재작성 전.
+**1~7단계 완료.** 21.5초 완주 · QA 전 항목 통과 · 망별 빌드 4종 검증 완료.
 
-| 완료 | 내용 |
-|---|---|
-| ✅ | 1차 프로젝트 복제 (210MB → 28MB) |
-| ✅ | 이전 IP 에셋 제거 — 슬라임 시퀀스 · 던전 배경 · `art/octopus` 29MB |
-| ✅ | 리타 시퀀스 3벌 유지 (`src/art/raw/seq/rita_*`) |
-| ✅ | `tools/release.sh` 납품 경로를 새 폴더로 교체 |
-| ⬜ | 1~7단계 (인수인계 문서 참조) |
+| | 단계 | 내용 |
+|---|---|---|
+| ✅ | 0 | 프로젝트 복제 · 이전 IP 에셋 제거 · 리타 시퀀스 3벌 유지 |
+| ✅ | 1 | 월드 톤 전환 — 네온 팔레트 + 절차적 우주 배경(그림 0장) |
+| ✅ | 2 | 몬스터 5종을 네온 벡터 도형으로 (`src/data/neonmob.js`) |
+| ✅ | 3 | 이펙트 강화 — 부채꼴 5발 · 볼리 12발 · 적중 흩뿌림 · 가산 블렌딩 |
+| ✅ | 4 | 피해 출처별 집계 (`src/game/damage.js`) |
+| ✅ | 5 | HUD 재작성 — 레퍼런스 재현 (표시값 10개) |
+| ✅ | 6 | 20웨이브 카운터 · 배너 제거 · 길이 21.5초 유지 |
+| ✅ | 7 | 파이프라인 정리 — `release.sh` 이식성 · `prep_anim.py` 1차 잔재 제거 |
+| ⬜ | — | 엔드카드 (2차 요청이지만 아직 안 만듦 — 인수인계 문서 참조) |
 
-### ⚠️ release.sh 경로 주의
-복제 직후 `release.sh` 가 **1차 납품 폴더(`PIXEL_SURVIVOR_UIHD_FINAL`)를 가리키고 있었다.**
-그대로 돌렸으면 이미 고객사에 나간 패키지를 덮어썼다. 지금은 아래로 교체돼 있다:
+### 그림 파일 0장으로 완주한다
+배경(별 3층 + 성운 + 네온 격자)과 몬스터 5종을 전부 코드로 그린다.
+넷마블 아트 대기 없이 진행되고, 브리프의 "우선 가장 기본형으로 캐릭터만 적용한 버전"과 맞는다.
+실제 시트가 들어오면 `src/art/sheets/<key>.webp` 를 넣기만 하면 `sprite.js` 가 시트를 우선한다.
 
-```
-FINAL="$CODE/NEON_DEFENSE_FINAL"
-VIDEO="$CODE/NEON_DEFENSE_영상추출"
-```
+### 고객사에 알릴 것
+- **우상단 톱니는 순수 장식이다.** `handleTap`(engine.js)은 CTA 만 라우팅하므로 눌러도 반응하지
+  않는다. "눌러도 반응 없는 버튼 = 광고 이탈 요인"이지만 레퍼런스 재현을 우선해 장식으로 뒀다.
+  기능을 붙이거나 빼는 선택지가 남아 있다.
+- **결과 화면 `STAGE CLEAR` 타이틀은 1차 에셋(금/적)이다.** 네온 우주 톤과 팔레트가 어긋난다.
+  교체하려면 `src/art/raw/ui/title_clear.png` 를 갈아 끼우면 된다 (코드 수정 불필요).
 
 ## 명령
 
 ```bash
-python3 tools/prep_anim.py      # 리타 시퀀스 → 아틀라스 (MONS/BGS 정리 필요)
+python3 tools/prep_anim.py      # 리타 시퀀스 + UI 아이콘 → 아틀라스
 python3 tools/build.py --uihd   # → dist/playable_uihd.html
-node tools/qa.js                # 13종 기기 · 완주 · 광고규격 · CTA발동
+node tools/qa.js                # 13종 기기 · 완주 · 광고규격 · 전폭딤 · CTA발동
 ./tools/release.sh              # 백업 → 재빌드 → QA → 망별빌드 → 흔적검사 → 커밋
 ./tools/rollback.sh             # 되돌리기
 ```
 
+`release.sh` 는 `python3 node rsync zip unzip tar` 가 필요하다(0단계에서 확인한다).
+납품 폴더 위치는 환경변수로 바꾼다:
+
+```bash
+NEON_FINAL_DIR=~/Desktop/납품 NEON_VIDEO_DIR=~/Desktop/영상 ./tools/release.sh
+```
+
+### 눈으로 확인하기
+
+```bash
+python3 -m http.server 8778
+```
+
+| URL | 무엇을 보나 |
+|---|---|
+| `dist/playable_uihd.html?t=8` | 볼리 순간 — 충격파 3겹 · 콤보 텍스트 |
+| `dist/playable_uihd.html?t=13` | 밀도 최대 — **탄막이 "면"처럼 뭉치지 않는지** |
+| `dist/playable_uihd.html?t=19.4` | 궁극기 직전 — HP·실드가 실제로 깎여 있는지 |
+| `dist/playable_uihd.html?t=23` | 결과 화면 |
+| `?debug=1` | 히트박스 · 발밑 원점 |
+
+창을 가로(844×390)로 줄여 레터박스가 정상 동작하는지도 확인한다 (AppLovin 규격).
+
 ## 1차 프로젝트와의 관계
 
-엔진(`src/core/`)과 도구(`tools/`)는 1차와 **같은 코드**다. 1차에서 고친 버그·규격 대응이
+엔진(`src/core/`)과 도구(`tools/`)는 1차와 **거의 같은 코드**다. 1차에서 고친 버그·규격 대응이
 전부 들어있다 (광고망별 CTA 분리 · 가로 대응 · 디바이스 픽셀 스냅 · HP 연출 등).
+
+2차에서 엔진에 손댄 곳은 셋뿐이다:
+- `sprite.js` — 벡터 도형(`NEONMOB`) 폴백 경로 + `smooth` 플래그 + `spin` 옵션
+- `fx.js` — 이펙트 레이어 가산 블렌딩 + 파티클 풀 상한
+- `engine.js` — 우주 톤 · 실드 충전 · 점선 원 · 피해 집계 호출
+
 **엔진 수정이 필요하면 1차에도 반영할지 판단할 것** — 지금은 두 벌로 갈라져 있다.
