@@ -1,0 +1,9 @@
+.DS_Store
+._*
+__MACOSX/
+dist/
+releases/
+_verify.html
+
+# 생성물 — prep_anim.py 가 raw 에서 다시 굽는다 (원본은 src/art/raw/ 에 있다)
+src/art/sheets/

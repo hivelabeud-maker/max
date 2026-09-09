@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>NEON DEFENSE — Playable (dev)</title>
+<style>
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#04020e;
+    touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;touch-action:none;image-rendering:pixelated;}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv"></canvas></div>
+
+<!-- ── CORE ── -->
+<script src="core/stage.js"></script>
+<script src="core/input.js"></script>
+<script src="core/pool.js"></script>
+<script src="core/grid.js"></script>
+<!-- ── DATA (교체 지점) ── -->
+<script src="data/pixelart.js"></script>
+<script src="data/icons.js"></script>
+<script src="data/atlas.js"></script>
+<script src="data/theme.js"></script>
+<script src="data/character.js"></script>
+<script src="data/enemies.js"></script>
+<script src="data/timeline.js"></script>
+<!-- ── CORE (data 의존) ── -->
+<script src="core/sprite.js"></script>
+<script src="core/anim.js"></script>
+<script src="core/fx.js"></script>
+<script src="core/cta.js"></script>
+<!-- ── GAME ── -->
+<script src="game/state.js"></script>
+<script src="game/player.js"></script>
+<script src="game/enemy.js"></script>
+<script src="game/bullet.js"></script>
+<script src="game/skill.js"></script>
+<script src="game/hud.js"></script>
+<script src="game/screens.js"></script>
+<script src="game/director.js"></script>
+<!-- ── BOOT ── -->
+<script src="core/debug.js"></script>
+<script src="core/engine.js"></script>
+</body>
+</html>
