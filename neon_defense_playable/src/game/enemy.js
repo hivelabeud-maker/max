@@ -94,9 +94,12 @@ var Enemies = {
     return best;
   },
 
-  damage: function (e, amt, col, big) {
+  /* src — 피해 출처 id (data 는 damage.js SRC). 좌하단 "스킬 피해 현황" 패널이
+     이 집계를 그린다. 넘기지 않으면 기본 사격으로 잡힌다 */
+  damage: function (e, amt, col, big, src) {
     if (e.dieT > 0) return;
     e.hp -= amt;
+    Damage.add(src || 'basic', Math.min(amt, e.hp + amt));   /* 초과분은 빼고 실피해만 */
     if (e.hitCd <= 0) { e.hit = 0.07; e.hitCd = 0.20; }
     /* 데미지 숫자는 큰 타격만. 초당 수십 발이라 전부 띄우면 주인공이 숫자에 파묻힌다. */
     if (big || rand() < 0.10)

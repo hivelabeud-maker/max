@@ -16,7 +16,7 @@ function restart() {
   Game.cutin = 0; Game.danger = 0; Game.spawned = 0; Game.ended = false; Game.hitstop = 0;
   Game.enemies.reset(); Game.bullets.reset();
   Enemies.sqLeft = 0; Enemies.sqTotal = 0;
-  FX.reset(); Skills.reset();
+  FX.reset(); Skills.reset(); Damage.reset();
   Director.reset();
   Game.player = Player.make(); Player.layout(Game.player);
   Input.everTouched = false; Input.idle = 0; Input.enabled = true;
@@ -36,7 +36,7 @@ function fastForward(sec) {
     FX.update(w); Input.flush(d);
   }
   /* 점프 직후 표시값이 0 부터 따라 올라가면 캡처 화면에 엉뚱한 수가 찍힌다 */
-  Game.killShown = Game.kills;
+  Game.killShown = Game.kills; Damage.snap();
 }
 
 function handleTap(p) {
@@ -80,6 +80,7 @@ function frame(now) {
     var kGap = Game.kills - Game.killShown;
     if (kGap > 0) Game.killShown = Math.min(Game.kills, Game.killShown + Math.max(kGap * 7.5, 30) * dt);
     else Game.killShown = Game.kills;
+    Damage.update(dt);          /* 스킬 피해 표시값 — killShown 과 같은 스무딩 */
     Player.update(Game.player, wdt);
     Enemies.update(wdt);
     Bullets.update(wdt);

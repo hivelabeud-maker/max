@@ -7,14 +7,16 @@ var Bullets = {
   qbuf: [], sbuf: [],
   init: function () {
     Game.bullets = new Pool(function () {
-      return { on:false, x:0,y:0, vx:0,vy:0, a:0, dmg:0, pierce:0, life:0, big:0, hitIds:null };
+      return { on:false, x:0,y:0, vx:0,vy:0, a:0, dmg:0, pierce:0, life:0, big:0, src:'basic', hitIds:null };
     }, 320);
   },
-  /* big=1 은 360° 볼리 탄 — 더 굵고 밝게 그려 "사방으로 뿜었다"가 읽히게 한다 */
-  spawn: function (x, y, a, sp, dmg, pierce, big) {
+  /* big=1 은 360° 볼리 탄 — 더 굵고 밝게 그려 "사방으로 뿜었다"가 읽히게 한다
+     src 는 피해 출처 id — 이 탄이 준 피해가 어느 행에 쌓일지 정한다 */
+  spawn: function (x, y, a, sp, dmg, pierce, big, src) {
     var b = Game.bullets.get();
     b.x = x; b.y = y; b.a = a; b.vx = Math.cos(a) * sp; b.vy = Math.sin(a) * sp;
     b.dmg = dmg; b.pierce = pierce || 0; b.life = 1.2; b.big = big ? 1 : 0;
+    b.src = src || 'basic';
     b.hitIds = b.hitIds || []; b.hitIds.length = 0;
   },
 
@@ -41,7 +43,7 @@ var Bullets = {
       var e = near[i]; if (!e.on || e.dieT > 0) continue;
       var dx = e.x - x, dy = e.y - y;
       if (dx * dx + dy * dy < S.r * S.r)
-        Enemies.damage(e, dmg * S.mul, THEME.dmgNormal, false);
+        Enemies.damage(e, dmg * S.mul, THEME.dmgNormal, false, 'splash');
     }
   },
 
@@ -61,7 +63,7 @@ var Bullets = {
              똑같은 탄막에 강약이 생긴다 */
           var crit = rand() < 0.08;
           Enemies.damage(e, b.dmg * (crit ? 2.4 : 1),
-                         crit ? THEME.dmgCrit : THEME.dmgNormal, crit);
+                         crit ? THEME.dmgCrit : THEME.dmgNormal, crit, b.src);
           if (crit) { FX.ring(e.x, e.y - e.def.hLogic * 0.3, 3, 38, 0.18, THEME.dmgCrit, 2.5); }
           /* ── 적중 흩뿌림 ────────────────────────────────────────────────
              브리프가 문장으로 콕 집은 항목이다:

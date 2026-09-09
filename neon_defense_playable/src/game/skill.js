@@ -19,7 +19,7 @@ var Skills = {
     for (var i = 0; i < near.length; i++) {
       var e = near[i]; if (!e.on || e.dieT > 0) continue;
       var dx = e.x - x, dy = e.y - y;
-      if (dx * dx + dy * dy < r * r) Enemies.damage(e, dmg, col, true);
+      if (dx * dx + dy * dy < r * r) Enemies.damage(e, dmg, col, true, 'ultimate');
     }
   },
 
@@ -43,6 +43,10 @@ var Skills = {
       var e = list[i];
       if (i % step === 0 && i / step < nShow)
         FX.num(e.x, e.y - e.def.hLogic * 0.5, '' + (999 + ri(9000)), THEME.gold, 20);
+      /* 잔여 체력을 섬멸 행에 더한다 — kill() 은 피해를 거치지 않고 즉사시키므로
+         여기서 넣지 않으면 화면을 통째로 비운 기술의 피해가 0으로 남는다.
+         500마리 잔여체력이 한 번에 들어와 15.7k 같은 수치가 자연스럽게 나온다 */
+      Damage.add('ultimate', e.hp);
       Enemies.kill(e);
     }
     /* HP 는 회복시키지 않는다 — 여기서 만렙으로 되돌리면 마지막 2초에 게이지가

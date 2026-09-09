@@ -64,7 +64,7 @@ var Player = {
       var my = p.y + M.y + Math.sin(base) * M.r * 0.7;   /* 탑다운 원근 — 세로는 눌러서 */
       for (var j = 0; j < A.count; j++) {
         var a = base + (A.count > 1 ? (j - (A.count - 1) / 2) * A.spread : 0);
-        Bullets.spawn(mx, my, a, A.speed, A.dmg, A.pierce);
+        Bullets.spawn(mx, my, a, A.speed, A.dmg, A.pierce, 0, 'basic');
       }
       /* 반복형(매 발) 이펙트는 조금만 올린다 — 크게 키우면 화면을 덮는다.
          손맛은 아래 볼리 같은 순간형에서 벌 것 */
@@ -92,7 +92,7 @@ var Player = {
         for (var vi = 0; vi < n; vi++) {
           var va = a0 + vi * 6.2832 / n;
           Bullets.spawn(p.x + Math.cos(va) * 16, p.y - 6 + Math.sin(va) * 11,
-                        va, A.speed * 0.9, V.dmg, 1, 1);
+                        va, A.speed * 0.9, V.dmg, 1, 1, 'volley');
         }
         /* 충격파 3겹 — 빠른 흰 링이 앞서고 마젠타·시안이 차례로 번진다.
            볼리는 1.1초에 한 번뿐인 순간형이라 크게 가야 손맛이 난다.
