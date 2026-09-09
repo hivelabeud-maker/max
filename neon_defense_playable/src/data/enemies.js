@@ -27,8 +27,8 @@ var ENEMY_SET = {
     /* rmin — 이 몹만 숨구멍을 뚫고 들어온다. 카펫 전체가 포켓 밖에 머물면
        그림은 깨끗해지지만 아무도 캐릭터에 닿지 못해 HP가 안 깎이고
        위기감이 통째로 사라진다. 마젠타 돌격체가 그 역할을 전담한다 */
-    fast  : { sheet:'n_fa', hLogic:26, hp:8,   speed:158, dmg:10, r:10, score:1,
-              fps:17, drop:0.08, rmin:19, float:true, aim:true },
+    fast  : { sheet:'n_fa', hLogic:26, hp:8,   speed:205, dmg:17, r:10, score:1,
+              fps:17, drop:0.08, rmin:14, float:true, aim:true },
     tank  : { sheet:'n_ta', hLogic:35, hp:52,  speed:58,  dmg:12, r:14, score:3,
               fps:10, drop:0.40, float:true, spin:0.55 },
     armor : { sheet:'n_ar', hLogic:46, hp:160, speed:64,  dmg:10, r:17, score:6,

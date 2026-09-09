@@ -82,7 +82,10 @@ var Stage = {
 
     /* 플레이 영역: 상단 HUD 아래 ~ 하단 여백 위 */
     this.pf.x = 0; this.pf.w = this.W;
-    this.pf.y = 86; this.pf.h = this.H - 86;
+    /* 플레이 영역 상단 — 상단 HUD(재화·웨이브·타이머·진행바 2단) 아래.
+       진행 바가 한 줄에서 두 줄로 늘어나며 86 → 110 이 됐다.
+       여기를 줄이면 바와 몹이 겹친다 (qa.js ① 상단침범 검사가 70 하한을 본다) */
+    this.pf.y = 110; this.pf.h = this.H - 110;
     if (typeof onStageResize === 'function') onStageResize();
   },
 

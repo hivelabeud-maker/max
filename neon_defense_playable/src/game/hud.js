@@ -8,11 +8,15 @@
    시각적 자극으로 후킹하는 것이 최우선이다. 근거는 docs/00_인수인계.md.
 
    ■ 2차 규칙
-     ① ★ 플랫하게. 실게임 참고 영상(docs/reference/레퍼런스1_실게임_*.png)의
-        UI 는 장식이 하나도 없다 — 흰 알약, 얇은 바, 검은 박스에 1px 흰 테두리.
-        1차에서 물려받은 uihd 스킨(계단형 픽셀 프레임 + 모서리 스터드)은
-        정반대라 전부 걷어냈다 (2026-09-09 실장 지시).
-        발광은 허용하되 프레임 장식은 금지. 되돌리지 말 것.
+     ① ★ 네온 스타일 유지 + 레퍼런스 레이아웃.
+        한 번 완전 플랫으로 갔다가 실장 지시로 네온을 되살렸다
+        ("ui는 버전 이전 걸로, 네온타입의 UI는 유지해도 되는 거야").
+        정리하면 — **보이는 질감은 네온, 배치와 항목은 실게임 그대로**다:
+          질감 : 발광·시안 라인·라운드 캡슐 허용
+          배치 : 실게임 참고 영상의 위치·항목을 그대로 따른다
+                (재화 2 · 웨이브 N/20 · 타이머 · 톱니 · 진행바 2단 ·
+                 배율 · 콤보 · HP · 실드 · 스킬 피해 3행 + Lv 배지)
+        둘을 섞는 게 요구사항이다. 한쪽만 보고 되돌리지 말 것.
      ② 표시값은 10개다 — 재화 2 · 웨이브 · 타이머 · 진행바 · 배율 · 콤보 ·
         HP · 실드 · 스킬 피해 4행. 레퍼런스 실측 항목 그대로다.
      ③ 하단 요소는 플레이 영역을 "덮는" 오버레이다. 세로를 예약하지 않는다.
@@ -107,41 +111,40 @@ var HUD = {
   /* ── 스탯 카드 — 둥근 다크 패널 + 1px 테두리 ──
      ⚠️ roundRect + fill 로만 그린다. fillRect(0, y, W, n) 형태는 절대 금지
         (전폭 검정 띠 — qa.js 검사 ⑥ 이 빌드를 실패시킨다). 카드는 국소 패널이라 무관. */
-  /* ── 패널 — 검은 면 + 1px 흰 테두리. 그게 전부다 ──────────────────────
-     실게임 UI 를 실측하면 패널에 장식이 없다. 계단 프레임도 스터드도 베벨도
-     없고, 검은 박스에 얇은 흰 선 하나다. 배경이 우주라 그 대비만으로 충분하다.
-     ⚠️ 스킨 분기(uihd/dot)를 지웠다. 세 스킨이 서로 다른 프레임을 그리던 걸
-        하나로 합친 것이라, 스킨을 되살리려면 이 주석부터 읽을 것.          */
+  /* ── 패널 — 네온 캡슐 ────────────────────────────────────────────────
+     반투명 잉크 면 + 시안 1px 테두리 + 안쪽 상단 하이라이트 한 줄.
+     플랫 검정 박스로 갔다가 네온으로 되돌린 자리다(실장 지시).       */
   card: function (x, y, w, h, r) {
     var c = Stage.ctx;
-    r = (r === undefined) ? 3 : r;
+    r = (r === undefined) ? 6 : r;
     c.fillStyle = THEME.panel;
     roundRect(c, x, y, w, h, r); c.fill();
     c.strokeStyle = THEME.panelEdge; c.lineWidth = 1;
     roundRect(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke();
+    /* 안쪽 상단 라인 — 유리면 느낌. 이 한 줄이 "네온 패널"과 "검은 박스"를 가른다 */
+    c.strokeStyle = 'rgba(142,240,255,.16)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(x + r, y + 1.5); c.lineTo(x + w - r, y + 1.5); c.stroke();
   },
 
   /* 아이콘 — 사용자 제공 시트(src/art/raw/ui/ic_*.png)가 있으면 그걸 쓰고,
-     없으면 gen_icons.py 도트로 폴백한다. 시트 파일명 매핑: */
+     없으면 도트 폴백. 결과 화면이 이 함수를 쓴다. */
   IC: { skull:'ic_kill', hourglass:'ic_time', heart:'ic_hp',
         swords:'ic_kill', timer:'ic_time', gem:'ic_reward' },
 
   icon: function (key, cx, cy, target, alpha) {
     var sheet = this.IC[key];
     if (sheet && Anim.pic(sheet, cx, cy, target, alpha)) return target;
-    /* 도트 폴백 — 목표 높이에 가장 가까운 정수 배율 */
-    var s = getSprite(key); if (!s) return 0;
-    var base = s.box.h || s.h;
+    var sp = getSprite(key); if (!sp) return 0;
+    var base = sp.box.h || sp.h;
     var mul = Math.max(1, Math.round(target / base));
     Anim.dot(key, cx, cy, base * mul, alpha === undefined ? undefined : { alpha: alpha });
     return base * mul;
   },
 
   /* ── 네온 글리프 ────────────────────────────────────────────────────────
-     HUD 아이콘을 도트 시트가 아니라 벡터로 그린다. 2차에서 새로 필요해진
-     아이콘이 8종인데(재화 2 · 시계 · 톱니 · 스킬 4) 전부 시트로 만들면
-     넷마블 아트 대기가 생긴다. 몹과 같은 방식으로 코드로 그려 0장을 유지한다.
-     (cx, cy) 중심, r = 반지름. col 하나만 받아 단색으로 그린다.        */
+     HUD 아이콘을 시트가 아니라 벡터로 그린다. 2차에서 새로 필요해진 아이콘이
+     여러 종인데 전부 시트로 만들면 넷마블 아트 대기가 생긴다.
+     (cx, cy) 중심, r = 반지름.                                            */
   glyph: function (kind, cx, cy, r, col, alpha) {
     var c = Stage.ctx, i, a;
     c.save();
@@ -149,22 +152,27 @@ var HUD = {
     c.strokeStyle = col; c.fillStyle = col;
     c.lineWidth = Math.max(1, r * 0.22); c.lineJoin = 'round'; c.lineCap = 'round';
 
-    if (kind === 'coin') {                       /* 재화 1 — 동전 */
+    if (kind === 'coin') {
       c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
       c.font = '900 ' + (r * 1.35).toFixed(1) + 'px ' + FONT;
       c.textAlign = 'center'; c.textBaseline = 'middle';
       c.fillText('$', cx, cy + r * 0.06);
 
-    } else if (kind === 'gem') {                 /* 재화 2 — 반쪽 채운 원 */
+    } else if (kind === 'gem') {
       c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
       c.beginPath(); c.arc(cx, cy, r * 0.92, -1.5708, 1.5708); c.fill();
 
-    } else if (kind === 'clock') {               /* 타이머 */
+    } else if (kind === 'clock') {
       c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
       c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - r * 0.55);
       c.moveTo(cx, cy); c.lineTo(cx + r * 0.42, cy + r * 0.20); c.stroke();
 
-    } else if (kind === 'gear') {                /* 설정 — 장식이다 (아래 drawGear 주석) */
+    } else if (kind === 'mult') {          /* 삼각 — 레퍼런스의 배수 아이콘 */
+      c.beginPath();
+      c.moveTo(cx - r * 0.7, cy - r); c.lineTo(cx + r * 0.8, cy); c.lineTo(cx - r * 0.7, cy + r);
+      c.closePath(); c.fill();
+
+    } else if (kind === 'gear') {
       c.beginPath(); c.arc(cx, cy, r * 0.46, 0, 6.2832); c.stroke();
       for (i = 0; i < 8; i++) {
         a = i * 0.7854;
@@ -174,7 +182,7 @@ var HUD = {
         c.stroke();
       }
 
-    } else if (kind === 'dmg_fan') {             /* 집중 사격 — 부채꼴 3줄기 */
+    } else if (kind === 'dmg_fan') {
       for (i = -1; i <= 1; i++) {
         a = -1.5708 + i * 0.42;
         c.beginPath();
@@ -182,7 +190,7 @@ var HUD = {
         c.lineTo(cx + Math.cos(a) * r,       cy + Math.sin(a) * r);
         c.stroke();
       }
-    } else if (kind === 'dmg_burst') {           /* 착탄 폭발 — 사방 파편 */
+    } else if (kind === 'dmg_burst') {
       for (i = 0; i < 6; i++) {
         a = i * 1.0472;
         c.beginPath();
@@ -190,10 +198,10 @@ var HUD = {
         c.lineTo(cx + Math.cos(a) * r,        cy + Math.sin(a) * r);
         c.stroke();
       }
-    } else if (kind === 'dmg_ring') {            /* 전방위 난사 — 이중 링 */
+    } else if (kind === 'dmg_ring') {
       c.beginPath(); c.arc(cx, cy, r * 0.92, 0, 6.2832); c.stroke();
       c.beginPath(); c.arc(cx, cy, r * 0.38, 0, 6.2832); c.fill();
-    } else if (kind === 'dmg_ult') {             /* 섬멸 — 침 박힌 코어 */
+    } else if (kind === 'dmg_ult') {
       c.beginPath();
       for (i = 0; i < 8; i++) {
         a = -1.5708 + i * 0.7854;
@@ -203,7 +211,7 @@ var HUD = {
       }
       c.closePath(); c.fill();
 
-    } else if (kind === 'shield') {              /* 실드 — 방패 */
+    } else if (kind === 'shield') {
       c.beginPath();
       c.moveTo(cx, cy - r);
       c.lineTo(cx + r * 0.8, cy - r * 0.5);
@@ -216,13 +224,19 @@ var HUD = {
     c.restore();
   },
 
-  /* ── 흰 알약 — 좌상단 재화. 레퍼런스 실측 ─────────────────────────────
-     실게임은 이 칩만 흰 바탕이다. 화면에서 유일한 밝은 면이라 재화가 즉시
-     눈에 들어온다. 어두운 칩으로 바꾸면 우주에 묻혀서 있으나 마나 해진다. */
+  /* ── 재화 칩 — 네온 캡슐 ─────────────────────────────────────────────
+     레퍼런스는 흰 알약이지만, 실장이 네온 UI 유지를 지시했다.
+     형태(캡슐)와 위치는 레퍼런스를 따르고 질감만 네온으로 간다 —
+     어두운 잉크 + 시안 테두리 + 은은한 외광.                          */
   chip: function (x, y, w, h) {
     var c = Stage.ctx, r = h / 2;
-    c.fillStyle = '#ffffff';
+    c.save();
+    c.shadowColor = 'rgba(142,240,255,.45)'; c.shadowBlur = 8;
+    c.fillStyle = THEME.ink;
     roundRect(c, x, y, w, h, r); c.fill();
+    c.restore();
+    c.strokeStyle = 'rgba(142,240,255,.55)'; c.lineWidth = 1.2;
+    roundRect(c, x + 0.6, y + 0.6, w - 1.2, h - 1.2, r); c.stroke();
   },
 
   /* 외곽선 텍스트 — 우주/탄막 위에서도 읽히게. 전폭 딤의 대안이다 */
@@ -238,31 +252,34 @@ var HUD = {
   /* ── 공통 게이지 ────────────────────────────────────────────────────────
      어두운 네이비 트랙 + 1px 테두리 + 단색 채움. 그게 전부다.
      opt: { ghost, radius }                                                */
-  /* ── 게이지 — 납작한 사각 트랙 + 단색 채움 ────────────────────────────
-     레퍼런스의 HP·SHIELD·XP 바는 전부 모서리도 안 깎인 그냥 사각형이다.
-     계단 프레임·다이아 마커·고스트 채움 같은 1차 장치를 전부 뺐다.
-     opt: { ghost, radius, pad }                                            */
+  /* ── 게이지 — 네온 트랙 ──────────────────────────────────────────────
+     라운드 트랙 + 단색 채움 + 채움 머리의 옅은 발광.
+     opt: { ghost, radius, pad, glow }                                    */
   bar: function (x, y, w, h, ratio, fill, opt) {
     var c = Stage.ctx;
     opt = opt || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
-    var r = opt.radius === undefined ? 1 : opt.radius;
+    var r = opt.radius === undefined ? Math.min(4, h / 2) : opt.radius;
 
     c.fillStyle = THEME.trackBg;
     roundRect(c, x, y, w, h, r); c.fill();
 
     var p = opt.pad === undefined ? 1 : opt.pad;
     var fh = h - p * 2, iw = w - p * 2;
+    var fw = iw * clamp(ratio, 0, 1);
     c.save();
     roundRect(c, x + p, y + p, iw, fh, Math.max(0, r - 1));
     c.clip();
-    /* 고스트 — 방금 깎인 만큼을 흰색으로 잠깐 남긴다. HP 전용이라 opt 로만 */
     if (opt.ghost !== undefined && opt.ghost > ratio + 0.002) {
       c.fillStyle = 'rgba(255,255,255,.45)';
       c.fillRect(x + p, y + p, iw * clamp(opt.ghost, 0, 1), fh);
     }
-    var fw = iw * clamp(ratio, 0, 1);
-    if (fw > 0.5) { c.fillStyle = fill; c.fillRect(x + p, y + p, Math.round(fw), fh); }
+    if (fw > 0.5) {
+      if (opt.glow !== false) { c.shadowColor = fill; c.shadowBlur = 7; }
+      c.fillStyle = fill;
+      c.fillRect(x + p, y + p, Math.round(fw), fh);
+      c.shadowBlur = 0;
+    }
     c.restore();
 
     c.strokeStyle = THEME.line; c.lineWidth = 1;
@@ -270,78 +287,108 @@ var HUD = {
   },
 
   /* ── 상단 HUD ───────────────────────────────────────────────────────────
-     실게임 참고 영상 실측 배치:
-       좌  흰 알약 2개(재화) · 중앙 '웨이브' + N/20 · 그 우측 타이머 ·
-       우  흰 원형 톱니 · 아래 XP 바(레벨 텍스트 안쪽 + 우측 배율)
-     장식 없음. 흰 알약 두 개만 밝고 나머지는 전부 얇은 선과 글자다.
+     실게임 참고 영상의 항목·위치를 그대로 옮기고 질감만 네온으로 간다.
+
+       y  8~36   재화 칩 ①(좌)   ·  웨이브(중앙)        ·  톱니(우)
+       y 40~68   재화 칩 ②(좌)   ·  N/20 + ×배수(중앙)  ·  타이머(중앙 우)
+       y 74~82   진행 바 (웨이브 전체 진행)
+       y 86~99   XP 바 (Lv.N/20 (xx.x%) 안쪽 · 오른쪽 끝에 ×1.4)
+       Stage.pf.y = 110 ─────────── 아래는 플레이 영역
+       콤보는 플레이 영역 안 상단에 뜬다 (레퍼런스도 XP 바 아래)
+
+     ★ 겹침 방지 규칙
+       중앙 열(웨이브·N/20)과 타이머는 x 로 분리한다. 예전엔 타이머가
+       중앙에서 62px 떨어져 있어 20/20 같은 두 자리 웨이브에서 겹쳤다.
+       지금은 중앙 블록 폭을 재고 그 오른쪽부터 타이머를 놓는다.
      ──────────────────────────────────────────────────────────────────── */
   draw: function () {
     var c = Stage.ctx, W = Stage.W, PAD = this.PAD;
     c.textBaseline = 'alphabetic';
 
-    /* ── ① 재화 흰 알약 2개 ───────────────────────────────────────────── */
-    var chW = 104, chH = 28, chX = PAD;
-    var chips = [
-      { y: 10, g:'coin', v: (Game.coins | 0) + '' },
-      { y: 42, g:'gem',  v: Damage.fmt(Damage.shown ? Damage.total : 0) }
-    ];
-    for (var i = 0; i < chips.length; i++) {
-      var ch = chips[i], cy = ch.y + chH / 2;
-      HUD.chip(chX, ch.y, chW, chH);
-      /* 아이콘은 검은 원 안에 흰 기호 — 흰 알약 위라 반전된다 */
-      c.fillStyle = '#111114';
-      c.beginPath(); c.arc(chX + 15, cy, 10, 0, 6.2832); c.fill();
-      HUD.glyph(ch.g, chX + 15, cy, 6, '#ffffff');
-      c.font = '800 15px ' + FONT; c.textAlign = 'right'; c.fillStyle = '#111114';
-      c.fillText(ch.v, Stage.snap(chX + chW - 12), Stage.snap(cy + 5));
-    }
-
-    /* ── ② 중앙 — 웨이브 N/20 ─────────────────────────────────────────── */
     var wv = TIMELINE.waveAt(Game.t), wn = TIMELINE.waveSpan.length;
     var cxm = W / 2;
-    HUD.txt(THEME.labelWave, Stage.snap(cxm), Stage.snap(28),
-            '800 20px ' + FONT, THEME.text, 'center', 4);
-    HUD.txt(wv + '/' + wn, Stage.snap(cxm), Stage.snap(50),
-            '800 17px ' + FONT, THEME.text, 'center', 3.5);
 
-    /* ── ③ 타이머 (중앙 우측) ─────────────────────────────────────────── */
+    /* ── ① 재화 칩 2개 (좌상단) ───────────────────────────────────────── */
+    var chW = 96, chH = 26, chX = PAD;
+    var chips = [
+      { y:  8, g:'coin', col: THEME.gold,  v: (Game.coins | 0) + '' },
+      { y: 40, g:'gem',  col: THEME.neonC, v: Damage.fmt(Damage.shown ? Damage.total : 0) }
+    ];
+    for (var i = 0; i < chips.length; i++) {
+      var ch = chips[i], ccy = ch.y + chH / 2;
+      HUD.chip(chX, ch.y, chW, chH);
+      HUD.glyph(ch.g, chX + 16, ccy, 8, ch.col);
+      HUD.txt(ch.v, Stage.snap(chX + chW - 11), Stage.snap(ccy + 5),
+              '800 14px ' + FONT, THEME.text, 'right', 3);
+    }
+
+    /* ── ② 중앙 — 웨이브 / N·20 ──────────────────────────────────────── */
+    HUD.txt(THEME.labelWave, Stage.snap(cxm), Stage.snap(30),
+            '800 21px ' + FONT, THEME.text, 'center', 4);
+    var wtxt = wv + '/' + wn;
+    HUD.txt(wtxt, Stage.snap(cxm), Stage.snap(56),
+            '800 18px ' + FONT, THEME.text, 'center', 3.5);
+
+    /* 중앙 블록의 실제 폭을 재서 타이머 시작점을 잡는다 (겹침 방지) */
+    c.font = '800 21px ' + FONT;
+    var midW = Math.max(c.measureText(THEME.labelWave).width,
+                        c.measureText(wtxt).width);
+
+    /* ── ③ 배수 표시 (중앙 좌측) — 레퍼런스의 ▷ x1 ────────────────────── */
+    var mx = cxm - midW / 2 - 30;
+    HUD.glyph('mult', mx, 46, 7, THEME.text, 0.9);
+    HUD.txt('\u00d71', Stage.snap(mx + 9), Stage.snap(60),
+            '800 11px ' + FONT, THEME.text, 'left', 2.5);
+
+    /* ── ④ 타이머 (중앙 우측) ─────────────────────────────────────────── */
     var left = Math.max(0, TIMELINE.cues[TIMELINE.cues.length - 1].t - Game.t);
     var mm = (left / 60) | 0, ss = (left % 60) | 0;
     var tt = (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
     var urgent = (Game.danger > 0 || left <= 10);
-    var tx = cxm + 56;
-    HUD.glyph('clock', tx, 42, 9, urgent ? THEME.danger : THEME.text, 0.9);
-    HUD.txt(tt, Stage.snap(tx + 14), Stage.snap(48), '800 16px ' + FONT,
+    var tx = cxm + midW / 2 + 16;
+    HUD.glyph('clock', tx + 7, 36, 8, urgent ? THEME.danger : THEME.textDim);
+    HUD.txt(tt, Stage.snap(tx), Stage.snap(60), '800 15px ' + FONT,
             urgent ? THEME.danger : THEME.text, 'left', 3.5);
 
-    /* ── ④ 톱니 (우상단) — 흰 원 안에 어두운 톱니 ─────────────────────
-       ⚠️ 순수 장식이다. handleTap(engine.js)은 CTA 만 라우팅한다.
-          레퍼런스 재현이 목적이라 남겼다. 고객사에 알릴 것.               */
-    var gx = W - PAD - 16, gy = 30;
-    c.fillStyle = '#ffffff';
-    c.beginPath(); c.arc(gx, gy, 16, 0, 6.2832); c.fill();
-    HUD.glyph('gear', gx, gy, 10, '#16161a');
+    /* ── ⑤ 톱니 (우상단) ──────────────────────────────────────────────
+       ⚠️ 순수 장식이다. handleTap 은 CTA 만 라우팅한다. 고객사에 알릴 것. */
+    var gx = W - PAD - 15, gy = 28;
+    c.save();
+    c.shadowColor = 'rgba(142,240,255,.4)'; c.shadowBlur = 7;
+    c.fillStyle = THEME.ink;
+    c.beginPath(); c.arc(gx, gy, 15, 0, 6.2832); c.fill();
+    c.restore();
+    c.strokeStyle = 'rgba(142,240,255,.5)'; c.lineWidth = 1.2;
+    c.beginPath(); c.arc(gx, gy, 14.4, 0, 6.2832); c.stroke();
+    HUD.glyph('gear', gx, gy, 9, THEME.neonC, 0.85);
 
-    /* ── ⑤ XP 바 + 배율 ───────────────────────────────────────────────── */
+    /* ── ⑥ 진행 바 2단 ────────────────────────────────────────────────
+       위: 웨이브 전체 진행(흰색)  ·  아래: XP(시안) + 레벨 텍스트 + 배율
+       레퍼런스가 정확히 이 두 줄 구성이다. 1차는 한 줄뿐이었다.        */
     var sp = TIMELINE.waveSpan;
     var s0 = sp[0][0], s1 = sp[sp.length - 1][1];
     var r = clamp((Game.t - s0) / (s1 - s0), 0, 1);
-    var barY = 62, barH = 12, mulW = 44;
-    HUD.bar(PAD, barY, W - PAD * 2 - mulW - 6, barH, r, THEME.xp, { radius: 1, pad: 1 });
-    HUD.txt('Lv.' + wv + '/' + wn + ' (' + (r * 100).toFixed(1) + '%)',
-            PAD + 6, barY + barH - 3, '800 8px ' + FONT, THEME.text, 'left', 2.5);
+    var bw = W - PAD * 2;
+
+    HUD.bar(PAD, 74, bw, 8, r, 'rgba(255,255,255,.88)', { radius: 4, pad: 1 });
+
+    /* XP 는 웨이브 안에서의 진행이라 톱니바퀴처럼 반복해서 찬다 */
+    var xpR = (r * wn) % 1;
+    var lv = Math.min(wn, wv);
+    HUD.bar(PAD, 86, bw, 13, xpR, THEME.xp, { radius: 5, pad: 1 });
+    HUD.txt('Lv.' + lv + '/' + wn + ' (' + (xpR * 100).toFixed(1) + '%)',
+            PAD + 7, 96, '800 8px ' + FONT, THEME.text, 'left', 2.5);
     HUD.txt('\u00d7' + (1 + r * 1.4).toFixed(1),
-            Stage.snap(W - PAD), Stage.snap(barY + barH - 1),
-            '900 13px ' + FONT, '#5dff8a', 'right', 3);
+            Stage.snap(W - PAD - 7), Stage.snap(96),
+            '900 10px ' + FONT, '#5dff8a', 'right', 2.5);
   },
 
   /* ── 공격 범위 점선 원 ───────────────────────────────────────────────────
-     레퍼런스에 주인공을 감싼 점선 원이 있다. 우리 화면에서 이 원이 뜻하는
-     것은 360° 볼리의 충격파 도달 거리(player.js FX.ring 205)다 —
+     레퍼런스 실게임에 코어를 감싼 점선 원이 있다. 우리 화면에서 이 원이
+     뜻하는 것은 360° 볼리 충격파의 도달 거리(player.js FX.ring 205)다 —
      장식이 아니라 실제 사거리를 그린다.
-     탑다운 원근에 맞춰 세로를 0.86 으로 누른다(슬래시·헤일로와 같은 계수).
-     ※ 월드 좌표계에서 그린다. engine.js 가 배경 직후·몹 앞에 호출하므로
-        바닥 표시처럼 몹 밑에 깔린다.
+     캐릭터가 중앙 고정이므로 원도 화면 중앙에 붙박인다.
+     탑다운 원근에 맞춰 세로를 0.86 으로 누른다.
      ※ setLineDash 는 소스 전체에서 여기만 쓴다. qa.js mkCtx 에 noop 스텁이
         있어 헤드리스 검사는 깨지지 않는다.                                */
   drawRange: function () {
@@ -349,8 +396,8 @@ var HUD = {
     var c = Stage.ctx, R = 205;
     c.save();
     c.setLineDash([9, 11]);
-    c.lineDashOffset = -Game.wt * 14;      /* 천천히 흐른다 — 정지한 원은 죽어 보인다 */
-    c.strokeStyle = 'rgba(142,240,255,.30)'; c.lineWidth = 1.4;
+    c.lineDashOffset = -Game.wt * 14;
+    c.strokeStyle = 'rgba(255,255,255,.34)'; c.lineWidth = 1.4;
     c.beginPath(); c.ellipse(p.x, p.y - 6, R, R * 0.86, 0, 0, 6.2832); c.stroke();
     c.setLineDash([]);
     c.strokeStyle = 'rgba(142,240,255,.10)'; c.lineWidth = 1;
@@ -379,16 +426,20 @@ var HUD = {
   /* CTA 면 — 인게임/결과 공용. 도트 스킨은 계단 프레임 + 하단 그림자 단 */
   ctaFace: function (x, y, w, h, fontPx) {
     var c = Stage.ctx;
-    /* ── 플랫 CTA ────────────────────────────────────────────────────────
-       1차의 btn_cta.png(베벨·스터드가 구워진 픽셀 버튼)를 쓰지 않는다.
-       실게임 UI 가 전부 플랫이라 버튼만 입체면 혼자 다른 세계가 된다.
-       레퍼런스에 CTA 자체는 없지만(실게임 화면이므로), 광고에는 필요하므로
-       같은 언어로 그린다 — 단색 면 + 얇은 밝은 테두리.
-       ⚠️ 이미지를 되살리려면 이 주석부터 읽을 것 (2026-09-09 실장 지시).   */
+    /* ── 네온 CTA ────────────────────────────────────────────────────────
+       1차의 btn_cta.png(베벨·스터드가 구워진 픽셀 버튼)는 쓰지 않는다.
+       완전 플랫으로 갔다가 실장 지시로 네온으로 되돌린 자리다 —
+       면은 단색이되 외광 + 밝은 테두리 + 안쪽 상단 하이라이트로 발광시킨다.
+       레퍼런스 실게임의 결과 화면 초록 버튼이 이 자리, 이 색이다.        */
+    c.save();
+    c.shadowColor = 'rgba(45,220,110,.75)'; c.shadowBlur = 18;
     c.fillStyle = THEME.cta;
-    roundRect(c, x, y, w, h, 6); c.fill();
-    c.strokeStyle = 'rgba(255,255,255,.34)'; c.lineWidth = 1.5;
-    roundRect(c, x + 0.75, y + 0.75, w - 1.5, h - 1.5, 6); c.stroke();
+    roundRect(c, x, y, w, h, 10); c.fill();
+    c.restore();
+    c.strokeStyle = 'rgba(180,255,205,.85)'; c.lineWidth = 2;
+    roundRect(c, x + 1, y + 1, w - 2, h - 2, 10); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(x + 14, y + 4.5); c.lineTo(x + w - 14, y + 4.5); c.stroke();
     c.font = '800 ' + fontPx + 'px ' + FONT;
     c.textAlign = 'center'; c.textBaseline = 'middle';
     c.fillStyle = '#ffffff';
@@ -483,6 +534,28 @@ var HUD = {
     var half = c.measureText(B.txt).width / 2 + 16;
     c.beginPath(); c.moveTo(W / 2 - tw, y); c.lineTo(W / 2 - half, y); c.stroke();
     c.beginPath(); c.moveTo(W / 2 + half, y); c.lineTo(W / 2 + tw, y); c.stroke();
+    c.restore();
+  },
+
+  /* ── 인게임 CLEAR 텍스트 ────────────────────────────────────────────────
+     레퍼런스는 마지막 웨이브를 정리한 직후 화면 한가운데 CLEAR 가 크게 뜨고,
+     게임 화면이 비쳐 보이는 채로 잠깐 머물다 결과 패널로 넘어간다.
+     그 첫 박자를 여기서 그린다 — 결과 패널(screens.drawResult)과 이어지는
+     한 시퀀스이므로 글자 크기·발광을 맞춰 두었다.                        */
+  drawClear: function () {
+    if (Game.clearT < 0) return;
+    Game.clearT += 1 / 60;
+    var c = Stage.ctx, W = Stage.W;
+    var t = Game.clearT;
+    var pop = eOut(clamp(t / 0.45, 0, 1));
+    var a = clamp(t / 0.2, 0, 1);
+    var y = Stage.pf.y + (HUD.ctaTop() - Stage.pf.y) * 0.5;
+    c.save();
+    c.globalAlpha = a;
+    c.shadowColor = 'rgba(142,240,255,.85)'; c.shadowBlur = 26 * pop;
+    HUD.txt('CLEAR', Stage.snap(W / 2), Stage.snap(y),
+            '900 ' + (44 * (0.55 + pop * 0.45)).toFixed(0) + 'px ' + FONT,
+            '#ffffff', 'center', 7);
     c.restore();
   },
 

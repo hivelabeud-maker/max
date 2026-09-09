@@ -19,6 +19,7 @@ var Game = {
   lineHit : 0,           /* 방어선 피격 플래시 */
   banner : { txt:'', t:0 },
   hint   : { on:false, t:0 },
+  clearT : -1,      /* >=0 이면 인게임 CLEAR 텍스트가 떠 있다 (skill.js 가 연다) */
   cutin  : 0,
   danger : 0,
   spawned: 0,

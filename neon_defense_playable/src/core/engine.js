@@ -14,7 +14,7 @@ function restart() {
   Game.shield = 0; Game.shieldHit = 0;
   Game.boss = null; Game.bossAt = 0; Game.press = 0; Game.lineHit = 0;
   Game.banner = { txt: '', t: 0 }; Game.hint = { on: false, t: 0 };
-  Game.cutin = 0; Game.danger = 0; Game.spawned = 0; Game.ended = false; Game.hitstop = 0;
+  Game.clearT = -1; Game.cutin = 0; Game.danger = 0; Game.spawned = 0; Game.ended = false; Game.hitstop = 0;
   Game.enemies.reset(); Game.bullets.reset();
   Enemies.sqLeft = 0; Enemies.sqTotal = 0;
   FX.reset(); Skills.reset(); Damage.reset();
@@ -75,11 +75,13 @@ function frame(now) {
     if (Game.hpGhost > Game.hp) Game.hpGhost = Math.max(Game.hp, Game.hpGhost - 34 * Game.hpU * wdt);
     else Game.hpGhost = Game.hp;
     /* 실드 충전 — HP 재생 잠금이 풀린 뒤에만. 압박이 심하면 안 차고,
-       숨돌릴 틈이 생기면 4초쯤에 만충된다. 게이지가 실제로 오르내려야
+       숨돌릴 틈이 생기면 17초쯤에 만충된다.
+       26 → 6 으로 두 번 낮췄다 — 적을 6분의 1로 줄이자 피격 사이 간격이 벌어져
+       매번 만충돼 HP 로 한 방울도 안 넘어갔다. 레퍼런스는 SHIELD 0/100 이다. 게이지가 실제로 오르내려야
        레퍼런스의 SHIELD 칸이 살아 있는 것으로 읽힌다 */
     if (Game.shieldHit > 0) Game.shieldHit -= dt;
     if (Game.hpRegenLock <= 0 && Game.shield < Game.shieldMax)
-      Game.shield = Math.min(Game.shieldMax, Game.shield + 26 * wdt);
+      Game.shield = Math.min(Game.shieldMax, Game.shield + 6 * wdt);
     /* 처치 수 표시값 — 실제 kills 를 부드럽게 따라간다.
        볼리가 한 번에 30~50 을 지우면 원본은 계단처럼 튀는데, 그대로 그리면
        "느린 박자로 덜컥덜컥" 올라가는 것처럼 보인다. 남은 차이에 비례해
@@ -119,6 +121,7 @@ function frame(now) {
     HUD.drawPlayerHP();
     FX.drawUI();
     HUD.drawBanner();
+    HUD.drawClear();
     HUD.drawCTA();
   }
   if (Game.state === 'result') { Screens.drawResult(Director.resT); FX.drawUI(); }

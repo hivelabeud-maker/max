@@ -164,271 +164,141 @@ var Screens = {
   /* ── 결과 (목업 레이아웃) ─────────────────────────────────────────────
      위→아래: STAGE CLEAR 타이틀 이미지 → 리타 → 스탯 3줄 → (여백) → 설치 버튼.
      클리어 보너스 영역은 제거 — 별은 타이틀 이미지 안에 이미 있다. */
+  /* ── 결과 화면 — 실게임의 라운드 클리어 패널 ────────────────────────────
+     레퍼런스 종료 시퀀스(docs/reference/레퍼런스1_클리어_*.png) 실측 구성:
+
+       CLEAR              대형 흰 글씨 + 아래 가로 구분선
+       (시계) 05:27        클리어 시각
+       피해 현황           라벨
+       [아이콘][바][값]×3  인게임 스킬 피해 패널과 같은 행, 더 크게
+       (코어 엠블럼)
+       전리품              라벨
+       [아이템 6개 + 개수]  둥근 사각 박스 하나에 가로로
+       [초록 버튼]         원본은 "2배 받기". 우리는 설치 CTA 가 그 자리다
+
+     ★ 1차의 STAGE CLEAR + 리타 + 스탯 3줄 구성을 이걸로 교체했다.
+       실장 지시: "실제 이 레퍼런스 게임류처럼 동일한 게임이어야 하고,
+       플레이가 종료되었을 때 상황도 같이 고려해서 디자인 업데이트".
+       원본 타이틀 이미지(title_clear.png)는 1차 금·적 에셋이라 안 쓴다 —
+       CLEAR 를 코드로 그리면 네온 톤과 어긋나지 않는다.
+     ──────────────────────────────────────────────────────────────────── */
+  LOOT: [
+    { g:'coin',      n:'152' },
+    { g:'dmg_fan',   n:'3'   },
+    { g:'shield',    n:'1'   },
+    { g:'dmg_burst', n:'1'   },
+    { g:'gem',       n:'19'  },
+    { g:'dmg_ring',  n:'21'  }
+  ],
+
   drawResult: function (t) {
     var c = Stage.ctx, W = Stage.W, H = Stage.H;
     var k = eOut(clamp(t / 0.4, 0, 1));
 
-    var bg = this.bakeBG('bg');   /* 인게임과 같은 배경. 교체 시 두 화면이 함께 바뀐다 */
-    c.drawImage(bg || this.bakeSpace(), 0, 0);
-    c.fillStyle = 'rgba(10,9,18,' + (0.68 * k).toFixed(3) + ')';
+    /* 배경은 인게임 그대로 두고 딤만 얹는다 — 원본도 게임 화면이 비쳐 보인다.
+       전체화면 채우기라 qa.js ⑥ 의 "고정 높이 띠" 판정에 걸리지 않는다 */
+    c.drawImage(this.bakeSpace(), 0, 0);
+    c.fillStyle = 'rgba(4,2,14,' + (0.80 * k).toFixed(3) + ')';
     c.fillRect(0, 0, W, H);
 
-    /* 설치 버튼 자리 — 레이아웃 하한 */
-    /* 버튼 기하 — 인게임과 동일 (HUD.ctaGeom 단일 소스) */
     var g0 = HUD.ctaGeom();
-    var bw = g0.w, bh = g0.h, bx = g0.x, by = g0.y;
-    this.resInstall = { x: bx, y: by, w: bw, h: bh };
+    this.resInstall = { x: g0.x, y: g0.y, w: g0.w, h: g0.h };
 
-    var pad = 34, pw = W - pad * 2;
-    var rowH = 52, gap = 10;
+    var cx = W / 2;
+    var top = Stage.pf.y + 6;
+    var bot = g0.y - 16;
+    var avail = bot - top;
 
-    /* ── 프리레이아웃 ────────────────────────────────────────────────────
-       타이틀+캐릭터+스탯을 "한 그룹"으로 묶어 세로 중앙에 앉힌다.
-       화면 비율이 길어져도(반응형) 남는 여백이 위·아래로 均分되어
-       시선이 중앙에 모인다 — 조각별로 따로 앉히면 갭이 흩어진다. */
-    var G1 = 16, G2 = 36, BOT = 14;
-    var ti = Sprites.cache['title_clear'];
-    var hasTitle = !!(ti && ti.src === 'sheet');
-    var tW = 0, tH = 66;
-    if (hasTitle) {
-      tW = Math.min(W * 0.84, ti.w); tH = tW * ti.h / ti.w;
-      var tcap = H * 0.24;
-      if (tH > tcap) { tH = tcap; tW = tH * ti.w / ti.h; }
-    }
-    var aKey = CHARACTER.anim.idle;
-    var hasChar = Anim.has(aKey.key);
-    var mA = hasChar ? Anim.meta(aKey.key) : null;
-    var cellH = hasChar ? mA.fh : 0;
-    var statsH = (UI_STYLE === 'uihd') ? (92 + 14 + 76) : (rowH * 3 + gap * 2);
-    var chMax = (by - BOT) - 12 - tH - G1 - G2 - statsH;
-    var ch = hasChar ? clamp(Math.min(H * 0.30, cellH, chMax), 90, cellH) : 0;
-    var contentH = tH + G1 + ch + G2 + statsH;
-    var startY = Math.max(10, Math.round((by - contentH) / 2) - 6);
-    var tTop = startY;
-    var charTop = tTop + tH + G1;
-    var statsY = charTop + ch + G2;
-    var titleCy = tTop + tH / 2;
+    /* ── 세로 배치 — 사용 가능한 높이에서 역산한다 ────────────────────────
+       기기마다 세로가 크게 다르므로(810~1280) 고정 y 를 쓰면 짧은 기기에서
+       전리품이 CTA 를 뚫는다. 블록 높이를 먼저 더하고 남는 만큼 간격을 준다 */
+    var titleH = 46, timeH = 34, dmgLabelH = 20;
+    var rowH = 26, rowGap = 7, rows = Damage.SRC.length;
+    var dmgH = rows * rowH + (rows - 1) * rowGap;
+    var lootLabelH = 20, lootH = 60;
+    var blockH = titleH + timeH + dmgLabelH + dmgH + lootLabelH + lootH;
+    var gap = clamp((avail - blockH) / 5, 6, 30);
+    var y = top + Math.max(0, (avail - blockH - gap * 5) / 2);
 
-    /* ── ① 타이틀 ── */
-    var tk = eOut(clamp((t - 0.10) / 0.32, 0, 1));
-    if (hasTitle) {
-      if (tk > 0) {
-        /* 등장 후엔 CTA 와 같은 펄스 — 축소/확대 호흡. 소스가 2배 해상도라
-           ±1.2% 스케일에도 선명도가 유지된다 (축소 렌더 범위 안) */
-        var tpu = tk >= 1 ? 1 + Math.sin(Game.wt * 2.6) * 0.012 : 1;
-        c.save();
-        c.globalAlpha = k * tk;
-        c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-        c.translate(W / 2, tTop + tH / 2); c.scale(tpu, tpu);
-        c.drawImage(ti.cv, -tW / 2, -tH / 2 + (1 - tk) * -14, tW, tH);
-        c.restore();
-      }
-    } else {
-      c.save(); c.globalAlpha = k * tk;
-      c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.font = '800 38px ' + FONT; c.fillStyle = THEME.text;
-      c.fillText(THEME.resultTitle, W / 2, tTop + 24 + (1 - tk) * 10);
-      c.font = '700 13px ' + FONT; c.fillStyle = THEME.textDim;
-      c.fillText(THEME.resultSub, W / 2, tTop + 56);
-      c.restore();
-    }
-    if (tk >= 1 && !this.resFxDone) {
-      this.resFxDone = true;
-      FX.burst(W / 2, titleCy, 14, THEME.gold, 300, 3);
-      FX.kick(3.5, 0.12);
-    }
+    /* ── CLEAR ──────────────────────────────────────────────────────────── */
+    var pop = eOut(clamp(t / 0.5, 0, 1));
+    c.save();
+    c.globalAlpha = k;
+    c.shadowColor = 'rgba(142,240,255,.8)'; c.shadowBlur = 22 * pop;
+    HUD.txt('CLEAR', Stage.snap(cx), Stage.snap(y + 34),
+            '900 ' + (40 * (0.7 + pop * 0.3)).toFixed(0) + 'px ' + FONT,
+            '#ffffff', 'center', 6);
+    c.restore();
+    c.strokeStyle = 'rgba(255,255,255,.26)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(cx - 120, y + 46.5); c.lineTo(cx + 120, y + 46.5); c.stroke();
+    y += titleH + gap;
 
-    /* ── ② 리타 — 타이틀 아래. 셀 높이(원본)를 넘겨 그리지 않는다 ── */
-    var a = aKey;
-    if (hasChar) {
-      var ck = ch / cellH;
-      var rise = (1 - eOut(clamp(t / 0.45, 0, 1))) * 14;
-      var cy = Stage.snap(charTop + mA.ay * ch + Math.sin(Game.wt * 2.4) * 3 + rise);
-      /* 링·그림자 = 실측 발끝 (bbox 도, 원점도 아님 — 무기 때문에 둘 다 어긋난다) */
-      var fy = cy + (CHARACTER.feet.y - mA.ay) * ch;
-      /* uihd — 총이 오른쪽으로 길어 원점 기준으론 몸이 왼쪽에 붙는다.
-         스프라이트를 오른쪽으로 밀어 "몸(발) 중심"을 화면 중앙에 맞춘다. */
-      var drawX = (UI_STYLE === 'uihd')
-        ? W / 2 + (mA.ax - CHARACTER.feet.x) * mA.fw * ck
-        : W / 2;
-      var vxF = drawX + (CHARACTER.feet.x - mA.ax) * mA.fw * ck;   /* = 몸 중심 */
-
-      /* 스포트라이트 — 위에서 내려오는 빛 기둥 */
-      c.save();
-      c.globalAlpha = k * 0.5;
-      var sg = c.createLinearGradient(0, 0, 0, fy + 10);
-      sg.addColorStop(0, 'rgba(255,214,120,.30)');
-      sg.addColorStop(1, 'rgba(255,190,80,0)');
-      c.fillStyle = sg;
-      c.beginPath();
-      c.moveTo(W / 2 - ch * 0.20, 0); c.lineTo(W / 2 + ch * 0.20, 0);
-      c.lineTo(W / 2 + ch * 0.62, fy + 10); c.lineTo(W / 2 - ch * 0.62, fy + 10);
-      c.closePath(); c.fill();
-      c.restore();
-
-      if (UI_STYLE === 'uihd') {
-        /* 퍼플 발판 — 실측 발 중심(vxF)·발끝(fy)에 정확히 */
-        c.globalAlpha = k;
-        c.save(); c.translate(vxF, fy); c.scale(1, 0.32); c.translate(-vxF, -fy);
-        var pg = c.createRadialGradient(vxF, fy, ch * 0.05, vxF, fy, ch * 0.40);
-        pg.addColorStop(0.00, 'rgba(24,12,52,.95)');
-        pg.addColorStop(0.55, 'rgba(110,72,235,.55)');
-        pg.addColorStop(0.85, 'rgba(140,100,255,.25)');
-        pg.addColorStop(1.00, 'rgba(140,100,255,0)');
-        c.fillStyle = pg;
-        c.beginPath(); c.arc(vxF, fy, ch * 0.40, 0, 6.2832); c.fill();
-        c.strokeStyle = 'rgba(150,112,255,.65)'; c.lineWidth = 2.5;
-        c.beginPath(); c.arc(vxF, fy, ch * 0.30, 0, 6.2832); c.stroke();
-        c.restore();
-      } else {
-        c.save();
-        c.globalAlpha = k * 0.34; c.fillStyle = '#000';
-        c.beginPath(); c.ellipse(vxF, fy, ch * 0.24, ch * 0.066, 0, 0, 6.2832); c.fill();
-        c.globalAlpha = k * 0.55;
-        c.strokeStyle = 'rgba(255,200,90,.7)'; c.lineWidth = 1.5;
-        c.beginPath(); c.ellipse(vxF, fy, ch * 0.26, ch * 0.072, 0, 0, 6.2832); c.stroke();
-        c.restore();
-      }
-
-      /* 캐릭터 — snap 으로 디바이스 픽셀 격자에 */
-      c.save(); c.globalAlpha = k;
-      Anim.draw(a.key, Anim.frameAt(a.key, Game.wt, a.fps), drawX, cy, ck, { snap: true });
-      c.restore();
-
-      /* 떠다니는 별 — 결정적 위치 (영상 재현성) */
-      for (var i = 0; i < 9; i++) {
-        var ang = i * 0.698 + 0.4;
-        var rad = ch * (0.42 + 0.22 * ((i * 7) % 5) / 4);
-        var drift = Math.sin(Game.wt * 1.3 + i * 1.7) * 7;
-        var sx = W / 2 + Math.cos(ang) * rad * 1.35;
-        var sy = cy + Math.sin(ang) * rad * 0.92 + drift;
-        var tw2 = 0.5 + 0.5 * Math.sin(Game.wt * 3.1 + i * 2.3);
-        var big = (i % 3) === 0;
-        Anim.dot(big ? 'star' : 'star_s', sx, sy, big ? 17 : 9,
-          { alpha: k * (0.28 + tw2 * 0.62) });
-      }
-
-      if (t - this._chFx > 1.1) {
-        this._chFx = t;
-        FX.burst(W / 2 + rnd(-46, 46), cy + rnd(-26, 18), 4, THEME.gold, 130, 2.4);
-      }
-    }
-
-    /* ── ③ 스탯 3줄 — 아이콘 + 라벨 왼쪽 / 값 오른쪽 ── */
-    var shown = Math.round(Game.kills * eOut(clamp(t / 0.9, 0, 1)));
+    /* ── 클리어 시각 ────────────────────────────────────────────────────── */
     var sv = Math.round(TIMELINE.cues[TIMELINE.cues.length - 1].t);
-    var svTxt = ((sv / 60) | 0) + ':' + (sv % 60 < 10 ? '0' : '') + (sv % 60);
-    var reward = Math.round(Game.kills * eOut(clamp(t / 0.9, 0, 1)) * 0.45);
-    var rows = [
-      ['swords', THEME.labelKill,   shown + '',  THEME.text],
-      ['timer',  THEME.labelTime,   svTxt,       THEME.gold],
-      ['gem',    THEME.labelReward, reward + '', THEME.text]
-    ];
-    if (UI_STYLE === 'uihd') {
-      /* ── 위계형 스탯 (구성안 v2) ──
-         ① 처치 = 히어로: [큰 아이콘] 처치 수 ……………… 큰 숫자(우)
-         ② 생존/보상 = 반폭 패널 2개, 같은 한 줄 문법 */
-      var r1h = 92, r2h = 76, gap2 = 14;
-      if (!this._numFx) this._numFx = {};
-      var NF = this._numFx, self2 = this;
-      /* 카운트업: t0 부터 dur 동안 0→val. 완료 순간 1회 팝(0.25s) + 파열 */
-      function cnt(t0, dur, val) {
-        var q = eOut(clamp((t - t0) / dur, 0, 1));
-        return { v: Math.round(val * q), done: q >= 1 };
-      }
-      function popScale(key, done, px2, py2) {
-        if (!done) return 1;
-        if (!NF[key]) { NF[key] = t; FX.burst(px2, py2, 6, THEME.gold, 170, 2.4); }
-        var pt = t - NF[key];
-        return pt < 0.25 ? 1 + 0.26 * (1 - pt / 0.25) : 1;
-      }
-      function popText(txt, ax, ay, ps, col) {
-        c.save(); c.translate(ax, ay); c.scale(ps, ps);
-        c.fillStyle = col; c.fillText(txt, 0, 0); c.restore();
-      }
+    var svTxt = '0' + ((sv / 60) | 0) + ':' + (sv % 60 < 10 ? '0' : '') + (sv % 60);
+    HUD.glyph('clock', cx, y + 9, 9, THEME.textDim);
+    HUD.txt(svTxt, Stage.snap(cx), Stage.snap(y + 32),
+            '800 15px ' + FONT, THEME.text, 'center', 3.5);
+    y += timeH + gap;
 
-      var rkN = eOut(clamp((t - 0.30) / 0.32, 0, 1));
-      if (rkN > 0) {
-        c.save(); c.globalAlpha = k * rkN; c.translate(0, (1 - rkN) * 14);
-        HUD.hdPanel(pad, statsY, pw, r1h);
-        var m1 = statsY + r1h / 2;
-        HUD.icon('swords', pad + 48, m1, 56);
-        c.textAlign = 'left'; c.textBaseline = 'middle';
-        c.font = '700 16px ' + FONT; c.fillStyle = THEME.textDim;
-        c.fillText(THEME.labelKillL, pad + 88, m1);
-        var kc = cnt(0.30, 1.35, Game.kills);
-        var kps = popScale('k', kc.done, pad + pw - 60, m1 - 20);
-        c.font = '800 46px ' + FONT; c.textAlign = 'right';
-        popText(kc.v + '', pad + pw - 26, m1 + 2, kps, THEME.text);
-        c.restore();
-      }
+    /* ── 피해 현황 ──────────────────────────────────────────────────────── */
+    HUD.txt('피해 현황', Stage.snap(cx), Stage.snap(y + 13),
+            '800 13px ' + FONT, THEME.text, 'center', 3);
+    y += dmgLabelH + gap * 0.4;
 
-      var ry1 = statsY + r1h + gap2;
-      var half = Math.round((pw - gap2) / 2);
-      rkN = eOut(clamp((t - 0.42) / 0.32, 0, 1));
-      if (rkN > 0) {
-        c.save(); c.globalAlpha = k * rkN; c.translate(0, (1 - rkN) * 14);
-        var m2 = ry1 + r2h / 2;
-        /* 좌 — 생존 시간 */
-        HUD.hdPanel(pad, ry1, half, r2h);
-        HUD.icon('timer', pad + 38, m2, 44);
-        c.textAlign = 'left'; c.textBaseline = 'middle';
-        c.font = '700 14px ' + FONT; c.fillStyle = THEME.textDim;
-        c.fillText(THEME.labelTimeL, pad + 68, m2);
-        var tc = cnt(0.45, 1.0, sv);
-        var tTxt = ((tc.v / 60) | 0) + ':' + (tc.v % 60 < 10 ? '0' : '') + (tc.v % 60);
-        var tps = popScale('t', tc.done, pad + half - 44, m2 - 16);
-        c.font = '800 30px ' + FONT; c.textAlign = 'right';
-        popText(tTxt, pad + half - 20, m2 + 1, tps, THEME.gold);
-        /* 우 — 보상 (젬 수치만) */
-        var rx2 = pad + half + gap2;
-        HUD.hdPanel(rx2, ry1, half, r2h);
-        HUD.icon('gem', rx2 + 38, m2, 44);
-        c.textAlign = 'left';
-        c.font = '700 14px ' + FONT; c.fillStyle = THEME.textDim;
-        c.fillText(THEME.labelReward, rx2 + 68, m2);
-        var rc = cnt(0.55, 1.2, Math.round(Game.kills * 0.45));
-        var rps = popScale('r', rc.done, rx2 + half - 44, m2 - 16);
-        c.font = '800 30px ' + FONT; c.textAlign = 'right';
-        popText(rc.v + '', rx2 + half - 20, m2 + 1, rps, THEME.text);
-        c.restore();
-      }
-    } else {
-    for (var ri2 = 0; ri2 < rows.length; ri2++) {
-      var rk = eOut(clamp((t - 0.30 - ri2 * 0.10) / 0.32, 0, 1));
-      if (rk <= 0) continue;
-      var ry = statsY + ri2 * (rowH + gap);
-      c.save(); c.globalAlpha = k * rk;
-      c.translate(0, (1 - rk) * 14);
-      if (UI_STYLE === 'uihd') {
-        HUD.hdPanel(pad, ry, pw, rowH);
-      } else if (UI_STYLE === 'dot') {
-        HUD.pixPanel(pad, ry, pw, rowH, THEME.dotPanel, THEME.dotEdge);
-      } else {
-        c.fillStyle = THEME.ink;
-        roundRect(c, pad, ry, pw, rowH, 4); c.fill();
-        c.strokeStyle = THEME.line; c.lineWidth = 1;
-        roundRect(c, pad + 0.5, ry + 0.5, pw - 1, rowH - 1, 4); c.stroke();
-      }
-      var ih = 38;
-      HUD.icon(rows[ri2][0], pad + 16 + ih / 2, ry + rowH / 2, ih);
-      c.font = '700 13px ' + FONT; c.textAlign = 'left'; c.textBaseline = 'middle';
-      c.fillStyle = THEME.textDim;
-      c.fillText(rows[ri2][1], pad + 26 + ih, ry + rowH / 2);
-      c.font = '800 26px ' + FONT; c.textAlign = 'right';
-      c.fillStyle = rows[ri2][3];
-      c.fillText(rows[ri2][2], pad + pw - 18, ry + rowH / 2 + 1);
+    var pw = Math.min(300, W - 80), px = cx - pw / 2;
+    var iw = 30, vw = 74, bx2 = px + iw + 6, bw2 = pw - iw - 6 - vw - 6;
+    var mx2 = 1, i;
+    for (i = 0; i < rows; i++) mx2 = Math.max(mx2, Damage.shown[Damage.SRC[i].id]);
+    for (i = 0; i < rows; i++) {
+      var S = Damage.SRC[i], v = Damage.shown[S.id] || 0;
+      var ry = y + i * (rowH + rowGap);
+      HUD.card(px, ry, iw, rowH, 4);
+      HUD.glyph(S.icon, px + iw / 2, ry + rowH / 2, 8, S.col, v > 0 ? 1 : 0.3);
+      HUD.bar(bx2, ry + 4, bw2, rowH - 8, v / mx2, S.col, { radius: 4, pad: 1 });
+      HUD.card(px + pw - vw, ry, vw, rowH, 4);
+      HUD.txt(v > 0 ? Damage.fmt(v) : '-',
+              Stage.snap(px + pw - 9), Stage.snap(ry + rowH - 8),
+              '800 13px ' + FONT, v > 0 ? THEME.text : THEME.textDim, 'right', 3);
+    }
+    y += dmgH + gap;
+
+    /* ── 전리품 ─────────────────────────────────────────────────────────── */
+    HUD.txt('전리품', Stage.snap(cx), Stage.snap(y + 13),
+            '800 13px ' + FONT, THEME.text, 'center', 3);
+    y += lootLabelH + gap * 0.4;
+
+    var L = this.LOOT, n = L.length;
+    var lw = Math.min(320, W - 60), lx = cx - lw / 2;
+    HUD.card(lx, y, lw, lootH - 4, 10);
+    var cellW = lw / n;
+    for (i = 0; i < n; i++) {
+      var ccx = lx + cellW * (i + 0.5);
+      /* 등장 순서를 어긋나게 해서 하나씩 채워지는 인상을 만든다 */
+      var ka = clamp((t - 0.5 - i * 0.09) / 0.3, 0, 1);
+      if (ka <= 0) continue;
+      c.save(); c.globalAlpha = ka;
+      HUD.glyph(L[i].g, ccx, y + 20, 10, THEME.neonC);
+      HUD.txt(L[i].n, Stage.snap(ccx), Stage.snap(y + 46),
+              '800 12px ' + FONT, THEME.text, 'center', 3);
       c.restore();
     }
 
-    }
-
-    /* ── 설치 버튼 ── */
-    var pulse = 1 + Math.sin(Game.wt * 3.6) * 0.018;
-    c.save(); c.globalAlpha = k;
-    c.translate(bx + bw / 2, by + bh / 2); c.scale(pulse, pulse); c.translate(-bw / 2, -bh / 2);
-    HUD.ctaFace(0, 0, bw, bh, UI_STYLE === 'uihd' ? 30 : 19);
-    c.restore(); c.globalAlpha = 1;
+    /* ── 설치 버튼 ────────────────────────────────────────────────────────
+       ★ 레퍼런스의 초록 "2배 받기" 자리가 그대로 우리 CTA 자리다.
+         원본도 결과 패널의 유일한 강조 버튼이 여기 있고 초록이다.
+       기하는 HUD.ctaGeom() 단일 소스 — 인게임과 결과 화면이 "완전히 같은
+       버튼"을 써야 동선 학습이 끊기지 않는다.
+       ⚠️ 재작성하면서 한 번 빠뜨렸다. 이 호출이 없으면 결과 화면에
+          버튼이 아예 안 그려진다(히트박스만 남아 보이지 않는 버튼이 된다). */
+    var pulse = 1 + Math.sin(Game.wt * 3.2) * 0.012;
+    c.save();
+    c.globalAlpha = clamp((t - 0.35) / 0.35, 0, 1);
+    c.translate(g0.x + g0.w / 2, g0.y + g0.h / 2);
+    c.scale(pulse, pulse);
+    c.translate(-g0.w / 2, -g0.h / 2);
+    HUD.ctaFace(0, 0, g0.w, g0.h, UI_STYLE === 'uihd' ? 30 : 18);
+    c.restore();
   },
 
   hit: function (r, x, y) { return r && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
