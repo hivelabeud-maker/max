@@ -117,7 +117,6 @@ function frame(now) {
   if (Game.state !== 'result') {
     HUD.draw();
     HUD.drawPlayerHP();
-    HUD.drawHint();
     FX.drawUI();
     HUD.drawBanner();
     HUD.drawCTA();

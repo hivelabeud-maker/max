@@ -56,12 +56,14 @@ var Bullets = {
     c.save();
     c.globalCompositeOperation = 'lighter';
     Game.bullets.each(function (b) {
-      c.globalAlpha = 0.20;
+      /* 후광은 아주 얇게만 — 원본의 점은 또렷한 흰 원이다.
+         크게 주면 점끼리 번져 붙어서 "일정한 간격"이 안 읽힌다 */
+      c.globalAlpha = 0.13;
       c.fillStyle = B.trail;
-      c.beginPath(); c.arc(b.x, b.y, B.w * 1.5, 0, 6.2832); c.fill();
+      c.beginPath(); c.arc(b.x, b.y, B.w * 0.95, 0, 6.2832); c.fill();
       c.globalAlpha = 1;
       c.fillStyle = B.color;
-      c.beginPath(); c.arc(b.x, b.y, B.w * 0.52, 0, 6.2832); c.fill();
+      c.beginPath(); c.arc(b.x, b.y, B.w * 0.5, 0, 6.2832); c.fill();
     });
     c.restore();
   }

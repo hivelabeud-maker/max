@@ -116,7 +116,6 @@ function frame(now) {
 
   if (Game.state !== 'result') {
     HUD.draw();
-    HUD.drawHint();
     FX.drawUI();
     HUD.drawDominate();
     HUD.drawBanner();

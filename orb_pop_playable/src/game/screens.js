@@ -41,7 +41,10 @@ var Screens = {
      ★ 순검정을 고른 건 취향이 아니라 이 게임의 요구다.
        화면의 주인공이 "원색 공"과 "흰 탄 줄기"인데, 배경에 무늬가 있으면
        공의 색이 배경과 섞여 무엇을 터뜨렸는지가 안 읽힌다.
-       유일하게 남긴 것은 콤보가 달아오를 때의 미세한 금색 광량이다 —
+       ★ 금색 광량을 heat 의 제곱에 비례시켰다. 선형이면 콤보 초반부터 배경이
+       누렇게 뜨는데, 원본은 평온 구간의 밝은 픽셀이 3% 남짓인 순검정이다.
+       제곱이라 후반에만 확 달아오른다.
+     유일하게 남긴 것은 콤보가 달아오를 때의 미세한 금색 광량이다 —
        화면 전체가 콤보 하나를 따라 뜨거워지는 연출의 바탕이다.          */
   drawBG: function (dt) {
     var c = Stage.ctx, W = Stage.W, H = Stage.H;
@@ -54,8 +57,8 @@ var Screens = {
       var p = Game.player;
       var cx = p ? p.x : W / 2, cy = p ? p.y : H / 2;
       var g = c.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.85);
-      g.addColorStop(0, 'rgba(255,170,60,' + (heat * 0.16).toFixed(3) + ')');
-      g.addColorStop(0.55, 'rgba(255,120,30,' + (heat * 0.06).toFixed(3) + ')');
+      g.addColorStop(0, 'rgba(255,170,60,' + (heat * heat * 0.11).toFixed(3) + ')');
+      g.addColorStop(0.55, 'rgba(255,120,30,' + (heat * heat * 0.04).toFixed(3) + ')');
       g.addColorStop(1, 'rgba(0,0,0,0)');
       c.fillStyle = g; c.fillRect(0, 0, W, H);
     }

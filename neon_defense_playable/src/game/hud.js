@@ -458,43 +458,14 @@ var HUD = {
     }
   },
 
-  /* ── 튜토리얼 — 도트 손 + 골드 셰브론 ──────────────────────────────────
-     셰브론은 제자리에서 깜빡이고, 손만 좌우로 스윙한다.
-     손이 그쪽에 닿으면 해당 셰브론이 밝아져서 "이 방향으로 끌어라"가 읽힌다.
-     ──────────────────────────────────────────────────────────────────── */
-  drawHint: function () {
-    if (!Game.hint.on) return;
-    var c = Stage.ctx, p = Game.player;
-    var t = Game.hint.t;
-    var cy = p.y + 116;              /* 파이어 헤일로 아래로 충분히 내린다 */
-    var swing = Math.sin(t * 2.6) * 52;
-
-    /* 셰브론 — 고정 위치. 손이 다가온 쪽이 밝아진다 */
-    var blink = 0.42 + Math.sin(t * 5) * 0.18;
-    Anim.dot('chevL', p.x - 100, cy, 28, { alpha: blink + (swing < -20 ? 0.45 : 0) });
-    Anim.dot('chevR', p.x + 100, cy, 28, { alpha: blink + (swing > 20 ? 0.45 : 0) });
-
-    /* 탭 펄스 링 — 손끝에서 퍼진다 */
-    var ph = (t * 1.1) % 1;
-    c.save();
-    c.globalAlpha = (1 - ph) * 0.42;
-    c.strokeStyle = '#ffcf3f'; c.lineWidth = 2;
-    c.beginPath(); c.arc(p.x + swing, cy - 6, 12 + ph * 26, 0, 6.2832); c.stroke();
-    c.restore();
-
-    /* 손 — 스윙 + 진행 방향으로 살짝 기울기 */
-    Anim.dot('hand', p.x + swing, cy + 10, 64);   /* 회전 금지 — 도트가 뭉개진다 */
-
-    /* 문구 */
-    c.save();
-    c.globalAlpha = 0.9;
-    c.font = '800 14px ' + FONT; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.lineJoin = 'round'; c.lineWidth = 5; c.strokeStyle = 'rgba(8,6,16,.75)';
-    c.strokeText(THEME.tutorial, p.x, cy + 54);
-    c.fillStyle = '#ffffff';
-    c.fillText(THEME.tutorial, p.x, cy + 54);
-    c.restore();
-  },
+  /* ── 튜토리얼 힌트는 제거했다 ────────────────────────────────────────
+     ★ 도트 손 · 좌우 셰브론 · "드래그로 이동" 문구를 전부 뺐다.
+     이 소재는 드래그로 조작하는 게 아니다 — 캐릭터/발사대가 화면 중앙에
+     고정돼 있고 전투는 자동으로 진행된다. 그런데 손이 좌우로 흔들리며
+     "드래그로 이동"이라고 안내하면, 따라 해도 아무 일이 안 일어난다.
+     반응 없는 안내는 없는 것만 못하다 (2026-09-09 실장 지시).
+     되살리려면 먼저 조작을 되살릴 것 — 순서가 반대다.                    */
+  drawHint: function () {},
 
   /* ── 웨이브 배너 — 얇은 라인 사이의 텍스트 한 줄 ── */
   drawBanner: function () {

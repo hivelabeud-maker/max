@@ -347,10 +347,11 @@ var HUD = {
     var heat = Combo.heat();
     var scSz = 40 + heat * 8;
     c.save();
-    if (heat > 0.25) { c.shadowColor = THEME.goal; c.shadowBlur = 10 + heat * 22; }
+    /* 원본의 점수는 평온 구간 내내 순백이다. 임계를 올려 후반에만 물들인다 */
+    if (heat > 0.55) { c.shadowColor = THEME.goal; c.shadowBlur = (heat - 0.55) * 46; }
     HUD.txt(scTxt, Stage.snap(cxm), Stage.snap(topY + 32),
             '900 ' + scSz.toFixed(0) + 'px ' + FONT,
-            heat > 0.5 ? THEME.goal : THEME.score, 'center', 5);
+            heat > 0.7 ? THEME.goal : THEME.score, 'center', 5);
     c.restore();
 
     /* ── ⑤ GOAL: N LEFT ──────────────────────────────────────────────── */
@@ -406,53 +407,16 @@ var HUD = {
   /* CTA 면 — 인게임/결과 공용. 도트 스킨은 계단 프레임 + 하단 그림자 단 */
   ctaFace: function (x, y, w, h, fontPx) {
     var c = Stage.ctx;
-    var img = Sprites.cache['btn_cta'];
-    if (img && img.src === 'sheet') {
-      /* 사용자 버튼 이미지 — 3분할: 좌캡 / 중앙 늘림 / 우캡.
-         통째로 늘리면 끝 장식이 찌그러진다. 캡 폭 = 소스 높이(장식이 그 안에 있음) */
-      var sw = img.w, sh = img.h;
-      var capS = Math.round(sh * 0.92);
-      var capD = Math.round(h * capS / sh);
-      c.save();
-      c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-      c.drawImage(img.cv, 0, 0, capS, sh, x, y, capD, h);
-      c.drawImage(img.cv, capS, 0, sw - capS * 2, sh, x + capD, y, w - capD * 2, h);
-      c.drawImage(img.cv, sw - capS, 0, capS, sh, x + w - capD, y, capD, h);
-      c.restore();
-      /* 텍스트 — 플레이트 "페이스" 실측 중심 0.411h.
-         이미지 하단 ~30% 가 베벨·그림자 밴드라 기하 중심(0.5h)은 낮아 보인다.
-         (측정: 밝은 초록 행 밴드 y 31~195 / 275 — 버튼 이미지 교체 시 재측정) */
-      c.font = '800 ' + fontPx + 'px ' + FONT;
-      c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = '#ffffff';
-      c.fillText(THEME.ctaLabel, Math.round(x + w / 2), Math.round(y + h * 0.411));
-      return;
-    } else if (UI_STYLE === 'uihd') {
-      /* 레퍼런스 초록 플레이트: 다크 외곽 → 딥그린 프레임 → 본체 → 상단 하이라이트 띠 + 스터드 */
-      this.pix(x - 3, y - 3, w + 6, h + 6, THEME.hdCtaDark, 3);
-      this.pix(x, y, w, h, THEME.hdCtaEdge, 3);
-      this.pix(x + 3, y + 3, w - 6, h - 6, THEME.hdCta, 3);
-      c.fillStyle = THEME.hdCtaHi;
-      c.fillRect(Math.round(x) + 9, Math.round(y) + 3, Math.round(w) - 18, 3);
-      c.fillStyle = 'rgba(0,0,0,.25)';
-      c.fillRect(Math.round(x) + 9, Math.round(y + h) - 6, Math.round(w) - 18, 3);
-      var ins = 12;
-      this.stud(x + ins, y + ins, 3, THEME.hdCtaHi);
-      this.stud(x + w - ins, y + ins, 3, THEME.hdCtaHi);
-      this.stud(x + ins, y + h - ins, 3, THEME.hdCtaHi);
-      this.stud(x + w - ins, y + h - ins, 3, THEME.hdCtaHi);
-    } else if (UI_STYLE === 'dot') {
-      this.pixPanel(x, y, w, h, THEME.cta, '#128a44');
-      c.fillStyle = 'rgba(0,0,0,.22)';                 /* 눌리는 단 */
-      c.fillRect(Math.round(x) + 6, Math.round(y + h) - 9, Math.round(w) - 12, 6);
-    } else {
-      c.fillStyle = THEME.cta;
-      roundRect(c, x, y, w, h, 4); c.fill();
-    }
+    /* 플랫 CTA — 1차의 btn_cta.png(베벨·스터드 픽셀 버튼)를 쓰지 않는다.
+       레퍼런스 UI 가 전부 플랫이라 버튼만 입체면 혼자 다른 세계가 된다. */
+    c.fillStyle = THEME.cta;
+    roundRect(c, x, y, w, h, 6); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.34)'; c.lineWidth = 1.5;
+    roundRect(c, x + 0.75, y + 0.75, w - 1.5, h - 1.5, 6); c.stroke();
     c.font = '800 ' + fontPx + 'px ' + FONT;
     c.textAlign = 'center'; c.textBaseline = 'middle';
     c.fillStyle = '#ffffff';
-    c.fillText(THEME.ctaLabel, x + w / 2, y + h / 2 + 1);
+    c.fillText(THEME.ctaLabel, Math.round(x + w / 2), Math.round(y + h / 2 + 1));
   },
 
   drawCTA: function () {
@@ -473,43 +437,14 @@ var HUD = {
      없도록 빈 함수로 남겨 의도를 명시한다. */
   drawPlayerHP: function () {},
 
-  /* ── 튜토리얼 — 도트 손 + 골드 셰브론 ──────────────────────────────────
-     셰브론은 제자리에서 깜빡이고, 손만 좌우로 스윙한다.
-     손이 그쪽에 닿으면 해당 셰브론이 밝아져서 "이 방향으로 끌어라"가 읽힌다.
-     ──────────────────────────────────────────────────────────────────── */
-  drawHint: function () {
-    if (!Game.hint.on) return;
-    var c = Stage.ctx, p = Game.player;
-    var t = Game.hint.t;
-    var cy = p.y + 116;              /* 파이어 헤일로 아래로 충분히 내린다 */
-    var swing = Math.sin(t * 2.6) * 52;
-
-    /* 셰브론 — 고정 위치. 손이 다가온 쪽이 밝아진다 */
-    var blink = 0.42 + Math.sin(t * 5) * 0.18;
-    Anim.dot('chevL', p.x - 100, cy, 28, { alpha: blink + (swing < -20 ? 0.45 : 0) });
-    Anim.dot('chevR', p.x + 100, cy, 28, { alpha: blink + (swing > 20 ? 0.45 : 0) });
-
-    /* 탭 펄스 링 — 손끝에서 퍼진다 */
-    var ph = (t * 1.1) % 1;
-    c.save();
-    c.globalAlpha = (1 - ph) * 0.42;
-    c.strokeStyle = '#ffcf3f'; c.lineWidth = 2;
-    c.beginPath(); c.arc(p.x + swing, cy - 6, 12 + ph * 26, 0, 6.2832); c.stroke();
-    c.restore();
-
-    /* 손 — 스윙 + 진행 방향으로 살짝 기울기 */
-    Anim.dot('hand', p.x + swing, cy + 10, 64);   /* 회전 금지 — 도트가 뭉개진다 */
-
-    /* 문구 */
-    c.save();
-    c.globalAlpha = 0.9;
-    c.font = '800 14px ' + FONT; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.lineJoin = 'round'; c.lineWidth = 5; c.strokeStyle = 'rgba(8,6,16,.75)';
-    c.strokeText(THEME.tutorial, p.x, cy + 54);
-    c.fillStyle = '#ffffff';
-    c.fillText(THEME.tutorial, p.x, cy + 54);
-    c.restore();
-  },
+  /* ── 튜토리얼 힌트는 제거했다 ────────────────────────────────────────
+     ★ 도트 손 · 좌우 셰브론 · "드래그로 이동" 문구를 전부 뺐다.
+     이 소재는 드래그로 조작하는 게 아니다 — 캐릭터/발사대가 화면 중앙에
+     고정돼 있고 전투는 자동으로 진행된다. 그런데 손이 좌우로 흔들리며
+     "드래그로 이동"이라고 안내하면, 따라 해도 아무 일이 안 일어난다.
+     반응 없는 안내는 없는 것만 못하다 (2026-09-09 실장 지시).
+     되살리려면 먼저 조작을 되살릴 것 — 순서가 반대다.                    */
+  drawHint: function () {},
 
   /* ── escalation 배너 ────────────────────────────────────────────────────
      레퍼런스의 3단 문구를 그대로 옮긴다:

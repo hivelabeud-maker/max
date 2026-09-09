@@ -35,11 +35,18 @@ var Player = {
   /* 부유 존 — 아주 좁다. 레퍼런스의 플레이어는 제자리를 지킨다.
      ★ 세로 중심은 플레이 영역의 정중앙이 아니라 살짝 위다. 아래쪽은
        CTA·조이스틱이 먹으므로, 정중앙에 두면 캐릭터가 UI 에 붙어 보인다 */
+  /* ── 고정 위치 ─────────────────────────────────────────────────────────
+     ★ 발사대는 움직이지 않는다. 원본 영상에서 2.0~4.0초 동안 좌표가
+       (143,232)에서 1px도 안 변했다 — 284폭 기준 가로 정중앙,
+       플레이 영역 세로의 43% 지점이다.
+     1차 구현은 리사주 곡선으로 부유시켰는데, 실장이 "중앙에서 쏘는 방식이
+     반영이 안 됐다"고 지적한 게 이것이다. 되돌리지 말 것.
+     세로를 43%로 잡는 이유: 오브가 위쪽에 몰려 있고 폭발도 위에서 나므로,
+     발사대가 정중앙이면 폭발이 화면 밖으로 밀린다.                        */
   zone: function () {
     var top = Stage.pf.y, bot = HUD.ctaTop();
-    var cx = Stage.W / 2, cy = top + (bot - top) * 0.46;
-    var rx = Stage.W * 0.10, ry = (bot - top) * 0.06;
-    return { cx: cx, cy: cy, x0: cx - rx, x1: cx + rx, y0: cy - ry, y1: cy + ry };
+    var cx = Stage.W / 2, cy = top + (bot - top) * 0.43;
+    return { cx: cx, cy: cy, x0: cx, x1: cx, y0: cy, y1: cy };
   },
 
   update: function (p, dt) {
@@ -65,13 +72,11 @@ var Player = {
     while (d < -Math.PI) d += 6.2831853;
     p.aim += d * (1 - Math.exp(-A.aimSpeed * dt));
 
-    /* ── 부유 ────────────────────────────────────────────────────────────
-       이동이 아니라 숨쉬기다. 리사주 곡선으로 아주 천천히 흔든다 */
+    /* ── 위치 고정 ────────────────────────────────────────────────────────
+       부유도 없다. 화면 회전·리사이즈로 중심이 바뀔 때만 수렴으로 따라간다 */
     var z = Player.zone();
-    p.tx = z.cx + Math.sin(Game.wt * 0.53) * (z.x1 - z.cx) * 0.75;
-    p.ty = z.cy + Math.sin(Game.wt * 0.41 + 1.9) * (z.y1 - z.cy) * 0.85;
-    var ox = p.x, oy = p.y;
-    var sm = 1 - Math.exp(-CHARACTER.move.smooth * dt);
+    p.tx = z.cx; p.ty = z.cy;
+    var sm = 1 - Math.exp(-14 * dt);
     p.x += (p.tx - p.x) * sm; p.y += (p.ty - p.y) * sm;
     p.moving = 0;                    /* 부유는 걷기가 아니다 — idle/fire 만 쓴다 */
     p.at += dt; p.walk += dt * 5;
@@ -120,9 +125,13 @@ var Player = {
       });
       if (w > 0) p.sweep = Math.atan2(by, bx);
     }
-    /* 목표 방향 주변을 계속 훑는다. 진폭이 0이면 한 점만 쏴서 화면이 멈춘다 */
-    p.aimT = p.sweep + Math.sin(Game.wt * 1.35) * 0.62
-                     + Math.sin(Game.wt * 0.47 + 2.2) * 0.30;
+    /* ── 스윕 속도가 곧 점 궤적의 길이다 ──────────────────────────────────
+       원본 영상 실측: 0.8초 동안 궤적 방향이 약 150° 돌았다 = 3.3 rad/s.
+       1차 구현은 진폭 0.62 × 주파수 1.35 = 0.84 rad/s 로 4배 느렸고,
+       그래서 점이 한 자리에 뭉쳐 "일정 간격으로 늘어선 줄"이 안 나왔다.
+       조준이 빠르게 훑어야 먼저 쏜 탄과 나중 탄의 각도가 벌어져 곡선이 그려진다. */
+    p.aimT = p.sweep + Math.sin(Game.wt * 2.6) * 1.25
+                     + Math.sin(Game.wt * 0.9 + 2.2) * 0.55;
   },
 
   /* 상황 → 애니 선택. 사격 직후 0.42초는 fire 를 유지해 깜빡임을 막는다. */
@@ -189,6 +198,23 @@ var Player = {
         flip: flip,
         tint: p.hurt > 0 ? '#ff5a6e' : null, tintA: 0.32
       });
+      /* ── 조준 막대 ─────────────────────────────────────────────────────
+         원본의 발사대는 "시안 오브 + 흰 막대"라 조준 방향이 한눈에 읽힌다.
+         리타 스프라이트는 좌우 반전만 되고 방향을 못 알려주므로,
+         같은 역할의 막대를 코드로 그려 붙인다. */
+      var M3 = CHARACTER.muzzle;
+      var sx = p.x + Math.cos(p.aim) * (M3.r - 4);
+      var sy = p.y + M3.y + Math.sin(p.aim) * (M3.r - 4) * 0.7;
+      var ex = p.x + Math.cos(p.aim) * (M3.r + 15);
+      var ey = p.y + M3.y + Math.sin(p.aim) * (M3.r + 15) * 0.7;
+      c.save();
+      c.lineCap = 'round';
+      c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 8;
+      c.beginPath(); c.moveTo(sx, sy); c.lineTo(ex, ey); c.stroke();
+      c.strokeStyle = '#ffffff'; c.lineWidth = 5;
+      c.beginPath(); c.moveTo(sx, sy); c.lineTo(ex, ey); c.stroke();
+      c.restore();
+
       /* 총구 화염 — 스프라이트에 굽지 않고 코드로 (방향을 따라간다) */
       if (p.muzzle > 0) {
         var M2 = CHARACTER.muzzle;

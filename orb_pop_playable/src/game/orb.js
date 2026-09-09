@@ -49,8 +49,17 @@ var Orbs = {
     var pf = this.field();
     o.t = tier; o.r = d.r; o.hp = d.hp;
     o.col = (col === undefined) ? ri(THEME.orbCols.length) : col;
-    o.x = (x === undefined) ? rnd(pf.x + 40, pf.x + pf.w - 40) : x;
-    o.y = (y === undefined) ? rnd(pf.y + 40, pf.y + pf.h - 40) : y;
+    /* ── 스폰 위치는 위쪽에 편중된다 ──────────────────────────────────
+       원본 영상의 프렌지 구간에서 밝은 픽셀의 83~93%가 화면 상단 절반에
+       있었다. 폭발이 위에서 난다는 뜻이고, 그러려면 표적이 위에 있어야 한다.
+       발사대(세로 43%)보다 위를 중심으로 뿌리되, 아래도 조금 남겨서
+       조준이 한 방향으로만 굳지 않게 한다.                              */
+    o.x = (x === undefined) ? rnd(pf.x + 36, pf.x + pf.w - 36) : x;
+    if (y === undefined) {
+      var up = rand() < 0.74;                    /* 74% 는 발사대 위쪽 */
+      o.y = up ? rnd(pf.y + 30, pf.y + pf.h * 0.42)
+               : rnd(pf.y + pf.h * 0.52, pf.y + pf.h - 40);
+    } else o.y = y;
     if (vx === undefined) {
       var a = rnd(0, 6.2832), s = ORB_SET.drift * d.speed;
       o.vx = Math.cos(a) * s; o.vy = Math.sin(a) * s;
@@ -88,8 +97,11 @@ var Orbs = {
     FX.burst(o.x, o.y, big ? 8 : 3, THEME.boomC, big ? 260 : 180, big ? 2.2 : 1.5);
     FX.ring(o.x, o.y, o.r * 0.5, o.r * (big ? 3.4 : 2.6), big ? 0.26 : 0.18, col, big ? 3 : 2);
     if (big) {
-      FX.slashBurst(o.x, o.y, 5, THEME.boomA, o.r * 5);
-      FX.kick(o.t >= 4 ? 3.2 : 2.0, 0.07);
+      /* ⚠️ FX.slashBurst(방사 막대)를 뺐다. 원본 영상의 폭발은 파편과 링뿐이고
+         굵은 막대가 뻗는 연출이 없다. 넣었더니 화면에서 가장 눈에 띄는
+         이물질이 됐다 (2026-09-09 캡처 확인). 되살리지 말 것 */
+      FX.ring(o.x, o.y, o.r * 0.8, o.r * 4.6, 0.30, THEME.boomC, 2);
+      FX.kick(2.4, 0.07);
     }
 
     /* 분열 — 부모 속도에 반발을 더해 사방으로 흩어진다.
@@ -156,13 +168,11 @@ var Orbs = {
     Game.orbs.each(function (o) {
       if (o.dieT > 0) return;
       var col = Orbs.colorOf(o);
-      /* 헤일로는 아주 옅게. 처음엔 1.75r · 알파 .16 이었는데 공마다 큰 후광이
-         생겨 화면이 뭉개졌다 — 레퍼런스의 공은 후광 없는 납작한 원이다.
-         순검정 위에서 가장자리를 살짝 띄우는 정도만 남긴다 */
-      c.globalAlpha = 0.10;
-      c.fillStyle = col;
-      c.beginPath(); c.arc(o.x, o.y, o.r * 1.35, 0, 6.2832); c.fill();
-      c.globalAlpha = 1;
+      /* ★ 헤일로를 완전히 뺐다. 두 번 줄였는데도 순검정 위에서 옅은 후광이
+         "어두운 링"으로 읽혀 공마다 테두리가 생겼다. 원본 영상의 공은
+         후광이 없는 완전히 납작한 원이다 — 아래 본체 + 상단 하이라이트가 전부.
+         (이 each 루프가 비게 됐지만 lighter 블록 구조는 남겨둔다 —
+          나중에 발광 오브 타입을 넣으면 여기가 그 자리다) */
     });
     c.restore();
 

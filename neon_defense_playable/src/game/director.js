@@ -29,7 +29,7 @@ var Director = {
 
   setState: function (s, n) {
     Game.state = s;
-    if (s === 'tutorial') { Game.timeScale = 1; Game.hint.on = true; }
+    if (s === 'tutorial') { Game.timeScale = 1; }   /* 힌트 없음 — 아래 참조 */
     else if (s === 'battle') { Game.timeScale = 1; }
     else if (s === 'ultimate') {
       Game.timeScale = 0.22; Director.ultT = 0;
