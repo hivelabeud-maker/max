@@ -153,7 +153,14 @@ var Player = {
     if (Game.state !== 'battle' && Game.state !== 'tutorial') return;
     if (p.hurtCd > 0) return;
     p.hurt = 0.08; p.hurtCd = 0.50;
-    Game.hp = Math.max(Game.hpMax * Game.hpFloor, Game.hp - (dmg || 4) * 0.42 * Game.hpU);
+    var raw = (dmg || 4) * 0.42 * Game.hpU;
+    /* 실드가 먼저 받는다. 남은 만큼만 HP 로 넘어간다 */
+    if (Game.shield > 0) {
+      var ab = Math.min(Game.shield, raw);
+      Game.shield -= ab; raw -= ab; Game.shieldHit = 0.22;
+      FX.ring(p.x, p.y - 6, 26, 54, 0.20, 'rgba(142,240,255,.75)', 2);
+    }
+    if (raw > 0) Game.hp = Math.max(Game.hpMax * Game.hpFloor, Game.hp - raw);
     Game.hpRegenLock = 1.6;   /* 맞은 티가 나도록 잠깐 재생을 멈춘다 */
     Game.hpHit = 0.22;
     FX.kick(4, 0.10);

@@ -11,6 +11,7 @@ function restart() {
   Game.kills = 0; Game.coins = 0; Game.killShown = 0;
   Game.hp = Game.hpMax = Game.hpGhost = CHARACTER.hp; Game.hpHit = 0;
   Game.hpU = Game.hpMax / 100; Game.hpRegenLock = 0;
+  Game.shield = 0; Game.shieldHit = 0;
   Game.boss = null; Game.bossAt = 0; Game.press = 0; Game.lineHit = 0;
   Game.banner = { txt: '', t: 0 }; Game.hint = { on: false, t: 0 };
   Game.cutin = 0; Game.danger = 0; Game.spawned = 0; Game.ended = false; Game.hitstop = 0;
@@ -73,6 +74,12 @@ function frame(now) {
     else if (Game.hp < Game.hpMax) Game.hp = Math.min(Game.hpMax, Game.hp + 1.4 * Game.hpU * wdt);
     if (Game.hpGhost > Game.hp) Game.hpGhost = Math.max(Game.hp, Game.hpGhost - 34 * Game.hpU * wdt);
     else Game.hpGhost = Game.hp;
+    /* 실드 충전 — HP 재생 잠금이 풀린 뒤에만. 압박이 심하면 안 차고,
+       숨돌릴 틈이 생기면 4초쯤에 만충된다. 게이지가 실제로 오르내려야
+       레퍼런스의 SHIELD 칸이 살아 있는 것으로 읽힌다 */
+    if (Game.shieldHit > 0) Game.shieldHit -= dt;
+    if (Game.hpRegenLock <= 0 && Game.shield < Game.shieldMax)
+      Game.shield = Math.min(Game.shieldMax, Game.shield + 26 * wdt);
     /* 처치 수 표시값 — 실제 kills 를 부드럽게 따라간다.
        볼리가 한 번에 30~50 을 지우면 원본은 계단처럼 튀는데, 그대로 그리면
        "느린 박자로 덜컥덜컥" 올라가는 것처럼 보인다. 남은 차이에 비례해
@@ -98,6 +105,7 @@ function frame(now) {
      자체 외곽선으로 읽히므로 몹이 뒤로 지나가도 문제없다. */
   c.save();
   if (live) {   /* result 는 곧바로 배경으로 덮이므로 월드를 그릴 필요가 없다 */
+    HUD.drawRange();                /* 공격 범위 점선 원 — 바닥 표시라 몹보다 먼저 */
     Enemies.drawAll(Game.player);   /* 발밑 y 깊이 정렬 — 캐릭터가 자기 깊이에 끼어든다 */
     Bullets.draw();
     FX.drawWorld();

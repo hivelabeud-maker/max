@@ -1,15 +1,22 @@
 /* ============================================================================
-   hud.js — 플랫 HUD
+   hud.js — 네온 HUD (2차 · NEON DEFENSE)
 
-   도트 아트가 이미 정보량이 많다. UI 가 조금이라도 입체적이면 화면이 즉시
-   지저분해진다. 그래서 이번 버전은 규칙을 넷으로 고정했다:
-     ① 그라디언트·베벨·글로우 금지. 단색 면 + 1px 라인만.
-     ② 모서리는 라운드 4px 이하. 캡슐 금지.
-     ③ 표시하는 값은 3개뿐 — 처치 수 / 웨이브 진행 / HP.
-     ④ ★ 화면 폭 전체를 덮는 딤/스크림 사각형 절대 금지.
-        (fillRect(0, 0, W, n) 같은 것) — 배경 위에서 "검정 띠"로 보인다.
-        3회 재발한 실수다. 가독성은 strokeText 외곽선으로만 해결한다.
-        qa.js ⑥ 이 이 규칙을 자동 검사한다.
+   ⚠️ 규칙이 1차에서 통째로 뒤집혔다. 되돌리지 말 것.
+   1차(pixel_survivor)는 "표시값 3개 / 플랫 / 조용한 UI"였다. 도트 아트가
+   정보량이 많아서 UI 를 눌러야 했기 때문이다.
+   2차 브리프는 정반대를 요구한다 — 레퍼런스처럼 조밀한 게임 UI 를 재현하고,
+   시각적 자극으로 후킹하는 것이 최우선이다. 근거는 docs/00_인수인계.md.
+
+   ■ 2차 규칙
+     ① 발광 허용. 우주 배경이 거의 검정이라 얇은 네온 라인이 떠야 읽힌다.
+     ② 표시값은 10개다 — 재화 2 · 웨이브 · 타이머 · 진행바 · 배율 · 콤보 ·
+        HP · 실드 · 스킬 피해 4행. 레퍼런스 실측 항목 그대로다.
+     ③ 하단 요소는 플레이 영역을 "덮는" 오버레이다. 세로를 예약하지 않는다.
+        Stage.pf 를 건드리면 qa.js ① 의 play ≥ 430 이 즉시 깨진다.
+     ④ ★ 화면 폭 전체를 덮는 딤/스크림 사각형은 여전히 절대 금지.
+        (fillRect(0, y, W, n) 같은 것) — 배경 위에서 "검정 띠"로 보인다.
+        3회 재발한 실수다. 가독성은 국소 패널과 strokeText 외곽선으로만.
+        qa.js ⑥ 이 이 규칙을 자동 검사하고, 걸리면 빌드가 실패한다.
    전부 벡터 드로잉이라 어떤 배율에서도 깨지지 않는다.
    ========================================================================== */
 var HUD = {
@@ -122,6 +129,105 @@ var HUD = {
     return base * mul;
   },
 
+  /* ── 네온 글리프 ────────────────────────────────────────────────────────
+     HUD 아이콘을 도트 시트가 아니라 벡터로 그린다. 2차에서 새로 필요해진
+     아이콘이 8종인데(재화 2 · 시계 · 톱니 · 스킬 4) 전부 시트로 만들면
+     넷마블 아트 대기가 생긴다. 몹과 같은 방식으로 코드로 그려 0장을 유지한다.
+     (cx, cy) 중심, r = 반지름. col 하나만 받아 단색으로 그린다.        */
+  glyph: function (kind, cx, cy, r, col, alpha) {
+    var c = Stage.ctx, i, a;
+    c.save();
+    if (alpha !== undefined) c.globalAlpha = alpha;
+    c.strokeStyle = col; c.fillStyle = col;
+    c.lineWidth = Math.max(1, r * 0.22); c.lineJoin = 'round'; c.lineCap = 'round';
+
+    if (kind === 'coin') {                       /* 재화 1 — 동전 */
+      c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
+      c.font = '900 ' + (r * 1.35).toFixed(1) + 'px ' + FONT;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('$', cx, cy + r * 0.06);
+
+    } else if (kind === 'gem') {                 /* 재화 2 — 반쪽 채운 원 */
+      c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
+      c.beginPath(); c.arc(cx, cy, r * 0.92, -1.5708, 1.5708); c.fill();
+
+    } else if (kind === 'clock') {               /* 타이머 */
+      c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke();
+      c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - r * 0.55);
+      c.moveTo(cx, cy); c.lineTo(cx + r * 0.42, cy + r * 0.20); c.stroke();
+
+    } else if (kind === 'gear') {                /* 설정 — 장식이다 (아래 drawGear 주석) */
+      c.beginPath(); c.arc(cx, cy, r * 0.46, 0, 6.2832); c.stroke();
+      for (i = 0; i < 8; i++) {
+        a = i * 0.7854;
+        c.beginPath();
+        c.moveTo(cx + Math.cos(a) * r * 0.68, cy + Math.sin(a) * r * 0.68);
+        c.lineTo(cx + Math.cos(a) * r,        cy + Math.sin(a) * r);
+        c.stroke();
+      }
+
+    } else if (kind === 'dmg_fan') {             /* 집중 사격 — 부채꼴 3줄기 */
+      for (i = -1; i <= 1; i++) {
+        a = -1.5708 + i * 0.42;
+        c.beginPath();
+        c.moveTo(cx - Math.cos(a) * r * 0.2, cy - Math.sin(a) * r * 0.2);
+        c.lineTo(cx + Math.cos(a) * r,       cy + Math.sin(a) * r);
+        c.stroke();
+      }
+    } else if (kind === 'dmg_burst') {           /* 착탄 폭발 — 사방 파편 */
+      for (i = 0; i < 6; i++) {
+        a = i * 1.0472;
+        c.beginPath();
+        c.moveTo(cx + Math.cos(a) * r * 0.34, cy + Math.sin(a) * r * 0.34);
+        c.lineTo(cx + Math.cos(a) * r,        cy + Math.sin(a) * r);
+        c.stroke();
+      }
+    } else if (kind === 'dmg_ring') {            /* 전방위 난사 — 이중 링 */
+      c.beginPath(); c.arc(cx, cy, r * 0.92, 0, 6.2832); c.stroke();
+      c.beginPath(); c.arc(cx, cy, r * 0.38, 0, 6.2832); c.fill();
+    } else if (kind === 'dmg_ult') {             /* 섬멸 — 침 박힌 코어 */
+      c.beginPath();
+      for (i = 0; i < 8; i++) {
+        a = -1.5708 + i * 0.7854;
+        var rr = (i % 2) ? r * 0.42 : r;
+        if (i === 0) c.moveTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+        else         c.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+      }
+      c.closePath(); c.fill();
+
+    } else if (kind === 'shield') {              /* 실드 — 방패 */
+      c.beginPath();
+      c.moveTo(cx, cy - r);
+      c.lineTo(cx + r * 0.8, cy - r * 0.5);
+      c.lineTo(cx + r * 0.8, cy + r * 0.25);
+      c.lineTo(cx, cy + r);
+      c.lineTo(cx - r * 0.8, cy + r * 0.25);
+      c.lineTo(cx - r * 0.8, cy - r * 0.5);
+      c.closePath(); c.stroke();
+    }
+    c.restore();
+  },
+
+  /* 네온 칩 — 좌상단 재화처럼 작고 둥근 국소 패널.
+     card() 는 uihd 계단 프레임이라 24px 칩에는 장식이 과하다 */
+  chip: function (x, y, w, h) {
+    var c = Stage.ctx, r = h / 2;
+    c.fillStyle = THEME.ink;
+    roundRect(c, x, y, w, h, r); c.fill();
+    c.strokeStyle = THEME.line; c.lineWidth = 1;
+    roundRect(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke();
+  },
+
+  /* 외곽선 텍스트 — 우주/탄막 위에서도 읽히게. 전폭 딤의 대안이다 */
+  txt: function (str, x, y, font, col, align, ow) {
+    var c = Stage.ctx;
+    c.font = font; c.textAlign = align || 'left';
+    c.lineJoin = 'round'; c.lineWidth = ow || 3.5;
+    c.strokeStyle = 'rgba(3,2,12,.82)';
+    c.strokeText(str, x, y);
+    c.fillStyle = col; c.fillText(str, x, y);
+  },
+
   /* ── 공통 게이지 ────────────────────────────────────────────────────────
      어두운 네이비 트랙 + 1px 테두리 + 단색 채움. 그게 전부다.
      opt: { ghost, radius }                                                */
@@ -185,54 +291,99 @@ var HUD = {
     }
   },
 
+  /* ── 상단 HUD ───────────────────────────────────────────────────────────
+     레퍼런스 실측 배치를 그대로 옮긴다:
+       좌: 재화 칩 2개(세로) · 중앙: 웨이브 라벨 + N/20 · 그 우측: 타이머 ·
+       우: 톱니 · 아래: 진행 바 + 배율
+     전부 y < 86 안에 들어간다 (Stage.pf.y = 86). 넘기면 몹이 HUD 뒤로 들어간다.
+     ──────────────────────────────────────────────────────────────────── */
   draw: function () {
-    var c = Stage.ctx, W = Stage.W;
-    var PAD = this.PAD, cw = this.CARD_W, chh = this.CARD_H, cy0 = this.TOP;
-
-    /* ⚠️ 상단에 전폭 딤/스크림을 절대 깔지 말 것 — 배경 위에서 "검정 띠"가 된다.
-       가독성은 카드(국소 패널)가 담당한다. 카드 위에 글자 외곽선까지 겹치면
-       탁해 보이므로 카드 안 텍스트는 stroke 없이 그린다. */
+    var c = Stage.ctx, W = Stage.W, PAD = this.PAD;
     c.textBaseline = 'alphabetic';
 
-    /* ── ① 처치 카드 (좌) / ② 생존 카드 (우) ── */
-    var left = Math.max(0, TIMELINE.cues[TIMELINE.cues.length - 1].t - Game.t);
-    var mm = (left / 60) | 0, ss = (left % 60) | 0;
-    var tt = mm + ':' + (ss < 10 ? '0' : '') + ss;
-    var urgent = (Game.danger > 0 || left <= 10);
-
-    var cards = [
-      /* 표시값은 Game.kills 가 아니라 Game.killShown — 볼리 한 방에 30~50 이
-         동시에 죽으면 원본 값은 뭉텅이로 튀어서 "덜컥덜컥" 올라간다.
-         표시용 값만 따로 굴려 끊김 없이 흐르게 한다 (engine.js 에서 갱신) */
-      { x: PAD,              ic: 'skull',     lab: THEME.labelKill, val: (Game.killShown | 0) + '', col: THEME.text },
-      { x: W - PAD - cw,     ic: 'hourglass', lab: THEME.labelTime, val: tt,              col: urgent ? THEME.danger : THEME.text }
+    /* ── ① 재화 칩 2개 (좌상단) ──────────────────────────────────────────
+       위: Game.coins — 이미 존재하고 fx.js 가 증가시키는데 1차에서는 어디에도
+           표시되지 않던 값이다. 표시만 붙였다.
+       아래: 누적 총 피해 — Damage.total. 큰 수가 계속 굴러가야 화면이 산다  */
+    var chW = 92, chH = 24, chX = PAD;
+    var chips = [
+      { y: 10, g:'coin', col: THEME.gold,  v: (Game.coins | 0) + '' },
+      { y: 38, g:'gem',  col: THEME.neonC, v: Damage.fmt(Damage.shown ? Damage.total : 0) }
     ];
-    for (var i = 0; i < cards.length; i++) {
-      var cd = cards[i];
-      HUD.card(cd.x, cy0, cw, chh);
-      HUD.icon(cd.ic, cd.x + 31, cy0 + chh / 2, 32);
-      c.textAlign = 'left';
-      c.font = '700 11px ' + FONT;
-      c.fillStyle = THEME.textDim;
-      c.fillText(cd.lab, Stage.snap(cd.x + 58), Stage.snap(cy0 + 21));
-      c.font = '800 26px ' + FONT;
-      c.fillStyle = cd.col;
-      /* ★ Stage.snap 필수 — 전역 변환이 scale*dpr(≈1.97) 소수 배율이라
-         논리 좌표를 그대로 넘기면 글자가 반픽셀에 앉아 번져 보인다.
-         특히 처치 수는 매 프레임 값이 바뀌어서 번짐이 잔상처럼 읽힌다 */
-      c.fillText(cd.val, Stage.snap(cd.x + 58), Stage.snap(cy0 + 44));
+    for (var i = 0; i < chips.length; i++) {
+      var ch = chips[i];
+      HUD.chip(chX, ch.y, chW, chH);
+      HUD.glyph(ch.g, chX + 15, ch.y + chH / 2, 8, ch.col);
+      HUD.txt(ch.v, Stage.snap(chX + chW - 10), Stage.snap(ch.y + chH / 2 + 5),
+              '800 14px ' + FONT, THEME.text, 'right', 3);
     }
 
-    /* ── ③ 진행 게이지 — 단일 바 + 다이아 마커 ────────────────────────────
-       예전엔 3칸으로 쪼개져 있었는데 목업은 하나짜리 바에 마커가 붙는 형태다.
-       웨이브 전 구간(첫 시작 ~ 마지막 끝)을 0~1 로 환산한다. */
+    /* ── ② 중앙 — 웨이브 N/20 ────────────────────────────────────────────
+       1차는 1.3초짜리 배너로 웨이브를 알렸다. 20웨이브(웨이브당 ~1초)에서는
+       배너가 상시 겹쳐서 화면을 덮는다. 레퍼런스처럼 상단 카운터로 바꾼다  */
+    var wv = TIMELINE.waveAt(Game.t), wn = TIMELINE.waveSpan.length;
+    var cxm = W / 2;
+    HUD.txt(THEME.labelWave, cxm, 25, '800 13px ' + FONT, THEME.textDim, 'center', 3.5);
+    HUD.txt(wv + '/' + wn, Stage.snap(cxm), Stage.snap(48),
+            '900 22px ' + FONT, THEME.text, 'center', 4);
+
+    /* ── ③ 타이머 (중앙 우측) — 남은 시간 mm:ss ──────────────────────────
+       1차는 m:ss 였다. 레퍼런스가 03:26 형식이라 분도 두 자리로 맞춘다 */
+    var left = Math.max(0, TIMELINE.cues[TIMELINE.cues.length - 1].t - Game.t);
+    var mm = (left / 60) | 0, ss = (left % 60) | 0;
+    var tt = (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+    var urgent = (Game.danger > 0 || left <= 10);
+    var tx = cxm + 62;
+    HUD.glyph('clock', tx, 41, 8, urgent ? THEME.danger : THEME.textDim);
+    HUD.txt(tt, Stage.snap(tx + 13), Stage.snap(47), '800 17px ' + FONT,
+            urgent ? THEME.danger : THEME.text, 'left', 3.5);
+
+    /* ── ④ 톱니 (우상단) ─────────────────────────────────────────────────
+       ⚠️ 순수 장식이다. handleTap(engine.js)은 CTA 만 라우팅하므로 눌러도
+          반응하지 않는다. "눌러도 반응 없는 버튼 = 광고 이탈 요인"이라
+          기능을 붙이거나 빼는 편이 원칙적으로 맞지만, 이번 건은 레퍼런스
+          재현이 목적이라 장식으로 둔다. 고객사에 이 트레이드오프를 알릴 것.
+          알파를 낮춰 "누르는 것"으로 덜 읽히게 해두었다 */
+    HUD.glyph('gear', W - PAD - 13, 30, 12, THEME.textDim, 0.55);
+
+    /* ── ⑤ 진행 바 + 배율 ────────────────────────────────────────────────
+       바가 재는 것은 웨이브 전 구간(첫 시작 ~ 마지막 끝) 진행도다. 실제 값이다.
+       레퍼런스 표기를 따라 왼쪽에 Lv.N, 오른쪽에 전투 배율을 얹는다 —
+       배율은 진행도에서 파생시킨 연출 수치다(별도 시스템이 아니다).       */
     var sp = TIMELINE.waveSpan;
     var s0 = sp[0][0], s1 = sp[sp.length - 1][1];
     var r = clamp((Game.t - s0) / (s1 - s0), 0, 1);
-    /* 바는 항상 노랑. 위험 신호는 타이머 숫자 색이 담당한다 —
-       바까지 빨개지면 화면이 온통 붉어져서 오히려 긴장감이 안 읽힌다. */
-    HUD.bar(PAD, cy0 + chh + 5, W - PAD * 2, this.BAR_TOP, r, THEME.xp,
+    var barY = 62, barH = 11, mulW = 46;
+    HUD.bar(PAD, barY, W - PAD * 2 - mulW - 6, barH, r, THEME.xp,
             { radius: this.R_BAR, marker: THEME.marker });
+    HUD.txt('Lv.' + wv + '  ' + (r * 100).toFixed(1) + '%',
+            PAD + 8, barY + barH - 2, '800 8px ' + FONT, THEME.text, 'left', 2.5);
+    HUD.txt('\u00d7' + (1 + r * 1.4).toFixed(2),
+            Stage.snap(W - PAD), Stage.snap(barY + barH - 1),
+            '900 12px ' + FONT, THEME.neonC, 'right', 3);
+  },
+
+  /* ── 공격 범위 점선 원 ───────────────────────────────────────────────────
+     레퍼런스에 주인공을 감싼 점선 원이 있다. 우리 화면에서 이 원이 뜻하는
+     것은 360° 볼리의 충격파 도달 거리(player.js FX.ring 205)다 —
+     장식이 아니라 실제 사거리를 그린다.
+     탑다운 원근에 맞춰 세로를 0.86 으로 누른다(슬래시·헤일로와 같은 계수).
+     ※ 월드 좌표계에서 그린다. engine.js 가 배경 직후·몹 앞에 호출하므로
+        바닥 표시처럼 몹 밑에 깔린다.
+     ※ setLineDash 는 소스 전체에서 여기만 쓴다. qa.js mkCtx 에 noop 스텁이
+        있어 헤드리스 검사는 깨지지 않는다.                                */
+  drawRange: function () {
+    var p = Game.player; if (!p) return;
+    var c = Stage.ctx, R = 205;
+    c.save();
+    c.setLineDash([9, 11]);
+    c.lineDashOffset = -Game.wt * 14;      /* 천천히 흐른다 — 정지한 원은 죽어 보인다 */
+    c.strokeStyle = 'rgba(142,240,255,.30)'; c.lineWidth = 1.4;
+    c.beginPath(); c.ellipse(p.x, p.y - 6, R, R * 0.86, 0, 0, 6.2832); c.stroke();
+    c.setLineDash([]);
+    c.strokeStyle = 'rgba(142,240,255,.10)'; c.lineWidth = 1;
+    c.beginPath(); c.ellipse(p.x, p.y - 6, R * 0.56, R * 0.56 * 0.86, 0, 0, 6.2832); c.stroke();
+    c.restore();
   },
 
   /* ── CTA 기하 — 단일 소스. 인게임과 결과 화면이 "완전히 같은 버튼"을 쓴다.
@@ -316,44 +467,73 @@ var HUD = {
     c.restore();
   },
 
-  /* ── 플레이어 HP — CTA 바로 위. 상단 게이지와 같은 디자인 시스템 ──
-     폭은 CTA 의 95%, 트랙 19 / 채움 14. 라벨과 수치는 바 안에 얹는다
-     (바깥에 두면 세로 공간을 더 먹는다 — 화면을 가리지 않는 게 우선). */
+  /* ── 하단 오버레이 — HP / 실드 / 스킬 피해 현황 ─────────────────────────
+     세로 순서(레퍼런스와 동일): HP·실드 한 줄 → 스킬 피해 패널 → CTA.
+     ★ 전부 플레이 영역 "위에 뜨는" 오버레이다. Stage.pf 를 줄이지 않는다.
+       (줄이면 qa.js ① 의 play ≥ 430 이 깨져 빌드가 막힌다)
+     ★ 패널 폭은 전부 W 미만이다. 전폭 채우기는 qa.js ⑥ 이 잡는다.
+     ──────────────────────────────────────────────────────────────────── */
+  SKILL_W : 168,          /* 스킬 패널 폭 — 좌측에 붙는 좁은 기둥 */
+  SKILL_ROW : 17,
+
   drawPlayerHP: function () {
-    var c = Stage.ctx, W = Stage.W;
-    var x0 = 22;                                  /* CTA 와 같은 좌측 기준선 */
-    var bh = this.BAR_HP;
-    var by = this.ctaTop() - bh - 8;
-    var midY = by + bh / 2;
-    var r  = clamp(Game.hp / Game.hpMax, 0, 1);
-    var rg = clamp(Game.hpGhost / Game.hpMax, 0, 1);
+    var c = Stage.ctx, W = Stage.W, PAD = this.PAD;
+    var rows = Damage.SRC.length;
+    var panelH = 16 + rows * this.SKILL_ROW + 4;   /* 헤더 + 행 + 아래 여백 */
+    var panelY = this.ctaTop() - 6 - panelH;
+    var barH = 18;
+    var rowY = panelY - 7 - barH;          /* HP·실드 줄이 패널 위에 온다 */
+    var midY = rowY + barH / 2;
+
     if (Game.hpHit > 0) Game.hpHit -= 1 / 60;
     var kick = Game.hpHit > 0 ? Math.sin(Game.hpHit * 42) * 1.6 * (Game.hpHit / 0.22) : 0;
 
-    /* 좌측 — HP 라벨 + 하트. 바 바깥에 두어 바 안은 수치만 남긴다 */
-    c.save();
-    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-    c.font = '800 10px ' + FONT;
-    c.lineJoin = 'round'; c.lineWidth = 4; c.strokeStyle = 'rgba(6,9,18,.8)';
-    c.strokeText(THEME.labelHP, x0 + kick, by - 9);
-    c.fillStyle = THEME.text; c.fillText(THEME.labelHP, x0 + kick, by - 9);
-    c.restore();
-    HUD.icon('heart', x0 + kick + 17, midY + 3, 32);
+    /* ── HP (좌) ──────────────────────────────────────────────────────── */
+    var hpW = Math.round(W * 0.50) - PAD;
+    var hr  = clamp(Game.hp / Game.hpMax, 0, 1);
+    var hrg = clamp(Game.hpGhost / Game.hpMax, 0, 1);
+    HUD.txt(THEME.labelHP + ': ' + Math.round(Game.hp) + '/' + Game.hpMax,
+            PAD + kick, rowY - 5, '800 11px ' + FONT, THEME.text, 'left', 3.5);
+    HUD.bar(PAD + kick, rowY, hpW, barH, hr, THEME.hp,
+            { ghost: hrg, radius: this.R_HP, pad: 3 });
 
-    /* 바 — 하트 오른쪽부터 CTA 오른쪽 끝까지 */
-    var bx = x0 + 42, bw = (W - 22) - bx;
-    HUD.bar(bx + kick, by, bw, bh, r, THEME.hp,
-            { ghost: rg, radius: this.R_HP, pad: 3 });
+    /* ── 실드 (우) ─────────────────────────────────────────────────────
+       Game.shield 는 2차 신규다. 피격 전에 먼저 깎이고, 안 맞는 동안 다시
+       찬다 — 레퍼런스의 SHIELD 0/100 이 늘 0인 것과 달리 실제로 움직인다.
+       (표시만 있고 아무것도 안 하는 게이지는 가짜로 읽힌다)              */
+    var shX = Math.round(W * 0.58), shW = W - PAD - shX;
+    var sr = Game.shieldMax > 0 ? clamp(Game.shield / Game.shieldMax, 0, 1) : 0;
+    HUD.glyph('shield', shX + 6, rowY - 9, 6, THEME.neonC, 0.85);
+    HUD.txt(THEME.labelShield + ': ' + Math.round(Game.shield) + '/' + Game.shieldMax,
+            shX + 16, rowY - 5, '800 11px ' + FONT, THEME.textDim, 'left', 3.5);
+    HUD.bar(shX, rowY, shW, barH, sr, THEME.neonC, { radius: this.R_HP, pad: 3 });
 
-    /* 수치 — 바 중앙 (목업 형식) */
-    c.save();
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    var txt = Math.round(Game.hp) + ' / ' + Game.hpMax;
-    c.font = '800 13px ' + FONT;
-    c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = 'rgba(6,9,18,.85)';
-    c.strokeText(txt, bx + kick + bw / 2, midY + 0.5);
-    c.fillStyle = '#ffffff'; c.fillText(txt, bx + kick + bw / 2, midY + 0.5);
-    c.restore();
+    /* ── 스킬 피해 현황 (좌하단 기둥) ───────────────────────────────────
+       레퍼런스의 4~5행 패널. 값은 damage.js 의 스무딩된 표시값이고,
+       미니 바는 그 판의 최대값 대비 비율이라 어느 기술이 지금 판을 끌고
+       있는지가 길이로 읽힌다. 아직 안 쓴 기술은 '-' 로 비워 둔다 —
+       레퍼런스도 하위 두 행이 비어 있다.                                */
+    var px = PAD, pw = this.SKILL_W;
+    HUD.card(px, panelY, pw, panelH);
+    HUD.txt('스킬 피해 현황', px + 10, panelY + 12, '800 9px ' + FONT, THEME.textDim, 'left', 2.5);
+
+    var mx = 1;
+    for (var i = 0; i < rows; i++) mx = Math.max(mx, Damage.shown[Damage.SRC[i].id]);
+    for (i = 0; i < rows; i++) {
+      var S = Damage.SRC[i], v = Damage.shown[S.id] || 0;
+      var ry = panelY + 16 + i * this.SKILL_ROW + this.SKILL_ROW / 2;
+      HUD.glyph(S.icon, px + 13, ry, 5.5, S.col, v > 0 ? 1 : 0.28);
+      /* 미니 트랙 — 국소 폭이라 전폭 딤 규칙과 무관하다 */
+      var tx2 = px + 24, tw = pw - 24 - 46;
+      c.fillStyle = 'rgba(142,240,255,.09)';
+      roundRect(c, tx2, ry - 4, tw, 8, 4); c.fill();
+      if (v > 0) {
+        c.fillStyle = S.col;
+        roundRect(c, tx2, ry - 4, Math.max(4, tw * (v / mx)), 8, 4); c.fill();
+      }
+      HUD.txt(v > 0 ? Damage.fmt(v) : '-', Stage.snap(px + pw - 9), Stage.snap(ry + 4),
+              '800 11px ' + FONT, v > 0 ? THEME.text : THEME.textDim, 'right', 3);
+    }
   },
 
   /* ── 튜토리얼 — 도트 손 + 골드 셰브론 ──────────────────────────────────

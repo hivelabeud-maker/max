@@ -9,6 +9,9 @@ var Game = {
   hp : 1000, hpMax : 1000, hpFloor : 0.15, hpGhost : 1000, hpCap : 1000, hpHit : 0,
   hpU : 10,        /* hpMax / 100 — 피해·재생 스케일 단위. 최대치를 바꿔도 밸런스가 유지된다 */
   hpRegenLock : 0, /* 피격 직후 이 시간(초) 동안은 재생 정지 — 맞아도 안 깎이는 것처럼 보이는 문제 방지 */
+  /* 실드 — 2차 신규. HP 앞에서 먼저 깎이고 안 맞는 동안 다시 찬다.
+     표시만 있고 아무것도 안 하는 게이지는 화면에서 즉시 가짜로 읽힌다 */
+  shield : 0, shieldMax : 100, shieldHit : 0,
   player : null,
   enemies : null, bullets : null, orbs : null,
   boss : null, bossAt : 0,
