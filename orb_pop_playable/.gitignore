@@ -1,0 +1,13 @@
+.DS_Store
+._*
+__MACOSX/
+dist/
+releases/
+_verify.html
+
+# 생성물 — prep_anim.py 가 raw 에서 다시 굽는다 (원본은 src/art/raw/ 에 있다)
+src/art/sheets/
+
+# 납품 폴더 — release.sh 가 만든다. 저장소에 들어가면 안 된다
+/NEON_DEFENSE_FINAL/
+/NEON_DEFENSE_영상추출/
