@@ -4,12 +4,15 @@ var FX = {
   shake: 0, shakeMag: 0, flash: 0, flashCol: '#ffffff',
   vignette: 0,
 
+  /* ⚠️ 풀 상한 — 2차에서 부채꼴 3→5발, 볼리 6→12발이 되면서 초당 파티클
+     생성량이 2~3배가 됐다. 1차 상한 그대로 두면 Pool 이 가장 오래된 입자를
+     회수해 파편이 수명을 못 채우고 뚝뚝 끊긴다 (2026-09-09 상향) */
   init: function () {
     this.nums  = new Pool(function () { return { x:0,y:0,vx:0,vy:0,t:0,life:0,txt:'',col:'#fff',sz:20,pop:0,on:false }; }, 150);
-    this.parts = new Pool(function () { return { x:0,y:0,vx:0,vy:0,t:0,life:0,col:'#fff',sz:3,g:0,on:false }; }, 420);
+    this.parts = new Pool(function () { return { x:0,y:0,vx:0,vy:0,t:0,life:0,col:'#fff',sz:3,g:0,on:false }; }, 620);
     this.coins = new Pool(function () { return { x:0,y:0,vx:0,vy:0,t:0,life:0,ph:0,on:false }; }, 120);
-    this.rings = new Pool(function () { return { x:0,y:0,r0:0,r1:0,t:0,life:0,col:'#fff',lw:3,on:false }; }, 60);
-    this.slashes = new Pool(function () { return { x:0,y:0,a:0,r0:0,r1:0,t:0,life:0,col:'#fff',w:0,on:false }; }, 40);
+    this.rings = new Pool(function () { return { x:0,y:0,r0:0,r1:0,t:0,life:0,col:'#fff',lw:3,on:false }; }, 90);
+    this.slashes = new Pool(function () { return { x:0,y:0,a:0,r0:0,r1:0,t:0,life:0,col:'#fff',w:0,on:false }; }, 70);
     this.confs = new Pool(function () { return { x:0,y:0,vx:0,vy:0,rot:0,vr:0,t:0,life:0,col:'#fff',w:0,h:0,on:false }; }, 160);
   },
   reset: function () { this.nums.reset(); this.parts.reset(); this.coins.reset(); this.rings.reset();
@@ -132,6 +135,14 @@ var FX = {
 
   drawWorld: function () {
     var c = Stage.ctx;
+    /* ── 가산 블렌딩 ────────────────────────────────────────────────────────
+       슬래시·링·파편은 전부 "빛"이다. 1차는 일반 블렌딩이라 던전 배경 위에서
+       물감처럼 얹혔는데, 우주 배경에서는 그게 탁한 얼룩으로 보인다.
+       탄(bullet.js draw)은 이미 lighter 를 쓰고 있어 이펙트만 재질이 달랐다.
+       겹칠수록 밝아지는 게 네온의 기본 성질이라 여기서 맞춘다.
+       ※ 코인은 스프라이트라 제외한다 — lighter 를 걸면 형태가 날아간다 */
+    c.save();
+    c.globalCompositeOperation = 'lighter';
     this.slashes.each(function (o) {
       var k = o.t / o.life;
       var r = lerp(o.r0, o.r1, eOut(k));
@@ -153,6 +164,7 @@ var FX = {
       c.globalAlpha = 1 - o.t / o.life; c.fillStyle = o.col;
       c.fillRect(o.x - o.sz / 2, o.y - o.sz / 2, o.sz, o.sz); c.globalAlpha = 1;
     });
+    c.restore();
     this.coins.each(function (o) {
       var sq = 1 + Math.sin(o.t * 16 + o.ph) * 0.28;
       drawSprite('coin', o.x, o.y, 2, { squash: sq > 0.2 ? sq : 0.2 });

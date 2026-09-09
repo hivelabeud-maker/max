@@ -66,8 +66,10 @@ var Player = {
         var a = base + (A.count > 1 ? (j - (A.count - 1) / 2) * A.spread : 0);
         Bullets.spawn(mx, my, a, A.speed, A.dmg, A.pierce);
       }
-      FX.burst(mx + Math.cos(base) * 10, my + Math.sin(base) * 10, 1, '#ff9fe4', 150, 1.6);
-      FX.kick(1.1, 0.04);
+      /* 반복형(매 발) 이펙트는 조금만 올린다 — 크게 키우면 화면을 덮는다.
+         손맛은 아래 볼리 같은 순간형에서 벌 것 */
+      FX.burst(mx + Math.cos(base) * 10, my + Math.sin(base) * 10, 2, '#ff9fe4', 175, 1.7);
+      FX.kick(1.3, 0.04);
     }
 
     /* ── 360° 방사 볼리 — 주기적으로 사방에 탄을 뿜는다 (영상의 핵심 액션) ──
@@ -80,8 +82,8 @@ var Player = {
       /* 예고 — 0.24초 전 수축링. 바깥에서 안으로 조여들며 "모은다" */
       if (!p.volTold && p.volT >= V.every - 0.24 && Enemies.nearest(p.x, p.y, 520)) {
         p.volTold = 1;
-        FX.ring(p.x, p.y - 6, 112, 20, 0.24, 'rgba(255,190,245,.85)', 2.5);
-        FX.ring(p.x, p.y - 6, 84,  14, 0.24, 'rgba(255,255,255,.55)', 1.6);
+        FX.ring(p.x, p.y - 6, 140, 20, 0.24, 'rgba(255,190,245,.9)', 3);
+        FX.ring(p.x, p.y - 6, 104, 14, 0.24, 'rgba(255,255,255,.6)', 2);
       }
 
       if (p.volT >= V.every && Enemies.nearest(p.x, p.y, 520)) {
@@ -92,12 +94,17 @@ var Player = {
           Bullets.spawn(p.x + Math.cos(va) * 16, p.y - 6 + Math.sin(va) * 11,
                         va, A.speed * 0.9, V.dmg, 1, 1);
         }
-        /* 충격파 2겹 — 빠른 흰 링이 앞서고 넓은 마젠타가 뒤따른다 */
-        FX.ring(p.x, p.y - 6, 12, 96,  0.16, 'rgba(255,255,255,.95)', 4);
-        FX.ring(p.x, p.y - 6, 20, 168, 0.34, 'rgba(255,120,225,.75)', 3);
-        FX.slashBurst(p.x, p.y - 6, 8, 'rgba(255,175,240,.9)', 150);
-        FX.burst(p.x, p.y - 6, 10, '#ffd9f4', 300, 2.4);
-        FX.kick(4.6, 0.10);
+        /* 충격파 3겹 — 빠른 흰 링이 앞서고 마젠타·시안이 차례로 번진다.
+           볼리는 1.1초에 한 번뿐인 순간형이라 크게 가야 손맛이 난다.
+           (반복형과 달리 눈에 쌓이지 않는다 — 1차에서 뭉뚱그려 줄였다가
+            "팡 터져서 흔들리는건 다 좋아"라고 정정받은 지점이다) */
+        FX.ring(p.x, p.y - 6, 12, 118, 0.16, 'rgba(255,255,255,.95)', 5);
+        FX.ring(p.x, p.y - 6, 20, 205, 0.34, 'rgba(255,120,225,.8)', 4);
+        FX.ring(p.x, p.y - 6, 34, 262, 0.46, 'rgba(142,240,255,.42)', 2.5);
+        FX.slashBurst(p.x, p.y - 6, 14, 'rgba(255,175,240,.9)', 205);
+        FX.burst(p.x, p.y - 6, 22, '#ffd9f4', 380, 2.6);
+        FX.burst(p.x, p.y - 6, 12, '#8ef0ff', 300, 2.0);
+        FX.kick(6.2, 0.12);
         Game.hitstop = Math.max(Game.hitstop, 0.035);
         p.shoot = 0.42; p.muzzle = 0.06;
         /* 콤보 집계 창 열기 — 이 안에서 죽은 마리수를 세서 크게 꽂는다 */
@@ -111,8 +118,10 @@ var Player = {
            가려서, 겹침을 없애려던 작업이 새 겹침을 만들었다.
            20마리 이상일 때만 — 매번 뜨면 그냥 배경 노이즈가 된다 */
         if (p.volKillT <= 0 && p.volKills >= 20) {
-          FX.punch(Stage.W / 2, Stage.pf.y + 74, '×' + p.volKills, THEME.gold,
-                   24 + Math.min(10, p.volKills * 0.12));
+          /* 표기를 레퍼런스대로 'Combo N!!' 로 바꿨다. 금색 ×N 은 1차 던전
+             팔레트의 잔재라 네온 화면에서 혼자 난색으로 떴다 */
+          FX.punch(Stage.W / 2, Stage.pf.y + 74, 'Combo ' + p.volKills + '!!', THEME.neonC,
+                   26 + Math.min(12, p.volKills * 0.14));
         }
       }
     }
@@ -221,11 +230,24 @@ var Player = {
         var my = p.y + M2.y + Math.sin(p.aim) * M2.r * 0.7;
         var mk = p.muzzle / 0.06;
         c.save(); c.globalCompositeOperation = 'lighter';
-        var fx2 = mx + Math.cos(p.aim) * 8, fy2 = my + Math.sin(p.aim) * 6;
-        c.fillStyle = 'rgba(255,120,210,' + (0.55 * mk).toFixed(3) + ')';
-        c.beginPath(); c.arc(fx2, fy2, 12 * mk, 0, 6.2832); c.fill();
-        c.fillStyle = 'rgba(255,90,70,' + (0.9 * mk).toFixed(3) + ')';
-        c.beginPath(); c.arc(fx2, fy2, 6.5 * mk, 0, 6.2832); c.fill();
+        var fx2 = mx + Math.cos(p.aim) * 9, fy2 = my + Math.sin(p.aim) * 7;
+        /* 총구 화염 — 2차에서 키우고 색을 네온으로 바꿨다.
+           1차는 주황 코어(255,90,70)였는데 우주·네온 화면에서 혼자 난색이라
+           탄막과 다른 물질처럼 보였다. 마젠타 헤일로 + 백열 코어로 통일한다.
+           원뿔은 조준 방향으로만 뻗어서 "어디로 쐈는지"를 같이 알려준다 */
+        c.fillStyle = 'rgba(255,95,214,' + (0.5 * mk).toFixed(3) + ')';
+        c.beginPath(); c.arc(fx2, fy2, 17 * mk, 0, 6.2832); c.fill();
+        c.fillStyle = 'rgba(255,160,235,' + (0.75 * mk).toFixed(3) + ')';
+        c.beginPath(); c.arc(fx2, fy2, 9.5 * mk, 0, 6.2832); c.fill();
+        c.fillStyle = 'rgba(255,255,255,' + (0.95 * mk).toFixed(3) + ')';
+        c.beginPath(); c.arc(fx2, fy2, 5 * mk, 0, 6.2832); c.fill();
+        var cone = 26 * mk, hw = 9 * mk;
+        c.fillStyle = 'rgba(255,150,235,' + (0.42 * mk).toFixed(3) + ')';
+        c.beginPath();
+        c.moveTo(fx2 + Math.cos(p.aim + 1.5708) * hw, fy2 + Math.sin(p.aim + 1.5708) * hw * 0.7);
+        c.lineTo(fx2 + Math.cos(p.aim) * cone,        fy2 + Math.sin(p.aim) * cone * 0.7);
+        c.lineTo(fx2 + Math.cos(p.aim - 1.5708) * hw, fy2 + Math.sin(p.aim - 1.5708) * hw * 0.7);
+        c.closePath(); c.fill();
         c.restore();
       }
       return;

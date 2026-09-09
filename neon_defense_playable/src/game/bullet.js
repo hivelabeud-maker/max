@@ -22,18 +22,20 @@ var Bullets = {
   splash: function (x, y, dmg) {
     var S = CHARACTER.attack.splash;
     /* 링·파편은 확률 샘플링 — 초당 수십 번 터지므로 전부 그리면 낙서가 된다.
-       대신 12% 는 "파열"로 크게 터뜨린다. 전부 같은 크기로 터지면 리듬이
-       평평해서 아무리 많이 터져도 밋밋하게 읽힌다 */
-    if (rand() < 0.12) {
-      FX.ring(x, y, 4, S.r * 1.4, 0.18, 'rgba(255,190,245,.85)', 2.5);
-      FX.ring(x, y, 2.5, S.r * 0.85, 0.13, 'rgba(255,255,255,.9)', 1.6);
-      FX.slashBurst(x, y, 2, 'rgba(255,150,235,.9)', S.r * 1.5);
-      FX.burst(x, y, 4, '#ffffff', 220, 1.8);
-    } else if (rand() < 0.30) {
-      FX.ring(x, y, 3, S.r * 0.7, 0.13, 'rgba(255,140,230,.7)', 1.5);
+       대신 26% 는 "파열"로 크게 터뜨린다. 전부 같은 크기로 터지면 리듬이
+       평평해서 아무리 많이 터져도 밋밋하게 읽힌다.
+       ※ 2차에서 12% → 26% 로 올렸다. 브리프 최우선이 시각 자극이라
+          "가끔 크게"의 빈도를 올린 것이지, 전부 크게 만든 게 아니다 */
+    if (rand() < 0.26) {
+      FX.ring(x, y, 4, S.r * 1.7, 0.20, 'rgba(255,190,245,.9)', 3);
+      FX.ring(x, y, 2.5, S.r * 1.05, 0.14, 'rgba(255,255,255,.95)', 1.8);
+      FX.slashBurst(x, y, 3, 'rgba(255,150,235,.9)', S.r * 1.9);
+      FX.burst(x, y, 7, '#ffffff', 260, 2.0);
+    } else if (rand() < 0.55) {
+      FX.ring(x, y, 3, S.r * 0.9, 0.14, 'rgba(255,140,230,.75)', 1.8);
     }
-    FX.burst(x, y, 2, '#ffffff', 170, 1.4);
-    if (rand() < 0.55) FX.burst(x, y, 1, '#ff8ae0', 140, 1.7);
+    FX.burst(x, y, 3, '#ffffff', 190, 1.5);
+    if (rand() < 0.7) FX.burst(x, y, 2, '#ff8ae0', 160, 1.8);
     var near = Grid.query(x, y, S.r, this.sbuf);
     for (var i = 0; i < near.length; i++) {
       var e = near[i]; if (!e.on || e.dieT > 0) continue;
@@ -60,7 +62,20 @@ var Bullets = {
           var crit = rand() < 0.08;
           Enemies.damage(e, b.dmg * (crit ? 2.4 : 1),
                          crit ? THEME.dmgCrit : THEME.dmgNormal, crit);
-          if (crit) { FX.ring(e.x, e.y - e.def.hLogic * 0.3, 3, 30, 0.18, THEME.dmgCrit, 2.5); }
+          if (crit) { FX.ring(e.x, e.y - e.def.hLogic * 0.3, 3, 38, 0.18, THEME.dmgCrit, 2.5); }
+          /* ── 적중 흩뿌림 ────────────────────────────────────────────────
+             브리프가 문장으로 콕 집은 항목이다:
+             "적에게 탄막이 닿으면 탄막이 흩뿌려지는 이펙트".
+             탄이 사라진 자리에서 그 몹의 제 색으로 튀어야
+             "무엇을 때렸는지"까지 같이 읽힌다. 흰색으로 통일하면
+             수백 개가 같은 색으로 튀어서 노이즈가 된다.
+             방사 슬래시는 확률로 뽑는다 — 매 발 넣으면 풀이 말라
+             파편이 수명을 못 채우고 끊긴다 */
+          var ec = ENEMY_SET.cols[e.sheet] || THEME.neonC;
+          FX.burst(b.x, b.y, crit ? 10 : 5, ec, crit ? 330 : 235, crit ? 2.6 : 1.9);
+          if (crit || rand() < 0.34) {
+            FX.slashBurst(b.x, b.y, crit ? 4 : 2, ec, crit ? 66 : 36);
+          }
           Bullets.splash(e.x, e.y - e.def.hLogic * 0.3, b.dmg);
           if (b.pierce > 0) { b.pierce--; b.hitIds.push(e); }
           else { Game.bullets.kill(b); return; }

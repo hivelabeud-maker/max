@@ -29,6 +29,7 @@ var NEONMOB = {
      col    : 네온 라인색
      core   : 코어 채움. 어두워야 별밭 위에서 도형이 면으로 읽힌다
      solid  : true 면 core 대신 col 로 꽉 채운다 (작은 몹 전용 — 아래 참조)
+     fa     : solid 채움 알파. 물량 몹을 한 톤 물려 탄막이 그 위에 뜨게 한다
      gl     : 발광 알파 배율. 물량 몹은 낮춰야 화면이 안 탄다
      hot    : true 면 심 안쪽에 백열 실선을 한 겹 더 — 상위 등급 표시
      rings  : 궤도 링 [{r, lw, a}] — r 은 몸통 반경 대비 배율
@@ -45,12 +46,12 @@ var NEONMOB = {
 
   /* ◆ 물량. 작고 꽉 찬 시안 보석. 수백 마리가 겹쳐도 카펫으로 읽힌다 */
   n_gr : { n:4, rot:0,     ar:1.00, lw:1.5, col:'#8ef0ff', core:'#0b3d52',
-           solid:true, gl:0.55 },
+           solid:true, gl:0.40, fa:0.78 },
 
   /* ▲ 돌격. 세로로 길고 꼭짓점이 셋뿐 — 방향이 즉시 읽힌다.
        enemy.js 가 진행 방향으로 돌려서 그린다 */
   n_fa : { n:3, rot:0,     ar:1.52, lw:1.4, col:'#ff5fd6', core:'#5c1046',
-           solid:true, gl:0.62 },
+           solid:true, gl:0.55, fa:0.86 },
 
   /* ⬡ 중장. 여기서부터 속을 비운다. 굵은 선 + 어두운 코어 = 단단한 구조물 */
   n_ta : { n:6, rot:0.26,  ar:0.92, lw:3.4, col:'#b8d4ff', core:'#16305c', gl:1.0 },
@@ -129,7 +130,7 @@ function bakeNeon(def) {
   if (def.solid) {
     g.globalAlpha = 0.30; g.fillStyle = def.col;    /* 채움 안쪽에 옅은 발광 */
     neonPoly(g, C, C, rx * 1.28, ry * 1.28, n, rot); g.fill();
-    g.globalAlpha = 0.95; g.fillStyle = def.col;
+    g.globalAlpha = (def.fa === undefined ? 0.95 : def.fa); g.fillStyle = def.col;
     neonPoly(g, C, C, rx, ry, n, rot); g.fill();
     g.globalAlpha = 0.55; g.fillStyle = def.core;   /* 중앙을 살짝 눌러 입체를 만든다 */
     neonPoly(g, C, C, rx * 0.48, ry * 0.48, n, rot); g.fill();
