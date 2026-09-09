@@ -1,6 +1,25 @@
-/* player.js — 드래그 자유 이동 + 자동 조준 사격.
+/* ============================================================================
+   player.js — 화면 중앙 고정 + 자동 조준 사격
+
+   ⚠️ 캐릭터는 움직이지 않는다. 되돌리지 말 것.
+   실게임 참고 영상(docs/reference/레퍼런스1_실게임_*.png)에서 코어는 화면
+   정중앙에 완전히 고정돼 있고, 공격 범위 점선 원도 그 중심에 붙어 있다.
+   1차(pixel_survivor)의 "드래그 자유 이동"을 그대로 물려받았다가
+   2026-09-09 실장 지시로 고정으로 바꿨다.
+
+   ■ 왜 고정이 더 나은가
+     브리프 문장이 "가운데 캐릭터를 중심으로 몰려오는 적들을 막아내는" 이다.
+     캐릭터가 돌아다니면 그 "가운데"가 매 순간 흔들려서, 사방에서 밀려오는
+     구도 자체가 성립하지 않는다. 고정이라야 포위가 그림으로 읽힌다.
+
+   ■ 정지 화면처럼 보이지 않게 하는 것
+     위치는 고정하되 코어 글로우가 맥동하고, 조준은 계속 돌아간다.
+     실게임도 같은 방식이다 — 코어는 붙박이고 주변이 움직인다.
+
    리타는 프레임 애니 3종(idle / run / fire)을 상황에 따라 갈아탄다.
-   원점이 셀 안에 기록돼 있어 애니를 바꿔도 위치가 튀지 않는다. */
+   고정이라 run 은 더 이상 쓰이지 않는다(idle / fire 만).
+   원점이 셀 안에 기록돼 있어 애니를 바꿔도 위치가 튀지 않는다.
+   ========================================================================== */
 var Player = {
   make: function () {
     return {
@@ -21,30 +40,26 @@ var Player = {
     p.ty = clamp(p.ty, z0.y0, z0.y1);
   },
 
-  /* 중앙 존 — 캐릭터가 이 안에만 머문다.
-     구석으로 도망가면 몹 카펫이 한쪽에만 쌓여 "사방 포위"가 무너진다. */
+  /* 고정 위치 — 플레이 영역의 정중앙 한 점.
+     예전엔 폭 ±22% 의 "존"이었고 그 안을 돌아다녔다. 지금은 점이다.
+     x0..x1 / y0..y1 을 남겨둔 건 layout() 과 오토 조준이 아직 이 형태를
+     읽기 때문이다 — 전부 같은 값이라 실질적으로 한 점이다. */
   zone: function () {
     var cx = Stage.W / 2, cy = (Stage.pf.y + HUD.ctaTop()) / 2;
-    var rx = Stage.W * 0.22, ry = (HUD.ctaTop() - Stage.pf.y) * 0.17;
-    return { cx: cx, cy: cy, x0: cx - rx, x1: cx + rx, y0: cy - ry, y1: cy + ry };
+    return { cx: cx, cy: cy, x0: cx, x1: cx, y0: cy, y1: cy };
   },
 
   update: function (p, dt) {
-    var mv = CHARACTER.move;
-    if (Input.dx || Input.dy) {
-      p.tx += Input.dx * mv.drag; p.ty += Input.dy * mv.drag;
-    } else if (!Input.everTouched || Input.idle > 1.2) {
-      Player.auto(p, dt);
-    }
+    /* ── 위치 고정 ─────────────────────────────────────────────────────────
+       드래그 입력도 오토 선회도 받지 않는다. 화면 방향이 바뀌면(회전·리사이즈)
+       중심이 옮겨지므로 매 프레임 중앙으로 수렴시킨다 — 순간이동이 아니라
+       수렴이라야 리사이즈 때 캐릭터가 튀지 않는다. */
     var cz = Player.zone();
-    p.tx = clamp(p.tx, cz.x0, cz.x1);
-    p.ty = clamp(p.ty, cz.y0, cz.y1);
-
-    var ox = p.x, oy = p.y;
-    var s = 1 - Math.exp(-mv.smooth * dt);
+    p.tx = cz.cx; p.ty = cz.cy;
+    var s = 1 - Math.exp(-14 * dt);
     p.x += (p.tx - p.x) * s; p.y += (p.ty - p.y) * s;
-    p.moving = (Math.abs(p.x - ox) + Math.abs(p.y - oy)) > 0.35 ? 1 : 0;
-    p.at += dt; p.walk += dt * (p.moving ? 13 : 5);
+    p.moving = 0;                    /* 고정이므로 run 애니는 쓰지 않는다 */
+    p.at += dt; p.walk += dt * 5;
     if (p.hurt > 0) p.hurt -= dt;
     if (p.hurtCd > 0) p.hurtCd -= dt;
     if (p.shoot > 0) p.shoot -= dt;
@@ -127,26 +142,9 @@ var Player = {
     }
   },
 
-  /* 오토플레이 — 중앙을 지키며 천천히 선회한다. */
-  auto: function (p, dt) {
-    var z = Player.zone();
-    var t = Game.wt;
-    var ox = Math.sin(t * 0.62) * (z.x1 - z.cx) * 0.52 + Math.sin(t * 1.13 + 1.7) * 12;
-    var oy = Math.sin(t * 0.47 + 2.1) * (z.y1 - z.cy) * 0.52 + Math.cos(t * 0.91) * 9;
-    var ax = 0, ay = 0;
-    Game.enemies.each(function (e) {
-      if (e.dieT > 0) return;
-      var dx = p.x - e.x, dy = p.y - e.y, d2 = dx * dx + dy * dy;
-      if (d2 < 4900 && d2 > 1) { var w = (4900 - d2) / 4900; var d = Math.sqrt(d2); ax += dx / d * w; ay += dy / d * w; }
-    });
-    /* 회피가 너무 강하면 fast(빨강 돌격체)의 rmin 이 뚫려 있어도 플레이어가
-       아예 안 붙어서 접촉 자체가 안 난다 — HP가 절대 안 깎이는 원인이었다.
-       완전히 파묻히지만 않을 만큼만 밀어내고, 나머지는 fast 가 뚫고 온다 */
-    var tx = z.cx + ox + clamp(ax * 18, -17, 17);
-    var ty = z.cy + oy + clamp(ay * 18, -17, 17);
-    p.tx += (tx - p.tx) * (1 - Math.exp(-2.2 * dt));
-    p.ty += (ty - p.ty) * (1 - Math.exp(-2.2 * dt));
-  },
+  /* ※ 오토플레이 선회(Player.auto)는 제거했다.
+     캐릭터가 고정이라 선회할 대상이 없다. 1차 코드를 참고하다 되살리지 말 것 —
+     되살리면 실장이 지적한 "캐릭터가 돌아다닌다"가 그대로 재발한다. */
 
   /* 접촉 피해 — 무적 시간으로 DPS 상한. 하한 15%, 사망 없음 */
   hurt: function (p, dmg) {
