@@ -1,7 +1,8 @@
 /* ============================================================================
    sprite.js — 스프라이트 레이어
    ① 실제 도트 시트(PNG)가 있으면 그것을 쓴다
-   ② 없으면 PIXELART 맵으로 캔버스를 만들어 쓴다 (에셋 0장 완주 보장)
+   ② 없으면 NEONMOB(벡터 도형) → PIXELART(도트 맵) 순으로 구워 쓴다
+      (2차는 몹이 전부 ②의 벡터 경로다 — 그림 파일 0장으로 완주한다)
    ③ 어느 쪽이든 로드 시점에 알파 바운즈를 재서 "발밑 원점"을 자동 정렬한다
       → 캐릭터를 교체해도 좌표를 손으로 잡지 않는다 (사례분석 S6)
    ========================================================================== */
@@ -45,11 +46,17 @@ function measureAlpha(canvasOrImg, w, h) {
 function getSprite(key) {
   var s = Sprites.cache[key];
   if (s) return s;
+  /* 벡터 도형(네온 몹) — box 를 설계값으로 직접 주므로 알파 측정이 필요 없다 */
+  if (typeof NEONMOB !== 'undefined' && NEONMOB[key]) {
+    s = bakeNeon(NEONMOB[key]);
+    Sprites.cache[key] = s;
+    return s;
+  }
   var def = PIXELART[key];
   if (!def) return null;
   var cv = bakePixel(def);
   var box = measureAlpha(cv, cv.width, cv.height);
-  s = { cv: cv, w: cv.width, h: cv.height, box: box, src: 'proc' };
+  s = { cv: cv, w: cv.width, h: cv.height, box: box, src: 'proc', smooth: false };
   Sprites.cache[key] = s;
   return s;
 }
@@ -61,7 +68,7 @@ function loadSheet(key, dataUri, cb) {
   var im = new Image();
   im.onload = function () {
     var box = measureAlpha(im, im.width, im.height);
-    Sprites.cache[key] = { cv: im, w: im.width, h: im.height, box: box, src: 'sheet' };
+    Sprites.cache[key] = { cv: im, w: im.width, h: im.height, box: box, src: 'sheet', smooth: true };
     Sprites.pending--; if (cb) cb(true);
   };
   im.onerror = function () { Sprites.pending--; if (cb) cb(false); };   /* 실패해도 폴백으로 계속 */
@@ -75,11 +82,11 @@ function getSilhouette(key, col) {
   if (s) return s;
   var base = getSprite(key); if (!base) return null;
   var c = document.createElement('canvas'); c.width = base.w; c.height = base.h;
-  var g = c.getContext('2d'); g.imageSmoothingEnabled = false;
+  var g = c.getContext('2d'); g.imageSmoothingEnabled = !!base.smooth;
   g.drawImage(base.cv, 0, 0);
   g.globalCompositeOperation = 'source-in';
   g.fillStyle = col; g.fillRect(0, 0, base.w, base.h);
-  s = { cv: c, w: base.w, h: base.h, box: base.box, src: 'sil' };
+  s = { cv: c, w: base.w, h: base.h, box: base.box, src: 'sil', smooth: base.smooth };
   Sprites.cache[id] = s;
   return s;
 }
@@ -97,12 +104,15 @@ function drawSprite(key, x, footY, k, opt) {
   var oy = (b.y + b.h) * k;              /* 내용 하단 y = 발밑 */
   c.save();
   c.translate(x, footY);
+  /* spin — 내용 중심을 축으로 돌린다. tilt(발밑 축)와 달리 떠 있는 도형용이다.
+     발밑 앵커는 그대로 유지되므로 깊이 정렬(gy)이 흔들리지 않는다 */
+  if (opt.spin) { c.translate(0, -(b.h / 2) * k); c.rotate(opt.spin); c.translate(0, (b.h / 2) * k); }
   if (opt.tilt) c.rotate(opt.tilt);
   if (opt.squash) c.scale(1 / opt.squash, opt.squash);
   if (opt.flip) c.scale(-1, 1);
   if (opt.alpha !== undefined) c.globalAlpha = opt.alpha;
-  c.imageSmoothingEnabled = (s.src === 'sheet');   /* 고해상 시트는 부드럽게, 도트는 계단 그대로 */
-  if (s.src === 'sheet') c.imageSmoothingQuality = 'high';
+  c.imageSmoothingEnabled = !!s.smooth;   /* 시트·벡터는 부드럽게, 도트는 계단 그대로 */
+  if (s.smooth) c.imageSmoothingQuality = 'high';
   c.drawImage(s.cv, -ox, -oy, w, h);
   if (opt.tint) {                        /* 히트 플래시 — 실루엣을 덧그린다 */
     var t = getSilhouette(key, opt.tint);
@@ -144,6 +154,6 @@ function uiImage(key, x, y, w, h, alpha) {
 function fitScale(key, targetH) {
   var s = getSprite(key); if (!s) return 1;
   var k = targetH / (s.box.h || s.h);
-  if (s.src === 'sheet') return k;
+  if (s.smooth) return k;              /* 시트·벡터는 소수 배율로 정확히 맞춘다 */
   return Math.max(1, Math.round(k));
 }

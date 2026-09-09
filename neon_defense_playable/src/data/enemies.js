@@ -1,33 +1,40 @@
 /* ============================================================================
    enemies.js — ★★ 교체 지점 2
-   프로젝트 옥토퍼스 · 슬라임 5종. 전부 정면 뷰라 어느 방향에서 와도 뒤집을
-   필요가 없다 (사방 포위 구성에 유리).
-     grunt  파랑 슬라임    — 기본 물량
-     fast   빨강 슬라임    — 빠른 돌격
-     tank   메탈 슬라임    — 느리고 단단
-     armor  헬멧 슬라임    — 중간 보스급
-     elite  황금 슬라임    — 엘리트 / 피날레
-   anim 키는 <sheet>_walk / <sheet>_atk (data/atlas.js).
+   2차(우주·네온) 몹 5종. 도트 시트가 아니라 data/neonmob.js 의 벡터 도형이다.
+   전부 정면 대칭이라 어느 방향에서 와도 뒤집을 필요가 없다 (사방 포위에 유리).
+     grunt  ◆ 시안 마름모      — 기본 물량
+     fast   ▲ 마젠타 화살촉    — 빠른 돌격. 진행 방향으로 돌아간다
+     tank   ⬡ 청백 육각        — 느리고 단단
+     armor  ▣◎ 보라 사각 + 링  — 중간 보스급
+     elite  ✳◎◎ 백열 침 + 이중 링 — 엘리트 / 피날레
+   sheet 키는 NEONMOB 의 키다. 나중에 실제 시트가 들어오면 같은 키로
+   art/sheets/<key>.webp 를 넣기만 하면 시트가 우선한다 (sprite.js ①).
    ========================================================================== */
 var ENEMY_SET = {
   theme : 'octopus',
   types : {
     /* 크기 — 캐릭터 80 대비 약 1:3. 레퍼런스의 "작은 것들이 새까맣게" 비율.
        키우면 같은 마리수여도 화면이 금방 차서 오히려 적어 보인다.
-       줄인 만큼 enemy.js 의 분리 반경(22)도 같이 줄여야 카펫 밀도가 유지된다 */
-    grunt : { sheet:'m_blue',   hLogic:29, hp:11,  speed:92,  dmg:6,  r:11, score:1,
-              fps:13, drop:0.10 },
+       ※ 첫 시안은 도트 몹보다 키웠다가 되돌렸다. 실제로 굽고 보니 반대였다 —
+          네온 도형은 배경과 대비가 최대라 같은 hLogic 이어도 도트보다 크게
+          읽힌다. 물량 몹(grunt 21)은 도트 시절(29)보다 오히려 작다.
+          속을 비운 특수 몹만 큰 값을 유지한다 (2026-09-09 캡처 실측)
+       ※ hp/speed/dmg/drop 은 1차 값 그대로다. 21.5초 페이싱(총 1,500킬 ·
+          최저 HP 450선)이 검증된 수치라 실루엣 교체와 같이 흔들지 않았다.
+          밸런스를 손대려면 qa.js ② 의 최저 HP 하한(150)부터 확인할 것 */
+    grunt : { sheet:'n_gr', hLogic:21, hp:11,  speed:92,  dmg:6,  r:11, score:1,
+              fps:13, drop:0.10, float:true },
     /* rmin — 이 몹만 숨구멍을 뚫고 들어온다. 카펫 전체가 포켓 밖에 머물면
        그림은 깨끗해지지만 아무도 캐릭터에 닿지 못해 HP가 안 깎이고
-       위기감이 통째로 사라진다. 빨강 돌격체가 그 역할을 전담한다 */
-    fast  : { sheet:'m_red',    hLogic:27, hp:8,   speed:158, dmg:10, r:10, score:1,
-              fps:17, drop:0.08, rmin:19 },
-    tank  : { sheet:'m_metal',  hLogic:37, hp:52,  speed:58,  dmg:12, r:14, score:3,
-              fps:10, drop:0.40 },
-    armor : { sheet:'m_helmet', hLogic:45, hp:160, speed:64,  dmg:10, r:17, score:6,
-              fps:11, drop:0.70, hpbar:true },
-    elite : { sheet:'m_gold',   hLogic:57, hp:520, speed:50,  dmg:12, r:21, score:12,
-              fps:10, drop:1.0, hpbar:true }
+       위기감이 통째로 사라진다. 마젠타 돌격체가 그 역할을 전담한다 */
+    fast  : { sheet:'n_fa', hLogic:26, hp:8,   speed:158, dmg:10, r:10, score:1,
+              fps:17, drop:0.08, rmin:19, float:true, aim:true },
+    tank  : { sheet:'n_ta', hLogic:35, hp:52,  speed:58,  dmg:12, r:14, score:3,
+              fps:10, drop:0.40, float:true, spin:0.55 },
+    armor : { sheet:'n_ar', hLogic:46, hp:160, speed:64,  dmg:10, r:17, score:6,
+              fps:11, drop:0.70, hpbar:true, float:true, spin:-0.8 },
+    elite : { sheet:'n_el', hLogic:60, hp:520, speed:50,  dmg:12, r:21, score:12,
+              fps:10, drop:1.0, hpbar:true, float:true, spin:0.42 }
   },
 
   /* ── 스폰 게이트 — 변에서 몹이 나올 수 있는 구간 (이미지 비율 0~1) ────────
@@ -44,9 +51,10 @@ var ENEMY_SET = {
     right  : [[0.05, 0.95]]
   },
 
-  /* 처치 파편 색 — 시트별 대표색 */
+  /* 처치 파편 색 — 도형별 네온색. 터질 때 그 몹의 색이 그대로 흩뿌려져야
+     "무엇을 잡았는지"가 읽힌다 */
   cols : {
-    m_blue:'#6fb8ff', m_red:'#ff6b5a', m_metal:'#c8ced8',
-    m_helmet:'#9fb4ff', m_gold:'#ffc93f'
+    n_gr:'#8ef0ff', n_fa:'#ff5fd6', n_ta:'#b8d4ff',
+    n_ar:'#a77bff', n_el:'#ffffff'
   }
 };

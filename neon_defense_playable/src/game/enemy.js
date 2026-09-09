@@ -253,22 +253,43 @@ var Enemies = {
           });
         } else {
           drawSprite(e.sheet, e.x, e.y, e.k * (1 + t * 0.5),
-            { alpha: 1 - t, squash: 1 + t * 0.35, sil: t < 0.55 ? '#ffffff' : null });
+            { alpha: 1 - t, squash: e.def.float ? 1 : 1 + t * 0.35,
+              spin: e.def.float ? (Game.wt * (e.def.spin || 0) + e.ph + t * 1.8) : 0,
+              sil: t < 0.55 ? '#ffffff' : null });
         }
         return;
       }
 
-      /* 발밑 그림자 — 접지감. 슬라임이 떠 보이지 않게 */
-      c.globalAlpha = 0.24; c.fillStyle = '#000';
-      c.beginPath();
-      c.ellipse(e.x, e.y + e.def.hLogic * 0.30, e.def.hLogic * 0.24, e.def.hLogic * 0.085, 0, 0, 6.2832);
-      c.fill();
-      c.globalAlpha = 1;
+      /* 발밑 그림자 — 지면이 있는 도트 몹만. 우주에 떠 있는 네온 도형에
+         검은 그림자를 깔면 바닥이 있는 것처럼 읽혀 무드가 깨진다 */
+      if (!e.def.float) {
+        c.globalAlpha = 0.24; c.fillStyle = '#000';
+        c.beginPath();
+        c.ellipse(e.x, e.y + e.def.hLogic * 0.30, e.def.hLogic * 0.24, e.def.hLogic * 0.085, 0, 0, 6.2832);
+        c.fill();
+        c.globalAlpha = 1;
+      }
 
       if (anim) {
         Anim.draw(key, Anim.frameAt(key, e.at, e.def.fps), e.x, e.y, e.k, {
           tint: e.hit > 0 ? '#ffffff' : (e.frz > 0 ? '#8be9ff' : null),
           tintA: e.frz > 0 ? 0.55 : 0.7
+        });
+      } else if (e.def.float) {
+        /* 네온 도형 — 프레임 애니가 없다. 회전과 미세한 상하 호흡으로 살린다.
+           aim  : 화살촉이 진행 방향(주인공 쪽)을 향한다. 도형 기본 방향이
+                  위(-Y)라 +PI/2 를 더해 각을 맞춘다
+           spin : 등급 표시. 링 달린 상위 몹만 돌려서 시선을 끌어온다 */
+        var bob2 = Math.sin(Game.wt * 4.2 + e.ph) * 1.4;
+        var ang = 0;
+        if (e.def.aim && Game.player) {
+          ang = Math.atan2(Game.player.y - e.y, Game.player.x - e.x) + 1.5707963;
+        } else if (e.def.spin) {
+          ang = Game.wt * e.def.spin + e.ph;
+        }
+        drawSprite(e.sheet, e.x, e.y + bob2, e.k, {
+          spin: ang,
+          tint: e.hit > 0 ? '#ffffff' : null, tintA: 0.85
         });
       } else {
         var bob = Math.sin(Game.wt * 7 + e.ph) * 0.9;
