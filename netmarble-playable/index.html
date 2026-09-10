@@ -1191,20 +1191,23 @@ function drawHUD(){
   pill(18, 'coin', P.gold, String(300 + S.kills*2));   // 18~62
   pill(68, 'moon', P.cyan, '3k');                       // 68~112
 
-  /* 웨이브 · 시계 */
-  txt('웨이브', CX, 34, 22, P.ink2, 'center', 700);
-  const label = S.wave + '/20';
+  /* 웨이브 · 시계 — 두 줄 (실장님 전달 시안 기준)
+     1행 : wave 라벨 + n/20 을 한 줄로 묶어 중앙 정렬. 라벨이 크고 숫자가 작다
+     2행 : 시계 + 시간. 시간을 40px로 키워 무게 중심을 아래 줄에 둔다
+     두 줄 다 실측 폭(tw)으로 잡아서 숫자 자릿수가 바뀌어도 중앙이 안 흔들린다 */
+  const waveNum = S.wave + '/20';
+  const lbW = tw('wave', 30, 800), numW = tw(waveNum, 26, 800);
+  const lx = CX - (lbW + 10 + numW) / 2;
+  txt('wave', lx, 32, 30, '#fff', 'left', 800, 'rgba(109,219,255,.55)');
+  txt(waveNum, lx + lbW + 10, 33, 26, P.ink2, 'left', 800);
+
   const mm = String(Math.floor(S.t/60)).padStart(2,'0');
   const ss = String(Math.floor(S.t%60)).padStart(2,'0');
   const clockStr = mm + ':' + ss;
-  const wW = tw(label, 44, 800), tW = tw(clockStr, 32, 800);
-  const total = wW + 20 + 30 + 8 + tW;             // 실측 폭으로 한 줄 정렬
-  let cx0 = CX - total/2;
-  txt(label, cx0, 76, 44, '#fff', 'left', 800, 'rgba(109,219,255,.6)');
-  cx0 += wW + 20;
-  glyph('clock', cx0 + 15, 78, 28, P.ink2);
-  cx0 += 30 + 8;
-  txt(clockStr, cx0, 78, 32, '#fff', 'left', 800);
+  const cW = tw(clockStr, 40, 800);
+  const cx0 = CX - (34 + 12 + cW) / 2;
+  glyph('clock', cx0 + 17, 89, 34, P.ink2);
+  txt(clockStr, cx0 + 46, 89, 40, '#fff', 'left', 800);
 
   /* 설정 아이콘(장식) */
   ctx.save(); ctx.translate(CONT_R - 20, 46); ctx.rotate(S.t*0.3);
