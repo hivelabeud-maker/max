@@ -536,7 +536,7 @@ const P = {
   pink:'#FF4FA3', pinkD:'#C8267A',
   purple:'#8E5CF7',
   violet:'#8E5CF7', violetL:'#C9A4FF', violetD:'#6D2BF5',   // 탄막 : 글로우·잔상
-  lime:'#7BF03A', limeL:'#B6F871', limeD:'#4FBF18',
+  cta:'#38C6F4', ctaL:'#8DE7FF', ctaD:'#1478B8',            // CTA 버튼 (라임 → 블루)
   gold:'#FFC83D',
   red:'#FF4D6D', redL:'#FF93AC',
   panel:'rgba(16,9,34,.80)', panelB:'rgba(178,146,255,.42)',
@@ -600,20 +600,20 @@ function neonPanel(x, y, w, h){
   ctx.fillStyle = P.panel; ctx.fill();
   ctx.lineWidth = 2; ctx.strokeStyle = P.panelB; ctx.stroke();
 }
-/* ── 라임 CTA 버튼 ── */
+/* ── 블루 CTA 버튼 ── */
 function ctaButton(x, y, w, h, label, size, alpha){
   ctx.save();
   ctx.globalAlpha = alpha === undefined ? 1 : alpha;
-  ctx.shadowColor = 'rgba(123,240,58,.8)'; ctx.shadowBlur = 34;
+  ctx.shadowColor = 'rgba(56,198,244,.8)'; ctx.shadowBlur = 34;
   rrect(x, y, w, h, 16);
   const g = ctx.createLinearGradient(x, y, x, y+h);
-  g.addColorStop(0, P.lime); g.addColorStop(1, P.limeD);
+  g.addColorStop(0, P.cta); g.addColorStop(1, P.ctaD);
   ctx.fillStyle = g; ctx.fill();
   ctx.shadowBlur = 0;
-  ctx.lineWidth = 5; ctx.strokeStyle = P.limeL;
+  ctx.lineWidth = 5; ctx.strokeStyle = P.ctaL;
   rrect(x+4, y+4, w-8, h-8, 13); ctx.stroke();
   const pl = (cx, cy) => {                        // 모서리 십자 장식
-    ctx.fillStyle = '#D8FFAE';
+    ctx.fillStyle = '#D6F6FF';
     ctx.fillRect(cx-10, cy-3, 20, 6); ctx.fillRect(cx-3, cy-10, 6, 20);
   };
   pl(x+26, y+22); pl(x+w-26, y+22); pl(x+26, y+h-22); pl(x+w-26, y+h-22);
@@ -1079,12 +1079,16 @@ function drawHUD(){
   const peak = Math.max(1, ...S.skills.map(k => k.dmg));
   const cols  = [P.cyanD, P.pinkD, '#6D3FD6'];
   const colsL = [P.cyan, P.pink, P.purple];
+  /* 인게임은 수치가 계속 오른다. 실측값으로 재면 자릿수가 늘 때마다
+     바 길이가 튀므로 최대 자릿수('999k')를 기준으로 한 번 재서 고정한다 */
+  const barX = 66, barR = 400, gap = 14;
+  const barW = barR - tw('999k', 19, 800) - gap - barX;
   S.skills.forEach((k, i) => {
     const y = 1076 + i*26;
     ctx.globalAlpha = k.on ? 1 : 0.3;
     glyph(k.icon, 48, y, 18, colsL[i]);
-    neonBar(66, y - 7, 214, 14, k.on ? k.dmg/peak : 0, cols[i], colsL[i], 0);
-    txt(k.on ? fmt(k.dmg) : '-', 400, y, 19, '#fff', 'right', 800);
+    neonBar(barX, y - 7, barW, 14, k.on ? k.dmg/peak : 0, cols[i], colsL[i], 0);
+    txt(k.on ? fmt(k.dmg) : '-', barR, y, 19, '#fff', 'right', 800);
     ctx.globalAlpha = 1;
   });
 
@@ -1112,18 +1116,22 @@ function drawEnd(){
   if (a < 0.2) return;
 
   txt('CLEAR', CX, 292, 92, '#fff', 'center', 800, P.cyan);
-  ctx.strokeStyle = 'rgba(178,146,255,.25)'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(54, 362); ctx.lineTo(666, 362); ctx.stroke();
 
   txt('피해 현황', CX, 402, 24, P.ink2, 'center', 700);
   const peak = Math.max(1, ...S.skills.map(k => k.dmg));
   const cols  = [P.cyanD, P.pinkD, '#6D3FD6'];
   const colsL = [P.cyan, P.pink, P.purple];
+  /* 게이지 길이는 실제 수치 폭을 재서 정한다 — 고정 폭이면 자릿수가 짧을 때
+     바 끝과 숫자 사이에 빈 칸이 남는다. 결과창은 수치가 멈춘 화면이라
+     실측값을 그대로 써도 길이가 흔들리지 않는다. 여백은 16px 고정 */
+  const barX = 112, barR = 666, gap = 16;
+  const numW = Math.max(...S.skills.map(k => tw(fmt(k.dmg), 26, 800)));
+  const barW = barR - numW - gap - barX;
   S.skills.forEach((k, i) => {
     const y = 462 + i*58;
     glyph(k.icon, 78, y, 30, colsL[i]);
-    neonBar(112, y - 14, 420, 28, k.dmg/peak, cols[i], colsL[i], 0);
-    txt(fmt(k.dmg), 666, y, 26, '#fff', 'right', 800);
+    neonBar(barX, y - 14, barW, 28, k.dmg/peak, cols[i], colsL[i], 0);
+    txt(fmt(k.dmg), barR, y, 26, '#fff', 'right', 800);
   });
 
   txt('전리품', CX, 662, 24, P.ink2, 'center', 700);
