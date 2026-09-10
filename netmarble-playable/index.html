@@ -154,7 +154,7 @@ const T = {
   AWAKEN   :21.8,    // 21.8   각성 → 압도적 해소
   FINAL    :25.0,    // 25.0   마지막 일격 — 남은 적 전멸
   CLEAR    :27.6,    // 27.6   결과 + CTA (종료 ≈28초)
-  PILL     :3.0      //        상시 CTA 노출
+  PILL     :1.2      //        상시 CTA 노출 (빨리 띄운다)
 };
 
 let S, raf = 0, lastT = 0, hudAcc = 0;
@@ -316,7 +316,19 @@ function fireNova(dt){
 
 /* ───────── 2층 : 보스 ───────── */
 function spawnBoss(){
-  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, rot:0, hitFx:0, t:0 };
+  /* 균열은 등장할 때 한 번 뽑아 둔다 — 매 프레임 새로 뽑으면 깜빡인다.
+     시드 RNG라 몇 번을 돌려도 같은 균열이 나온다. */
+  const cracks = [];
+  for (let i = 0; i < 6; i++){
+    let a = i/6*TAU + rr(-0.28, 0.28);
+    const pts = [];
+    for (let r = 6; r <= 34; r += 7){
+      a += rr(-0.30, 0.30);
+      pts.push({ x: Math.cos(a)*r, y: Math.sin(a)*r });
+    }
+    cracks.push(pts);
+  }
+  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, rot:0, hitFx:0, t:0, cracks };
   punch(22, 1.09, 0.15, 0.42, 0.7);
   S.fx.push({ nova:true, life:1, max:.5, r0:420, r1:150 });   // 수축 링 = 등장
 }
@@ -536,7 +548,7 @@ const P = {
   pink:'#FF4FA3', pinkD:'#C8267A',
   purple:'#8E5CF7',
   violet:'#8E5CF7', violetL:'#C9A4FF', violetD:'#6D2BF5',   // 탄막 : 글로우·잔상
-  cta:'#38C6F4', ctaL:'#8DE7FF', ctaD:'#1478B8',            // CTA 버튼 (라임 → 블루)
+  cta:'#6CDBFF', ctaL:'#B3ECFF', ctaD:'#00B8F5',            // CTA 버튼 · 기준색 #6CDBFF
   gold:'#FFC83D',
   red:'#FF4D6D', redL:'#FF93AC',
   panel:'rgba(16,9,34,.80)', panelB:'rgba(178,146,255,.42)',
@@ -604,7 +616,7 @@ function neonPanel(x, y, w, h){
 function ctaButton(x, y, w, h, label, size, alpha){
   ctx.save();
   ctx.globalAlpha = alpha === undefined ? 1 : alpha;
-  ctx.shadowColor = 'rgba(56,198,244,.8)'; ctx.shadowBlur = 34;
+  ctx.shadowColor = 'rgba(108,219,255,.85)'; ctx.shadowBlur = 34;
   rrect(x, y, w, h, 16);
   const g = ctx.createLinearGradient(x, y, x, y+h);
   g.addColorStop(0, P.cta); g.addColorStop(1, P.ctaD);
@@ -987,26 +999,85 @@ function drawEnemy(e, x, y){
   ctx.restore();
 }
 /* ── 보스 ── */
+/* 도넛 조각 하나 — 장갑판·구동링을 같은 헬퍼로 그린다 */
+function ringSeg(r0, r1, a0, a1){
+  ctx.beginPath();
+  ctx.arc(0, 0, r1, a0, a1);
+  ctx.arc(0, 0, r0, a1, a0, true);
+  ctx.closePath();
+}
+/* 보스 : 기계 하우징에 갇힌 균열 난 에너지 코어.
+   체력이 깎일수록 균열이 늘고 벌어진다 — 남은 체력을 형태로도 읽게 한다. */
 function drawBoss(b){
+  const hot = b.hitFx > 0;
+  const dmg = 1 - clamp(b.hp / b.hpMax, 0, 1);
   ctx.save(); ctx.translate(b.x, b.y);
+
+  /* 바깥 발광 — 화면에서 보스 자리를 먼저 알린다 */
   const g = ctx.createRadialGradient(0,0,10,0,0,150);
   g.addColorStop(0,'rgba(255,79,163,.5)'); g.addColorStop(1,'rgba(255,79,163,0)');
   ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0,0,150,0,TAU); ctx.fill();
-  ctx.rotate(b.rot);
-  ctx.shadowColor = P.pink; ctx.shadowBlur = b.hitFx > 0 ? 34 : 18;
-  for (let i=0;i<8;i++){
-    ctx.save(); ctx.rotate(i/8*TAU);
-    ctx.fillStyle = i%2 ? P.ice : P.cyan;
-    ctx.beginPath();
-    ctx.moveTo(0,-22); ctx.quadraticCurveTo(38,-56, 0,-76);
-    ctx.quadraticCurveTo(-38,-56, 0,-22); ctx.fill();
+
+  /* 바깥 장갑판 6장 — 어두운 금속에 시안 테두리 */
+  ctx.save(); ctx.rotate(b.rot);
+  const span = TAU/6 * 0.74;
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = hot ? '#FFFFFF' : P.cyan;
+  ctx.shadowColor = P.cyan; ctx.shadowBlur = hot ? 28 : 14;
+  for (let i = 0; i < 6; i++){
+    const a0 = i/6*TAU - span/2;
+    ringSeg(54, 76, a0, a0 + span);
+    ctx.fillStyle = '#0C0A1C'; ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* 안쪽 구동링 3장 — 반대로 돈다. 부품이 따로 움직여야 기계로 읽힌다 */
+  ctx.save(); ctx.rotate(-b.rot * 1.6);
+  ctx.shadowColor = P.violet; ctx.shadowBlur = hot ? 22 : 12;
+  ctx.fillStyle = hot ? P.violetL : P.violet;
+  for (let i = 0; i < 3; i++){
+    const a0 = i/3*TAU;
+    ringSeg(41, 48, a0, a0 + TAU/3 * 0.58);
+    ctx.fill();
+  }
+  ctx.restore();
+  ctx.shadowBlur = 0;
+
+  /* 에너지 코어 — 숨 쉬듯 뛴다. 가장자리는 껍데기처럼 어둡게 남겨
+     그 위에 그리는 균열이 '빛이 새는 금'으로 읽히게 한다 */
+  const cr = 34 * (1 + Math.sin(b.t * 3.4) * 0.05);
+  const cg = ctx.createRadialGradient(0, 0, 2, 0, 0, cr);
+  cg.addColorStop(0,   'rgba(224,150,255,.96)');
+  cg.addColorStop(.45, 'rgba(255,79,163,.88)');
+  cg.addColorStop(.86, 'rgba(150,26,102,.92)');
+  cg.addColorStop(1,   'rgba(54,10,44,.96)');
+  ctx.shadowColor = P.pink; ctx.shadowBlur = hot ? 38 : 22;
+  ctx.fillStyle = cg;
+  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = 'rgba(16,4,26,.9)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.stroke();
+
+  /* 균열 — 체력이 깎인 만큼 개수가 늘고 굵어진다 */
+  const shown = Math.round(dmg * b.cracks.length);
+  if (shown > 0){
+    ctx.save();
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const lw = 1.4 + dmg * 2.4;
+    for (let i = 0; i < shown; i++){
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      b.cracks[i].forEach(q => ctx.lineTo(q.x, q.y));
+      /* 어두운 밑선을 먼저 깔고 흰 심을 얹는다.
+         코어 안쪽이 밝아서 흰 선만 그으면 중심 쪽 금이 묻힌다 */
+      ctx.strokeStyle = 'rgba(28,4,34,.85)'; ctx.lineWidth = lw + 2.6;
+      ctx.shadowBlur = 0; ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,' + (.62 + dmg*.38) + ')';
+      ctx.lineWidth = lw;
+      ctx.shadowColor = P.violetL; ctx.shadowBlur = 14 + dmg * 12;
+      ctx.stroke();
+    }
     ctx.restore();
   }
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = '#0A0616'; ctx.beginPath(); ctx.arc(0,0,26,0,TAU); ctx.fill();
-  ctx.strokeStyle = P.pink; ctx.lineWidth = 4;
-  ctx.shadowColor = P.pink; ctx.shadowBlur = 14;
-  ctx.beginPath(); ctx.arc(0,0,26,0,TAU); ctx.stroke();
   ctx.restore(); ctx.shadowBlur = 0;
 }
 function drawBossBar(b){
@@ -1095,7 +1166,7 @@ function drawHUD(){
   /* 상시 CTA */
   if (S.t >= T.PILL)
     ctaButton(CTA_BTN.x, CTA_BTN.y, CTA_BTN.w, CTA_BTN.h,
-              '이 게임이 궁금하다면?', 40, clamp((S.t - T.PILL)/0.6, 0, 1));
+              '이 게임이 궁금하다면?', 40, clamp((S.t - T.PILL)/0.22, 0, 1));
 
   /* 마지막 일격 */
   if (S.finalBlow && !S.ended){
