@@ -158,6 +158,10 @@ const T = {
 };
 
 let S, raf = 0, lastT = 0, hudAcc = 0;
+/* 연출 전용 시계. S.t 는 결과창 뒤에 멈추지만 이건 계속 간다.
+   버튼 호흡처럼 끝없이 반복돼야 하는 것만 여기에 맡긴다.
+   프레임마다 같은 dt 를 먹으므로 녹화(?record=1) 재현성도 그대로다. */
+let fxT = 0;
 
 function reset(){
   _seed = 20260909;
@@ -179,7 +183,7 @@ function reset(){
   for (let i=0;i<13;i++){ spawnEnemy(); S.enemies[i].r = rr(300, 660); }
   document.getElementById('ctaMain').classList.remove('on');
   document.getElementById('ctaPill').classList.add('on');
-  hudAcc = 1; lastT = performance.now();
+  hudAcc = 1; lastT = performance.now(); fxT = 0;
   cancelAnimationFrame(raf);
   raf = requestAnimationFrame(loop);
 }
@@ -316,7 +320,7 @@ function fireNova(dt){
 
 /* ───────── 2층 : 보스 ───────── */
 function spawnBoss(){
-  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, rot:0, hitFx:0, t:0 };
+  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, hitFx:0, t:0 };
   punch(22, 1.09, 0.15, 0.42, 0.7);
   S.fx.push({ nova:true, life:1, max:.5, r0:420, r1:150 });   // 수축 링 = 등장
 }
@@ -490,7 +494,7 @@ function update(dtRaw, real){
 
   /* 보스 */
   if (S.boss && !S.boss.dead){
-    const b = S.boss; b.t += dt; b.rot += dt * 0.55;
+    const b = S.boss; b.t += dt;
     b.hitFx = Math.max(0, b.hitFx - dt*3);
     b.x = CX + 186 + Math.sin(b.t*0.8) * 34;
     b.y = CY - 170 + Math.cos(b.t*0.6) * 22;
@@ -1024,6 +1028,16 @@ const CORE_ARMS  = (() => {
 })();
 const CORE_DIR = [[0,-1],[1,0],[0,1],[-1,0]];
 
+/* 보스 하우징 — 코어와 **같은 셀 크기**를 쓰는 게 핵심이다.
+   계단 크기가 같아야 하우징과 코어가 한 덩어리로 보인다.
+   셀 목록은 여기서 한 번만 뽑는다. 매 프레임 스캔하면 31×31 을 15번 훑는다. */
+const BOSS_N = 31, BOSS_CELL = 5;
+const BOSS_SEG6 = [[8,52],[68,112],[128,172],[188,232],[248,292],[308,352]];
+const BOSS_SEG3 = [[25,95],[145,215],[265,335]];
+const BOSS_PLATE = BOSS_SEG6.map(g => arcCells(BOSS_N, 10.8, 14.2, g));  // 장갑판 몸통
+const BOSS_EDGE  = BOSS_SEG6.map(g => arcCells(BOSS_N, 13.3, 14.2, g));  // 바깥 한 줄
+const BOSS_DRIVE = BOSS_SEG3.map(g => arcCells(BOSS_N,  8.6,  9.6, g));  // 구동링
+
 /* 코어를 그린다. 도트라 각도 회전은 안 건다 —
    밝은 구간을 한 칸씩 옮겨 도는 것처럼 보이게 하고,
    창끝은 한 셀 나갔다 들어오게 한다. 픽셀이 안 무너지는 움직임만 쓴다. */
@@ -1122,60 +1136,52 @@ function drawEnemy(e, x, y){
   ctx.restore(); ctx.shadowBlur = 0;
 }
 /* ── 보스 ── */
-/* 도넛 조각 하나 — 장갑판·구동링을 같은 헬퍼로 그린다 */
-function ringSeg(r0, r1, a0, a1){
-  ctx.beginPath();
-  ctx.arc(0, 0, r1, a0, a1);
-  ctx.arc(0, 0, r0, a1, a0, true);
-  ctx.closePath();
-}
-/* 보스 : 기계 하우징에 갇힌 균열 난 에너지 코어.
-   체력이 깎일수록 균열이 늘고 벌어진다 — 남은 체력을 형태로도 읽게 한다. */
+/* 보스 : 도트 하우징 + 도트 코어.
+   도트에는 외곽선이 없다 — 면을 칠하고 선을 두르는 대신 밝은 셀을 놓는다.
+   벡터 곡선 + 흰 라인으로 두르던 이전 판은 코어와 언어가 달라 겉돌았다.
+   회전도 못 건다(계단이 무너진다). 대신 밝은 판이 한 바퀴 돈다.          */
 function drawBoss(b){
   const hot = b.hitFx > 0;
   const dmg = 1 - clamp(b.hp / b.hpMax, 0, 1);
-  ctx.save(); ctx.translate(b.x, b.y);
+  ctx.save();
+  ctx.translate(Math.round(b.x), Math.round(b.y));   // 도트는 정수 좌표에 앉힌다
 
   /* 바깥 발광 — 화면에서 보스 자리를 먼저 알린다 */
   const g = ctx.createRadialGradient(0,0,10,0,0,150);
   g.addColorStop(0,'rgba(255,79,163,.5)'); g.addColorStop(1,'rgba(255,79,163,0)');
   ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0,0,150,0,TAU); ctx.fill();
 
-  /* 바깥 장갑판 6장 — 어두운 금속에 시안 테두리 */
-  ctx.save(); ctx.rotate(b.rot);
-  const span = TAU/6 * 0.74;
-  ctx.lineWidth = 2.5;
-  ctx.strokeStyle = hot ? '#FFFFFF' : P.cyan;
-  ctx.shadowColor = P.cyan; ctx.shadowBlur = hot ? 28 : 14;
-  for (let i = 0; i < 6; i++){
-    const a0 = i/6*TAU - span/2;
-    ringSeg(54, 76, a0, a0 + span);
-    ctx.fillStyle = '#0C0A1C'; ctx.fill(); ctx.stroke();
-  }
-  ctx.restore();
+  const o = -Math.round(BOSS_CELL * BOSS_N / 2);
+  const put = cells => cells.forEach(p =>
+    ctx.fillRect(o + p[0]*BOSS_CELL, o + p[1]*BOSS_CELL, BOSS_CELL, BOSS_CELL));
 
-  /* 안쪽 구동링 3장 — 반대로 돈다. 부품이 따로 움직여야 기계로 읽힌다 */
-  ctx.save(); ctx.rotate(-b.rot * 1.6);
-  ctx.shadowColor = P.violet; ctx.shadowBlur = hot ? 22 : 12;
-  ctx.fillStyle = hot ? P.violetL : P.violet;
-  for (let i = 0; i < 3; i++){
-    const a0 = i/3*TAU;
-    ringSeg(41, 48, a0, a0 + TAU/3 * 0.58);
-    ctx.fill();
-  }
-  ctx.restore();
-  ctx.shadowBlur = 0;
+  /* 장갑판 6장 — 체력이 깎이면 한 장씩 떨어져 나간다 */
+  const keep = Math.max(1, Math.ceil((1 - dmg) * 6));
+  const lit  = Math.floor(b.t * 4.2) % 6;
+  BOSS_PLATE.forEach((cells, i) => {
+    if (i >= keep) return;
+    ctx.fillStyle = hot ? '#22314F' : '#131C36';      // 어두운 몸통
+    put(cells);
+  });
+  BOSS_EDGE.forEach((cells, i) => {
+    if (i >= keep) return;
+    ctx.fillStyle = (hot || i === lit) ? '#FFFFFF' : P.cyan;   // 바깥 한 줄만 밝게
+    put(cells);
+  });
 
-  /* 에너지 코어 — 실장님 전달 시안의 8비트 도형.
-     무리는 그라디언트 한 장으로 깔고 셀은 그림자 없이 또렷하게 찍는다.
-     셀 200여 개에 각각 그림자를 걸면 가장자리가 뭉갠다.               */
-  const gg = ctx.createRadialGradient(0,0,0, 0,0, 48);
-  gg.addColorStop(0,   'rgba(190,235,255,' + (hot ? .52 : .30) + ')');
-  gg.addColorStop(.45, 'rgba(140,210,255,' + (hot ? .26 : .14) + ')');
-  gg.addColorStop(1,   'rgba(109,219,255,0)');
-  ctx.fillStyle = gg;
-  ctx.beginPath(); ctx.arc(0,0,48,0,TAU); ctx.fill();
-  drawCoreArt(4, b.t, hot, 1 - dmg);
+  /* 구동링 3장 — 밝은 칸이 반대로 돈다. 부품이 따로 움직여야 기계로 읽힌다 */
+  const litD = 2 - Math.floor(b.t * 2.6) % 3;
+  BOSS_DRIVE.forEach((cells, i) => {
+    ctx.fillStyle = (hot || i === litD) ? P.violetL : P.violet;
+    put(cells);
+  });
+
+  /* 에너지 코어 — 하우징과 같은 셀 크기 */
+  const gg = ctx.createRadialGradient(0,0,0, 0,0, 46);
+  gg.addColorStop(0, 'rgba(190,235,255,' + (hot ? .42 : .24) + ')');
+  gg.addColorStop(1, 'rgba(109,219,255,0)');
+  ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0,0,46,0,TAU); ctx.fill();
+  drawCoreArt(BOSS_CELL, b.t, hot, 1 - dmg);
 
   ctx.restore(); ctx.shadowBlur = 0;
 }
@@ -1278,7 +1284,7 @@ function drawHUD(){
      'element is not stable' 에 걸리지 않는다. v3 때 걸렸던 함정이다. */
   if (S.t >= T.PILL){
     const k  = clamp((S.t - T.PILL)/0.22, 0, 1);
-    const sc = (0.88 + 0.12*k) * (1 + 0.020 * Math.sin(S.t * 3.0));
+    const sc = (0.88 + 0.12*k) * (1 + 0.020 * Math.sin(fxT * 3.0));
     ctx.save();
     ctx.translate(CTA_BTN.x + CTA_BTN.w/2, CTA_BTN.y + CTA_BTN.h/2);
     ctx.scale(sc, sc);
@@ -1393,7 +1399,8 @@ function drawEnd(){
      여기서도 캔버스 그림만 키운다. 탭 영역은 제자리다. */
   const kB = cue(1.06, 0.34);
   if (kB > 0){
-    const breathe = kB >= 1 ? 1 + 0.030 * Math.sin((et - 1.40) * 4.4) : 1;
+    /* 도착한 뒤에는 fxT 로 계속 뛴다. et 로 두면 S.t 가 멈추는 순간 같이 멈춘다 */
+    const breathe = kB >= 1 ? 1 + 0.032 * Math.sin(fxT * 4.2) : 1;
     const sc = (0.84 + 0.16 * kB) * breathe;
     ctx.save();
     ctx.translate(CTA_BTN.x + CTA_BTN.w/2, 914);
@@ -1430,6 +1437,7 @@ function loop(now){
   raf = requestAnimationFrame(loop);
   const real = (now - lastT) / 1000; lastT = now;
   const dt = Math.min(real, 0.05);
+  fxT += dt;
   /* 결과창 연출이 1.4초짜리라 여기서 update 를 끊으면 도중에 얼어붙는다 */
   if (!S.ended || S.t < T.CLEAR + 2.0) update(dt, real);
   draw();
@@ -1439,7 +1447,7 @@ reset();
 /* 녹화 하네스 : ?record=1 로 열면 rAF 대신 __step(dt) 로 한 프레임씩 전진한다.
    시드 RNG + 고정 dt 라서 몇 번을 돌려도 같은 영상이 나온다. */
 if (RECORD){
-  window.__step  = dt => { update(dt, dt); draw(); };
+  window.__step  = dt => { fxT += dt; update(dt, dt); draw(); };
   window.__reset = () => { reset(); draw(); };
   window.__len   = () => T.CLEAR + 2.2;
   window.__reset();
