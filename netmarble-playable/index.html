@@ -544,11 +544,11 @@ const $ = id => document.getElementById(id);
 const SANS = "'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif";
 const P = {
   bg0:'#04030A', bg1:'#1A0E33',                              // 우주 검정 → 성운 보라
-  cyan:'#6FE3FF', cyanD:'#2A9FD6', ice:'#DCEBFF',
+  cyan:'#6DDBFF', cyanD:'#15A6D5', ice:'#D6F5FF',           // ★ 블루 기준색 #6DDBFF
   pink:'#FF4FA3', pinkD:'#C8267A',
   purple:'#8E5CF7',
   violet:'#8E5CF7', violetL:'#C9A4FF', violetD:'#6D2BF5',   // 탄막 : 글로우·잔상
-  cta:'#3BEFE0', ctaL:'#8EF6ED', ctaD:'#0FB3A6',            // CTA 버튼 · 기준색 #3BEFE0
+  cta:'#6DDBFF', ctaL:'#B3ECFF', ctaD:'#00B8F5',            // CTA 버튼 — cyan 과 같은 블루
   gold:'#FFC83D',
   red:'#FF4D6D', redL:'#FF93AC',
   panel:'rgba(16,9,34,.80)', panelB:'rgba(190,162,255,.58)',
@@ -616,7 +616,7 @@ function neonPanel(x, y, w, h){
 function ctaButton(x, y, w, h, label, size, alpha){
   ctx.save();
   ctx.globalAlpha = alpha === undefined ? 1 : alpha;
-  ctx.shadowColor = 'rgba(59,239,224,.9)'; ctx.shadowBlur = 34;
+  ctx.shadowColor = 'rgba(109,219,255,.9)'; ctx.shadowBlur = 34;
   rrect(x, y, w, h, 16);
   const g = ctx.createLinearGradient(x, y, x, y+h);
   g.addColorStop(0, P.cta); g.addColorStop(1, P.ctaD);
@@ -625,7 +625,7 @@ function ctaButton(x, y, w, h, label, size, alpha){
   ctx.lineWidth = 5; ctx.strokeStyle = P.ctaL;
   rrect(x+4, y+4, w-8, h-8, 13); ctx.stroke();
   const pl = (cx, cy) => {                        // 모서리 십자 장식
-    ctx.fillStyle = '#CFFFF9';
+    ctx.fillStyle = '#D6F5FF';
     ctx.fillRect(cx-10, cy-3, 20, 6); ctx.fillRect(cx-3, cy-10, 6, 20);
   };
   pl(x+26, y+22); pl(x+w-26, y+22); pl(x+26, y+h-22); pl(x+w-26, y+h-22);
@@ -805,7 +805,7 @@ function draw(){
   ctx.beginPath(); ctx.arc(CX, CY, RING + 48, 0, TAU); ctx.stroke();
   ctx.restore();
   ctx.save();
-  ctx.strokeStyle = 'rgba(111,227,255,.55)'; ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(109,219,255,.55)'; ctx.lineWidth = 2;
   ctx.setLineDash([12,14]); ctx.lineDashOffset = -S.t * 14;
   ctx.beginPath(); ctx.arc(CX, CY, RING, 0, TAU); ctx.stroke();
   ctx.restore();
@@ -831,7 +831,7 @@ function draw(){
 
   /* 연쇄 번개 */
   S.bolts.forEach(b => {
-    ctx.strokeStyle = 'rgba(111,227,255,' + clamp(b.life,0,1) + ')';
+    ctx.strokeStyle = 'rgba(109,219,255,' + clamp(b.life,0,1) + ')';
     ctx.shadowColor = P.cyan; ctx.shadowBlur = 20;
     ctx.lineWidth = 4; ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -892,7 +892,7 @@ function draw(){
   S.fx.forEach(f => {
     if (f.nova) return;
     if (f.ring){
-      ctx.strokeStyle = (f.m ? 'rgba(255,79,163,' : 'rgba(111,227,255,') + f.life*.85 + ')';
+      ctx.strokeStyle = (f.m ? 'rgba(255,79,163,' : 'rgba(109,219,255,') + f.life*.85 + ')';
       ctx.lineWidth = 3 * f.life + .6;
       ctx.beginPath(); ctx.arc(f.x, f.y, lerp(f.r0,f.r1,1-f.life), 0, TAU); ctx.stroke();
     } else {
@@ -1076,7 +1076,7 @@ function drawBoss(b){
   ctx.shadowBlur = 0;
 
   /* 봉인 링 2줄 — 서로 다른 축으로 돈다. 코어가 갇혀 있다는 신호 */
-  ctx.strokeStyle = 'rgba(170,240,255,.45)'; ctx.lineWidth = 1.6;
+  ctx.strokeStyle = 'rgba(160,226,255,.45)'; ctx.lineWidth = 1.6;
   ctx.beginPath(); ctx.ellipse(0, 0, cr*.88, cr*.32,  b.t*0.70, 0, TAU); ctx.stroke();
   ctx.beginPath(); ctx.ellipse(0, 0, cr*.32, cr*.88, -b.t*0.50, 0, TAU); ctx.stroke();
 
@@ -1151,7 +1151,7 @@ function drawHUD(){
   const wW = tw(label, 44, 800), tW = tw(clockStr, 32, 800);
   const total = wW + 20 + 30 + 8 + tW;             // 실측 폭으로 한 줄 정렬
   let cx0 = CX - total/2;
-  txt(label, cx0, 76, 44, '#fff', 'left', 800, 'rgba(111,227,255,.6)');
+  txt(label, cx0, 76, 44, '#fff', 'left', 800, 'rgba(109,219,255,.6)');
   cx0 += wW + 20;
   glyph('clock', cx0 + 15, 78, 28, P.ink2);
   cx0 += 30 + 8;
@@ -1174,8 +1174,8 @@ function drawHUD(){
   ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.stroke();
   txt('Lv.' + S.level, 62, XPY + XPH/2, 17, '#fff', 'center', 800);
   txt((S.xp/S.xpNeed*100).toFixed(0) + '%', 122, XPY + XPH/2, 16, P.cyan, 'center', 800);
-  neonBar(168, XPY, 428, XPH, S.xp / S.xpNeed, '#1B7FB8', P.cyan, 0);
-  txt('×' + S.mult.toFixed(2), 696, XPY + XPH/2, 24, P.cyan, 'right', 800, 'rgba(111,227,255,.5)');
+  neonBar(168, XPY, 428, XPH, S.xp / S.xpNeed, P.cyanD, P.cyan, 0);
+  txt('×' + S.mult.toFixed(2), 696, XPY + XPH/2, 24, P.cyan, 'right', 800, 'rgba(109,219,255,.5)');
 
   /* 체력 · 실드 */
   txt('HP: ' + Math.round(S.hp) + '/1000', 24, 958, 23, '#fff', 'left', 800);
