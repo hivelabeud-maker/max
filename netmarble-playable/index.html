@@ -995,13 +995,29 @@ function drawHero(x, y, a){
   }
   ctx.restore();
 }
+/* heavy 적의 도트 도형 — 15×15 셀에 미리 찍어 둔다.
+   [열, 행, 폭, 높이] · 가운데 사각 + 직교 4팔(못 모양) + 대각 4팔(계단 쐐기).
+   90° 돌려도 같은 그림이 되도록 좌표를 맞춰 뒀다.                       */
+const HEAVY_CELLS = [
+  [6,6,3,3],                                      // 가운데 사각
+  [6,0,3,2],  [7,2,1,3],                          // 위   : 넓은 머리 + 가는 대
+  [6,13,3,2], [7,10,1,3],                         // 아래
+  [0,6,2,3],  [2,7,3,1],                          // 왼쪽
+  [13,6,2,3], [10,7,3,1],                         // 오른쪽
+  [12,2,2,1], [11,3,3,1], [10,4,3,1], [9,5,2,1],  // 오른위 계단
+  [1,2,2,1],  [1,3,3,1],  [2,4,3,1],  [4,5,2,1],  // 왼위
+  [12,12,2,1],[11,11,3,1],[10,10,3,1],[9,9,2,1],  // 오른아래
+  [1,12,2,1], [1,11,3,1], [2,10,3,1], [4,9,2,1]   // 왼아래
+];
+
 /* ── 적 3종 : 레퍼런스의 화이트 동그라미 · 보석 · 불빛 ──
    세 종류가 형태로 구분돼야 물량 구간에서 뭐가 오는지 읽힌다.
    전부 같은 마름모였을 땐 색만 다른 한 덩어리로 보였다.                */
 function drawEnemy(e, x, y){
   const hit = e.hitFx > 0;
-  const r = e.rad * (e.kind === 'heavy' ? 1.15 : 1);
-  ctx.save(); ctx.translate(x, y);
+  const px  = e.kind === 'heavy';                 // 도트 도형은 정수 좌표에 앉힌다
+  const r = e.rad * (px ? 1.15 : 1);
+  ctx.save(); ctx.translate(px ? Math.round(x) : x, px ? Math.round(y) : y);
 
   if (e.kind === 'ring'){
     /* 화이트 동그라미 — 속이 빈 흰 링 */
@@ -1029,21 +1045,21 @@ function drawEnemy(e, x, y){
     ctx.closePath(); ctx.fill();
 
   } else {
-    /* 불빛 — 가운데가 흰 발광체 + 십자 섬광 */
-    const bg = ctx.createRadialGradient(0,0,0, 0,0, r*1.5);
-    bg.addColorStop(0,  'rgba(255,255,255,.95)');
-    bg.addColorStop(.30,'rgba(190,235,255,.68)');
+    /* 도트 도형 — 무리는 그라디언트 한 장으로 깔고, 도형은 셀로 또렷하게 찍는다.
+       셀마다 그림자를 걸면 물량 구간에서 프레임이 깎이고 가장자리도 뭉갠다.
+       회전은 걸지 않는다 — 도트를 각도로 돌리면 계단이 무너진다.            */
+    const bg = ctx.createRadialGradient(0,0,0, 0,0, r*1.9);
+    bg.addColorStop(0,  'rgba(255,255,255,' + (hit ? .60 : .40) + ')');
+    bg.addColorStop(.34,'rgba(190,235,255,' + (hit ? .34 : .20) + ')');
     bg.addColorStop(1,  'rgba(109,219,255,0)');
     ctx.fillStyle = bg;
-    ctx.beginPath(); ctx.arc(0,0, r*1.5, 0, TAU); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,' + (hit ? 1 : .78) + ')';
-    ctx.lineWidth = 2; ctx.lineCap = 'round';
-    ctx.shadowColor = '#FFFFFF'; ctx.shadowBlur = hit ? 24 : 12;
-    const f = r * 1.9;
-    ctx.beginPath();
-    ctx.moveTo(-f,0); ctx.lineTo(f,0); ctx.moveTo(0,-f); ctx.lineTo(0,f); ctx.stroke();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath(); ctx.arc(0,0, r*.34, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(0,0, r*1.9, 0, TAU); ctx.fill();
+
+    const cell = Math.max(1, Math.round(r * 2.3 / 15));
+    const o = -Math.round(cell * 7.5);
+    ctx.fillStyle = hit ? '#FFFFFF' : 'rgba(255,255,255,.95)';
+    for (const c of HEAVY_CELLS)
+      ctx.fillRect(o + c[0]*cell, o + c[1]*cell, c[2]*cell, c[3]*cell);
   }
   ctx.restore(); ctx.shadowBlur = 0;
 }
