@@ -42,7 +42,6 @@ html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;
   <div id="ui">
     <button class="hit" id="ctaPill" aria-label="이 게임이 궁금하다면?"></button>
     <button class="hit" id="ctaMain" aria-label="이 게임이 궁금하다면?"></button>
-    <button class="hit" id="again"   aria-label="다시 보기"></button>
   </div>
 </div></div>
 
@@ -178,7 +177,7 @@ function reset(){
   };
   /* 주목도가 가장 높은 0~2초가 빈 화면이 되지 않게 미리 날아오는 적을 심는다 */
   for (let i=0;i<13;i++){ spawnEnemy(); S.enemies[i].r = rr(300, 660); }
-  ['ctaMain','again'].forEach(id => document.getElementById(id).classList.remove('on'));
+  document.getElementById('ctaMain').classList.remove('on');
   document.getElementById('ctaPill').classList.add('on');
   hudAcc = 1; lastT = performance.now();
   cancelAnimationFrame(raf);
@@ -945,12 +944,18 @@ function drawHero(x, y, a){
   ctx.save(); ctx.translate(x, y);
   const w = CHARACTER.w;
   const h = heroReady ? w * (heroFrames[0].height / heroFrames[0].width) : w * 0.7;
-  /* 발밑 골드 링 */
+  /* 발밑 네온 보라 링 — 네온관처럼 두 번 긋는다.
+     배경이 보라 성운이라 한 겹으로는 바닥에 묻힌다.
+     굵은 헤일로로 자리를 만들고, 그 위에 흰빛 심을 얹어 캐릭터를 띄운다. */
   ctx.save();
   ctx.translate(0, h*0.40); ctx.scale(1, 0.30);
-  ctx.strokeStyle = '#FFB53D'; ctx.lineWidth = 8;
-  ctx.shadowColor = '#FF9A2E'; ctx.shadowBlur = 22;
-  ctx.beginPath(); ctx.arc(0, 0, w*0.33, 0, TAU); ctx.stroke();
+  const ringR = w*0.33;
+  ctx.strokeStyle = P.violet;  ctx.lineWidth = 11;
+  ctx.shadowColor = P.violet;  ctx.shadowBlur = 30;
+  ctx.beginPath(); ctx.arc(0, 0, ringR, 0, TAU); ctx.stroke();
+  ctx.strokeStyle = '#EADCFF';  ctx.lineWidth = 4;
+  ctx.shadowColor = P.violetL;  ctx.shadowBlur = 12;
+  ctx.beginPath(); ctx.arc(0, 0, ringR, 0, TAU); ctx.stroke();
   ctx.restore();
   if (heroReady){
     const im = heroFrames[Math.floor(S.animT * CHARACTER.fps) % heroFrames.length];
@@ -1012,8 +1017,7 @@ function drawBossBar(b){
 }
 
 /* ═══════ HUD ═══════ */
-const CTA_BTN   = { x: 40,  y: 1158, w: 640, h: 94 };
-const END_AGAIN = { x: 240, y: 1268, w: 240, h: 10 };
+const CTA_BTN = { x: 40, y: 1158, w: 640, h: 94 };
 
 function drawHUD(){
   /* 재화 pill */
@@ -1134,7 +1138,6 @@ function drawEnd(){
   });
 
   ctaButton(CTA_BTN.x, 862, CTA_BTN.w, 104, '이 게임이 궁금하다면?', 42, 1);
-  txt('다시 보기', CX, 1006, 22, P.ink3, 'center', 700);
 }
 
 /* ───────── CTA 발동 체인 ───────── */
@@ -1152,11 +1155,10 @@ function placeHit(el, r){
 }
 placeHit($('ctaPill'), CTA_BTN);
 placeHit($('ctaMain'), { x:CTA_BTN.x, y:862, w:CTA_BTN.w, h:104 });
-placeHit($('again'), { x:240, y:984, w:240, h:46 });
 $('ctaPill').addEventListener('click', go);
 $('ctaMain').addEventListener('click', go);
-$('again').addEventListener('click', reset);
-function showEnd(){ $('ctaMain').classList.add('on'); $('again').classList.add('on'); }
+/* 결과창에는 CTA 하나만 남긴다 — 다시 보기 버튼이 CTA와 시선을 나눠 갖지 않게 */
+function showEnd(){ $('ctaMain').classList.add('on'); }
 
 /* ───────── 루프 ───────── */
 const RECORD = /[?&]record=1/.test(location.search);
