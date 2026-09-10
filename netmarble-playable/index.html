@@ -153,8 +153,8 @@ const T = {
   BOSS     :19.5,    // 19.5   보스 등장
   AWAKEN   :21.8,    // 21.8   각성 → 압도적 해소
   FINAL    :25.0,    // 25.0   마지막 일격 — 남은 적 전멸
-  CLEAR    :27.6,    // 27.6   결과 + CTA (종료 ≈28초)
-  PILL     :1.2      //        상시 CTA 노출 (빨리 띄운다)
+  CLEAR    :27.6     // 27.6   결과 + CTA (종료 ≈28초)
+                     //        상시 CTA 는 0초부터 — 별도 시각을 두지 않는다
 };
 
 let S, raf = 0, lastT = 0, hudAcc = 0;
@@ -1034,9 +1034,8 @@ const CORE_DIR = [[0,-1],[1,0],[0,1],[-1,0]];
 const BOSS_N = 31, BOSS_CELL = 5;
 const BOSS_SEG6 = [[8,52],[68,112],[128,172],[188,232],[248,292],[308,352]];
 const BOSS_SEG3 = [[25,95],[145,215],[265,335]];
-const BOSS_PLATE = BOSS_SEG6.map(g => arcCells(BOSS_N, 10.8, 14.2, g));  // 장갑판 몸통
-const BOSS_EDGE  = BOSS_SEG6.map(g => arcCells(BOSS_N, 13.3, 14.2, g));  // 바깥 한 줄
-const BOSS_DRIVE = BOSS_SEG3.map(g => arcCells(BOSS_N,  8.6,  9.6, g));  // 구동링
+const BOSS_RING  = BOSS_SEG6.map(g => arcCells(BOSS_N, 12.6, 13.7, g));  // 바깥 끊긴 링
+const BOSS_DRIVE = BOSS_SEG3.map(g => arcCells(BOSS_N,  9.0,  9.9, g));  // 안쪽 구동링
 
 /* 코어를 그린다. 도트라 각도 회전은 안 건다 —
    밝은 구간을 한 칸씩 옮겨 도는 것처럼 보이게 하고,
@@ -1139,7 +1138,8 @@ function drawEnemy(e, x, y){
 /* 보스 : 도트 하우징 + 도트 코어.
    도트에는 외곽선이 없다 — 면을 칠하고 선을 두르는 대신 밝은 셀을 놓는다.
    벡터 곡선 + 흰 라인으로 두르던 이전 판은 코어와 언어가 달라 겉돌았다.
-   회전도 못 건다(계단이 무너진다). 대신 밝은 판이 한 바퀴 돈다.          */
+   검정 면도 걷어냈다(B안). 링 두 겹과 코어가 같은 셀 굵기로 선다.
+   회전도 못 건다(계단이 무너진다). 대신 밝은 구간이 한 바퀴 돈다.        */
 function drawBoss(b){
   const hot = b.hitFx > 0;
   const dmg = 1 - clamp(b.hp / b.hpMax, 0, 1);
@@ -1155,21 +1155,16 @@ function drawBoss(b){
   const put = cells => cells.forEach(p =>
     ctx.fillRect(o + p[0]*BOSS_CELL, o + p[1]*BOSS_CELL, BOSS_CELL, BOSS_CELL));
 
-  /* 장갑판 6장 — 체력이 깎이면 한 장씩 떨어져 나간다 */
+  /* 바깥 링 6구간 — 검정 면 없이 셀 선만. 체력이 깎이면 한 구간씩 사라진다 */
   const keep = Math.max(1, Math.ceil((1 - dmg) * 6));
-  const lit  = Math.floor(b.t * 4.2) % 6;
-  BOSS_PLATE.forEach((cells, i) => {
+  const lit  = Math.floor(b.t * 3.6) % 6;
+  BOSS_RING.forEach((cells, i) => {
     if (i >= keep) return;
-    ctx.fillStyle = hot ? '#22314F' : '#131C36';      // 어두운 몸통
-    put(cells);
-  });
-  BOSS_EDGE.forEach((cells, i) => {
-    if (i >= keep) return;
-    ctx.fillStyle = (hot || i === lit) ? '#FFFFFF' : P.cyan;   // 바깥 한 줄만 밝게
+    ctx.fillStyle = (hot || i === lit) ? '#FFFFFF' : P.cyan;
     put(cells);
   });
 
-  /* 구동링 3장 — 밝은 칸이 반대로 돈다. 부품이 따로 움직여야 기계로 읽힌다 */
+  /* 구동링 3구간 — 밝은 칸이 반대로 돈다. 부품이 따로 움직여야 기계로 읽힌다 */
   const litD = 2 - Math.floor(b.t * 2.6) % 3;
   BOSS_DRIVE.forEach((cells, i) => {
     ctx.fillStyle = (hot || i === litD) ? P.violetL : P.violet;
@@ -1177,7 +1172,7 @@ function drawBoss(b){
   });
 
   /* 에너지 코어 — 하우징과 같은 셀 크기 */
-  const gg = ctx.createRadialGradient(0,0,0, 0,0, 46);
+  const gg = ctx.createRadialGradient(0,0,0, 0,0, 52);
   gg.addColorStop(0, 'rgba(190,235,255,' + (hot ? .42 : .24) + ')');
   gg.addColorStop(1, 'rgba(109,219,255,0)');
   ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0,0,46,0,TAU); ctx.fill();
@@ -1279,17 +1274,17 @@ function drawHUD(){
     ctx.globalAlpha = 1;
   });
 
-  /* 상시 CTA — 캔버스 그림만 확대·축소한다.
-     탭 영역(DOM)은 제자리에 고정이라 클라이언트 자동 QA 의
-     'element is not stable' 에 걸리지 않는다. v3 때 걸렸던 함정이다. */
-  if (S.t >= T.PILL){
-    const k  = clamp((S.t - T.PILL)/0.22, 0, 1);
-    const sc = (0.88 + 0.12*k) * (1 + 0.020 * Math.sin(fxT * 3.0));
+  /* 상시 CTA — 첫 프레임부터 나머지 HUD 와 같이 떠 있는다.
+     페이드·지연을 두면 이 버튼만 늦게 도착해 UI 가 따로 노는 것처럼 보인다.
+     확대·축소는 캔버스 그림만 키운다. 탭 영역(DOM)은 제자리에 고정이라
+     클라이언트 자동 QA 의 'element is not stable' 에 안 걸린다 — v3 때 걸렸던 함정이다. */
+  {
+    const sc = 1 + 0.020 * Math.sin(fxT * 3.0);
     ctx.save();
     ctx.translate(CTA_BTN.x + CTA_BTN.w/2, CTA_BTN.y + CTA_BTN.h/2);
     ctx.scale(sc, sc);
     ctaButton(-CTA_BTN.w/2, -CTA_BTN.h/2, CTA_BTN.w, CTA_BTN.h,
-              '이 게임이 궁금하다면?', 40, k);
+              '이 게임이 궁금하다면?', 40, 1);
     ctx.restore();
   }
 
