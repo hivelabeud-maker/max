@@ -548,10 +548,10 @@ const P = {
   pink:'#FF4FA3', pinkD:'#C8267A',
   purple:'#8E5CF7',
   violet:'#8E5CF7', violetL:'#C9A4FF', violetD:'#6D2BF5',   // 탄막 : 글로우·잔상
-  cta:'#6CDBFF', ctaL:'#B3ECFF', ctaD:'#00B8F5',            // CTA 버튼 · 기준색 #6CDBFF
+  cta:'#3BEFE0', ctaL:'#8EF6ED', ctaD:'#0FB3A6',            // CTA 버튼 · 기준색 #3BEFE0
   gold:'#FFC83D',
   red:'#FF4D6D', redL:'#FF93AC',
-  panel:'rgba(16,9,34,.80)', panelB:'rgba(178,146,255,.42)',
+  panel:'rgba(16,9,34,.80)', panelB:'rgba(190,162,255,.58)',
   ink:'#FFFFFF', ink2:'rgba(255,255,255,.74)', ink3:'rgba(255,255,255,.44)'
 };
 
@@ -616,7 +616,7 @@ function neonPanel(x, y, w, h){
 function ctaButton(x, y, w, h, label, size, alpha){
   ctx.save();
   ctx.globalAlpha = alpha === undefined ? 1 : alpha;
-  ctx.shadowColor = 'rgba(108,219,255,.85)'; ctx.shadowBlur = 34;
+  ctx.shadowColor = 'rgba(59,239,224,.9)'; ctx.shadowBlur = 34;
   rrect(x, y, w, h, 16);
   const g = ctx.createLinearGradient(x, y, x, y+h);
   g.addColorStop(0, P.cta); g.addColorStop(1, P.ctaD);
@@ -625,7 +625,7 @@ function ctaButton(x, y, w, h, label, size, alpha){
   ctx.lineWidth = 5; ctx.strokeStyle = P.ctaL;
   rrect(x+4, y+4, w-8, h-8, 13); ctx.stroke();
   const pl = (cx, cy) => {                        // 모서리 십자 장식
-    ctx.fillStyle = '#D6F6FF';
+    ctx.fillStyle = '#CFFFF9';
     ctx.fillRect(cx-10, cy-3, 20, 6); ctx.fillRect(cx-3, cy-10, 6, 20);
   };
   pl(x+26, y+22); pl(x+w-26, y+22); pl(x+26, y+h-22); pl(x+w-26, y+h-22);
@@ -636,12 +636,22 @@ function fmt(n){
   if (n >= 1000) return (n/1000).toFixed(n >= 10000 ? 0 : 1).replace('.0','') + 'k';
   return String(Math.round(n));
 }
-/* ── 스킬/재화 글리프 ── */
+/* 색을 흰쪽으로 당긴다 — 네온의 '심'(가장 밝은 속)을 만들 때 쓴다 */
+function lighten(c, t){
+  if (c.charAt(0) !== '#') return c;          // rgba() 로 들어온 값은 그대로 둔다
+  const n = parseInt(c.slice(1), 16);
+  const m = v => Math.round(v + (255 - v) * t);
+  return 'rgb(' + m((n>>16)&255) + ',' + m((n>>8)&255) + ',' + m(n&255) + ')';
+}
+
+/* ── 스킬/재화 글리프 ──
+   네온은 두 번 긋는다 — 색으로 번지는 무리 한 겹, 그 위에 흰빛에 가까운 심.
+   한 겹으로 같은 색만 번지게 하면 획이 자기 무리에 먹혀 뿌옇게 뭉친다. */
 function glyph(kind, x, y, s, col){
   ctx.save(); ctx.translate(x, y);
-  ctx.shadowColor = col; ctx.shadowBlur = 8;
-  ctx.strokeStyle = col; ctx.fillStyle = col;
-  ctx.lineWidth = Math.max(2, s*0.16); ctx.lineCap = 'round';
+  ctx.lineCap = 'round';
+  const lw = Math.max(2, s*0.16);
+  const shape = () => {
   if (kind === 'dot'){                        // Y 자 발사체
     ctx.beginPath(); ctx.moveTo(-s*.4,-s*.5); ctx.lineTo(0,0);
     ctx.lineTo(s*.4,-s*.5); ctx.moveTo(0,0); ctx.lineTo(0,s*.5); ctx.stroke();
@@ -668,6 +678,15 @@ function glyph(kind, x, y, s, col){
     ctx.beginPath(); ctx.moveTo(0,-s*.02); ctx.lineTo(0,-s*.26);
     ctx.moveTo(0,0); ctx.lineTo(s*.2,s*.06); ctx.stroke();
   }
+  };
+  ctx.strokeStyle = ctx.fillStyle = col;            // 1겹 : 색 무리
+  ctx.lineWidth = lw;
+  ctx.shadowColor = col; ctx.shadowBlur = s * 0.42;
+  shape();
+  ctx.strokeStyle = ctx.fillStyle = lighten(col, .62);   // 2겹 : 밝은 심
+  ctx.lineWidth = lw * 0.5;
+  ctx.shadowBlur = 0;
+  shape();
   ctx.restore(); ctx.shadowBlur = 0;
 }
 
@@ -1055,6 +1074,19 @@ function drawBoss(b){
   ctx.fillStyle = cg;
   ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.fill();
   ctx.shadowBlur = 0;
+
+  /* 봉인 링 2줄 — 서로 다른 축으로 돈다. 코어가 갇혀 있다는 신호 */
+  ctx.strokeStyle = 'rgba(170,240,255,.45)'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.ellipse(0, 0, cr*.88, cr*.32,  b.t*0.70, 0, TAU); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0, 0, cr*.32, cr*.88, -b.t*0.50, 0, TAU); ctx.stroke();
+
+  /* 구체감 — 왼쪽 위 하이라이트 하나가 납작한 원을 구슬로 바꾼다 */
+  const hg = ctx.createRadialGradient(-cr*.32, -cr*.36, 1, -cr*.32, -cr*.36, cr*.66);
+  hg.addColorStop(0, 'rgba(255,255,255,.50)');
+  hg.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = hg;
+  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.fill();
+
   ctx.strokeStyle = 'rgba(16,4,26,.9)'; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.stroke();
 
@@ -1088,7 +1120,15 @@ function drawBossBar(b){
 }
 
 /* ═══════ HUD ═══════ */
-const CTA_BTN = { x: 40, y: 1158, w: 640, h: 94 };
+/* ───────── 레이아웃 그리드 ─────────
+   좌우 여백을 한 값으로 묶는다. HUD·CTA·결과창이 전부 같은 세로선에 선다.
+   (이전엔 24 / 40 / 54 세 값이 섞여 있어서 아래쪽이 들쭉날쭉했다) */
+const GUT    = 24;                    // 화면 좌우 공통 여백
+const CONT_L = GUT;                   // 24  — 모든 UI 블록의 왼쪽 선
+const CONT_R = BASE_W - GUT;          // 696 — 오른쪽 선
+const CONT_W = CONT_R - CONT_L;       // 672 — 꽉 찬 블록의 폭
+
+const CTA_BTN = { x: CONT_L, y: 1158, w: CONT_W, h: 94 };
 
 function drawHUD(){
   /* 재화 pill */
@@ -1118,7 +1158,7 @@ function drawHUD(){
   txt(clockStr, cx0, 78, 32, '#fff', 'left', 800);
 
   /* 설정 아이콘(장식) */
-  ctx.save(); ctx.translate(672, 46); ctx.rotate(S.t*0.3);
+  ctx.save(); ctx.translate(CONT_R - 20, 46); ctx.rotate(S.t*0.3);
   ctx.strokeStyle = P.ink3; ctx.lineWidth = 3; ctx.lineCap = 'round';
   ctx.beginPath(); ctx.arc(0,0,9,0,TAU); ctx.stroke();
   for (let i=0;i<8;i++){ const a=i/8*TAU;
@@ -1195,23 +1235,23 @@ function drawEnd(){
   /* 게이지 길이는 실제 수치 폭을 재서 정한다 — 고정 폭이면 자릿수가 짧을 때
      바 끝과 숫자 사이에 빈 칸이 남는다. 결과창은 수치가 멈춘 화면이라
      실측값을 그대로 써도 길이가 흔들리지 않는다. 여백은 16px 고정 */
-  const barX = 112, barR = 666, gap = 16;
+  const barX = CONT_L + 68, barR = CONT_R, gap = 16;
   const numW = Math.max(...S.skills.map(k => tw(fmt(k.dmg), 26, 800)));
   const barW = barR - numW - gap - barX;
   S.skills.forEach((k, i) => {
     const y = 462 + i*58;
-    glyph(k.icon, 78, y, 30, colsL[i]);
+    glyph(k.icon, CONT_L + 30, y, 30, colsL[i]);
     neonBar(barX, y - 14, barW, 28, k.dmg/peak, cols[i], colsL[i], 0);
     txt(fmt(k.dmg), barR, y, 26, '#fff', 'right', 800);
   });
 
   txt('전리품', CX, 662, 24, P.ink2, 'center', 700);
-  neonPanel(54, 696, 612, 122);
+  neonPanel(CONT_L, 696, CONT_W, 122);
   const loot = [['dot', S.kills, P.cyan], ['nova', Math.max(1,Math.floor(S.kills/26)), P.purple],
                 ['bolt', S.awakened ? 5 : 1, P.pink], ['coin', 300 + S.kills*2, P.gold],
                 ['moon', S.level, P.cyan], ['shield', Math.round(S.combo/3)+12, P.ice]];
   loot.forEach((l, i) => {
-    const x = 54 + 102*i + 51;
+    const x = CONT_L + CONT_W/6 * (i + 0.5);
     glyph(l[0], x, 742, 34, l[2]);
     txt(String(l[1]), x, 786, 22, '#fff', 'center', 800);
   });
