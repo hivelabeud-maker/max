@@ -290,7 +290,11 @@ function fireBolt(dt){
   if (sk.cd > 0) return;
   sk.cd = S.awakened ? 0.16 : lerp(0.95, 0.5, clamp((sk.lv-1)/4,0,1));
   const live = S.enemies.filter(e => !e.dead && e.r < SPAWN_R - 40);
-  if (!live.length && !S.boss) return;
+  /* 보스는 '살아 있을 때만' 표적이다. S.boss 는 죽은 뒤에도 남아 있어서
+     `!S.boss` 로만 걸러 내면 시체 좌표로 번개를 계속 쏜다 —
+     ALL CLEAR 구간에 우측으로 뻗는 시안 한 줄기가 그것이었다. */
+  const bossAlive = S.boss && !S.boss.dead;
+  if (!live.length && !bossAlive) return;
   const chain = S.awakened ? 9 : 3 + sk.lv;
   const pts = [{ x:CX, y:CY }];
   let pool = live.slice().sort((a,b)=>a.r-b.r).slice(0, chain);
@@ -298,7 +302,7 @@ function fireBolt(dt){
     const p = polar(e.a, e.r); pts.push(p);
     hurt(e, 46 * S.mult * (1 + (sk.lv-1)*0.5), 1);
   });
-  if (S.boss){
+  if (bossAlive){
     pts.push({ x:S.boss.x, y:S.boss.y });
     bossHurt(78 * S.mult * (1 + sk.lv*0.5), 1);
   }
@@ -306,6 +310,9 @@ function fireBolt(dt){
 }
 function fireNova(dt){
   const sk = S.skills[2]; if (!sk.on) return;
+  /* 표적이 없으면 쏘지 않는다 — 빈 화면에 링만 퍼지면 멈춘 것처럼 보인다.
+     fireCore 와 같은 규칙이다. 세 스킬이 규칙을 공유해야 화면이 같이 잠잠해진다. */
+  if (!S.enemies.some(e => !e.dead) && !(S.boss && !S.boss.dead)) return;
   sk.cd = (sk.cd || 0) - dt;
   if (sk.cd > 0) return;
   sk.cd = S.awakened ? 1.15 : lerp(2.4, 1.5, clamp((sk.lv-1)/4,0,1));
