@@ -316,19 +316,7 @@ function fireNova(dt){
 
 /* ───────── 2층 : 보스 ───────── */
 function spawnBoss(){
-  /* 균열은 등장할 때 한 번 뽑아 둔다 — 매 프레임 새로 뽑으면 깜빡인다.
-     시드 RNG라 몇 번을 돌려도 같은 균열이 나온다. */
-  const cracks = [];
-  for (let i = 0; i < 6; i++){
-    let a = i/6*TAU + rr(-0.28, 0.28);
-    const pts = [];
-    for (let r = 6; r <= 34; r += 7){
-      a += rr(-0.30, 0.30);
-      pts.push({ x: Math.cos(a)*r, y: Math.sin(a)*r });
-    }
-    cracks.push(pts);
-  }
-  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, rot:0, hitFx:0, t:0, cracks };
+  S.boss = { x: CX + 186, y: CY - 170, hp:7600, hpMax:7600, rot:0, hitFx:0, t:0 };
   punch(22, 1.09, 0.15, 0.42, 0.7);
   S.fx.push({ nova:true, life:1, max:.5, r0:420, r1:150 });   // 수축 링 = 등장
 }
@@ -995,6 +983,76 @@ function drawHero(x, y, a){
   }
   ctx.restore();
 }
+/* ── 도트 아트 헬퍼 ──
+   셀을 손으로 찍지 않고 스캔해서 뽑는다. 대칭이 저절로 맞고,
+   반경 숫자만 바꾸면 같은 모양이 커지거나 작아진다.               */
+function discCells(N, rad){
+  const c = (N-1)/2, out = [];
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++)
+    if (Math.hypot(x-c, y-c) <= rad) out.push([x,y]);
+  return out;
+}
+function arcCells(N, r0, r1, seg){
+  const c = (N-1)/2, out = [];
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++){
+    const d = Math.hypot(x-c, y-c);
+    if (d < r0 || d > r1) continue;
+    const a = (Math.atan2(y-c, x-c) * 180/Math.PI + 360) % 360;
+    if (a >= seg[0] && a <= seg[1]) out.push([x,y]);
+  }
+  return out;
+}
+function rot90(cells, N){ return cells.map(p => [N-1-p[1], p[0]]); }
+
+/* 코어 도형 — 실장님 전달 시안의 8비트 판.
+   가운데 원판 + 끊긴 링 2겹(대각 4구간) + 축 4방향 창끝.
+   링 구간을 축에서 비워 두면 창끝이 그 틈으로 뻗어 나간다.        */
+const CORE_N = 17;
+const CORE_SEG   = [[20,70],[110,160],[200,250],[290,340]];
+/* 반경 비율은 시안을 따랐다 — 원판 0.27 / 안쪽 링 0.42 / 바깥 링 0.70,
+   창끝은 1.0 까지 뻗는다. 링을 안쪽으로 당겨야 창끝이 밖으로 시원하게 나간다. */
+const CORE_DISC  = discCells(CORE_N, 2.2);
+const CORE_RING1 = CORE_SEG.map(g => arcCells(CORE_N, 3.0, 3.8, g));
+const CORE_RING2 = CORE_SEG.map(g => arcCells(CORE_N, 5.2, 6.0, g));
+const CORE_ARMS  = (() => {
+  /* 북쪽 창끝 한 벌 : 끝은 뾰족, 가운데는 슬릿, 뿌리에서 슬릿이 닫힌다 */
+  let arm = [[8,0],[7,1],[9,1],[6,2],[7,2],[9,2],[10,2],
+             [6,3],[7,3],[9,3],[10,3],[7,4],[8,4],[9,4]];
+  const all = [];
+  for (let i=0;i<4;i++){ all.push(arm); arm = rot90(arm, CORE_N); }
+  return all;                                   // [북, 동, 남, 서]
+})();
+const CORE_DIR = [[0,-1],[1,0],[0,1],[-1,0]];
+
+/* 코어를 그린다. 도트라 각도 회전은 안 건다 —
+   밝은 구간을 한 칸씩 옮겨 도는 것처럼 보이게 하고,
+   창끝은 한 셀 나갔다 들어오게 한다. 픽셀이 안 무너지는 움직임만 쓴다. */
+function drawCoreArt(cell, t, hot, life){
+  const o = -Math.round(cell * CORE_N / 2);
+  const put = p => ctx.fillRect(o + p[0]*cell, o + p[1]*cell, cell, cell);
+  const lit = Math.floor(t * 3.2) % 4;
+  const keep = Math.ceil(clamp(life, 0, 1) * 4);      // 체력만큼 바깥 링이 남는다
+
+  CORE_RING2.forEach((seg, i) => {
+    if (i >= keep) return;                            // 깎이면 한 구간씩 떨어져 나간다
+    ctx.fillStyle = (hot || i === lit) ? '#FFFFFF' : 'rgba(255,255,255,.40)';
+    seg.forEach(put);
+  });
+  CORE_RING1.forEach((seg, i) => {
+    ctx.fillStyle = (hot || i === (lit+2)%4) ? '#FFFFFF' : 'rgba(255,255,255,.62)';
+    seg.forEach(put);
+  });
+  const push = Math.sin(t * 2.1) > .4 ? 1 : 0;
+  ctx.fillStyle = hot ? '#FFFFFF' : 'rgba(255,255,255,.95)';
+  CORE_ARMS.forEach((arm, i) => {
+    const dx = CORE_DIR[i][0]*push, dy = CORE_DIR[i][1]*push;
+    arm.forEach(p => ctx.fillRect(o + (p[0]+dx)*cell, o + (p[1]+dy)*cell, cell, cell));
+  });
+  const br = .74 + .26 * (0.5 + 0.5*Math.sin(t*3.6));  // 원판은 숨 쉬듯 밝아진다
+  ctx.fillStyle = hot ? '#FFFFFF' : 'rgba(255,255,255,' + br.toFixed(3) + ')';
+  CORE_DISC.forEach(put);
+}
+
 /* heavy 적의 도트 도형 — 15×15 셀에 미리 찍어 둔다.
    [열, 행, 폭, 높이] · 가운데 사각 + 직교 4팔(못 모양) + 대각 4팔(계단 쐐기).
    90° 돌려도 같은 그림이 되도록 좌표를 맞춰 뒀다.                       */
@@ -1108,57 +1166,17 @@ function drawBoss(b){
   ctx.restore();
   ctx.shadowBlur = 0;
 
-  /* 에너지 코어 — 레퍼런스의 흰 결정(보석). 숨 쉬듯 뛴다.
-     방사 그라디언트 구슬은 면이 없어 평평해 보였다.
-     면 넷을 밝기 순으로 깔면 같은 실루엣이 깎인 돌로 읽힌다.          */
-  const puls = 1 + Math.sin(b.t * 3.4) * 0.05;
-  const gw = 33 * puls, gh = 45 * puls;          // 세로로 긴 팔면체
-  ctx.shadowColor = P.cyan; ctx.shadowBlur = hot ? 36 : 20;
-  const face = (px, py, col) => {
-    ctx.fillStyle = col;
-    ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(px, 0); ctx.lineTo(0, 0);
-    ctx.closePath(); ctx.fill();
-  };
-  face(-gw, -gh, 'rgba(255,255,255,.97)');       // 왼쪽 위 — 빛 받는 면
-  face( gw, -gh, 'rgba(198,233,255,.88)');
-  face(-gw,  gh, 'rgba(146,201,238,.82)');
-  face( gw,  gh, 'rgba(100,163,211,.76)');       // 오른쪽 아래 — 그늘
-  ctx.shadowBlur = 0;
+  /* 에너지 코어 — 실장님 전달 시안의 8비트 도형.
+     무리는 그라디언트 한 장으로 깔고 셀은 그림자 없이 또렷하게 찍는다.
+     셀 200여 개에 각각 그림자를 걸면 가장자리가 뭉갠다.               */
+  const gg = ctx.createRadialGradient(0,0,0, 0,0, 48);
+  gg.addColorStop(0,   'rgba(190,235,255,' + (hot ? .52 : .30) + ')');
+  gg.addColorStop(.45, 'rgba(140,210,255,' + (hot ? .26 : .14) + ')');
+  gg.addColorStop(1,   'rgba(109,219,255,0)');
+  ctx.fillStyle = gg;
+  ctx.beginPath(); ctx.arc(0,0,48,0,TAU); ctx.fill();
+  drawCoreArt(4, b.t, hot, 1 - dmg);
 
-  /* 봉인 링 2줄 — 서로 다른 축으로 돈다. 결정이 갇혀 있다는 신호 */
-  ctx.strokeStyle = 'rgba(160,226,255,.42)'; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.ellipse(0, 0, gw*.95, gh*.30,  b.t*0.70, 0, TAU); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(0, 0, gw*.34, gh*.92, -b.t*0.50, 0, TAU); ctx.stroke();
-
-  /* 결정 외곽선 */
-  ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0,-gh); ctx.lineTo(gw,0); ctx.lineTo(0,gh); ctx.lineTo(-gw,0);
-  ctx.closePath(); ctx.stroke();
-
-  /* 균열 — 체력이 깎인 만큼 늘고 벌어진다.
-     흰 결정 위라서 색을 뒤집는다 : 어두운 틈 + 새어 나오는 핑크 빛 */
-  const shown = Math.round(dmg * b.cracks.length);
-  if (shown > 0){
-    ctx.save();
-    ctx.beginPath();                              // 금은 결정 안쪽에만
-    ctx.moveTo(0,-gh); ctx.lineTo(gw,0); ctx.lineTo(0,gh); ctx.lineTo(-gw,0);
-    ctx.closePath(); ctx.clip();
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    const lw = 1.6 + dmg * 2.6;
-    for (let i = 0; i < shown; i++){
-      ctx.beginPath(); ctx.moveTo(0, 0);
-      b.cracks[i].forEach(q => ctx.lineTo(q.x, q.y));
-      ctx.strokeStyle = 'rgba(255,79,163,' + (.55 + dmg*.45) + ')';   // 새는 빛
-      ctx.lineWidth = lw + 3.2;
-      ctx.shadowColor = P.pink; ctx.shadowBlur = 12 + dmg * 14;
-      ctx.stroke();
-      ctx.strokeStyle = 'rgba(22,6,34,.92)';                          // 갈라진 틈
-      ctx.lineWidth = lw;
-      ctx.shadowBlur = 0; ctx.stroke();
-    }
-    ctx.restore();
-  }
   ctx.restore(); ctx.shadowBlur = 0;
 }
 function drawBossBar(b){
@@ -1255,10 +1273,19 @@ function drawHUD(){
     ctx.globalAlpha = 1;
   });
 
-  /* 상시 CTA */
-  if (S.t >= T.PILL)
-    ctaButton(CTA_BTN.x, CTA_BTN.y, CTA_BTN.w, CTA_BTN.h,
-              '이 게임이 궁금하다면?', 40, clamp((S.t - T.PILL)/0.22, 0, 1));
+  /* 상시 CTA — 캔버스 그림만 확대·축소한다.
+     탭 영역(DOM)은 제자리에 고정이라 클라이언트 자동 QA 의
+     'element is not stable' 에 걸리지 않는다. v3 때 걸렸던 함정이다. */
+  if (S.t >= T.PILL){
+    const k  = clamp((S.t - T.PILL)/0.22, 0, 1);
+    const sc = (0.88 + 0.12*k) * (1 + 0.020 * Math.sin(S.t * 3.0));
+    ctx.save();
+    ctx.translate(CTA_BTN.x + CTA_BTN.w/2, CTA_BTN.y + CTA_BTN.h/2);
+    ctx.scale(sc, sc);
+    ctaButton(-CTA_BTN.w/2, -CTA_BTN.h/2, CTA_BTN.w, CTA_BTN.h,
+              '이 게임이 궁금하다면?', 40, k);
+    ctx.restore();
+  }
 
   /* 마지막 일격 */
   if (S.finalBlow && !S.ended){
@@ -1271,44 +1298,109 @@ function drawHUD(){
   }
 }
 
-/* ═══════ 결과 화면 ═══════ */
+/* ═══════ 결과 화면 ═══════
+   전에는 0.4초 페이드 하나가 전부라, 광고에서 제일 중요한 화면이
+   제일 정적이었다. 위에서 아래로 어긋나게 띄워 시선을 CTA 까지 끌고 간다.
+   수치는 0에서 굴러 올라간다 — "내가 이만큼 했다"가 눈으로 읽혀야 한다. */
 function drawEnd(){
-  const a = clamp((S.t - T.CLEAR) / 0.4, 0, 1);
-  ctx.fillStyle = 'rgba(5,3,14,' + a + ')';   // 완전 불투명 — 뒤 게임 화면이 비치지 않게
+  const et = S.t - T.CLEAR;                    // 결과창 경과 시간
+  const a = clamp(et / 0.4, 0, 1);
+  ctx.fillStyle = 'rgba(5,3,14,' + a + ')';    // 완전 불투명 — 뒤 게임 화면이 비치지 않게
   ctx.fillRect(0, 0, BASE_W, BASE_H);
   if (a < 0.2) return;
 
-  txt('CLEAR', CX, 292, 92, '#fff', 'center', 800, P.cyan);
+  /* 수치는 결과창에 들어온 순간 얼려 둔다. update 가 계속 돌아서
+     카운트업 도중에 숫자가 바뀌면 굴러가다 튄다. */
+  if (!S.endSnap){
+    S.endSnap = {
+      dmg: S.skills.map(k => k.dmg),
+      loot: [['dot', S.kills, P.cyan],
+             ['nova', Math.max(1, Math.floor(S.kills/26)), P.purple],
+             ['bolt', S.awakened ? 5 : 1, P.pink],
+             ['coin', 300 + S.kills*2, P.gold],
+             ['moon', S.level, P.cyan],
+             ['shield', Math.round(S.combo/3) + 12, P.ice]]
+    };
+  }
+  const snap = S.endSnap;
 
-  txt('피해 현황', CX, 402, 24, P.ink2, 'center', 700);
-  const peak = Math.max(1, ...S.skills.map(k => k.dmg));
+  /* 시작이 빠르고 끝이 부드러운 곡선. cue(시작초, 길이) → 0~1 */
+  const ease = k => 1 - Math.pow(1 - clamp(k, 0, 1), 3);
+  const cue  = (at, dur) => ease((et - at) / (dur || 0.32));
+
+  /* CLEAR — 살짝 크게 들어왔다 제자리로 */
+  const kC = cue(0.10, 0.36);
+  if (kC > 0){
+    ctx.save(); ctx.globalAlpha = kC;
+    ctx.translate(CX, 292);
+    const sc = 1 + (1 - kC) * 0.30;
+    ctx.scale(sc, sc);
+    txt('CLEAR', 0, 0, 92, '#fff', 'center', 800, P.cyan);
+    ctx.restore(); ctx.globalAlpha = 1;
+  }
+
+  const kL = cue(0.30);
+  if (kL > 0){
+    ctx.globalAlpha = kL;
+    txt('피해 현황', CX, 402, 24, P.ink2, 'center', 700);
+    ctx.globalAlpha = 1;
+  }
+
+  const peak = Math.max(1, ...snap.dmg);
   const cols  = [P.cyanD, P.pinkD, '#6D3FD6'];
   const colsL = [P.cyan, P.pink, P.purple];
-  /* 게이지 길이는 실제 수치 폭을 재서 정한다 — 고정 폭이면 자릿수가 짧을 때
-     바 끝과 숫자 사이에 빈 칸이 남는다. 결과창은 수치가 멈춘 화면이라
-     실측값을 그대로 써도 길이가 흔들리지 않는다. 여백은 16px 고정 */
+  /* 게이지 길이는 최종 수치 폭을 재서 정한다 — 고정 폭이면 자릿수가 짧을 때
+     바 끝과 숫자 사이에 빈 칸이 남는다. 카운트업 중 숫자는 최종보다
+     길어질 수 없으므로 폭을 미리 잡아 둬도 어긋나지 않는다. */
   const barX = CONT_L + 68, barR = CONT_R, gap = 16;
-  const numW = Math.max(...S.skills.map(k => tw(fmt(k.dmg), 26, 800)));
+  const numW = Math.max(...snap.dmg.map(d => tw(fmt(d), 26, 800)));
   const barW = barR - numW - gap - barX;
-  S.skills.forEach((k, i) => {
+  snap.dmg.forEach((d, i) => {
+    const kg = cue(0.38 + i*0.10, 0.52);
+    if (kg <= 0) return;
     const y = 462 + i*58;
-    glyph(k.icon, CONT_L + 30, y, 30, colsL[i]);
-    neonBar(barX, y - 14, barW, 28, k.dmg/peak, cols[i], colsL[i], 0);
-    txt(fmt(k.dmg), barR, y, 26, '#fff', 'right', 800);
+    ctx.globalAlpha = clamp(kg * 2.4, 0, 1);
+    glyph(S.skills[i].icon, CONT_L + 30, y, 30, colsL[i]);
+    neonBar(barX, y - 14, barW, 28, (d/peak) * kg, cols[i], colsL[i], 0);
+    txt(fmt(Math.round(d * kg)), barR, y, 26, '#fff', 'right', 800);
+    ctx.globalAlpha = 1;
   });
 
-  txt('전리품', CX, 662, 24, P.ink2, 'center', 700);
-  neonPanel(CONT_L, 696, CONT_W, 122);
-  const loot = [['dot', S.kills, P.cyan], ['nova', Math.max(1,Math.floor(S.kills/26)), P.purple],
-                ['bolt', S.awakened ? 5 : 1, P.pink], ['coin', 300 + S.kills*2, P.gold],
-                ['moon', S.level, P.cyan], ['shield', Math.round(S.combo/3)+12, P.ice]];
-  loot.forEach((l, i) => {
+  const kT = cue(0.74);
+  if (kT > 0){
+    ctx.globalAlpha = kT;
+    txt('전리품', CX, 662, 24, P.ink2, 'center', 700);
+    neonPanel(CONT_L, 696, CONT_W, 122);
+    ctx.globalAlpha = 1;
+  }
+  snap.loot.forEach((l, i) => {
+    const kk = cue(0.82 + i*0.05, 0.30);
+    if (kk <= 0) return;
     const x = CONT_L + CONT_W/6 * (i + 0.5);
-    glyph(l[0], x, 742, 34, l[2]);
-    txt(String(l[1]), x, 786, 22, '#fff', 'center', 800);
+    ctx.save();
+    ctx.globalAlpha = kk;
+    ctx.translate(x, 742);
+    const sc = 0.55 + 0.45 * kk;               // 작게 들어왔다 제 크기로
+    ctx.scale(sc, sc);
+    glyph(l[0], 0, 0, 34, l[2]);
+    ctx.restore();
+    ctx.globalAlpha = kk;
+    txt(String(Math.round(l[1] * kk)), x, 786, 22, '#fff', 'center', 800);
+    ctx.globalAlpha = 1;
   });
 
-  ctaButton(CTA_BTN.x, 862, CTA_BTN.w, 104, '이 게임이 궁금하다면?', 42, 1);
+  /* CTA — 마지막에 도착해서, 그 뒤로는 계속 확대·축소한다.
+     여기서도 캔버스 그림만 키운다. 탭 영역은 제자리다. */
+  const kB = cue(1.06, 0.34);
+  if (kB > 0){
+    const breathe = kB >= 1 ? 1 + 0.030 * Math.sin((et - 1.40) * 4.4) : 1;
+    const sc = (0.84 + 0.16 * kB) * breathe;
+    ctx.save();
+    ctx.translate(CTA_BTN.x + CTA_BTN.w/2, 914);
+    ctx.scale(sc, sc);
+    ctaButton(-CTA_BTN.w/2, -52, CTA_BTN.w, 104, '이 게임이 궁금하다면?', 42, kB);
+    ctx.restore();
+  }
 }
 
 /* ───────── CTA 발동 체인 ───────── */
@@ -1338,7 +1430,8 @@ function loop(now){
   raf = requestAnimationFrame(loop);
   const real = (now - lastT) / 1000; lastT = now;
   const dt = Math.min(real, 0.05);
-  if (!S.ended || S.t < T.CLEAR + 0.5) update(dt, real);
+  /* 결과창 연출이 1.4초짜리라 여기서 update 를 끊으면 도중에 얼어붙는다 */
+  if (!S.ended || S.t < T.CLEAR + 2.0) update(dt, real);
   draw();
 }
 reset();
