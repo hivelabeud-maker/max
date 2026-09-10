@@ -798,19 +798,14 @@ function draw(){
     ctx.fillRect(0,0,BASE_W,BASE_H); ctx.globalAlpha = 1;
   }
 
-  /* 궤도 : 바깥 퍼플 실선 + 안쪽 시안 점선 */
+  /* 궤도 : 점선 원 하나. 레퍼런스가 한 겹이라
+     겹쳐 있던 바깥 실선(RING+48)과 안쪽 원(148)을 걷어냈다 */
   ctx.save();
-  ctx.strokeStyle = P.purple; ctx.lineWidth = 3;
-  ctx.shadowColor = P.purple; ctx.shadowBlur = 16;
-  ctx.beginPath(); ctx.arc(CX, CY, RING + 48, 0, TAU); ctx.stroke();
-  ctx.restore();
-  ctx.save();
-  ctx.strokeStyle = 'rgba(109,219,255,.55)'; ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(201,164,255,.62)'; ctx.lineWidth = 2;
+  ctx.shadowColor = P.violet; ctx.shadowBlur = 10;
   ctx.setLineDash([12,14]); ctx.lineDashOffset = -S.t * 14;
   ctx.beginPath(); ctx.arc(CX, CY, RING, 0, TAU); ctx.stroke();
   ctx.restore();
-  ctx.strokeStyle = 'rgba(178,146,255,.16)'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(CX, CY, 148, 0, TAU); ctx.stroke();
 
   /* 노바 링 */
   S.fx.forEach(f => {
@@ -938,7 +933,7 @@ function draw(){
   if (S.t < T.TUTORIAL && !input.everTouched){
     const h = polar(S.hintAng, RING);
     ctx.save();
-    ctx.globalAlpha = .45; ctx.strokeStyle = P.cyan; ctx.lineWidth = 4;
+    ctx.globalAlpha = .45; ctx.strokeStyle = P.violetL; ctx.lineWidth = 4;
     ctx.setLineDash([9,11]);
     ctx.beginPath(); ctx.arc(CX, CY, RING, S.heroAng, S.hintAng); ctx.stroke();
     ctx.restore();
@@ -1000,22 +995,57 @@ function drawHero(x, y, a){
   }
   ctx.restore();
 }
-/* ── 적 : 네온 다이아 ── */
+/* ── 적 3종 : 레퍼런스의 화이트 동그라미 · 보석 · 불빛 ──
+   세 종류가 형태로 구분돼야 물량 구간에서 뭐가 오는지 읽힌다.
+   전부 같은 마름모였을 땐 색만 다른 한 덩어리로 보였다.                */
 function drawEnemy(e, x, y){
-  ctx.save(); ctx.translate(x, y); ctx.rotate(e.rot * 0.5);
-  const col = e.kind === 'ring' ? P.cyan : e.kind === 'shard' ? P.ice : P.pink;
+  const hit = e.hitFx > 0;
   const r = e.rad * (e.kind === 'heavy' ? 1.15 : 1);
-  ctx.shadowColor = col; ctx.shadowBlur = e.hitFx > 0 ? 26 : 14;
-  ctx.fillStyle = e.hitFx > 0 ? '#fff' : col;
-  ctx.beginPath();
-  ctx.moveTo(0,-r); ctx.lineTo(r*.74,0); ctx.lineTo(0,r); ctx.lineTo(-r*.74,0);
-  ctx.closePath(); ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = 'rgba(255,255,255,.9)';
-  ctx.beginPath();
-  ctx.moveTo(0,-r*.46); ctx.lineTo(r*.34,0); ctx.lineTo(0,r*.46); ctx.lineTo(-r*.34,0);
-  ctx.closePath(); ctx.fill();
-  ctx.restore();
+  ctx.save(); ctx.translate(x, y);
+
+  if (e.kind === 'ring'){
+    /* 화이트 동그라미 — 속이 빈 흰 링 */
+    ctx.strokeStyle = hit ? '#FFFFFF' : 'rgba(255,255,255,.92)';
+    ctx.lineWidth = Math.max(2, r * 0.17);
+    ctx.shadowColor = '#FFFFFF'; ctx.shadowBlur = hit ? 22 : 9;
+    ctx.beginPath(); ctx.arc(0, 0, r * .82, 0, TAU); ctx.stroke();
+
+  } else if (e.kind === 'shard'){
+    /* 보석 — 파란 마름모를 네 면으로 갈라 각을 만든다 */
+    ctx.rotate(e.rot * 0.5);
+    ctx.shadowColor = P.cyan; ctx.shadowBlur = hit ? 26 : 13;
+    ctx.fillStyle = hit ? '#FFFFFF' : P.cyan;
+    ctx.beginPath();
+    ctx.moveTo(0,-r); ctx.lineTo(r*.72,0); ctx.lineTo(0,r); ctx.lineTo(-r*.72,0);
+    ctx.closePath(); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255,255,255,.95)';           // 왼쪽 위 면
+    ctx.beginPath();
+    ctx.moveTo(0,-r); ctx.lineTo(-r*.72,0); ctx.lineTo(0,0);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.42)';           // 오른쪽 아래 면
+    ctx.beginPath();
+    ctx.moveTo(0,r); ctx.lineTo(r*.72,0); ctx.lineTo(0,0);
+    ctx.closePath(); ctx.fill();
+
+  } else {
+    /* 불빛 — 가운데가 흰 발광체 + 십자 섬광 */
+    const bg = ctx.createRadialGradient(0,0,0, 0,0, r*1.5);
+    bg.addColorStop(0,  'rgba(255,255,255,.95)');
+    bg.addColorStop(.30,'rgba(190,235,255,.68)');
+    bg.addColorStop(1,  'rgba(109,219,255,0)');
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.arc(0,0, r*1.5, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,' + (hit ? 1 : .78) + ')';
+    ctx.lineWidth = 2; ctx.lineCap = 'round';
+    ctx.shadowColor = '#FFFFFF'; ctx.shadowBlur = hit ? 24 : 12;
+    const f = r * 1.9;
+    ctx.beginPath();
+    ctx.moveTo(-f,0); ctx.lineTo(f,0); ctx.moveTo(0,-f); ctx.lineTo(0,f); ctx.stroke();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath(); ctx.arc(0,0, r*.34, 0, TAU); ctx.fill();
+  }
+  ctx.restore(); ctx.shadowBlur = 0;
 }
 /* ── 보스 ── */
 /* 도넛 조각 하나 — 장갑판·구동링을 같은 헬퍼로 그린다 */
@@ -1062,51 +1092,54 @@ function drawBoss(b){
   ctx.restore();
   ctx.shadowBlur = 0;
 
-  /* 에너지 코어 — 숨 쉬듯 뛴다. 가장자리는 껍데기처럼 어둡게 남겨
-     그 위에 그리는 균열이 '빛이 새는 금'으로 읽히게 한다 */
-  const cr = 34 * (1 + Math.sin(b.t * 3.4) * 0.05);
-  const cg = ctx.createRadialGradient(0, 0, 2, 0, 0, cr);
-  cg.addColorStop(0,   'rgba(224,150,255,.96)');
-  cg.addColorStop(.45, 'rgba(255,79,163,.88)');
-  cg.addColorStop(.86, 'rgba(150,26,102,.92)');
-  cg.addColorStop(1,   'rgba(54,10,44,.96)');
-  ctx.shadowColor = P.pink; ctx.shadowBlur = hot ? 38 : 22;
-  ctx.fillStyle = cg;
-  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.fill();
+  /* 에너지 코어 — 레퍼런스의 흰 결정(보석). 숨 쉬듯 뛴다.
+     방사 그라디언트 구슬은 면이 없어 평평해 보였다.
+     면 넷을 밝기 순으로 깔면 같은 실루엣이 깎인 돌로 읽힌다.          */
+  const puls = 1 + Math.sin(b.t * 3.4) * 0.05;
+  const gw = 33 * puls, gh = 45 * puls;          // 세로로 긴 팔면체
+  ctx.shadowColor = P.cyan; ctx.shadowBlur = hot ? 36 : 20;
+  const face = (px, py, col) => {
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(px, 0); ctx.lineTo(0, 0);
+    ctx.closePath(); ctx.fill();
+  };
+  face(-gw, -gh, 'rgba(255,255,255,.97)');       // 왼쪽 위 — 빛 받는 면
+  face( gw, -gh, 'rgba(198,233,255,.88)');
+  face(-gw,  gh, 'rgba(146,201,238,.82)');
+  face( gw,  gh, 'rgba(100,163,211,.76)');       // 오른쪽 아래 — 그늘
   ctx.shadowBlur = 0;
 
-  /* 봉인 링 2줄 — 서로 다른 축으로 돈다. 코어가 갇혀 있다는 신호 */
-  ctx.strokeStyle = 'rgba(160,226,255,.45)'; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.ellipse(0, 0, cr*.88, cr*.32,  b.t*0.70, 0, TAU); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(0, 0, cr*.32, cr*.88, -b.t*0.50, 0, TAU); ctx.stroke();
+  /* 봉인 링 2줄 — 서로 다른 축으로 돈다. 결정이 갇혀 있다는 신호 */
+  ctx.strokeStyle = 'rgba(160,226,255,.42)'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.ellipse(0, 0, gw*.95, gh*.30,  b.t*0.70, 0, TAU); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0, 0, gw*.34, gh*.92, -b.t*0.50, 0, TAU); ctx.stroke();
 
-  /* 구체감 — 왼쪽 위 하이라이트 하나가 납작한 원을 구슬로 바꾼다 */
-  const hg = ctx.createRadialGradient(-cr*.32, -cr*.36, 1, -cr*.32, -cr*.36, cr*.66);
-  hg.addColorStop(0, 'rgba(255,255,255,.50)');
-  hg.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = hg;
-  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.fill();
+  /* 결정 외곽선 */
+  ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0,-gh); ctx.lineTo(gw,0); ctx.lineTo(0,gh); ctx.lineTo(-gw,0);
+  ctx.closePath(); ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(16,4,26,.9)'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.stroke();
-
-  /* 균열 — 체력이 깎인 만큼 개수가 늘고 굵어진다 */
+  /* 균열 — 체력이 깎인 만큼 늘고 벌어진다.
+     흰 결정 위라서 색을 뒤집는다 : 어두운 틈 + 새어 나오는 핑크 빛 */
   const shown = Math.round(dmg * b.cracks.length);
   if (shown > 0){
     ctx.save();
+    ctx.beginPath();                              // 금은 결정 안쪽에만
+    ctx.moveTo(0,-gh); ctx.lineTo(gw,0); ctx.lineTo(0,gh); ctx.lineTo(-gw,0);
+    ctx.closePath(); ctx.clip();
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    const lw = 1.4 + dmg * 2.4;
+    const lw = 1.6 + dmg * 2.6;
     for (let i = 0; i < shown; i++){
       ctx.beginPath(); ctx.moveTo(0, 0);
       b.cracks[i].forEach(q => ctx.lineTo(q.x, q.y));
-      /* 어두운 밑선을 먼저 깔고 흰 심을 얹는다.
-         코어 안쪽이 밝아서 흰 선만 그으면 중심 쪽 금이 묻힌다 */
-      ctx.strokeStyle = 'rgba(28,4,34,.85)'; ctx.lineWidth = lw + 2.6;
-      ctx.shadowBlur = 0; ctx.stroke();
-      ctx.strokeStyle = 'rgba(255,255,255,' + (.62 + dmg*.38) + ')';
-      ctx.lineWidth = lw;
-      ctx.shadowColor = P.violetL; ctx.shadowBlur = 14 + dmg * 12;
+      ctx.strokeStyle = 'rgba(255,79,163,' + (.55 + dmg*.45) + ')';   // 새는 빛
+      ctx.lineWidth = lw + 3.2;
+      ctx.shadowColor = P.pink; ctx.shadowBlur = 12 + dmg * 14;
       ctx.stroke();
+      ctx.strokeStyle = 'rgba(22,6,34,.92)';                          // 갈라진 틈
+      ctx.lineWidth = lw;
+      ctx.shadowBlur = 0; ctx.stroke();
     }
     ctx.restore();
   }
