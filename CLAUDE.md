@@ -170,9 +170,9 @@
 ### 1. 브랜치 — main은 읽기 기준선
 | 대상 | 규칙 |
 |---|---|
-| `.claude/agents/`, `.claude/skills/`, 루트 `CLAUDE.md` | **main 직접 수정 금지.** 브랜치 → PR → 오너 확인 후 병합. 고치면 팀 전원의 결과가 바뀐다 |
+| `.claude/agents/`, `.claude/skills/`, 루트 `CLAUDE.md` | **main 직접 수정 금지.** 브랜치 → PR → **김효정 확인 후 병합**. 고치면 팀 전원의 결과가 바뀐다 |
 | `.claude/projects/` 노트 | 자기 담당 건은 직접 커밋 가능. Stop 훅이 자동 저장한다 |
-| `team-onboarding/` | 배포 문서. 브랜치 → PR |
+| `team-onboarding/` | 배포 문서. 브랜치 → PR (병합 김효정) |
 
 브랜치 이름: `이름-작업` 또는 `claude/*`(원격 세션 자동). 예 — `hyun-marketer-v9`.
 
