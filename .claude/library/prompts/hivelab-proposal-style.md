@@ -1,3 +1,15 @@
+<!-- 팀 전환 정리 메모 (2026-09-11)
+이 파일은 `.claude/skills/hivelab-proposal-style.md`에 낱개로 있었다.
+Claude Code는 스킬을 `skills/<이름>/SKILL.md` 구조로만 읽으므로 그 자리에서는 작동하지 않았다.
+내용(245줄 HIVELAB 제안서 디자인 시스템)은 살아 있어 프롬프트 자산으로 옮겨 둔다.
+
+오너 결정 필요 2건:
+1. 본문이 참조하는 `HIVELAB_PROPOSAL_DESIGN_STYLE.md`와 `proposal_pb_brand_2026.html`이 저장소에 없다(깨진 참조).
+   원본을 올릴지, 참조 줄을 지울지 결정한다.
+2. `.claude/skills/mx-deck-design/`(MX실 표준 제안서 덱)과 역할이 겹친다.
+   정식 스킬로 승격하려면 둘 중 어느 쪽이 기본값인지 먼저 정한다.
+-->
+
 ---
 name: hivelab-proposal-style
 description: Apply HIVELAB's monotone proposal design system when building HTML slide decks. Use when creating proposal slides, components, or layouts that follow HIVELAB's design language.

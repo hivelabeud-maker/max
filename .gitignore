@@ -10,3 +10,14 @@ data-sources.md
 # 참고: .claude/projects/ 노트는 팀 공유·커밋 대상이다(반자동 저장 훅이 커밋).
 # 특정 클라이언트 기밀 산출물만 로컬에 두려면 아래에 파일 단위로 개별 추가한다.
 # (폴더 전체를 무시하면 프로젝트 노트가 커밋되지 않으니 블랭킷 무시 금지)
+
+# 팀 전환(2026-09) 추가 — 인증·개인 설정
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+service-account*.json
+# 개인 프로필은 각자 ~/.claude/CLAUDE.md에 둔다. 저장소에 들어오면 팀 전원에게 적용된다.
+.claude/CLAUDE.md
+.claude/settings.local.json
